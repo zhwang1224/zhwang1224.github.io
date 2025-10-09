@@ -322,7 +322,7 @@ mjx-container[display="true"] + br {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-10-09 11:13:28 / 修改时间：17:17:47" itemprop="dateCreated datePublished" datetime="2025-10-09T11:13:28+08:00">2025-10-09</time>
+      <time title="创建时间：2025-10-09 11:13:28 / 修改时间：17:19:36" itemprop="dateCreated datePublished" datetime="2025-10-09T11:13:28+08:00">2025-10-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -385,11 +385,11 @@ mjx-container[display="true"] + br {
 <li><p>芯粒式 WSI：利用晶圆级基板紧密集成、互连多个预先验证的芯粒。典型技术包括 Si-IF 和 台积电的 InFO-SoW。这种方式可以选择“已知良品芯粒 (KGD)” 集成到晶圆基板上，良率极高（&gt;99.9%）。同时，可以将不同工艺制程的芯粒整合到同一系统中，例如 Tesla Dojo  或 Waferscale-GPU ，从而实现单片式 WSI 无法做到的架构。</p>
 </li>
 </ul>
-<p><img src="/image.png" alt="alt text"></p>
+<p><img src="/images/WNS/image.png" alt="alt text"></p>
 <p>文章采用芯粒式 WSI。假设所有芯粒与相邻芯粒以类似网格的方式互连。对于非相邻芯粒，通信通过多跳方式实现，中间芯粒作为中继。根据不同的集成工艺（见表 I），片内互连的功耗和带宽密度会有所差异。</p>
 <p>而对于外部连接，通常使用晶圆边缘放置负责外部 I/O 的芯粒（Periphery I/O）。这些 I/O 芯粒在现有系统中大多基于 SerDes，但也可以采用 光学 I/O，即直接支持光收发器。两种方案中，I/O 芯粒都通过片上传输线与子交换芯粒 (SSC) 互连，如图 3.a 和 3.b 所示。只有位于晶圆边缘的芯粒能与 I/O 芯粒直接连接；若内部芯粒需要外部 I/O，则必须经由中继转发。</p>
 <p>另一种方式是 面积 I/O (Area I/O)，其特点是 I/O 信号可以直接连接晶圆上任意芯粒（而不仅仅是边缘芯粒）。Area I/O 通过 贯穿硅通孔 (TWVs) 将信号和电力传导至晶圆另一侧，然后通过承载晶圆的 中介 PCB (Mezzanine PCB) 将这些信号重新分配到外部 I/O 模块。图 3.c 展示了 Area I/O 的剖面示意图。</p>
-<p><img src="/image-1.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-1.png" alt="alt text"></p>
 <h3 id="1-2-构建晶圆级网络交换机"><a href="#1-2-构建晶圆级网络交换机" class="headerlink" title="1.2 构建晶圆级网络交换机"></a>1.2 构建晶圆级网络交换机</h3><p>文章的物理实现是：在晶圆上构建一个由子交换机 (SSC) 组成的网格，每个 SSC 对应一个先进的单芯片交换机。采用网格布局的好处是能将长互连拆分为更短的段，提升能效、降低延迟并提高良率。目前已有的商业 WSI 系统（如 Cerebras WSE, Tesla Dojo）也采用物理网格结构。</p>
 <p>在大部分分析中，文章使用 Broadcom Tomahawk 5 (TH-5) 作为子交换芯粒（SSC）的原型。TH-5 是一款 256 端口、200Gbps 的先进交换芯片。文章做了两点假设性修改：将 TH-5 芯片边缘的高速 SerDes 替换为更细间距的芯粒间 I/O。这样 SSC 可以通过细间距布线与四个相邻芯粒互连。由于网格拓扑的饱和吞吐量和双向带宽有限、延迟较高，不适合直接用作网络交换机，因此文章需要在物理网格上映射更理想的逻辑拓扑（如 Clos 拓扑），以获得高吞吐量和无阻塞特性。</p>
 <p>为支持这种映射，文章假设 TH-5 的一小部分芯片面积（&lt;2%）用于 贯通通道 (feedthrough channels)，以便信号跨越多个芯粒中继，从而在逻辑上实现长距离连接。例如，两个不相邻的 SSC 之间的逻辑连接，可以通过中间 SSC 转发来实现。在这种结构中：</p>
@@ -402,10 +402,10 @@ mjx-container[display="true"] + br {
 </li>
 </ul>
 <p>图 4 展示了 Clos 拓扑如何映射到物理网格上的一个例子。部分 SSC 之间直接相连，而另一些则通过中间 SSC 转发。这样，即使逻辑上需要全互连，物理网格依然能支持。</p>
-<p><img src="/image-2.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-2.png" alt="alt text"></p>
 <h2 id="2-量化晶圆级网络交换机的端口数（Radix）优势"><a href="#2-量化晶圆级网络交换机的端口数（Radix）优势" class="headerlink" title="2. 量化晶圆级网络交换机的端口数（Radix）优势"></a>2. 量化晶圆级网络交换机的端口数（Radix）优势</h2><h3 id="2-1-映射-Clos-拓扑"><a href="#2-1-映射-Clos-拓扑" class="headerlink" title="2.1 映射 Clos 拓扑"></a>2.1 映射 Clos 拓扑</h3><p>如何将逻辑 Clos 拓扑映射到物理网格上，将直接决定晶圆级网络交换机的性能表现。映射的核心目标是 最大化交换机的端口数 (Radix) 以及 双向带宽 (Bisection Bandwidth)。作者采用了<strong>成对交换 Pairwise Exchange</strong>的启发式算法。</p>
 <p>实验结果（图 5）显示，该算法相比随机映射能使 最坏情况下的片内 I/O 带宽/端口提升约 147.6%，说明映射优化能显著改善互连效率。</p>
-<p><img src="/image-3.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-3.png" alt="alt text"></p>
 <h3 id="2-2-理想与现实情况对比"><a href="#2-2-理想与现实情况对比" class="headerlink" title="2.2 理想与现实情况对比"></a>2.2 理想与现实情况对比</h3><h4 id="仅考虑晶圆面积约束"><a href="#仅考虑晶圆面积约束" class="headerlink" title="仅考虑晶圆面积约束"></a>仅考虑晶圆面积约束</h4><p>在仅考虑晶圆面积约束、忽略功耗与带宽瓶颈时，利用上述映射方法，文章可计算出晶圆级交换机的最大可支持端口数（图 6）。</p>
 <p>假设晶圆为正方形，例如边长 100mm 对应面积为 100×100 mm^2。TH-5 的三种典型配置（见表 II）在图中以红色方块标出。结果表明：</p>
 <ul>
@@ -414,7 +414,7 @@ mjx-container[display="true"] + br {
 </ul>
 <p>这种数量级的提升意味着网络拓扑可大幅减少跳数与延迟，甚至可实现大规模节点间的直接互连。不过也观察到，若在相同晶圆面积下提升单端口带宽（例如从 200G 提升到 800G），最大可支持的端口数会下降。但即使在高带宽场景中，晶圆级方案仍可带来 2–8 倍 的端口数增益。</p>
 <h4 id="考虑带宽瓶颈"><a href="#考虑带宽瓶颈" class="headerlink" title="考虑带宽瓶颈"></a>考虑带宽瓶颈</h4><p>在理想情况下忽略的带宽瓶颈，实际中会显著限制端口扩展。图 7 展示了在内部互连带宽密度为 <strong>3200 Gbps/mm</strong>（对应 Si-IF 技术）的条件下，不同外部 I/O 技术所能实现的最大端口数。</p>
-<p><img src="/image-4.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-4.png" alt="alt text"></p>
 <p>考虑三种外部 I/O 方案：</p>
 <ul>
 <li><strong>边缘 SerDes I/O</strong>：512 Gbps/mm  </li>
@@ -432,7 +432,7 @@ mjx-container[display="true"] + br {
 <li><strong>面积 I/O</strong> 的提升有限，因为其带宽密度天生低于光学 I/O。</li>
 </ol>
 <h4 id="考虑功耗与散热约束"><a href="#考虑功耗与散热约束" class="headerlink" title="考虑功耗与散热约束"></a>考虑功耗与散热约束</h4><p>上述分析未考虑功耗和散热限制。图 10 显示，在 <strong>200mm</strong> 与 <strong>300mm</strong> 晶圆下，当采用光学 I/O 或面积 I/O 时，总功耗超过 <strong>14 kW</strong>。在实际系统中，考虑到冷却方式（空气冷却、水冷或多相冷却），可承受的功率密度有限，因此最大可支持的端口数还将进一步下降。</p>
-<p><img src="/image-5.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-5.png" alt="alt text"></p>
 <hr>
 <p>晶圆级交换机在理论上可实现惊人的扩展性，但其潜力受限于三大现实瓶颈：</p>
 <ul>
@@ -463,19 +463,19 @@ mjx-container[display="true"] + br {
 <li>但总功耗高达 <strong>92.5 kW</strong>。</li>
 </ul>
 <p>因此，后续分析采用 <strong>Si-IF</strong> 作为主要 WSI 技术。  </p>
-<p><img src="/image-6.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-6.png" alt="alt text"></p>
 <hr>
 <h3 id="3-2-异构网络交换机设计"><a href="#3-2-异构网络交换机设计" class="headerlink" title="3.2 异构网络交换机设计"></a>3.2 异构网络交换机设计</h3><p>前述分析假设晶圆上所有 SSC（子交换芯片）均相同，形成<strong>同构 Clos 拓扑</strong>。  本节提出一种新的 <strong>异构设计</strong>。  </p>
 <p>Clos 的特性允许将<strong>叶节点 (Leaf SSC)</strong> 拆分为多个较小芯片，只要与上层 <strong>主干节点 (Spine SSC)</strong> 的连接保持不变，系统总体端口数不会减少。例如，一个 256 端口的叶子 SSC 可替换为两个 128 端口的小芯片。这样做会略微增加延迟（约 1%），但可显著降低功耗。  </p>
 <p>实测表明，多款商用高端口交换机（如 <strong>Broadcom Tomahawk</strong> 系列与 <strong>Marvell Teralynx</strong> 系列）的功耗随端口数呈<strong>超线性（二次）增长</strong>。图 15 展示了这一趋势：功耗几乎随端口数平方增长，这意味着两个小交换机的功耗总和明显低于一个同等端口数的大交换机。因此，使用较小端口数的 SSC 替换部分高端口 SSC，可有效降低系统功率密度。  </p>
-<p><img src="/image-7.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-7.png" alt="alt text"></p>
 <p>图 16 展示了异构优化的结果：  </p>
 <ul>
 <li>在 <strong>300mm 晶圆</strong> 上，采用小型 TH-3 级芯粒作为叶节点，可使总功耗降低 <strong>30.8%</strong>。  </li>
 <li>功率密度从 0.69 kW/mm² 降至 0.48 kW/mm²，适合 <strong>水冷系统</strong> 散热（根据 ，水冷可支持约 0.5 kW/mm² 热密度）。</li>
 </ul>
 <p>注意：此优化主要降低了 SSC 内部逻辑功耗，对内部 I/O 功耗影响较小。因此，随着系统规模增加，功率下降比例减小，因为 I/O 功耗占比上升。  </p>
-<p><img src="/image-8.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-8.png" alt="alt text"></p>
 <hr>
 <h3 id="3-3-子交换机降阶（Subswitch-Deradixing）"><a href="#3-3-子交换机降阶（Subswitch-Deradixing）" class="headerlink" title="3.3 子交换机降阶（Subswitch Deradixing）"></a>3.3 子交换机降阶（Subswitch Deradixing）</h3><p>另一种“反直觉”的优化方法是：<strong>降低每个 SSC 的端口数（radix），但保持芯片面积不变。</strong><br>这样能为每个芯片分配更多的“穿通 I/O”（feedthrough I/O），增加芯片间互连带宽。  </p>
 <p>原理如下：  </p>
@@ -496,7 +496,7 @@ mjx-container[display="true"] + br {
 <li>在 <strong>3200 Gbps/mm</strong> 下，将 SSC 端口数减半可使系统端口数翻倍。  </li>
 <li>在 <strong>6400 Gbps/mm</strong> 下，该趋势仍然存在，但当带宽充足时，过度降阶会导致端口利用率下降。</li>
 </ul>
-<p><img src="/image-9.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-9.png" alt="alt text"></p>
 <p>为突破第四章识别的瓶颈，本章提出三类可扩展性优化策略：</p>
 <ol>
 <li><strong>提高内部带宽密度</strong>（通过频率、电压提升）以扩展端口数，但需权衡功耗。  </li>
@@ -540,7 +540,7 @@ mjx-container[display="true"] + br {
 <li>出口交换机在发包前删除额外的头部信息。</li>
 </ul>
 <p>这种方法可消除多级查找延迟。估算显示，不含 IP 查表的路由计算（RC）延迟仅为传统的 <strong>1/4</strong>。  </p>
-<p><img src="/image-10.png" alt="alt text"></p>
+<p><img src="/images/WNS/image-10.png" alt="alt text"></p>
 <h3 id="4-2-仿真评估：专用路由的性能收益"><a href="#4-2-仿真评估：专用路由的性能收益" class="headerlink" title="4.2 仿真评估：专用路由的性能收益"></a>4.2 仿真评估：专用路由的性能收益</h3><p>研究者使用 <strong>Booksim2</strong> 对比了带 IP 查表与不带 IP 查表的性能差异。<br>仿真设置如下：  </p>
 <ul>
 <li>网络结构：两级 Clos 网络  </li>
@@ -566,7 +566,7 @@ mjx-container[display="true"] + br {
 </ul>
 </li>
 </ul>
-<h3 id="4-3-应用层性能评估"><a href="#4-3-应用层性能评估" class="headerlink" title="4.3 应用层性能评估"></a>4.3 应用层性能评估</h3><p><img src="/image-11.png" alt="alt text"></p>
+<h3 id="4-3-应用层性能评估"><a href="#4-3-应用层性能评估" class="headerlink" title="4.3 应用层性能评估"></a>4.3 应用层性能评估</h3><p><img src="/images/WNS/image-11.png" alt="alt text"></p>
 <p>为估计晶圆级交换机在应用层的潜在性能收益（包括更快互连和更快 SSC 微架构），<br>研究者对比了以下两种系统的性能：  </p>
 <ul>
 <li><strong>2048 端口、800 Gbps 的晶圆级交换机</strong>  </li>
@@ -587,7 +587,7 @@ mjx-container[display="true"] + br {
 <li>晶圆级交换机在所有流量模式下（除非对称流量外）具有<strong>相同或更高的饱和吞吐量</strong>；  </li>
 <li><strong>零负载延迟降低 38%</strong>，从 60 个仿真周期降至 <strong>37 个仿真周期</strong>。</li>
 </ul>
-<h3 id="4-4-高性能计算-HPC-应用测试"><a href="#4-4-高性能计算-HPC-应用测试" class="headerlink" title="4.4 高性能计算 (HPC) 应用测试"></a>4.4 高性能计算 (HPC) 应用测试</h3><p>研究者进一步在 <strong>NERSC 的 4 个 HPC 工作负载追踪</strong> [3] 上评估晶圆级交换机性能：  </p>
+<h3 id="4-4-高性能计算-HPC-应用测试"><a href="#4-4-高性能计算-HPC-应用测试" class="headerlink" title="4.4 高性能计算 (HPC) 应用测试"></a>4.4 高性能计算 (HPC) 应用测试</h3><p>研究者进一步在 <strong>NERSC 的 4 个 HPC 工作负载追踪</strong>  上评估晶圆级交换机性能：  </p>
 <ul>
 <li>LULESH  </li>
 <li>Mocfe  </li>
