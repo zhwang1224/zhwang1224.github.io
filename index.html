@@ -255,13 +255,13 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -283,6 +283,100 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/09/Waferscale-Network-Switches/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/09/Waferscale-Network-Switches/" class="post-title-link" itemprop="url">Waferscale_Network_Switches</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-09 11:13:28 / 修改时间：11:36:49" itemprop="dateCreated datePublished" datetime="2025-10-09T11:13:28+08:00">2025-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">互连网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="晶圆级网络交换机-Waferscale-Network-Switches"><a href="#晶圆级网络交换机-Waferscale-Network-Switches" class="headerlink" title="晶圆级网络交换机 Waferscale Network Switches"></a>晶圆级网络交换机 Waferscale Network Switches</h1><p>文章指出尽管网络交换机的端口数（radix）在决定现代计算机系统的延迟、成本、功耗、空间和能力方面至关重要，但由于片外 I/O 间距和交换芯片尺寸扩展不佳，交换机端口数多年来几乎没有增长。文章考虑采用晶圆级集成（WSI）来将交换机基板的尺寸扩展到远大于单个芯片，并提出问题：能否利用 WSI 构建端口数远超当今交换机的网络交换机？</p>
+<p>晶圆级网络交换机的端口数限制并非来自基板面积，而是受到 SSC 间连接的片内带宽所限制（第 IV 节）。为了支持 Clos 拓扑，尤其是在高层次上，需要大量逻辑连接，这会迅速耗尽相邻 SSC 间可用的物理带宽密度。我们还发现，当采用晶圆边缘基于 SerDes 的传统片外连接时，片外带宽也可能成为瓶颈。最后，功率密度也可能成为瓶颈，从而限制在给定散热机制下可支持的端口数。</p>
+<h2 id="1-利用晶圆级集成构建超高端口数交换机"><a href="#1-利用晶圆级集成构建超高端口数交换机" class="headerlink" title="1. 利用晶圆级集成构建超高端口数交换机"></a>1. 利用晶圆级集成构建超高端口数交换机</h2><h3 id="1-1-WSI"><a href="#1-1-WSI" class="headerlink" title="1.1 WSI"></a>1.1 WSI</h3><p>晶圆级集成 (WSI) 允许在整个硅晶圆尺度上构建集成电路。与传统方法不同，后者通过互连独立封装的芯片来构建大型系统，这些互连的带宽较低、能耗较高；而 WSI 则可以直接构建极大规模、紧密耦合的系统。WSI 技术可以分为两类：单片式 (monolithic) 和 芯粒式 (chiplet-based)。</p>
+<ul>
+<li><p>单片式 WSI：使用整片晶圆作为一个完整芯片，而不是切割成小芯片。上世纪 70 年代 Trilogy 系统架构和 2020 年的 Cerebras 晶圆级引擎 (WSE) 就是例子。在单片式 WSI 中，晶圆依然采用传统的步进曝光工艺制造，但不同之处在于不切割，而是在晶圆后续工序中构建跨视场（reticle）的互连。这样可以形成一个巨大的、紧密耦合的晶圆级系统。<br>主要挑战包括：</p>
+<ul>
+<li>(a) 制造过程存在缺陷和参数偏差，因此需要内建冗余来保证良率；</li>
+<li>(b) 由于只能使用单一工艺节点，这种方式仅支持同构架构，无法在同一晶圆上整合不同工艺优化的芯粒（如逻辑 vs I/O）。</li>
+</ul>
+</li>
+<li><p>芯粒式 WSI：利用晶圆级基板紧密集成、互连多个预先验证的芯粒。典型技术包括 Si-IF 和 台积电的 InFO-SoW。这种方式可以选择“已知良品芯粒 (KGD)” 集成到晶圆基板上，良率极高（&gt;99.9%）。同时，可以将不同工艺制程的芯粒整合到同一系统中，例如 Tesla Dojo  或 Waferscale-GPU ，从而实现单片式 WSI 无法做到的架构。</p>
+</li>
+</ul>
+<p>文章采用芯粒式 WSI。假设所有芯粒与相邻芯粒以类似网格的方式互连。对于非相邻芯粒，通信通过多跳方式实现，中间芯粒作为中继。根据不同的集成工艺（见表 I），片内互连的功耗和带宽密度会有所差异。</p>
+<p>而对于外部连接，通常使用晶圆边缘放置负责外部 I/O 的芯粒（Periphery I/O）。这些 I/O 芯粒在现有系统中大多基于 SerDes，但也可以采用 光学 I/O，即直接支持光收发器。两种方案中，I/O 芯粒都通过片上传输线与子交换芯粒 (SSC) 互连，如图 3.a 和 3.b 所示。只有位于晶圆边缘的芯粒能与 I/O 芯粒直接连接；若内部芯粒需要外部 I/O，则必须经由中继转发。</p>
+<p>另一种方式是 面积 I/O (Area I/O)，其特点是 I/O 信号可以直接连接晶圆上任意芯粒（而不仅仅是边缘芯粒）。Area I/O 通过 贯穿硅通孔 (TWVs) 将信号和电力传导至晶圆另一侧，然后通过承载晶圆的 中介 PCB (Mezzanine PCB) 将这些信号重新分配到外部 I/O 模块。图 3.c 展示了 Area I/O 的剖面示意图。</p>
+<h3 id="1-2"><a href="#1-2" class="headerlink" title="1.2"></a>1.2</h3>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

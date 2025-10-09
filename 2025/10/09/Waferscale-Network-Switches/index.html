@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="晶圆级网络交换机 Waferscale Network Switches文章指出尽管网络交换机的端口数（radix）在决定现代计算机系统的延迟、成本、功耗、空间和能力方面至关重要，但由于片外 I&#x2F;O 间距和交换芯片尺寸扩展不佳，交换机端口数多年来几乎没有增长。文章考虑采用晶圆级集成（WSI）来将交换机基板的尺寸扩展到远大于单个芯片，并提出问题：能否利用 WSI 构建端口数远超当今交换机的网络交换机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Waferscale_Network_Switches">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/10/09/Waferscale-Network-Switches/index.html">
+<meta property="og:site_name" content="Non si finisce mai di imparare">
+<meta property="og:description" content="晶圆级网络交换机 Waferscale Network Switches文章指出尽管网络交换机的端口数（radix）在决定现代计算机系统的延迟、成本、功耗、空间和能力方面至关重要，但由于片外 I&#x2F;O 间距和交换芯片尺寸扩展不佳，交换机端口数多年来几乎没有增长。文章考虑采用晶圆级集成（WSI）来将交换机基板的尺寸扩展到远大于单个芯片，并提出问题：能否利用 WSI 构建端口数远超当今交换机的网络交换机">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-09T03:13:28.000Z">
+<meta property="article:modified_time" content="2025-10-09T03:36:49.545Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="互连网络">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/10/09/Waferscale-Network-Switches/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/10/09/Waferscale-Network-Switches/","path":"2025/10/09/Waferscale-Network-Switches/","title":"Waferscale_Network_Switches"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Waferscale_Network_Switches | Non si finisce mai di imparare</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Non si finisce mai di imparare</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%99%B6%E5%9C%86%E7%BA%A7%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E6%9C%BA-Waferscale-Network-Switches"><span class="nav-number">1.</span> <span class="nav-text">晶圆级网络交换机 Waferscale Network Switches</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%88%A9%E7%94%A8%E6%99%B6%E5%9C%86%E7%BA%A7%E9%9B%86%E6%88%90%E6%9E%84%E5%BB%BA%E8%B6%85%E9%AB%98%E7%AB%AF%E5%8F%A3%E6%95%B0%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">1. 利用晶圆级集成构建超高端口数交换机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-WSI"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 WSI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/09/Waferscale-Network-Switches/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Waferscale_Network_Switches | Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Waferscale_Network_Switches
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-09 11:13:28 / 修改时间：11:36:49" itemprop="dateCreated datePublished" datetime="2025-10-09T11:13:28+08:00">2025-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">互连网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="晶圆级网络交换机-Waferscale-Network-Switches"><a href="#晶圆级网络交换机-Waferscale-Network-Switches" class="headerlink" title="晶圆级网络交换机 Waferscale Network Switches"></a>晶圆级网络交换机 Waferscale Network Switches</h1><p>文章指出尽管网络交换机的端口数（radix）在决定现代计算机系统的延迟、成本、功耗、空间和能力方面至关重要，但由于片外 I/O 间距和交换芯片尺寸扩展不佳，交换机端口数多年来几乎没有增长。文章考虑采用晶圆级集成（WSI）来将交换机基板的尺寸扩展到远大于单个芯片，并提出问题：能否利用 WSI 构建端口数远超当今交换机的网络交换机？</p>
+<p>晶圆级网络交换机的端口数限制并非来自基板面积，而是受到 SSC 间连接的片内带宽所限制（第 IV 节）。为了支持 Clos 拓扑，尤其是在高层次上，需要大量逻辑连接，这会迅速耗尽相邻 SSC 间可用的物理带宽密度。我们还发现，当采用晶圆边缘基于 SerDes 的传统片外连接时，片外带宽也可能成为瓶颈。最后，功率密度也可能成为瓶颈，从而限制在给定散热机制下可支持的端口数。</p>
+<h2 id="1-利用晶圆级集成构建超高端口数交换机"><a href="#1-利用晶圆级集成构建超高端口数交换机" class="headerlink" title="1. 利用晶圆级集成构建超高端口数交换机"></a>1. 利用晶圆级集成构建超高端口数交换机</h2><h3 id="1-1-WSI"><a href="#1-1-WSI" class="headerlink" title="1.1 WSI"></a>1.1 WSI</h3><p>晶圆级集成 (WSI) 允许在整个硅晶圆尺度上构建集成电路。与传统方法不同，后者通过互连独立封装的芯片来构建大型系统，这些互连的带宽较低、能耗较高；而 WSI 则可以直接构建极大规模、紧密耦合的系统。WSI 技术可以分为两类：单片式 (monolithic) 和 芯粒式 (chiplet-based)。</p>
+<ul>
+<li><p>单片式 WSI：使用整片晶圆作为一个完整芯片，而不是切割成小芯片。上世纪 70 年代 Trilogy 系统架构和 2020 年的 Cerebras 晶圆级引擎 (WSE) 就是例子。在单片式 WSI 中，晶圆依然采用传统的步进曝光工艺制造，但不同之处在于不切割，而是在晶圆后续工序中构建跨视场（reticle）的互连。这样可以形成一个巨大的、紧密耦合的晶圆级系统。<br>主要挑战包括：</p>
+<ul>
+<li>(a) 制造过程存在缺陷和参数偏差，因此需要内建冗余来保证良率；</li>
+<li>(b) 由于只能使用单一工艺节点，这种方式仅支持同构架构，无法在同一晶圆上整合不同工艺优化的芯粒（如逻辑 vs I/O）。</li>
+</ul>
+</li>
+<li><p>芯粒式 WSI：利用晶圆级基板紧密集成、互连多个预先验证的芯粒。典型技术包括 Si-IF 和 台积电的 InFO-SoW。这种方式可以选择“已知良品芯粒 (KGD)” 集成到晶圆基板上，良率极高（&gt;99.9%）。同时，可以将不同工艺制程的芯粒整合到同一系统中，例如 Tesla Dojo  或 Waferscale-GPU ，从而实现单片式 WSI 无法做到的架构。</p>
+</li>
+</ul>
+<p>文章采用芯粒式 WSI。假设所有芯粒与相邻芯粒以类似网格的方式互连。对于非相邻芯粒，通信通过多跳方式实现，中间芯粒作为中继。根据不同的集成工艺（见表 I），片内互连的功耗和带宽密度会有所差异。</p>
+<p>而对于外部连接，通常使用晶圆边缘放置负责外部 I/O 的芯粒（Periphery I/O）。这些 I/O 芯粒在现有系统中大多基于 SerDes，但也可以采用 光学 I/O，即直接支持光收发器。两种方案中，I/O 芯粒都通过片上传输线与子交换芯粒 (SSC) 互连，如图 3.a 和 3.b 所示。只有位于晶圆边缘的芯粒能与 I/O 芯粒直接连接；若内部芯粒需要外部 I/O，则必须经由中继转发。</p>
+<p>另一种方式是 面积 I/O (Area I/O)，其特点是 I/O 信号可以直接连接晶圆上任意芯粒（而不仅仅是边缘芯粒）。Area I/O 通过 贯穿硅通孔 (TWVs) 将信号和电力传导至晶圆另一侧，然后通过承载晶圆的 中介 PCB (Mezzanine PCB) 将这些信号重新分配到外部 I/O 模块。图 3.c 展示了 Area I/O 的剖面示意图。</p>
+<h3 id="1-2"><a href="#1-2" class="headerlink" title="1.2"></a>1.2</h3>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" rel="tag"># 互连网络</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/25/Switchless/" rel="prev" title="Switchless">
+                  <i class="fa fa-angle-left"></i> Switchless
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
