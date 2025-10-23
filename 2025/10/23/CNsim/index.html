@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation 2. 必要性 2.1 芯粒互连架构 2.2 网络模拟器 2.3 BookSim 性能剖析   3. CNSim 3.1 以数据包为中心的仿真 3.2 数据包并行仿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CNsim">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/10/23/CNsim/index.html">
+<meta property="og:site_name" content="Non si finisce mai di imparare">
+<meta property="og:description" content="[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation 2. 必要性 2.1 芯粒互连架构 2.2 网络模拟器 2.3 BookSim 性能剖析   3. CNSim 3.1 以数据包为中心的仿真 3.2 数据包并行仿">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-6.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-7.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-8.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-9.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-10.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-11.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-12.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-13.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CNsim/image-14.png">
+<meta property="article:published_time" content="2025-10-23T13:37:53.000Z">
+<meta property="article:modified_time" content="2025-10-23T14:53:22.571Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Chiplet">
+<meta property="article:tag" content="MCM">
+<meta property="article:tag" content="NOC">
+<meta property="article:tag" content="routing">
+<meta property="article:tag" content="simulator">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/CNsim/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/10/23/CNsim/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/10/23/CNsim/","path":"2025/10/23/CNsim/","title":"CNsim"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CNsim | Non si finisce mai di imparare</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Non si finisce mai di imparare</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ATC%E2%80%9924-Evaluating-Chiplet-based-Large-Scale-Interconnection-Networks-via-Cycle-Accurate-Packet-Parallel-Simulation"><span class="nav-number">1.</span> <span class="nav-text">[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%BF%85%E8%A6%81%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">2. 必要性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">2.1 芯粒互连架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%BD%91%E7%BB%9C%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.2 网络模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-BookSim-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90"><span class="nav-number">1.1.3.</span> <span class="nav-text">2.3 BookSim 性能剖析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-CNSim"><span class="nav-number">1.2.</span> <span class="nav-text">3. CNSim</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BB%A5%E6%95%B0%E6%8D%AE%E5%8C%85%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%BB%BF%E7%9C%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">3.1 以数据包为中心的仿真</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%95%B0%E6%8D%AE%E5%8C%85%E5%B9%B6%E8%A1%8C%E4%BB%BF%E7%9C%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">3.2 数据包并行仿真</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%BC%82%E6%9E%84%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8E%E9%93%BE%E8%B7%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">3.3 异构路由器与链路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E5%85%B6%E4%BB%96%E9%87%8D%E8%A6%81%E7%89%B9%E6%80%A7%E4%B8%8E%E5%8F%96%E8%88%8D"><span class="nav-number">1.2.4.</span> <span class="nav-text">3.4 其他重要特性与取舍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%AA%8C%E8%AF%81"><span class="nav-number">1.3.</span> <span class="nav-text">4. 验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BB%BF%E7%9C%9F"><span class="nav-number">1.3.1.</span> <span class="nav-text">4.1 实现与性能仿真</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E4%BB%BF%E7%9C%9F%E9%80%9F%E5%BA%A6%E4%B8%8E%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">4.2 仿真速度与内存使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%B9%B6%E8%A1%8C%E6%80%A7%E4%B8%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.3.3.</span> <span class="nav-text">4.3 并行性与不一致性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E8%8A%AF%E7%B2%92%E7%BD%91%E7%BB%9C%E8%AF%84%E4%BC%B0"><span class="nav-number">1.4.</span> <span class="nav-text">5. 芯粒网络评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%9F%BA%E4%BA%8E%E5%BC%82%E6%9E%84%E9%93%BE%E8%B7%AF%E7%9A%84%E7%BD%91%E7%BB%9C"><span class="nav-number">1.4.1.</span> <span class="nav-text">5.1 基于异构链路的网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E8%8A%AF%E7%B2%92%E5%8C%96-Dragonfly"><span class="nav-number">1.4.2.</span> <span class="nav-text">5.2 芯粒化 Dragonfly</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%9C%AC%E5%9C%B0%EF%BC%88%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%86%85-%E7%BB%84%E5%86%85%EF%BC%89%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">1. 本地（交换机内 &#x2F; 组内）性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%BB%84%E5%86%85%EF%BC%88intra-group%EF%BC%89%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">2. 组内（intra-group）性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%85%A8%E5%B1%80%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">3. 全局性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-AllReduce-%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">4. AllReduce 性能</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/23/CNsim/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CNsim | Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CNsim
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-23 21:37:53 / 修改时间：22:53:22" itemprop="dateCreated datePublished" datetime="2025-10-23T21:37:53+08:00">2025-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#atc24-evaluating-chiplet-based-large-scale-interconnection-networks--via-cycle-accurate-packet-parallel-simulation">[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation</a><ul>
+<li><a href="#2-%E5%BF%85%E8%A6%81%E6%80%A7">2. 必要性</a><ul>
+<li><a href="#21-%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E6%9E%B6%E6%9E%84">2.1 芯粒互连架构</a></li>
+<li><a href="#22-%E7%BD%91%E7%BB%9C%E6%A8%A1%E6%8B%9F%E5%99%A8">2.2 网络模拟器</a></li>
+<li><a href="#23-booksim-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90">2.3 BookSim 性能剖析</a></li>
+</ul>
+</li>
+<li><a href="#3-cnsim">3. CNSim</a><ul>
+<li><a href="#31-%E4%BB%A5%E6%95%B0%E6%8D%AE%E5%8C%85%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%BB%BF%E7%9C%9F">3.1 以数据包为中心的仿真</a></li>
+<li><a href="#32-%E6%95%B0%E6%8D%AE%E5%8C%85%E5%B9%B6%E8%A1%8C%E4%BB%BF%E7%9C%9F">3.2 数据包并行仿真</a></li>
+<li><a href="#33-%E5%BC%82%E6%9E%84%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8E%E9%93%BE%E8%B7%AF">3.3 异构路由器与链路</a></li>
+<li><a href="#34-%E5%85%B6%E4%BB%96%E9%87%8D%E8%A6%81%E7%89%B9%E6%80%A7%E4%B8%8E%E5%8F%96%E8%88%8D">3.4 其他重要特性与取舍</a></li>
+</ul>
+</li>
+<li><a href="#4-%E9%AA%8C%E8%AF%81">4. 验证</a><ul>
+<li><a href="#41-%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BB%BF%E7%9C%9F">4.1 实现与性能仿真</a></li>
+<li><a href="#42-%E4%BB%BF%E7%9C%9F%E9%80%9F%E5%BA%A6%E4%B8%8E%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8">4.2 仿真速度与内存使用</a></li>
+<li><a href="#43-%E5%B9%B6%E8%A1%8C%E6%80%A7%E4%B8%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E6%80%A7">4.3 并行性与不一致性</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%8A%AF%E7%B2%92%E7%BD%91%E7%BB%9C%E8%AF%84%E4%BC%B0">5. 芯粒网络评估</a><ul>
+<li><a href="#51-%E5%9F%BA%E4%BA%8E%E5%BC%82%E6%9E%84%E9%93%BE%E8%B7%AF%E7%9A%84%E7%BD%91%E7%BB%9C">5.1 基于异构链路的网络</a></li>
+<li><a href="#52-%E8%8A%AF%E7%B2%92%E5%8C%96-dragonfly">5.2 芯粒化 Dragonfly</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="ATC’24-Evaluating-Chiplet-based-Large-Scale-Interconnection-Networks-via-Cycle-Accurate-Packet-Parallel-Simulation"><a href="#ATC’24-Evaluating-Chiplet-based-Large-Scale-Interconnection-Networks-via-Cycle-Accurate-Packet-Parallel-Simulation" class="headerlink" title="[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation"></a>[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation</h1><p>芯粒系统与传统系统存在本质差异，尤其是芯粒间互连架构尚未得到充分评估。需要重点研究与评估的关键问题包括但不限于：<br>1）片内与片间网络的分层拓扑结构；<br>2）异构网络上的路由算法；<br>3）异构芯粒接口与异构路由器的影响；<br>4）不同拓扑在多种工作负载下的整体性能表现。</p>
+<p>评估芯粒互连网络主要面临两大挑战：</p>
+<ul>
+<li>挑战一：必须对整个网络进行统一仿真以评估芯粒互连架构</li>
+</ul>
+<p>传统设计中，片内网络与片外网络通常是分开构建的：片内网络通过交换机相连，而片外网络则由多个交换机组成，与片内架构无关。然而，芯粒架构通过超高密度与高带宽互连将多个硅片整合在一起，打破了片内与片外网络的界限。多个芯粒的片内路由器直接通过低延迟的片间链路连接，形成大规模异构网络，由此产生如下问题：<br>1）芯粒网络与片内网络紧密耦合，无法独立评估；<br>2）芯粒网络的规模远超传统片内网络；<br>3）片内/片间链路与路由器在机制、带宽和延迟上均异构，现有工具无法统一且精确地建模。</p>
+<ul>
+<li>挑战二：现有网络模拟器难以高效评估大规模芯粒共享内存网络。<br>片内网络与片外网络一直是两个相对独立的研究领域，各自拥有丰富的评估工具。传统片外链路与交换机（如 Ethernet 与 InfiniBand）的延迟通常在微秒（μs）级 [42,53]，因此粗粒度的事件驱动模拟已足够。然而，在多芯粒系统中，低延迟的片内路由器直接通过纳秒（ns）级的片间链路（如 UCIe [6]）相连。同时，缓冲区、链路、交换和流控等电路级微架构特性对系统性能影响显著。因此，评估芯粒网络必须采用精细的周期级精确模拟器。</li>
+</ul>
+<p>但现有周期级工具难以适用于大规模芯粒网络，原因有二：<br>1）模拟器通常完整建模 RTL 级路由器，包括许多非关键电路行为（如握手、轮询仲裁），导致效率低下；<br>2）复杂的资源依赖与竞争（线程同步）使网络仿真难以并行化。</p>
+<p>为此，本文在保持周期精度与必要微架构验证的前提下，舍弃部分非关键建模以加速仿真；同时采用基于原子操作的超线程机制，实现了高效的数据包并行模拟，几乎无一致性损失。最终，我们提出 Chiplet Network Simulator (CNSim) —— 一种周期级精确、数据包并行的网络模拟器，可系统且高效地评估芯粒互连架构。</p>
+<p>本文的主要贡献如下：</p>
+<ul>
+<li><p>CNSim 专为大规模芯粒（共享内存）网络设计，区别于现有小规模片内或大规模分布式网络模拟器。</p>
+</li>
+<li><p>采用以数据包为中心的模拟架构与基于原子操作的超线程机制，在验证必要微架构并保持周期精度的同时，实现 11×–14× 的加速。</p>
+</li>
+<li><p>支持多种芯粒网络评估特性，包括异构路由器/链路、分层拓扑、自适应路由与真实工作负载追踪。</p>
+</li>
+<li><p>基于 CNSim 系统地评估了两种典型芯粒网络，揭示了芯粒互连架构的性能优势与局限。</p>
+</li>
+</ul>
+<h2 id="2-必要性"><a href="#2-必要性" class="headerlink" title="2. 必要性"></a>2. 必要性</h2><h3 id="2-1-芯粒互连架构"><a href="#2-1-芯粒互连架构" class="headerlink" title="2.1 芯粒互连架构"></a>2.1 芯粒互连架构</h3><p><strong>片内网络与片外网络的关系：</strong><br>在传统互连架构中，片内与片外网络通常解耦设计。如图 1(a) 所示，片内网络通过交换机相连，而片外网络则由多个交换机构建。大多数数据中心交换式网络（如 Fat-tree 、Slingshot 、NVIDIA HGX）均采用此架构，因此网络性能通常在 NIC（网络接口控制器）之间衡量，与片上网络（NoC）无关。一些高性能计算（HPC）网络采用无交换机的直连拓扑（如 Torus 结构）。如图 1(b)，包括 TPUv4 和 TofuD 在内的许多系统实现了集中式 I/O 路由器以汇聚所有互连通道，从而同样隔离了片内与片外网络。然而，随着先进封装技术的发展，多个芯片可实现超高密度互连，从而打破了片内与片外的边界。如图 1(c)，多个芯粒的片内网络通过大量物理通道紧密相连。因此，在芯粒系统中，片内与片外网络必须联合设计与评估，而非独立考虑。</p>
+<p><img src="/images/CNsim/image.png" alt="alt text"></p>
+<p><strong>吞吐量（Throughput）：</strong><br>传统互连架构的一个明显瓶颈是 NIC 或 I/O 路由器。注入片外网络的流量远小于片内网络的总吞吐量。例如，两个服务器（处理器）连接至一台 64 端口 400 G 交换机，交换机的总带宽为 25.6 Tb/s，但两服务器间的通信带宽仅 400 G。对于某些工作负载（如 AI），本地吞吐量比全局吞吐量更重要。<br>借助先进封装与高速互连技术，芯粒间通信带宽可与常规交换机相当；因此，芯粒的注入/弹出带宽不再受限于集中式 NIC 或 I/O 路由器，从而显著提升网络可扩展性与总体吞吐。</p>
+<p><strong>时延（Latency）：</strong><br>芯粒组件的通信延迟远低于传统的片外交换机与链路（如 Ethernet 与 InfiniBand ），后者延迟通常达数百纳秒（甚至微秒级）。而典型片内路由器与芯粒间接口（如 UCIe ）的延迟仅为数纳秒（周期级）。因此，片内路由器的微架构对芯粒系统的整体性能影响显著。<br>同时，低延迟的芯粒间链路使得用多个廉价的芯粒间跳（hop）替代昂贵的交换机间跳成为可能，导致芯粒大规模网络可能具有更多跳数的拓扑结构。相比传统高径向（high-radix）交换网络，芯粒网络需要周期级精确建模以获得准确评估，但这种细粒度仿真往往计算量巨大。</p>
+<p><strong>共享内存 vs. 分布式内存：</strong><br>在共享内存架构中，多个处理器或核心共享同一地址空间；而在分布式内存架构中，每个处理器拥有独立私有内存。共享内存编程更方便，但硬件一致性协议对网络性能要求极高，因此现有大规模系统多采用分布式架构。<br>然而，芯粒架构的高互连性与低延迟特性使大规模共享内存系统成为可能。因此，大多数基于 MPI 的分布式并行机制并不适用于芯粒系统。共享内存架构缺乏相应的并行仿真框架，这也成为大规模芯粒网络仿真的挑战之一。</p>
+<h3 id="2-2-网络模拟器"><a href="#2-2-网络模拟器" class="headerlink" title="2.2 网络模拟器"></a>2.2 网络模拟器</h3><p>现有网络模拟器可根据仿真机制分为**周期驱动（cycle-based）<strong>与</strong>离散事件（discrete-event）**两类。BookSim高度契合路由器的真实实现。该类型模拟器可精细建模微架构，但不适合无全局时钟的大规模分布式系统。</p>
+<p>离散事件模拟器是评估大规模网络的主流方法。任何状态变化都被定义为一个事件，模拟器按时间线顺序处理所有事件。离散事件模拟器也可实现周期级精度（通过在周期粒度上生成事件），但由于需要串行处理庞大的事件队列，仿真速度较慢。</p>
+<p>并行仿真：<br>由于传统片内网络规模较小，现有周期级模拟器几乎不考虑性能优化。实际上，它们在片内网络仿真中已相当耗时。在主流的 PDES 模拟器（如 SST 、ROSS/CODES、NS-3、OMNeT++）中，系统被划分为多个 MPI 节点，依靠 MPI 通信实现同步。然而，分布式内存集群对多数研究者不可用，且 MPI 机制并不适合芯粒的共享内存系统。因此，**超线程（hyper-threading）**成为并行仿真大规模芯粒网络的更优选择。</p>
+<p>并行策略：<br>网络中的多个组件可采用不同方式并行化。常见方法是网络并行化（network parallelism），即多线程并行处理多个子网络或路由器。这种方式虽直观，但存在两大局限：<br>（1）每个路由器线程与其相邻路由器存在资源依赖与竞争，导致严重的线程冲突；<br>（2）单个路由器内的多物理/虚拟通道以及多个数据包通常顺序处理，限制了高径向、大缓冲路由器的并行性。<br>因此，本文提出一种新的策略——<strong>数据包并行（packet parallelism）</strong>，以实现更高效的并行仿真。</p>
+<h3 id="2-3-BookSim-性能剖析"><a href="#2-3-BookSim-性能剖析" class="headerlink" title="2.3 BookSim 性能剖析"></a>2.3 BookSim 性能剖析</h3><p>BookSim 为例， 函数 IQRouter::_InternalStep() 占据了主要运行时间——它在每个仿真周期、每个路由器上被调用一次。进一步分析发现，大部分时间用于资源分配（即虚拟通道与交换分配）。BookSim 维护了一个 vector&lt;vector<srequest>&gt; 类型的“请求者–提供者”映射表，用于轮询分配资源。频繁的索引、删除与插入操作严重影响性能。</srequest></p>
+<p>既然分配策略并非主要研究对象，减少相关仿真开销以支持更大规模的芯粒网络评估就显得必要。<br>因此，作者提出采用实现友好的分配策略与更高效的仿真机制：若可直接将空闲资源分配给当前请求者，而无需集中管理所有请求，仿真速度可显著提升。</p>
+<p>若所有请求按到达顺序处理，即自然形成先来先服务（First-Come-First-Serve, FCFS）策略。维护大量到达顺序队列虽复杂，但我们可以简化为按注入顺序维护数据包队列（packet queue），即**先注入先服务（First-Inject-First-Serve）**策略。</p>
+<h2 id="3-CNSim"><a href="#3-CNSim" class="headerlink" title="3. CNSim"></a>3. CNSim</h2><h3 id="3-1-以数据包为中心的仿真"><a href="#3-1-以数据包为中心的仿真" class="headerlink" title="3.1 以数据包为中心的仿真"></a>3.1 以数据包为中心的仿真</h3><p><img src="/images/CNsim/image-1.png" alt="alt text"></p>
+<p>如图 2 所示，我们提出一种新的数据包中心架构，结合了周期驱动与离散事件两类模拟器的优势。以注入时间为顺序维护一个数据包队列，并在每个周期按顺序更新所有数据包。存储在每个数据包中的状态包括：路由结果、已分配的缓冲、交换机仲裁状态、各个 flit 的传输轨迹以及必要的统计信息。</p>
+<p><img src="/images/CNsim/image-2.png" alt="alt text"></p>
+<p>算法 1 展示了更新流程：每个数据包在每个周期依据网络状态被更新一次。一次更新等价于在离散事件模拟器中处理一串事件：路由、VC 分配、交换分配、链路穿越与 flit 传输。</p>
+<p>正如第 §2.3 所述，仲裁建模仍有改进空间。数据包中心架构可以直接且高效地实现**先注入先服务（FIFS, First-Inject-First-Serve）**策略。图 2 中，流量管理器注入的数据包被追加到队列尾部；到达目的地的数据包被移除，且不改变其余数据包的顺序。由于单线程模拟器在每个周期顺序处理队列，只要将可用资源直接分配给当前请求者，就能自然实现 FIFS。如此一来，复杂的“请求—资源”映射管理成本得以消除，从而显著提升仿真速度。除 FIFS 外，也可通过为每个路由器维护一个数据包队列来实现 FCFS（先来先服务）。</p>
+<p>不过，完全的实时资源管理可能引入处理顺序导致的偏差：例如，若较早的数据包在本周期直接释放了其占用的资源（如物理链路），较晚的数据包可能在同一周期获得该资源，这与硬件机制不符。为此，我们仍会记录关键资源（如物理链路），并在所有数据包处理完成后再统一更新这些资源的状态。这可视作周期级同步，是保证仿真精度所必需的。该数据包中心架构与周期级同步也天然兼容后续的超线程并行仿真。</p>
+<h3 id="3-2-数据包并行仿真"><a href="#3-2-数据包并行仿真" class="headerlink" title="3.2 数据包并行仿真"></a>3.2 数据包并行仿真</h3><p>常用的网络并行存在局限，因此我们提出新的数据包并行策略以并行处理数据包。如图 3 所示，将数据包队列视作所有工作线程共享的任务池。每个工作线程依次从队列中抓取一个或少量数据包进行处理。完成一轮并行处理后，大多数数据包的状态已更新；但对于那些改动了关键资源（包括缓冲和链路）的数据包，会被打上特殊标记。随后由主线程执行必要的同步操作，包括更新链路状态并移除已完成的数据包。</p>
+<p><img src="/images/CNsim/image-3.png" alt="alt text"></p>
+<p>数据包并行的一大优势在于：单个数据包与其他数据包发生资源竞争的概率较低。例如，在同一台路由器内，只有各输入队列的队首数据包会相互竞争。因此，由超线程带来的开销与偏差可忽略。</p>
+<p>我们采用基于原子操作的机制：以牺牲部分仲裁一致性为代价，避免频繁同步、加速并行。共享资源（缓冲、链路）用原子变量表示，线程中最先成功修改原子变量的数据包赢得竞争。也就是说，用线程竞争来决定资源分配，取代手写的集中式仲裁逻辑。</p>
+<p>多线程不一致性。 相比单线程仿真，多线程不再严格遵循先注入先服务，而是近似遵循，因多线程随机性，后注入的数据包也可能在竞争中先获配。此外，缓冲获取/释放次序的不确定性可能导致一个 flit 的缓冲浪费。不过，由于数据包仍按注入顺序派发给各线程，早期数据包更有可能赢得竞争。另一个潜在问题是饥饿与性能影响，但由于线程竞争具有随机性，永久饥饿不可能发生。</p>
+<p>数据包并行可以与网络并行结合。对于 FCFS 策略，可为每个路由器维护一个队列，工作线程可并发处理不同队列中的数据包。当线程数很多时，对各队列下一份任务（队首包）的竞争会变得激烈。为避免队首竞争成为瓶颈，每个线程每次可以抓取多个数据包。但这种“多发射（multiple-issue）”会加剧仲裁不一致。</p>
+<h3 id="3-3-异构路由器与链路"><a href="#3-3-异构路由器与链路" class="headerlink" title="3.3 异构路由器与链路"></a>3.3 异构路由器与链路</h3><p>在传统片上网络中，链路通常是同质的（1 flit/周期）；因此，现有周期级模拟器也将所有路由器与链路配置为统一的时延与带宽。然而，芯粒间链路与片上链路不同，且一个芯粒可能具备多种片外接口。受链路异构性影响，芯粒上的路由器也呈现异构。这一直是现有周期级模拟器缺失的建模能力。</p>
+<p>在 CNSim 中，我们用统一模型构建各种不同的路由器与链路，并在仿真时对每个对象单独配置。如图 4 所示，CNSim 实现了可变宽度 FIFO与虚拟流水级（virtual pipeline stages），以统一地建模异构路由器与链路。对于带宽为 m flits/周期、时延为 n 周期的链路，输入缓冲队首最多 m 个 flit 可被传送至下一跳；完成一次传输共需 n 个虚拟流水级。非整数时延直接近似为整数；非整数带宽通过交替传送整数个 flit 来实现，例如 1.5 flits/周期 可通过第一周期传 2 个、下一周期传 1 个来近似。</p>
+<p>此外，CNSim 还兼容两种新近提出的异构接口实现：heteroPHY 与 hetero-channel。</p>
+<p><img src="/images/CNsim/image-4.png" alt="alt text"></p>
+<h3 id="3-4-其他重要特性与取舍"><a href="#3-4-其他重要特性与取舍" class="headerlink" title="3.4 其他重要特性与取舍"></a>3.4 其他重要特性与取舍</h3><p>剔除不关键的流水阶段。 如图 5，典型的周期级网络模拟器通常建模路由器的所有电路级流水：输入排队（IQ）、路由计算（RC）、虚拟信道分配（VA）、交换分配（SA）、交换穿越（ST）与链路穿越（LT）。其中真正影响整体性能的是那些存在资源竞争并会造成流水停顿的阶段。例如，某输入端口成功获得交换资源会阻塞其他同向请求。为加速仿真，我们只保留 RC、VA、SA、LT 四个核心阶段；其他阶段因为不会导致流水停顿而被省略。比如，获得输出端口的数据包会直接通过链路发送，而不再显式经历交换穿越与输出排队；平滑传输由 VC/交换/链路的分配共同保证。</p>
+<p>缓存重复路由计算的结果。 路由计算在仿真中耗时显著，尤其在自适应路由与复杂分层拓扑下。完整路由表难以使用：n 个节点的表规模为 O(n²)，内存开销过大。权衡之下，我们缓存部分重复计算的结果。以 Dragonfly 拓扑为例，缓存任意两组之间的全局通道，以及同组内任意两路由器之间的本地通道。通过缓存，内存使用有所增加，但仿真速度显著提升。§3.5.2 的验证实验表明，部分缓存带来的内存开销并不显著。</p>
+<p><img src="/images/CNsim/image-5.png" alt="alt text"></p>
+<p>集成真实工作负载轨迹。 CNSim 支持多种流量模式，包括 permutation 流量与 AllReduce 模式。为更贴近真实负载分析网络性能，CNSim 还支持两类典型轨迹：<br>1）共享内存工作负载轨迹（具有周期级时间戳）。Netrace 来自 64 核 M5 模拟系统，运行 PARSEC v2.1 多线程应用。每条轨迹记录 inject_cycle、bus_name、src_port_id、dst_port_id 与 msg_type（消息大小）。借助周期级轨迹，评估结果更具说服力。<br>2）分布式内存工作负载轨迹（无时间戳）。轨迹包含按生成顺序排列的消息列表（源—目的）。通过调节注入速率即可评价其性能。</p>
+<h2 id="4-验证"><a href="#4-验证" class="headerlink" title="4. 验证"></a>4. 验证</h2><p>CNSim 由 C++ 实现，并与三款典型的周期级精确模拟器进行对比验证：BookSim、Garnet 和 OMNeT++。<br><img src="/images/CNsim/image-6.png" alt="alt text"></p>
+<h3 id="4-1-实现与性能仿真"><a href="#4-1-实现与性能仿真" class="headerlink" title="4.1 实现与性能仿真"></a>4.1 实现与性能仿真</h3><p>CNSim 所实现的路由器微架构为典型的输入队列虚拟信道路由器（Input-Queued VC Router），与多数周期级模拟器一致，但实现细节略有不同：例如，Garnet 采用两级流水线，BookSim 为四级流水线，OMNeT++ 基于事件驱动而非周期驱动，因此无固定的时钟周期；CNSim 可根据配置采用单级或多级流水。</p>
+<p>各模拟器的网络性能通过时延–注入率曲线（latency–injection curve）评估。采用二维 Mesh 拓扑与维度序（XY）路由，网络规模为 4×4 与 8×8。关键参数：数据包大小 5 flits，缓冲深度 4 packets，每个端口 2 个 VC，其余保持默认。流量模式为均匀随机（uniform random），每组实验运行 10K 周期。</p>
+<p>如图 6 所示，CNSim 的模拟结果与 Garnet 接近，并优于 BookSim。这是因为 BookSim 严格模拟了四级电路流水，细粒度高但效率低；而 CNSim 与 Garnet 采用更高效的路由器模型，虽未完全反映电路级细节，但性能表现更接近真实趋势。</p>
+<h3 id="4-2-仿真速度与内存使用"><a href="#4-2-仿真速度与内存使用" class="headerlink" title="4.2 仿真速度与内存使用"></a>4.2 仿真速度与内存使用</h3><p><img src="/images/CNsim/image-7.png" alt="alt text"></p>
+<p>如图 7(a)，在 4×4 2D-Mesh 拓扑下，单线程 CNSim 比现有周期级模拟器快 14 倍以上。对于小规模网络，无需启用超线程。如图 7(b)，在 16K 节点 Dragonfly 拓扑下，单线程 CNSim 仍比 BookSim 快约 4 倍；开启 8 线程后，CNSim 进一步获得 3× 超线程加速，整体约为 BookSim 的 11 倍。</p>
+<p>如图 8 所示，在注入率 0.1–0.6 flits/周期/节点下，CNSim 的堆内存消耗为 131.7MB 至 297.5MB；相比之下，BookSim 的消耗为 586.2MB 至 1.1GB。正比；此外，网络状态与部分缓存路由表占用固定空间。当网络高负载（如 0.6 flits/周期/节点）时，数据包数量增多，内存使用上升。</p>
+<p>尽管如此，CNSim 的内存消耗仍显著低于 BookSim，因为 CNSim 不维护复杂的“请求映射表”。</p>
+<h3 id="4-3-并行性与不一致性"><a href="#4-3-并行性与不一致性" class="headerlink" title="4.3 并行性与不一致性"></a>4.3 并行性与不一致性</h3><p>CNSim 可在任意多核 CPU 上实现超线程并行仿真，且无需额外编程开销。我们在 1K 与 16K 节点的 Dragonfly 拓扑上评估 CNSim 的并行加速效果。注入率设为 0.5 flits/周期/节点，仿真时间为 100K 周期。每个线程每次从数据包队列中提取 1、10 或 100 个数据包进行处理。</p>
+<p><img src="/images/CNsim/image-8.png" alt="alt text"></p>
+<p>如图 9 所示，小规模网络的并行收益有限：在 1K 节点 Dragonfly 中，使用 32 线程、100-issue 配置可节省约 50% 的运行时间。但对于大规模网络，多线程带来显著加速：在 16K 节点下，4 线程与 32 线程的 100-issue CNSim 分别比单线程快 3 倍与 5 倍。</p>
+<p>相比单次提取（single-issue），**多次提取（multiple-issue）**减少了线程间竞争，从而获得更佳加速。对 Dragonfly 拓扑而言，每次提取少量数据包已足够，再增加 issue 数提升有限。若单个数据包的处理时间更短（如更简单的拓扑或路由），则可适当增加 issue 数。</p>
+<p>如 §3.2 所述，超线程与多发射在无严格同步时可能引入不一致性。为此，我们在相同的 Dragonfly 网络上评估 CNSim 的并行不一致性。测量单线程与多线程仿真的平均时延差异。所有实验使用相同的随机数种子（即相同的注入顺序与时间），以消除随机偏差。</p>
+<p><img src="/images/CNsim/image-9.png" alt="alt text"></p>
+<p>如图 10 所示，多线程带来的时延偏差在大多数情况下小于 0.2%。当流量负载较高时，不一致性略增，但仍低于 0.5%。在 1K 节点网络中，增加 issue 数可能略微恶化一致性；而在 16K 节点网络中，不一致性不再明显受 issue 数影响，因为在大规模网络中，数据包分布更广，**反向分配（inverted allocation）**的概率更低（详见附录 D）。</p>
+<p>总体而言，使用 10-issue 与 16 线程 的配置可在保证高一致性的同时，实现显著的仿真加速。</p>
+<h2 id="5-芯粒网络评估"><a href="#5-芯粒网络评估" class="headerlink" title="5. 芯粒网络评估"></a>5. 芯粒网络评估</h2><h3 id="5-1-基于异构链路的网络"><a href="#5-1-基于异构链路的网络" class="headerlink" title="5.1 基于异构链路的网络"></a>5.1 基于异构链路的网络</h3><p>在此前的实践中，我们遇到两类现实难题：<br>1）现有模拟器无法模拟芯粒网络的异构性；<br>2）仿真速度过慢，难以评估大规模芯粒网络（如 Dragonfly）。<br>CNSim 克服了这些局限，使得高效且准确的评估成为可能。本章对两类典型芯粒网络进行大规模评估：<br>1）异构链路的 2D-mesh/torus，并使用数十亿条 PARSEC 轨迹；<br>2）大规模芯粒化 Dragonfly，节点数达数万级。<br>在剔除无效与未展示的实验后，本章展示的评估共模拟约 5000 亿周期与 200 亿个数据包。总仿真用时 20+ 小时；若使用其他模拟器预计需 200+ 小时。</p>
+<p>如图 11(b)(c)，2D-mesh 与 2D-torus 是两类典型的芯粒网络拓扑。所有链路由两参数配置：带宽（B）与时延（L）。片上链路带宽为 1 flit/周期、时延 1 周期。对芯粒网络，我们设置两种 Die-to-Die 方案：</p>
+<p>低时延并行链路：B=1，L=2；</p>
+<p>高带宽串行链路：B=2，L=4。</p>
+<p>2D-mesh 采用两种路由：维度序（XY）与基于 Duato 协议的负优先自适应路由（NFR）；2D-torus 采用 CLUE 路由算法 。在芯粒化 2D-torus 中使用异构链路：相邻 die-to-die 链路配置为（B=2, L=4），环回（wraparound）die-to-die 链路配置为（B=2, L=4）。（按论文原文如是配置）评估包括均匀流量与 PARSEC 轨迹，默认参数见表 2。</p>
+<p>对于均匀流量，在不同注入率下测量平均时延；对于 PARSEC 轨迹，链路宽度设为 16 Bytes（即最大包为 5 flits），所有消息均按轨迹时间戳注入，即使产生排队也不违背时间戳。</p>
+<p><img src="/images/CNsim/image-10.png" alt="alt text"></p>
+<p>均匀流量模式。 在 2D-mesh 上使用 XY 路由。图 12 展示了小规模（4×4）与大规模（8×8）网络的结果。低负载下，die-to-die 链路的时延直接决定平均包时延，但对饱和吞吐影响不大。链路带宽对小规模网络的吞吐有影响，但对大规模网络影响可忽略。原因是：小规模网络里，随机消息有相当比例发生在芯片边界相邻节点之间，能充分吃满 die-to-die 链路带宽；而在大规模网络中，多数随机消息是长距离、跨芯粒的，在片上链路处拥塞，因此位于 2D-mesh 中部的高带宽串行链路并不优于低时延并行链路。</p>
+<p>串行链路的真正优势是可实现环回链路以缩短距离。采用异构链路的 2D-torus 在大小规模网络上都实现了更低时延与更高吞吐，因为其直径更小且二分带宽更大。这些结果与理论分析一致，并给出了周期级的定量验证。</p>
+<p><img src="/images/CNsim/image-11.png" alt="alt text"></p>
+<p>PARSEC 轨迹。 如图 13，对 8×8 大规模网络的不同配置进行评估。结果表明，高带宽串行链路并无收益，因为瓶颈在片上链路（与均匀流量一致）。对某些负载（如 Black–Scholes、Fluidanimate），确定性的 XY 路由会产生严重拥塞，平均时延远高于静态网络直径；若采用自适应路由，所有负载的平均时延均显著降低。采用 CLUE 的异构链路 2D-torus在所有负载上都实现了最低平均时延，几乎完全消除了网络瓶颈。整个 PARSEC 轨迹包含 1000+ 亿周期与 30 亿条消息；每轮实验（含部分未展示）约运行 2 小时，效率较高。</p>
+<h3 id="5-2-芯粒化-Dragonfly"><a href="#5-2-芯粒化-Dragonfly" class="headerlink" title="5.2 芯粒化 Dragonfly"></a>5.2 芯粒化 Dragonfly</h3><p>传统 Dragonfly 通过使用高径向（high-radix）交换机实现高可扩展性，但高带宽/高径向交换机昂贵且引入额外时延与功耗；同时，终端与交换机间的单一物理通道严重限制本地吞吐。</p>
+<p>借助先进封装（如 InFO-SoW），可将多芯片大规模高密度集成。如图 14，Dragonfly 可无交换机（switch-less）实现：以封装内 2D-mesh连接节点（芯粒）构成chiplet-group，其功能等价于传统 Dragonfly 的“交换机”；各 chiplet-group 再按传统 Dragonfly 的组间连接方式互联。由此构建的芯粒化 Dragonfly无需额外交换机。</p>
+<p><img src="/images/CNsim/image-12.png" alt="alt text"></p>
+<p>在传统交换机版 Dragonfly 中，本地吞吐与全局吞吐均受限于1 flit/周期/芯片（交换机端口带宽）。而在芯粒化 Dragonfly 中，芯片间通过多条物理通道互联，突破交换机瓶颈。一个潜在瓶颈在于 chiplet-group 的总二分带宽。</p>
+<p>基线为标准交换机版 Dragonfly。交换机的终端、本地、全局端口比例为：radix-16：4:7:5，radix-32：8:15:9。对应的组数与芯片数分别为 (41 组, 1312 芯片) 与 (145 组, 18560 芯片)。在芯粒化 Dragonfly 中，本地与全局端口数量与交换机版保持一致。<br>在真实系统中，交换机间跳数的时延远高于芯粒间跳数；但在仿真中，我们配置外部链路时延以维持相近的网络直径。默认参数见表 2，更多配置细节见源码。仅使用最短路由（minimal routing）；误路由等细节超出本文范围。</p>
+<p>工作负载。 两类网络负载：<br>（1）单播流量模式：评估均匀与其他置换模式；<br>（2）集合通信模式：评估双向环的 AllReduce</p>
+<p><img src="/images/CNsim/image-13.png" alt="alt text"><br><img src="/images/CNsim/image-14.png" alt="alt text"></p>
+<h4 id="1-本地（交换机内-组内）性能"><a href="#1-本地（交换机内-组内）性能" class="headerlink" title="1. 本地（交换机内 / 组内）性能"></a>1. 本地（交换机内 / 组内）性能</h4><p>交换机版 Dragonfly 的吞吐受限于连接终端与交换机的单一物理通道（1 flit/周期/芯片）；而芯粒化 Dragonfly 通过多物理通道突破瓶颈。图 15 显示，芯粒化 Dragonfly 的本地吞吐显著优于交换机版。</p>
+<p>评估中将 Dragonfly 通道时延设为 8 周期。随着规模增大，芯粒 mesh 的静态时延随直径增大而上升；但在真实系统里，交换机—交换机跳远比芯粒—芯粒跳昂贵。结论：芯粒化 Dragonfly 通过消除交换机瓶颈，可获得更好的组内性能。</p>
+<h4 id="2-组内（intra-group）性能"><a href="#2-组内（intra-group）性能" class="headerlink" title="2. 组内（intra-group）性能"></a>2. 组内（intra-group）性能</h4><p>对 41 组的 Dragonfly 进行评估。图 16 显示，除 bit-shuffle 模式外，芯粒化网络的饱和注入率均高于交换机版。由于注入/弹出带宽不再受限于终端—交换机的单通道，性能更高。尤其在 uniform 与 bit-transpose 模式下，饱和注入率超过 1。若瓶颈不在交换机处（如图 16(c) 的 bit-shuffle），两者表现相近。</p>
+<h4 id="3-全局性能"><a href="#3-全局性能" class="headerlink" title="3. 全局性能"></a>3. 全局性能</h4><p>如图 17，对两种规模的网络进行对比。在小规模（41 组）下，不改变组内带宽时，芯粒化 Dragonfly 与交换机版表现相近；而在大规模（145 组）下，如 §4.2.2 所述，大尺寸 2D-mesh 组成为瓶颈，芯粒化 Dragonfly 表现欠佳。若将组内带宽提高到 2 flits/周期/芯片，瓶颈即可消除。现实系统中，提升芯粒间链路带宽远易于提升交换机间链路带宽，因此这是合理做法。<br>在大规模 Dragonfly 上，仿真 1 万周期、注入率 0.5 意味着 2300 万个 4-flit 数据包；每轮从低负载到饱和的实验约 15 分钟，效率较高。</p>
+<h4 id="4-AllReduce-性能"><a href="#4-AllReduce-性能" class="headerlink" title="4. AllReduce 性能"></a>4. AllReduce 性能</h4><p>基于环的 AllReduce 并不重载，因为每个芯片（进程）只向相邻芯片发送数据。图 18 表明，交换机版 Dragonfly 的吞吐被交换机1 flit/周期/芯片所限；芯粒化 Dragonfly 因无交换机瓶颈，吞吐可显著提高。小规模与大规模网络首次出现超时包时的注入率分别为 1.3 与 1.5 flits/周期/芯片。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Chiplet/" rel="tag"># Chiplet</a>
+              <a href="/tags/MCM/" rel="tag"># MCM</a>
+              <a href="/tags/routing/" rel="tag"># routing</a>
+              <a href="/tags/NOC/" rel="tag"># NOC</a>
+              <a href="/tags/simulator/" rel="tag"># simulator</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/10/23/Scalable-methodology/" rel="prev" title="Scalable methodology">
+                  <i class="fa fa-angle-left"></i> Scalable methodology
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
