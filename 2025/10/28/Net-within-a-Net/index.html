@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture 1. High-Radix Router Microarchitecture 1.1 “网络中的网络”交换结构      Network within a Network Approach to Create a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Net within a Net">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/10/28/Net-within-a-Net/index.html">
+<meta property="og:site_name" content="Non si finisce mai di imparare">
+<meta property="og:description" content="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture 1. High-Radix Router Microarchitecture 1.1 “网络中的网络”交换结构      Network within a Network Approach to Create a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Net-within-a-Net/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Net-within-a-Net/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Net-within-a-Net/image-2.png">
+<meta property="article:published_time" content="2025-10-28T13:15:41.000Z">
+<meta property="article:modified_time" content="2025-10-28T15:45:15.403Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="High-Radix">
+<meta property="article:tag" content="Microarchitecture">
+<meta property="article:tag" content="Router">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/Net-within-a-Net/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/10/28/Net-within-a-Net/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/10/28/Net-within-a-Net/","path":"2025/10/28/Net-within-a-Net/","title":"Net within a Net"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Net within a Net | Non si finisce mai di imparare</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Non si finisce mai di imparare</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><span class="nav-number">1.</span> <span class="nav-text">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-High-Radix-Router-Microarchitecture"><span class="nav-number">1.1.</span> <span class="nav-text">1. High-Radix Router Microarchitecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E2%80%9C%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E2%80%9D%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 “网络中的网络”交换结构</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/28/Net-within-a-Net/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Net within a Net | Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Net within a Net
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-28 21:15:41 / 修改时间：23:45:15" itemprop="dateCreated datePublished" datetime="2025-10-28T21:15:41+08:00">2025-10-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#network-within-a-network-approach-to-create-a-scalable--high-radix-router-microarchitecture">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</a><ul>
+<li><a href="#1-high-radix-router-microarchitecture">1. High-Radix Router Microarchitecture</a><ul>
+<li><a href="#11-%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84">1.1 “网络中的网络”交换结构</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><a href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture" class="headerlink" title="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture"></a>Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</h1><p>高径数路由器的一个关键挑战在于如何构建可扩展的路由器微结构。这些大规模网络的成本主要由电缆决定，而性能通常受限于片外通道（off-chip channel）带宽。因此，路由器微结构必须合理扩展，以确保片外带宽得到充分利用，同时内部结构不会成为瓶颈。</p>
+<p>遗憾的是，传统的由单个交叉开关（crossbar switch）组成的标准路由器结构随径数 k 增大而扩展不佳，因为其分配复杂度与 k² 成正比，而交叉开关连线的扇出（fanout）随 k 线性增长。为克服这些限制，Kim 等人提出了分层交叉开关结构（hierarchical crossbar switch organization），并将其应用于 YARC 路由器。该方法将单个大型交叉开关划分为多个小交叉开关或子交换单元（subswitch），并在子交换单元的输入和输出端放置中间缓冲区。这样可以降低分配复杂度，同时减少每个输入端口驱动的输出端口数量，相较于传统交叉开关更为高效。</p>
+<p>然而，YARC 路由器设计由于需要过多的连线（如第 3.1 节所述），其可扩展性仍然受限。本文提出了一种替代性可扩展路由器微结构，利用局部网络（local network），并借鉴高径数拓扑（如 folded-Clos 和 HyperX ）的思想，将其应用于高径数路由器的交换设计中。我们在每个路由器内部创建一个片上网络（on-chip network），用于连接路由器的各个交换端口，然后通过这些路由器互连形成全局网络，从而实现一种“网络中的网络”的可扩展交换结构设计方法。</p>
+<p><img src="/images/Net-within-a-Net/image.png" alt="alt text"></p>
+<p>与分层交叉开关设计相比，这些基于网络的交换结构所需的全局连线、交叉开关和中间缓冲区更少，因此在面积和能耗效率上都有显著提升。此外，由于局部网络嵌套在全局网络之中，我们能够利用全局网络在各个路由器上表现出的流量特征来简化局部交换结构。此外，我们还提出了一种新的拓扑感知型（topology-aware）交换设计，称为双向蝶形（bilateral butterfly），用于折叠 Clos 全局网络中的局部网络。</p>
+<h2 id="1-High-Radix-Router-Microarchitecture"><a href="#1-High-Radix-Router-Microarchitecture" class="headerlink" title="1. High-Radix Router Microarchitecture"></a>1. High-Radix Router Microarchitecture</h2><p>先描述先前提出的用于高径数路由器的分层交换结构及其局限性，然后介绍一种基于网络的替代交换设计，从而形成一种“网络中的网络”的组织方式。在整个工作中，我们将单个路由器内部使用的网络称为局部网络（local network），而将连接这些路由器组成系统级网络的称为全局网络（global network）。</p>
+<p>分层路由器组织结构将一个单一的 k×k 交换机划分为 (k&#x2F;p)² 个 p×p 子交换机，其中 k 是路由器的径数，p 是子交换机的径数。该分层结构在每个子交换机的输入与输出端引入了 2k²&#x2F;p 个中间缓冲区（或称子交换缓冲区）。中间缓冲区将输入和输出仲裁过程解耦，从而避免了全局仲裁，使仲裁过程本地化。图 3 展示了一个分层交叉开关结构的布局示例，其中 k &#x3D; 16，p &#x3D; 4。</p>
+<p><img src="/images/Net-within-a-Net/image-1.png" alt="alt text"></p>
+<p>分层交叉开关由 k 条水平广播通道（row buses）和 k² × (k&#x2F;p) 条垂直通道组成，因为每一列中的所有输出端口都与同列的所有列缓冲区完全连接。这些水平和垂直通道需要使用全局连线，其面积按比例增长为：k×pk2×k​&#x3D;2pk3​。我们设置 p &#x3D; √k。因此，当 k 很大时，水平和垂直连线的面积成为主导因素，按 k²·⁵ 的速率增长。子交换缓冲区的数量也按 k²&#x2F;p &#x3D; k¹·⁵ 的速率超线性增长。这些因素共同导致分层交换机在面积和功耗扩展方面效率低下。因此，我们探索一种基于不同多级网络的替代交换结构，以实现更具可扩展性的设计。</p>
+<h3 id="1-1-“网络中的网络”交换结构"><a href="#1-1-“网络中的网络”交换结构" class="headerlink" title="1.1 “网络中的网络”交换结构"></a>1.1 “网络中的网络”交换结构</h3><p>探索基于网络拓扑的交换机微结构设计，创建一种“网络中的网络”（network within a network）式的交换架构，也称为网络交换结构（network switch architecture）。在这种设计中，一个交换机由多个子交换机构成，这些子交换机通过内部点对点通道互联。每个子交换机都是输入缓冲型的，从而使仲裁仅限于子交换机内部，类似于分层交换结构的思想。</p>
+<p><strong>对于局部网络，我们重点研究三种不同的拓扑：折叠 Clos（folded-Clos）、二维环形（2D torus） 和二维 HyperX。当然，也可以使用其他拓扑，如二维网格（2D mesh）或树形（tree-based）拓扑，但它们分别会引入非均匀性（如网格）或带宽瓶颈（如树形结构），因此不适合作为局部网络。</strong></p>
+<p>由于片外带宽在大规模系统中是昂贵资源，必须被充分利用，因此局部网络不能成为性能瓶颈。</p>
+<p><img src="/images/Net-within-a-Net/image-2.png" alt="alt text"></p>
+<p><strong>将所有交换结构配置为在给定路由器径数 k 下具有相同的聚合片外带宽。</strong> 采用以下指标进行比较：交换机中的缓冲区与交叉点（crosspoints）数量；聚合扇出；总交换面积。每个交叉点和缓冲区均由晶体管实现，即使在无活动时也消耗静态功率，因此更多的交叉点和缓冲区意味着更高的静态功耗。聚合扇出影响动态能耗，因为更高的扇出需要更大的晶体管驱动，导致更高的动态能耗。</p>
+<p>对于折叠二维环形结构, 该网络具有 $4\sqrt{k}$ 条穿越中截面（bisection）的通道，因此每条内部通道的带宽需为：$\frac{k}{4\sqrt{k}} &#x3D; \frac{\sqrt{k}}{4}$ 倍于连接 I&#x2F;O 端口的外部通道带宽。假设每个子交换机保留一个端口用于 I&#x2F;O 端口，一个逻辑内部通道由 √k&#x2F;4 条物理通道组成，因此子交换机的径数为：$\frac{\sqrt{k}}{4} \times 4 + 1 &#x3D; \sqrt{k} + 1$。采用 Valiant 路由算法，其平均跳数为 √k。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/High-Radix/" rel="tag"># High-Radix</a>
+              <a href="/tags/Router/" rel="tag"># Router</a>
+              <a href="/tags/Microarchitecture/" rel="tag"># Microarchitecture</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/10/28/Micro-high-radix-router/" rel="prev" title="Micro high radix router">
+                  <i class="fa fa-angle-left"></i> Micro high radix router
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
