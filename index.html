@@ -255,7 +255,7 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -266,7 +266,7 @@ mjx-container[display="true"] + br {
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -283,6 +283,303 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/28/Micro-high-radix-router/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/28/Micro-high-radix-router/" class="post-title-link" itemprop="url">Micro high radix router</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-28 20:33:48 / 修改时间：21:02:07" itemprop="dateCreated datePublished" datetime="2025-10-28T20:33:48+08:00">2025-10-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#%E4%B8%80%E6%97%A9%E6%9C%9F%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E4%B8%8Ehop-count%E6%9C%80%E5%B0%8F%E5%8C%96">一、早期设计理念与Hop Count最小化</a></li>
+<li><a href="#%E4%BA%8C%E7%8E%B0%E4%BB%A3%E7%BD%91%E7%BB%9C%E5%BB%B6%E8%BF%9F%E6%A8%A1%E5%9E%8B">二、现代网络延迟模型</a></li>
+<li><a href="#%E4%B8%89%E6%9C%80%E4%BC%98radix%E7%9A%84%E6%8E%A8%E5%AF%BC">三、最优radix的推导</a></li>
+<li><a href="#%E5%9B%9B%E6%8A%80%E6%9C%AF%E8%BF%9B%E6%AD%A5%E6%8E%A8%E5%8A%A8radix%E4%B8%8A%E5%8D%87">四、技术进步推动radix上升</a></li>
+<li><a href="#%E4%BA%94%E6%88%90%E6%9C%AC%E5%92%8C%E5%8A%9F%E8%80%97%E9%9A%8Fradix%E4%B8%8A%E5%8D%87%E8%80%8C%E4%B8%8B%E9%99%8D">五、成本和功耗随radix上升而下降</a></li>
+<li><a href="#%E5%90%8E%E7%BB%AD%E7%AB%A0%E8%8A%82">后续章节：</a></li>
+<li><a href="#-%E6%80%BB%E4%BD%93%E7%BB%93%E8%AE%BA">✅ 总体结论</a></li>
+<li><a href="#-%E4%BD%9C%E8%80%85%E6%8F%90%E5%87%BA%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E5%88%86%E5%B1%82%E4%BA%A4%E5%8F%89%E5%BC%80%E5%85%B3hierarchical-crossbar">🌟 作者提出的解决方案：<strong>分层交叉开关（Hierarchical Crossbar）</strong></a></li>
+</ul>
+<p>总结</p>
+<h3 id="一、早期设计理念与Hop-Count最小化"><a href="#一、早期设计理念与Hop-Count最小化" class="headerlink" title="一、早期设计理念与Hop Count最小化"></a>一、早期设计理念与Hop Count最小化</h3><p>早期的互连网络（如Butterfly和Hypercube）追求<strong>最小跳数（hop count）</strong>，因为这有助于降低延迟。在当时的封装条件下，<strong>低radix（端口数少）的路由器延迟更低</strong>。</p>
+<h3 id="二、现代网络延迟模型"><a href="#二、现代网络延迟模型" class="headerlink" title="二、现代网络延迟模型"></a>二、现代网络延迟模型</h3><p>随着技术演进，考虑的因素更多，网络延迟 $T$ 可以分为两部分：</p>
+<ul>
+<li><p><strong>头延迟 $T_h &#x3D; H \cdot t_r$</strong>：跳数 × 每跳延迟</p>
+</li>
+<li><p><strong>串行化延迟 $T_s &#x3D; L &#x2F; b$</strong>：数据包长度 ÷ 通道带宽<br>  总延迟为 $T &#x3D; H t_r + L&#x2F;b$。</p>
+</li>
+</ul>
+<p>其中：</p>
+<ul>
+<li><p>$H \approx 2 \log_k N$：hop数随radix增大而减少</p>
+</li>
+<li><p>$b &#x3D; B &#x2F; 2k$：每个通道的带宽随radix增大而减少</p>
+</li>
+</ul>
+<p>将这些代入，得到总延迟表达式：</p>
+<p>$$T &#x3D; 2 t_r \log_k N + \frac{2kL}{B}$$</p>
+<h3 id="三、最优radix的推导"><a href="#三、最优radix的推导" class="headerlink" title="三、最优radix的推导"></a>三、最优radix的推导</h3><p>对上式对 $k$ 求导，得到使延迟最小的radix：</p>
+<p>$$k \log_2 k &#x3D; \frac{B t_r \log N}{L}$$</p>
+<p>这个比值称为<strong>路由器的纵横比（Aspect Ratio）</strong>，记为 $A &#x3D; \frac{B t_r \log N}{L}$。<br>含义如下：</p>
+<ul>
+<li><p>$A$ 高 → 更优的是“<strong>高而窄</strong>”的路由器（端口多、每端口带宽小）</p>
+</li>
+<li><p>$A$ 低 → 更优的是“<strong>短而宽</strong>”的路由器（端口少、带宽大）</p>
+</li>
+</ul>
+<h3 id="四、技术进步推动radix上升"><a href="#四、技术进步推动radix上升" class="headerlink" title="四、技术进步推动radix上升"></a>四、技术进步推动radix上升</h3><p>随着技术进步，路由器总带宽 $B$ 增大，处理延迟 $t_r$ 减少，纵横比 $A$ 增大，从而推动<strong>最优radix不断增大</strong>：</p>
+<ul>
+<li><p>2003年：Aspect Ratio &#x3D; 554，最优radix ≈ 40</p>
+</li>
+<li><p>2010年：Aspect Ratio &#x3D; 2978，最优radix ≈ 127</p>
+</li>
+</ul>
+<hr>
+<h3 id="五、成本和功耗随radix上升而下降"><a href="#五、成本和功耗随radix上升而下降" class="headerlink" title="五、成本和功耗随radix上升而下降"></a>五、成本和功耗随radix上升而下降</h3><ul>
+<li><p><strong>成本</strong>：主要由总带宽决定，与跳数成正比。radix增大 → hop数减少 → 成本降低</p>
+</li>
+<li><p><strong>功耗</strong>：与路由器数量成正比。radix增大 → 路由器节点数减少 → 功耗下降</p>
+<ul>
+<li>注意：虽然高radix增加仲裁复杂度，但在总功耗中影响极小</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/Micro-high-radix-router/image.png" alt="alt text"></p>
+<p>随着技术演进（带宽提高、延迟降低），互连网络的最优拓扑结构也发生了变化。传统小radix设计已不再最优，现代高性能互连网络更倾向于使用<strong>高radix、低跳数</strong>的拓扑结构，以优化延迟、降低成本和功耗。这种设计趋势已在多代超算中体现出来。</p>
+<p><strong>第3节</strong>：基线路由器架构（Baseline Router Architecture）</p>
+<p><img src="/images/Micro-high-radix-router/image-1.png" alt="alt text"></p>
+<p>本节介绍一个<strong>基础的虚拟通道（VC）路由器设计</strong>，它源自低radix路由器的结构。但随着radix（端口数）的提高，这种设计面临<strong>分配器（allocator）和连线复杂度急剧上升</strong>的问题，导致难以扩展。</p>
+<hr>
+<h3 id="后续章节："><a href="#后续章节：" class="headerlink" title="后续章节："></a>后续章节：</h3><p><img src="/images/Micro-high-radix-router/image-2.png" alt="alt text"></p>
+<p><strong>第4节</strong>：通过<strong>分布式分配器</strong>和<strong>简化VC分配逻辑</strong>来缓解复杂性，但仍存在性能瓶颈——<strong>头阻塞（head-of-line blocking）</strong>。</p>
+<p>在一个路由器里，每个输入端口可能有多个虚拟信道（VCs, Virtual Channels），每个 VC 都可能向不同的输出端口发出请求。</p>
+<ul>
+<li><p>如果基数很小，可以用一个集中式仲裁器一次性决定所有输入-输出匹配。</p>
+</li>
+<li><p>但在高基数（几十到上百个端口）时，这会导致：</p>
+<ul>
+<li><p>布线复杂度极高（每个输入都要连到所有输出仲裁器）。</p>
+</li>
+<li><p>时延过长（需要在一个时钟周期内处理成百上千个请求）。</p>
+</li>
+<li><p>芯片面积和功耗过大。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>因此，图 6 提出的是一种 分布式、可分解 (separable) 的仲裁机制。整个分配过程分为<strong>三阶段</strong>：</p>
+<h4 id="阶段1：输入仲裁（Input-Arbitration）"><a href="#阶段1：输入仲裁（Input-Arbitration）" class="headerlink" title="阶段1：输入仲裁（Input Arbitration）"></a>阶段1：输入仲裁（Input Arbitration）</h4><ul>
+<li><p>每个输入控制器内所有准备就绪的虚通道向交叉开关发出请求；</p>
+</li>
+<li><p>每个输入控制器内部先决出一个优胜虚通道；</p>
+</li>
+<li><p>该通道将其请求输出端口的编号以<strong>二进制形式</strong>，通过一组横向请求线发给本地输出仲裁器。</p>
+</li>
+</ul>
+<h4 id="阶段2：本地输出仲裁（Local-Output-Arbitration）"><a href="#阶段2：本地输出仲裁（Local-Output-Arbitration）" class="headerlink" title="阶段2：本地输出仲裁（Local Output Arbitration）"></a>阶段2：本地输出仲裁（Local Output Arbitration）</h4><ul>
+<li><p>每个本地输出仲裁器接收来自一组局部输入（如图中 $m &#x3D; 8$）的请求；</p>
+</li>
+<li><p>从中选择一个请求转发给全局输出仲裁器。</p>
+</li>
+</ul>
+<h4 id="阶段3：全局输出仲裁（Global-Output-Arbitration）"><a href="#阶段3：全局输出仲裁（Global-Output-Arbitration）" class="headerlink" title="阶段3：全局输出仲裁（Global Output Arbitration）"></a>阶段3：全局输出仲裁（Global Output Arbitration）</h4><ul>
+<li><p>全局仲裁器从所有本地仲裁器的输出中，选择一个请求获得访问对应输出端口的权限；</p>
+</li>
+<li><p>仲裁完成后，授权信号反向传播回输入端的虚通道。</p>
+</li>
+</ul>
+<p>问题：VC 分配比 switch allocation 难，因为：</p>
+<ul>
+<li>交换仲裁只关心“输出端口是否空闲”；</li>
+<li>VC 分配要知道“输出端口的哪条虚通道是否空闲”，这使得 wiring 和逻辑复杂度大幅提升。</li>
+</ul>
+<p>理论上，如果每个输入 VC 都能实时监控所有输出 VC 的状态，复杂度会是 v²k²（v&#x3D;VC 数，k&#x3D;端口数），不可实现。解决思路：两种可扩展架构:</p>
+<p><img src="/images/Micro-high-radix-router/image-3.png" alt="alt text"></p>
+<ul>
+<li><p>CVA (Crosspoint Virtual Channel Allocation)</p>
+<ul>
+<li><p>思想：在交叉点 (crosspoint) 上保存输出 VC 的状态。</p>
+</li>
+<li><p>每个 crosspoint 为输出端口的每个 VC 设置一个仲裁器（总共有 k×v 个）。</p>
+</li>
+<li><p>输入请求发到 crosspoint，本地就能决定是否分配 VC。</p>
+</li>
+<li><p>优点：实时性好，分配效率高。</p>
+</li>
+<li><p>缺点：仲裁器数量巨大，硬件开销高。</p>
+</li>
+</ul>
+</li>
+<li><p>OVA (Output Virtual Channel Allocation)</p>
+<ul>
+<li><p>思想：先完成 switch allocation（即决定了哪个输入能去哪个输出），再检查输出 VC 是否空闲。</p>
+</li>
+<li><p>好处：不需要在每个 crosspoint 部署仲裁器，硬件简单得多。</p>
+</li>
+<li><p>代价：由于要等 switch allocation 完成，VC 分配推迟，导致 更深的投机 (speculation)，性能会受损。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/Micro-high-radix-router/image-4.png" alt="alt text"></p>
+<p><strong>第5节</strong>：在<strong>交换矩阵交叉点增加缓冲区</strong>，消除头阻塞问题，但增加的缓冲区面积对芯片代价高。</p>
+<p><img src="/images/Micro-high-radix-router/image-5.png" alt="alt text"></p>
+<ul>
+<li><p>关键改动：在交叉点 (crosspoint) 增加了缓冲区。</p>
+</li>
+<li><p>效果：</p>
+<ul>
+<li><p>输入仲裁和输出仲裁解耦。输入端一旦赢得仲裁，就能直接把 flit 放到对应输出的 crosspoint buffer，不用等输出分配完成。</p>
+</li>
+<li><p>减少投机：传统设计里如果输出仲裁失败，flit 得退回输入队列再等一次仲裁；而现在它已经存在 crosspoint buffer，不会浪费之前的仲裁。</p>
+</li>
+<li><p>VC 分配也简化：因为 flit 已经绑定了输入 VC，到 crosspoint 时只需在本地做一个 v:1 仲裁，再加一个 k:1 的全局仲裁即可。</p>
+</li>
+</ul>
+</li>
+<li><p>问题：要避免 crosspoint buffer 溢出。</p>
+</li>
+<li><p>方法：用 credit-based flow control（基于信用的流控）。</p>
+<ul>
+<li><p>输入端为每个 crosspoint buffer 维护一个“空闲计数”。</p>
+</li>
+<li><p>发送 flit 时计数减一；flit 出队时返回 credit，计数加一。</p>
+</li>
+</ul>
+</li>
+<li><p>挑战：如果每个 crosspoint 单独拉一根返回线，硬件成本太高。</p>
+</li>
+<li><p>解决方案：所有 crosspoint 共享一条 credit return bus，并在总线上再做分布式仲裁。</p>
+</li>
+<li><p>结果：仿真发现这种共享总线与“理想情况（即时返回信用）”性能几乎一样，因为 flit 在输入行里本身要走 4 个周期，有足够时间等候仲裁。</p>
+</li>
+</ul>
+<p>上述提到的技术综合起来面积太大，crosspoint buffer 的存储开销随基数 k 呈二次增长，再乘以虚通道数 v，存储面积很快成为瓶颈。一个办法就是：不在 crosspoint 上为每个 VC 分独立 buffer，而是让所有 VC 共享一个 crosspoint buffer。这样存储量减少了 一个因子 v。</p>
+<p>但这样也带来了新问题 - VC 分配复杂化。同时需要在共享 buffer 情况下，flit 不能直接等在 crosspoint buffer 里，必须要有 “确认机制”，控制逻辑复杂，还增加了额外的延迟。</p>
+<p><strong>第6节</strong>：提出<strong>分层交换结构（hierarchical switch）</strong>，在保持良好性能的同时减少芯片面积。 分层交叉开关架构通过灵活调整子交换单元大小，为高radix路由器提供了一种<strong>在性能与实现成本之间取得良好平衡</strong>的解决方案。未来可以进一步探索如何与路由算法&#x2F;拓扑结构协同优化，实现系统级最优设计</p>
+<p><img src="/images/Micro-high-radix-router/image-6.png" alt="alt text"></p>
+<p><strong>架构思想</strong></p>
+<ul>
+<li><p>把一个 k 端口 crossbar 拆成若干个 p×p 子交换机 (subswitch)。</p>
+</li>
+<li><p>每个子交换机有自己的输入缓冲和输出缓冲（per-VC）。整个大 crossbar 就是由这些小 crossbar 拼成。</p>
+</li>
+<li><p>缓冲区面积缩减：因为只有子交换机边界有 buffer，总存储开销变成 O(v·k²&#x2F;p)。相比 fully buffered（O（v·k²）），大幅下降。</p>
+</li>
+</ul>
+<p><strong>控制逻辑</strong></p>
+<ul>
+<li><p>本地控制 (local)：每个子交换机只需要处理自己的输入输出情况，仲裁规模小，延迟低。</p>
+</li>
+<li><p>全局控制 (global)：在子交换机之间协调，确保 flit 能跨越整个 crossbar。</p>
+</li>
+<li><p>VC allocation 被拆成两层：</p>
+<ul>
+<li><p>子交换机内部做 local VC allocation。</p>
+</li>
+<li><p>子交换机之间做 global VC allocation。</p>
+</li>
+</ul>
+</li>
+<li><p>好处是：VC 分配失败时，flit 只会卡在子交换机缓冲，不需要 NACK 回退，也不会死锁。</p>
+</li>
+</ul>
+<h3 id="✅-总体结论"><a href="#✅-总体结论" class="headerlink" title="✅ 总体结论"></a>✅ 总体结论</h3><ul>
+<li><p>随着技术的进步，为了更高效地利用芯片带宽，<strong>高radix路由器</strong>成为趋势；</p>
+<ul>
+<li>相比于传统的少端口宽通道结构，高radix采用<strong>多端口窄通道</strong>，能更有效地降低延迟与成本。</li>
+</ul>
+</li>
+<li><p>然而，<strong>现有路由器微架构无法直接扩展到高radix</strong>：</p>
+<ul>
+<li><p><strong>直接扩展基线架构</strong>虽然设计简单，但吞吐率不到50%；</p>
+</li>
+<li><p><strong>全缓冲交叉开关（fully-buffered crossbar）在每个交叉点都设置了虚通道缓冲区，虽能接近100%吞吐，但面积和成本极高</strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="🌟-作者提出的解决方案：分层交叉开关（Hierarchical-Crossbar）"><a href="#🌟-作者提出的解决方案：分层交叉开关（Hierarchical-Crossbar）" class="headerlink" title="🌟 作者提出的解决方案：分层交叉开关（Hierarchical Crossbar）"></a>🌟 作者提出的解决方案：<strong>分层交叉开关（Hierarchical Crossbar）</strong></h3><ul>
+<li><p>性能接近全缓冲结构，但成本可接受；</p>
+</li>
+<li><p>相比基线架构，<strong>吞吐率提升20–60%</strong>；</p>
+</li>
+<li><p>相比全缓冲结构，<strong>芯片面积节省约40%</strong>；</p>
+</li>
+<li><p>分层结构不仅降低了硬件成本，还便于将控制逻辑也按层次结构组织，简化设计和实现。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -322,7 +619,7 @@ mjx-container[display="true"] + br {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-10-23 21:37:53 / 修改时间：22:53:59" itemprop="dateCreated datePublished" datetime="2025-10-23T21:37:53+08:00">2025-10-23</time>
+      <time title="创建时间：2025-10-23 21:37:53 / 修改时间：22:54:38" itemprop="dateCreated datePublished" datetime="2025-10-23T21:37:53+08:00">2025-10-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1287,105 +1584,9 @@ mjx-container[display="true"] + br {
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2024/03/16/RCA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Non si finisce mai di imparare">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Non si finisce mai di imparare">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/16/RCA/" class="post-title-link" itemprop="url">【HPCA'2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-03-16 00:08:07" itemprop="dateCreated datePublished" datetime="2024-03-16T00:08:07+08:00">2024-03-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-25 23:37:39" itemprop="dateModified" datetime="2025-09-25T23:37:39+08:00">2025-09-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/routing/" itemprop="url" rel="index"><span itemprop="name">routing</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#regional-congestion-awareness-for-load-balance-in-networks-on-chip">Regional Congestion Awareness for Load Balance in Networks-on-Chip</a><ul>
-<li><a href="#%E8%83%8C%E6%99%AF%E5%92%8C%E5%8A%A8%E6%9C%BA">背景和动机</a></li>
-<li><a href="#%E5%88%9B%E6%96%B0%E7%82%B9">创新点</a></li>
-<li><a href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0%E5%8F%8A%E7%BB%93%E8%AE%BA">实验评估及结论</a></li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/03/16/RCA/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
 
 </div>
   </main>
