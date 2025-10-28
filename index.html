@@ -322,7 +322,7 @@ mjx-container[display="true"] + br {
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-10-28 21:15:41 / 修改时间：23:45:15" itemprop="dateCreated datePublished" datetime="2025-10-28T21:15:41+08:00">2025-10-28</time>
+      <time title="创建时间：2025-10-28 21:15:41 / 修改时间：23:48:31" itemprop="dateCreated datePublished" datetime="2025-10-28T21:15:41+08:00">2025-10-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -353,22 +353,14 @@ mjx-container[display="true"] + br {
 </ul>
 </li>
 </ul>
-<h1 id="Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><a href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture" class="headerlink" title="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture"></a>Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</h1><p>高径数路由器的一个关键挑战在于如何构建可扩展的路由器微结构。这些大规模网络的成本主要由电缆决定，而性能通常受限于片外通道（off-chip channel）带宽。因此，路由器微结构必须合理扩展，以确保片外带宽得到充分利用，同时内部结构不会成为瓶颈。</p>
-<p>遗憾的是，传统的由单个交叉开关（crossbar switch）组成的标准路由器结构随径数 k 增大而扩展不佳，因为其分配复杂度与 k² 成正比，而交叉开关连线的扇出（fanout）随 k 线性增长。为克服这些限制，Kim 等人提出了分层交叉开关结构（hierarchical crossbar switch organization），并将其应用于 YARC 路由器。该方法将单个大型交叉开关划分为多个小交叉开关或子交换单元（subswitch），并在子交换单元的输入和输出端放置中间缓冲区。这样可以降低分配复杂度，同时减少每个输入端口驱动的输出端口数量，相较于传统交叉开关更为高效。</p>
-<p>然而，YARC 路由器设计由于需要过多的连线（如第 3.1 节所述），其可扩展性仍然受限。本文提出了一种替代性可扩展路由器微结构，利用局部网络（local network），并借鉴高径数拓扑（如 folded-Clos 和 HyperX ）的思想，将其应用于高径数路由器的交换设计中。我们在每个路由器内部创建一个片上网络（on-chip network），用于连接路由器的各个交换端口，然后通过这些路由器互连形成全局网络，从而实现一种“网络中的网络”的可扩展交换结构设计方法。</p>
-<p><img src="/images/Net-within-a-Net/image.png" alt="alt text"></p>
-<p>与分层交叉开关设计相比，这些基于网络的交换结构所需的全局连线、交叉开关和中间缓冲区更少，因此在面积和能耗效率上都有显著提升。此外，由于局部网络嵌套在全局网络之中，我们能够利用全局网络在各个路由器上表现出的流量特征来简化局部交换结构。此外，我们还提出了一种新的拓扑感知型（topology-aware）交换设计，称为双向蝶形（bilateral butterfly），用于折叠 Clos 全局网络中的局部网络。</p>
-<h2 id="1-High-Radix-Router-Microarchitecture"><a href="#1-High-Radix-Router-Microarchitecture" class="headerlink" title="1. High-Radix Router Microarchitecture"></a>1. High-Radix Router Microarchitecture</h2><p>先描述先前提出的用于高径数路由器的分层交换结构及其局限性，然后介绍一种基于网络的替代交换设计，从而形成一种“网络中的网络”的组织方式。在整个工作中，我们将单个路由器内部使用的网络称为局部网络（local network），而将连接这些路由器组成系统级网络的称为全局网络（global network）。</p>
-<p>分层路由器组织结构将一个单一的 k×k 交换机划分为 (k&#x2F;p)² 个 p×p 子交换机，其中 k 是路由器的径数，p 是子交换机的径数。该分层结构在每个子交换机的输入与输出端引入了 2k²&#x2F;p 个中间缓冲区（或称子交换缓冲区）。中间缓冲区将输入和输出仲裁过程解耦，从而避免了全局仲裁，使仲裁过程本地化。图 3 展示了一个分层交叉开关结构的布局示例，其中 k &#x3D; 16，p &#x3D; 4。</p>
-<p><img src="/images/Net-within-a-Net/image-1.png" alt="alt text"></p>
-<p>分层交叉开关由 k 条水平广播通道（row buses）和 k² × (k&#x2F;p) 条垂直通道组成，因为每一列中的所有输出端口都与同列的所有列缓冲区完全连接。这些水平和垂直通道需要使用全局连线，其面积按比例增长为：k×pk2×k​&#x3D;2pk3​。我们设置 p &#x3D; √k。因此，当 k 很大时，水平和垂直连线的面积成为主导因素，按 k²·⁵ 的速率增长。子交换缓冲区的数量也按 k²&#x2F;p &#x3D; k¹·⁵ 的速率超线性增长。这些因素共同导致分层交换机在面积和功耗扩展方面效率低下。因此，我们探索一种基于不同多级网络的替代交换结构，以实现更具可扩展性的设计。</p>
-<h3 id="1-1-“网络中的网络”交换结构"><a href="#1-1-“网络中的网络”交换结构" class="headerlink" title="1.1 “网络中的网络”交换结构"></a>1.1 “网络中的网络”交换结构</h3><p>探索基于网络拓扑的交换机微结构设计，创建一种“网络中的网络”（network within a network）式的交换架构，也称为网络交换结构（network switch architecture）。在这种设计中，一个交换机由多个子交换机构成，这些子交换机通过内部点对点通道互联。每个子交换机都是输入缓冲型的，从而使仲裁仅限于子交换机内部，类似于分层交换结构的思想。</p>
-<p><strong>对于局部网络，我们重点研究三种不同的拓扑：折叠 Clos（folded-Clos）、二维环形（2D torus） 和二维 HyperX。当然，也可以使用其他拓扑，如二维网格（2D mesh）或树形（tree-based）拓扑，但它们分别会引入非均匀性（如网格）或带宽瓶颈（如树形结构），因此不适合作为局部网络。</strong></p>
-<p>由于片外带宽在大规模系统中是昂贵资源，必须被充分利用，因此局部网络不能成为性能瓶颈。</p>
-<p><img src="/images/Net-within-a-Net/image-2.png" alt="alt text"></p>
-<p><strong>将所有交换结构配置为在给定路由器径数 k 下具有相同的聚合片外带宽。</strong> 采用以下指标进行比较：交换机中的缓冲区与交叉点（crosspoints）数量；聚合扇出；总交换面积。每个交叉点和缓冲区均由晶体管实现，即使在无活动时也消耗静态功率，因此更多的交叉点和缓冲区意味着更高的静态功耗。聚合扇出影响动态能耗，因为更高的扇出需要更大的晶体管驱动，导致更高的动态能耗。</p>
-<p>对于折叠二维环形结构, 该网络具有 $4\sqrt{k}$ 条穿越中截面（bisection）的通道，因此每条内部通道的带宽需为：$\frac{k}{4\sqrt{k}} &#x3D; \frac{\sqrt{k}}{4}$ 倍于连接 I&#x2F;O 端口的外部通道带宽。假设每个子交换机保留一个端口用于 I&#x2F;O 端口，一个逻辑内部通道由 √k&#x2F;4 条物理通道组成，因此子交换机的径数为：$\frac{\sqrt{k}}{4} \times 4 + 1 &#x3D; \sqrt{k} + 1$。采用 Valiant 路由算法，其平均跳数为 √k。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/10/28/Net-within-a-Net/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
