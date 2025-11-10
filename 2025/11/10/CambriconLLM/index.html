@@ -19,29 +19,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Booksim2.0安装编译 1. 从github上克隆源代码 2. 安装 flex bison 3. 编译Boosim">
+    <meta name="description" content="Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Booksim2.0安装编译">
-<meta property="og:url" content="https://zhwang1224.github.io/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/index.html">
+<meta property="og:title" content="CambriconLLM">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/11/10/CambriconLLM/index.html">
 <meta property="og:site_name" content="Non si finisce mai di imparare">
-<meta property="og:description" content="Booksim2.0安装编译 1. 从github上克隆源代码 2. 安装 flex bison 3. 编译Boosim">
+<meta property="og:description" content="Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zhwang1224.github.io/images/Booksim2.0/3987d9f1d628f3b6386ae7a2e728eac5.png">
-<meta property="article:published_time" content="2024-04-15T08:20:00.000Z">
-<meta property="article:modified_time" content="2025-09-23T13:36:46.008Z">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CambriconLLM/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CambriconLLM/image-1.png">
+<meta property="article:published_time" content="2025-11-10T05:03:35.000Z">
+<meta property="article:modified_time" content="2025-11-10T05:21:54.821Z">
 <meta property="article:author" content="Zhengzaishuru">
-<meta property="article:tag" content="模拟器">
+<meta property="article:tag" content="In-Flash Computing">
+<meta property="article:tag" content="Large Language Model Accelerator">
+<meta property="article:tag" content="Robotic Accelerator">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zhwang1224.github.io/images/Booksim2.0/3987d9f1d628f3b6386ae7a2e728eac5.png">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/CambriconLLM/image.png">
 
 
-<link rel="canonical" href="https://zhwang1224.github.io/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/">
+<link rel="canonical" href="https://zhwang1224.github.io/2025/11/10/CambriconLLM/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/","path":"2024/04/15/Booksim2.0安装编译/","title":"Booksim2.0安装编译"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/11/10/CambriconLLM/","path":"2025/11/10/CambriconLLM/","title":"CambriconLLM"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Booksim2.0安装编译 | Non si finisce mai di imparare</title>
+<title>CambriconLLM | Non si finisce mai di imparare</title>
   
 
 
@@ -136,7 +139,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Booksim2-0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">Booksim2.0安装编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%8Egithub%E4%B8%8A%E5%85%8B%E9%9A%86%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">1. 从github上克隆源代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85-flex-bison"><span class="nav-number">1.2.</span> <span class="nav-text">2. 安装 flex bison</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BC%96%E8%AF%91Boosim"><span class="nav-number">1.3.</span> <span class="nav-text">3. 编译Boosim</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM"><span class="nav-number">1.</span> <span class="nav-text">Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -189,7 +192,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/11/10/CambriconLLM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -202,12 +205,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Booksim2.0安装编译 | Non si finisce mai di imparare">
+      <meta itemprop="name" content="CambriconLLM | Non si finisce mai di imparare">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Booksim2.0安装编译
+          CambriconLLM
         </h1>
 
         <div class="post-meta-container">
@@ -217,15 +220,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-04-15 16:20:00" itemprop="dateCreated datePublished" datetime="2024-04-15T16:20:00+08:00">2024-04-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-09-23 21:36:46" itemprop="dateModified" datetime="2025-09-23T21:36:46+08:00">2025-09-23</time>
+      <time title="创建时间：2025-11-10 13:03:35 / 修改时间：13:21:54" itemprop="dateCreated datePublished" datetime="2025-11-10T13:03:35+08:00">2025-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -233,7 +230,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%A8%A1%E6%8B%9F%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">模拟器</span></a>
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
         </span>
     </span>
 
@@ -247,25 +244,34 @@
     
     
     <div class="post-body" itemprop="articleBody"><ul>
-<li><a href="#booksim20%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">Booksim2.0安装编译</a><ul>
-<li><a href="#1-%E4%BB%8Egithub%E4%B8%8A%E5%85%8B%E9%9A%86%E6%BA%90%E4%BB%A3%E7%A0%81">1. 从github上克隆源代码</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85-flex-bison">2. 安装 flex bison</a></li>
-<li><a href="#3-%E7%BC%96%E8%AF%91boosim">3. 编译Boosim</a></li>
-</ul>
-</li>
+<li><a href="#cambricon-llm-a-chiplet-based-hybrid--architecture-for-on-device-inference-of-70b-llm">Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</a></li>
 </ul>
 <span id="more"></span>
-<h1 id="Booksim2-0安装编译"><a href="#Booksim2-0安装编译" class="headerlink" title="Booksim2.0安装编译"></a>Booksim2.0安装编译</h1><h2 id="1-从github上克隆源代码"><a href="#1-从github上克隆源代码" class="headerlink" title="1. 从github上克隆源代码"></a>1. 从github上克隆源代码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; git clone https://github.com/booksim/booksim2.git</span><br></pre></td></tr></table></figure>
 
-<h2 id="2-安装-flex-bison"><a href="#2-安装-flex-bison" class="headerlink" title="2. 安装 flex bison"></a>2. 安装 flex bison</h2><p><code>flex</code> 和 <code>bison</code> 都是用于开发编程语言和工具的工具，它们通常一起使用来创建复杂的文本处理程序，如编译器、解释器和其他类型的语言处理工具。</p>
-<ul>
-<li>Flex<br><code>flex</code> 是一个词法分析器生成器，它允许开发者通过编写一个简短的、描述性的源文件来定义一组单词（或标记），然后 <code>flex</code> 会自动生成一个 C 语言程序，这个程序能够识别这些单词。这个生成的程序通常被称为词法分析器或扫描器。词法分析器是编译器或解释器的第一部分，负责将输入的文本（通常是源代码）分解成一系列的标记，这些标记可以被语法分析器进一步处理。</li>
-<li>Bison<br><code>bison</code> 是一个语法分析器生成器，它用来创建解析器，这些解析器可以理解和解释一种语言的语法规则。通过编写一个描述语法规则的源文件，<code>bison</code> 会生成一个 C 语言程序，这个程序可以构建抽象语法树（AST），这棵树表示了输入文本的语法结构。解析器是编译器或解释器的第二部分，它依赖于词法分析器提供的标记来正确地解析源代码的语法。<br>简单来说，<code>flex</code> 负责标记（词法）分析，<code>bison</code> 负责语法（语法）分析。这两个工具一起使用，可以快速地构建一个完整的语言处理工具链，从源代码到抽象语法树，再到最终的目标代码。这种工具链在构建编译器、解释器、格式化工具和其他需要处理复杂文本的应用程序时非常有用。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; sudo apt-get install flex</span><br><span class="line">&gt; sudo apt-get install bison</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-编译Boosim"><a href="#3-编译Boosim" class="headerlink" title="3. 编译Boosim"></a>3. 编译Boosim</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; cd booksim2/src</span><br><span class="line">&gt; make</span><br></pre></td></tr></table></figure>
-<p>如下图所示，编译成功，生成booksim执行文件。<br><img src="/images/Booksim2.0/3987d9f1d628f3b6386ae7a2e728eac5.png" alt="在这里插入图片描述"></p>
+<h1 id="Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM"><a href="#Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM" class="headerlink" title="Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM"></a>Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</h1><p>在智能手机和机器人等边缘设备上部署先进的大语言模型已成为趋势，此举既能提升用户数据隐私性与网络连接鲁棒性，又可保留智能计算能力。然而此类任务呈现算术强度极低的单批次计算特征，对资源受限的边缘设备提出了内存占用庞大、带宽需求严峻等挑战。为此，文章提出Cambricon-LLM：一种集成NPU与专用NAND闪存芯片的小芯片混合架构，可实现70B参数大语言模型的高效终端推理。该架构通过创新的硬件分块策略，协同发挥NPU的高算力优势与闪存芯片的数据容量优势，显著降低两者间的数据迁移开销。具体而言，经闪存内计算技术与片上ECC技术强化的NAND芯片可精准执行轻量化片上处理；NPU则协同处理矩阵运算及超越闪存能力范畴的特殊函数计算。实验表明，Cambricon-LLM能以3.44 token&#x2F;s的速度运行70B模型，以36.34 token&#x2F;s的速度运行7B模型，较现有闪存卸载技术提速22至45倍，展现了在边缘设备部署强大语言模型的潜力。</p>
+<p>在机器人、智能手机等边缘设备上实现私有化LLM推理变得日益重要。通过确保人人拥有个性化LLM智能体，文章不仅能发挥LLM智能体的变革性力量，更能满足隐私保护、定制化与可及性的根本需求。然而，相较于云端传统LLM推理，边缘设备上以单批次计算为主的个人LLM部署面临独特挑战——此类推理模式无法利用批间并行性，加剧了内存带宽瓶颈，进一步限制了LLM在边缘设备的部署。具体而言，个人LLM部署面临以下核心挑战：</p>
+<p>边缘资源受限下的巨大内存占用：<br>以INT8量化的Llama-70B模型为例，其内存需求高达70GB，远超典型智能手机DRAM容量。更关键的是，大规模参数必然引发密集的数据迁移，而数据移动正是边缘设备单批次LLM推理的主要能耗来源。值得注意的是，移动单比特数据的能量消耗约为计算能耗的100-500倍。</p>
+<p>单批次推理极低计算强度引发的带宽危机：<br>计算强度（计算操作数与慢速&#x2F;快速存储器间数据传输量的比值）过低表明程序受内存限制。不幸的是，INT8量化下的单批次LLM推理计算强度仅为2。产生极端带宽需求。</p>
+<p><img src="/images/CambriconLLM/image.png" alt="alt text"></p>
+<p>为解决内存占用问题，FlexGen和DeepSpeed等研究提出将LLM卸载至闪存（SSD）。但该方案存在明显局限：</p>
+<ol>
+<li>闪存带宽瓶颈：以UFS 4.0闪存（带宽4GB&#x2F;s）卸载INT8量化的Llama2-70B模型，理论最大速度仅0.06 token&#x2F;s，远低于实时交互应用所需的3-10 token&#x2F;s。</li>
+<li>额外数据迁移的能耗代价：传统架构禁止NPU直访闪存数据，需先迁移至DRAM，使总数据传输量增加3倍以上。鉴于数据移动能耗主导总能耗，此类额外传输将造成显著能量开销。</li>
+</ol>
+<p>为满足带宽需求，存内计算（ISC）技术通过挖掘闪存并行性看似可行，但现有方案（如OptimStore、BeaconGNN）难以适配本场景：</p>
+<ol>
+<li>闪存通道利用率低下：LLM单批次推理的缩减率（算子输入&#x2F;输出数据量比值）过高。以Llama2-7B为例，95%以上计算涉及广义矩阵-向量乘法（GeMV），最小矩阵尺寸为4096×4096，计算后结果向量尺寸缩减至权重矩阵的1&#x2F;4096。如图1(b)所示，其缩减率比ISC研究的其他场景高100倍，导致闪存通道利用率不足10%；</li>
+<li>片上纠错机制缺失：OptimStore与BeaconGNN缺乏片上纠错能力。若LLM暴露于未保护的闪存错误中，精度将骤降70%以上。</li>
+</ol>
+<p>为此，文章提出Cambricon-LLM——一种基于芯粒的异构架构，集成NPU与片上处理闪存，实现边缘设备上70B级LLM的高效推理。如图4(a)所示，Cambricon-LLM通过芯粒芯片间互联（D2D）将专用闪存芯片直连NPU：</p>
+<ol>
+<li>优化的数据分块策略最小化NPU-闪存间数据传输，充分协同闪存存储容量与NPU算力；</li>
+<li>芯粒技术既突破UFS 4.0协议的带宽限制，又实现NPU-闪存间低能耗数据传输，并集成闪存控制器支持NPU直访闪存数据；</li>
+<li>闪存内嵌片上计算单元，充分挖掘内部带宽以减少闪存通道数据流量；</li>
+<li>创新设计超轻量片上纠错单元，精准保护模型权重离群值，确保LLM推理精度。</li>
+</ol>
+<p>据文章所知，Cambricon-LLM是首个通过NPU-专用闪存异构扩展实现边缘设备高效LLM单批次推理的架构。本文贡献如下：<br>• 提出Cambricon-LLM：一种融合NPU与定制化闪存的芯粒异构架构，闪存具备片上处理能力且专为边缘LLM推理优化；<br>• 设计硬件感知数据分块策略，在NPU与闪存间最优分配LLM推理负载，避免闪存通道利用率不足；<br>• 提出高效片上纠错算法及轻量级硬件实现，有效抑制闪存高误码率，保障LLM推理精度；<br>• 基于SSDsim模拟器在多通道&#x2F;芯片配置下评估：Cambricon-LLM实现70B LLM 3.44 token&#x2F;s的推理速度，较基线提升22倍以上。</p>
+<p><img src="/images/CambriconLLM/image-1.png" alt="alt text"></p>
 
     </div>
 
@@ -275,21 +281,20 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%A8%A1%E6%8B%9F%E5%99%A8/" rel="tag"># 模拟器</a>
+              <a href="/tags/In-Flash-Computing/" rel="tag"># In-Flash Computing</a>
+              <a href="/tags/Large-Language-Model-Accelerator/" rel="tag"># Large Language Model Accelerator</a>
+              <a href="/tags/Robotic-Accelerator/" rel="tag"># Robotic Accelerator</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/03/16/RCA/" rel="prev" title="【HPCA&#39;2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip">
-                  <i class="fa fa-angle-left"></i> 【HPCA'2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip
+                <a href="/2025/11/06/HammingMesh/" rel="prev" title="HammingMesh">
+                  <i class="fa fa-angle-left"></i> HammingMesh
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/04/20/Dragonfly%E6%8B%93%E6%89%91/" rel="next" title="Dragonfly拓扑">
-                  Dragonfly拓扑 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
