@@ -255,7 +255,7 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -266,7 +266,7 @@ mjx-container[display="true"] + br {
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -283,6 +283,125 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/11/MCM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Non si finisce mai di imparare">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/11/MCM/" class="post-title-link" itemprop="url">【HPCA'2024】Enhancing Collective Communication in MCM  Accelerators for Deep Learning Training</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-10-11 11:35:19" itemprop="dateCreated datePublished" datetime="2025-10-11T11:35:19+08:00">2025-10-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-21 16:27:22" itemprop="dateModified" datetime="2025-10-21T16:27:22+08:00">2025-10-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#enhancing-collective-communication-in-mcm--accelerators-for-deep-learning-training">Enhancing Collective Communication in MCM  Accelerators for Deep Learning Training</a><ul>
+<li><a href="#backgroud">Backgroud</a><ul>
+<li><a href="#a-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83%E6%9C%BA%E5%88%B6">A. 深度学习的数据并行训练机制</a></li>
+<li><a href="#b-allreduce-algorithmallreduce-%E7%AE%97%E6%B3%95">B. AllReduce Algorithm（AllReduce 算法）</a></li>
+<li><a href="#c-multi-chip-modules%E5%A4%9A%E8%8A%AF%E7%89%87%E6%A8%A1%E5%9D%97">C. Multi-Chip-Modules（多芯片模块）</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%87%E7%AB%A0%E7%9A%84%E5%8A%A8%E6%9C%BA">文章的动机</a><ul>
+<li><a href="#a-feasibility-of-data-parallel-training-in-mcmsmcm-%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83%E7%9A%84%E5%8F%AF%E8%A1%8C%E6%80%A7">A. Feasibility of Data Parallel Training in MCMs（MCM 中数据并行训练的可行性）</a></li>
+<li><a href="#b-%E5%A5%87%E6%95%B0%E8%A7%84%E6%A8%A1%E7%BD%91%E6%A0%BC%E4%B8%AD%E5%8F%8C%E5%90%91%E7%8E%AF-allreduce-%E7%9A%84%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%80%A7">B. 奇数规模网格中双向环 AllReduce 的不可用性</a></li>
+<li><a href="#c-%E7%8E%B0%E6%9C%89-allreduce-%E7%AE%97%E6%B3%95%E7%9A%84%E9%93%BE%E8%B7%AF%E5%88%A9%E7%94%A8%E4%B8%8D%E8%B6%B3">C. 现有 AllReduce 算法的链路利用不足</a></li>
+</ul>
+</li>
+<li><a href="#1-ringbiodd-%E9%9D%A2%E5%90%91%E5%A5%87%E6%95%B0%E8%A7%84%E6%A8%A1%E7%BD%91%E6%A0%BC%E7%9A%84%E5%8F%8C%E5%90%91%E7%8E%AF%E5%BC%8F-allreduce-%E7%AE%97%E6%B3%95">1. RingBiOdd 面向奇数规模网格的双向环式 ALLReduce 算法</a><ul>
+<li><a href="#a-%E5%9C%A8%E5%A5%87%E6%95%B0%E8%A7%84%E6%A8%A1%E7%BD%91%E6%A0%BC%E4%B8%AD%E5%BD%A2%E6%88%90%E5%8F%8C%E5%90%91%E7%8E%AF">A. 在奇数规模网格中形成双向环</a></li>
+<li><a href="#b-ringbiodd-%E7%AE%97%E6%B3%95">B. RingBiOdd 算法</a></li>
+</ul>
+</li>
+<li><a href="#2-tto%E4%B8%89%E6%A0%91-allreduce-%E7%AE%97%E6%B3%95three-tree-allreduce">2. TTO：三树 AllReduce 算法（Three Tree AllReduce）</a><ul>
+<li><a href="#a-overlapping-of-chunks-in-1d-mesh%E4%B8%80%E7%BB%B4%E7%BD%91%E6%A0%BC%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9D%97%E9%87%8D%E5%8F%A0">A. Overlapping of Chunks in 1D Mesh（一维网格中的数据块重叠）</a></li>
+<li><a href="#b-%E4%BA%8C%E7%BB%B4%E7%BD%91%E6%A0%BC%E4%B8%AD%E7%9A%84%E4%BA%92%E4%B8%8D%E7%9B%B8%E4%BA%A4%E6%A0%91%E6%9E%84%E5%BB%BAdisjoint-tree-formation-in-2d-mesh">B. 二维网格中的互不相交树构建（Disjoint Tree Formation in 2D Mesh）</a></li>
+<li><a href="#c-tto%E4%B8%89%E6%A0%91-allreducethree-tree-allreduce">C. TTO：三树 AllReduce（Three Tree AllReduce）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/10/11/MCM/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
