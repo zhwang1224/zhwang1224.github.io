@@ -26,8 +26,8 @@
 <meta property="og:site_name" content="正在输入">
 <meta property="og:description" content="站点访问地图">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-06-19T04:40:45.227Z">
-<meta property="article:modified_time" content="2026-06-19T04:40:45.227Z">
+<meta property="article:published_time" content="2026-06-19T05:07:55.727Z">
+<meta property="article:modified_time" content="2026-06-19T05:07:55.727Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta name="twitter:card" content="summary">
 
@@ -206,21 +206,50 @@
 <script src="/stat/world.js"></script>
 <script>
 (function () {
-  /* ── 配置区 ───────────────────────────────────────────── */
-  var GIST_ID  = '02768a3c8be0f39880b2c83d14a95345';
-  /* ──────────────────────────────────────────────────────── */
+  /* 配置区：部署 Worker 后，把 VISITOR_API 改成 Worker 地址 */
+  var VISITOR_API = 'https://visitor-map-worker.visitor-map-worker.workers.dev';
+  var GIST_ID = '02768a3c8be0f39880b2c83d14a95345';
 
   var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
-  var RD_HDR   = { 'Accept': 'application/vnd.github.v3+json' };
+  var RD_HDR = { 'Accept': 'application/vnd.github.v3+json' };
+  var MAP_EL = document.getElementById('visitor-map');
+  var SUMMARY_EL = document.getElementById('visitor-summary');
 
-  var chart = echarts.init(document.getElementById('visitor-map'));
+  var chart = echarts.init(MAP_EL);
   chart.showLoading({ text: '加载中…', color: '#3a7bd5', textColor: '#ccc', maskColor: 'rgba(0,10,30,0.75)' });
 
-  /* 读取 Gist 数据并立即渲染 */
-  var initFetch = fetchGist();
-  initFetch.then(renderMap);
+  recordOrFetchVisitors().then(renderMap);
 
-  /* ── GitHub Gist 读取 ──────────────────────────────────── */
+  function recordOrFetchVisitors() {
+    if (!VISITOR_API) return fetchGist();
+
+    if (hasRecordedToday()) {
+      return fetchWorkerVisitors().catch(fetchGist);
+    }
+
+    return fetch(apiUrl('/visit'), { method: 'POST', headers: { 'Accept': 'application/json' } })
+      .then(function (r) {
+        if (!r.ok) throw new Error('visit api failed');
+        return r.json();
+      })
+      .then(function (payload) {
+        markRecordedToday();
+        return normalizeVisitors(payload);
+      })
+      .catch(function () {
+        return fetchWorkerVisitors().catch(fetchGist);
+      });
+  }
+
+  function fetchWorkerVisitors() {
+    return fetch(apiUrl('/visitors'), { headers: { 'Accept': 'application/json' } })
+      .then(function (r) {
+        if (!r.ok) throw new Error('visitor api failed');
+        return r.json();
+      })
+      .then(normalizeVisitors);
+  }
+
   function fetchGist() {
     return fetch(GIST_API, { headers: RD_HDR })
       .then(function (r) { return r.json(); })
@@ -231,16 +260,39 @@
       .catch(function () { return {}; });
   }
 
-  /* ── ECharts 渲染 ───────────────────────────────────────── */
+  function normalizeVisitors(payload) {
+    if (!payload) return {};
+    return payload.visitors || payload;
+  }
+
+  function apiUrl(path) {
+    return VISITOR_API.replace(/\/$/, '') + path;
+  }
+
+  function todayKey() {
+    return 'visitor-map-recorded-' + new Date().toISOString().slice(0, 10);
+  }
+
+  function hasRecordedToday() {
+    try { return localStorage.getItem(todayKey()) === '1'; } catch (e) { return false; }
+  }
+
+  function markRecordedToday() {
+    try { localStorage.setItem(todayKey(), '1'); } catch (e) {}
+  }
+
   function renderMap(visitors) {
     var entries = Object.keys(visitors).map(function (code) {
-      return { code: code, name: visitors[code].name, value: visitors[code].count };
+      return {
+        code: code,
+        name: visitors[code].name || code,
+        value: Number(visitors[code].count) || 0
+      };
     }).sort(function (a, b) { return b.value - a.value; });
 
-    var total     = entries.reduce(function (s, d) { return s + d.value; }, 0);
+    var total = entries.reduce(function (s, d) { return s + d.value; }, 0);
     var countries = entries.filter(function (d) { return d.code !== 'XX'; }).length;
-    var el = document.getElementById('visitor-summary');
-    if (el) el.textContent = '来自 ' + countries + ' 个国家 / 地区，共 ' + total + ' 次访问';
+    if (SUMMARY_EL) SUMMARY_EL.textContent = '来自 ' + countries + ' 个国家 / 地区，共 ' + total + ' 次访问';
 
     var maxVal = entries.length ? entries[0].value : 1;
     chart.hideLoading();
