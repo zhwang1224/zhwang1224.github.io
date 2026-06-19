@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Alibaba HPN: A Data Center Network for Large Language Model Training 1. Motivation 2. HPN 架构概述 3. Non-stacked Dual-ToR 4. Tier1 5. Tier2 6. 支持更大规模 7. 前端网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HPN">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/11/24/HPN/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="Alibaba HPN: A Data Center Network for Large Language Model Training 1. Motivation 2. HPN 架构概述 3. Non-stacked Dual-ToR 4. Tier1 5. Tier2 6. 支持更大规模 7. 前端网络">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image-5.png">
+<meta property="article:published_time" content="2025-11-24T02:39:06.000Z">
+<meta property="article:modified_time" content="2025-11-24T03:21:30.794Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="AI Infrastructure">
+<meta property="article:tag" content="Data Center Networks">
+<meta property="article:tag" content="Large Language Model">
+<meta property="article:tag" content="Model Training">
+<meta property="article:tag" content="Network Architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/HPN/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/11/24/HPN/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/11/24/HPN/","path":"2025/11/24/HPN/","title":"HPN"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HPN | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training"><span class="nav-number">1.</span> <span class="nav-text">Alibaba HPN: A Data Center Network for Large Language Model Training</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Motivation"><span class="nav-number">1.1.</span> <span class="nav-text">1. Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-HPN-%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0"><span class="nav-number">1.2.</span> <span class="nav-text">2. HPN 架构概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Non-stacked-Dual-ToR"><span class="nav-number">1.3.</span> <span class="nav-text">3. Non-stacked Dual-ToR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Tier1"><span class="nav-number">1.4.</span> <span class="nav-text">4. Tier1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Tier2"><span class="nav-number">1.5.</span> <span class="nav-text">5. Tier2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%94%AF%E6%8C%81%E6%9B%B4%E5%A4%A7%E8%A7%84%E6%A8%A1"><span class="nav-number">1.6.</span> <span class="nav-text">6. 支持更大规模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%89%8D%E7%AB%AF%E7%BD%91%E7%BB%9C"><span class="nav-number">1.7.</span> <span class="nav-text">7. 前端网络</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/11/24/HPN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="HPN | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HPN
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-11-24 10:39:06 / 修改时间：11:21:30" itemprop="dateCreated datePublished" datetime="2025-11-24T10:39:06+08:00">2025-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#alibaba-hpn-a-data-center-network-for-large-language-model-training">Alibaba HPN: A Data Center Network for Large Language Model Training</a><ul>
+<li><a href="#1-motivation">1. Motivation</a></li>
+<li><a href="#2-hpn-%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0">2. HPN 架构概述</a></li>
+<li><a href="#3-non-stacked-dual-tor">3. Non-stacked Dual-ToR</a></li>
+<li><a href="#4-tier1">4. Tier1</a></li>
+<li><a href="#5-tier2">5. Tier2</a></li>
+<li><a href="#6-%E6%94%AF%E6%8C%81%E6%9B%B4%E5%A4%A7%E8%A7%84%E6%A8%A1">6. 支持更大规模</a></li>
+<li><a href="#7-%E5%89%8D%E7%AB%AF%E7%BD%91%E7%BB%9C">7. 前端网络</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training"><a href="#Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training" class="headerlink" title="Alibaba HPN: A Data Center Network for Large Language Model Training"></a>Alibaba HPN: A Data Center Network for Large Language Model Training</h1><p>HPN（High Performance Network），即阿里云专为大语言模型（LLM）训练设计的数据中心网络。由于 LLM 与通用云计算在流量模式和容错性等方面存在显著差异，传统数据中心网络难以有效支撑 LLM 训练需求。这促使我们专门针对 LLM 训练设计一种全新的数据中心网络架构。</p>
+<p>与通用云计算产生数百万个小流量（例如低于 10 Gbps）不同，LLM 训练在每台主机上仅产生少量周期性、突发性的大流量（例如 400 Gbps）。这种特性使得传统数据中心广泛采用的等价多路径（ECMP）负载均衡机制容易出现哈希极化（hash polarization），导致流量分布不均等问题。</p>
+<p>HPN 提出了一种两层双平面架构，可在单个 Pod 内互联多达 15,000 块 GPU——这一规模通常需要传统三层 Clos 架构才能支持。该新架构不仅通过减少 ECMP 的使用避免了哈希极化问题，还大幅缩小了路径选择的搜索空间，从而能够精确挑选适合承载“大象流”（elephant flows）的网络路径。</p>
+<p>LLM 训练面临的另一挑战在于：其要求所有 GPU 同步完成迭代，因此对单点故障（尤其是机架顶部交换机 ToR 故障）更加敏感。为此，HPN 提出了一种新型双 ToR 设计，替代传统数据中心中的单 ToR 方案，并解决了二层同步方面的技术难题。HPN 已在我们的生产环境中部署运行超过八个月。</p>
+<h2 id="1-Motivation"><a href="#1-Motivation" class="headerlink" title="1. Motivation"></a>1. Motivation</h2><p>LLM 训练具有独特性，它对数据中心网络的设计提出了全新挑战。</p>
+<ul>
+<li>问题一：流量模式不同。<br>LLM 训练的流量模式与通用云计算存在两点关键差异：(1) 低熵性；(2) 突发性流量。具体而言，通用云计算会产生数百万个持续且低利用率的流量（例如通常低于网卡容量的 20%），如图 1 所示。</li>
+<li>问题二：对故障（尤其是单点故障）更为敏感。<br>LLM 训练是一个同步过程，所有 GPU 协同完成一系列迭代；因此，任意一块 GPU 出现异常都可能导致整个训练过程延迟甚至崩溃。这意味着 LLM 训练比通用云计算对故障更加敏感。我们发现，对 LLM 训练影响最大的是与机架顶部交换机（Top-of-Rack, ToR）相关的单点故障，这类故障可能波及大量 GPU。此外，LLM 训练中的故障代价高昂。生产数据显示，LLM 训练中的一次故障造成的损失是通用云计算场景下的 20 倍。</li>
+</ul>
+<p><img src="/images/HPN/image.png" alt="alt text"></p>
+<p>主要目标：</p>
+<ul>
+<li>G1：可扩展性。 图 6 显示，当前生产中单个训练任务所需 GPU 数量通常少于 3,000 块。为应对未来需求演进，我们将主容量目标设定为支持 15,000 块 GPU——这也与主流 LLM 训练提供商（如 Google、AWS、Azure 和 NVIDIA）提供的 10K–30K GPU 集群规模一致。根据经验，未来几年模型参数量可能再增长一个数量级（从 1 万亿增至 10 万亿），因此我们的数据中心还需具备支持 10 万块 GPU 规模的扩展能力。</li>
+<li>G2：高性能。 性能至关重要。为提升性能，设计应尽可能减少网络跳数。减少跳数不仅能降低延迟，还能减少 ECMP 哈希次数，使路径选择更精准。此外，设计应尽可能支持 GPU 间直连通信，而非经由网络转发。</li>
+<li>G3：单 ToR 故障容错。 基于 §2.3 的观察，影响 LLM 训练可靠性的最关键风险是单 ToR 故障。因此，我们的新网络架构必须在拓扑层面从根本上消除单 ToR 故障风险。</li>
+</ul>
+<p><img src="/images/HPN/image-1.png" alt="alt text"></p>
+<h2 id="2-HPN-架构概述"><a href="#2-HPN-架构概述" class="headerlink" title="2. HPN 架构概述"></a>2. HPN 架构概述</h2><p>图 7 展示了 HPN 的整体架构。HPN 由前端网络（frontend network）和后端网络（backend network）组成。后端网络主要用于承载训练过程中的通信流量；前端网络则负责其他类型的流量（例如管理、推理和存储流量）。在 LLM 训练场景中，我们主要关注 HPN 的后端网络。</p>
+<ul>
+<li>在 HPN 的后端网络中，每台主机配备 8 块 GPU，这些 GPU 通过专用的高带宽主机内网络（如 NVLink ）相互连接。每块 GPU 可通过该主机内网络（intra-host network）以 400–900 GBps（双向）的带宽直接与其他 GPU 通信。</li>
+<li>为了提供最大网络容量，每台主机配备了 9 张网卡（NIC），每张 NIC 具备 2×200 Gbps 的端口。其中一张 NIC（即图 7 中的 NIC0）连接到前端网络，其余 8 张 NIC 连接到后端网络，用于承载 LLM 训练期间的通信流量。</li>
+<li>这 8 张 NIC 各自服务于一块专用 GPU（称为一个“rail”），因此每块 GPU 都拥有 专用的 400 Gbps RDMA 网络吞吐能力，整机总带宽达到 3.2 Tbps。这种设计旨在最大化利用 GPU 的 PCIe 能力（PCIe Gen5×16），从而将网络发送/接收能力推至极限。</li>
+<li>每张 NIC 的两个端口分别连接到不同的 ToR 交换机，形成 双 ToR（dual-ToR）。该设计旨在避免单 ToR 故障问题。</li>
+</ul>
+<p>在 Tier-1 层，考虑到主机内网络（如 NVLink）的带宽远高于主机间的以太网，我们采用了 rail 优化设计：不同 rail 的 NIC 连接到不同的 ToR 集合。结合上述双 ToR 设计，一台主机在后端网络中总共连接到 16 台 ToR 交换机。通过充分利用 51.2 Tbps 交换芯片的能力，HPN 能够在一个单层网络（称为一个 segment，见 §5）中互联 1024 块 GPU。图 6 量化了这一优势：约 96.3% 的线上 LLM 训练任务使用的 GPU 数量少于 1000 块；因此，在 HPN 中，这些任务可以被部署在同一个 segment 内，从而获得极致的网络性能。</p>
+<p><img src="/images/HPN/image-2.png" alt="alt text"></p>
+<p>Tier-2 用于互联多个 segments。我们在这一层引入了双 ToR 特性，设计了 双平面转发架构（dual-plane forwarding，如图 7 所示）。从源 NIC 的 port 0 发出的流量，只能通过网络最终被目的 NIC 的 port 0 接收，与从 port 1 发出的流量在物理上完全隔离。这种双平面设计避免了聚合层（Aggregation layer）的 哈希极化（hash polarization）问题，同时保持了 1:1 的网络对分带宽（bisection bandwidth）。此外，双平面设计还将单个 Pod 可支持的 GPU 数量提升了一倍，达到 15,000 块 GPU。</p>
+<p>对于未来可能出现的更大规模单任务，我们还设计了 Pod 之间的核心层（Core layer）。由于单个 Pod 已支持 15K GPU，需要跨 Pod 协同的任务非常罕见。在我们的设计中，聚合层到核心层之间采用了 15:1 的带宽超配比（oversubscription）。基于 LLM 训练的流量特征，我们将 流水线并行（PP）通信安排在跨 Pod 之间，确保跨 Pod 传输对端到端训练性能的影响最小化。</p>
+<p>前端网络主要用于承载管理、推理和存储流量。前端与后端网络在物理上解耦，确保前端流量不会干扰训练任务的核心流程。此外，前端网络采用 1:1 无超配设计，使其具备良好的可扩展性，能够支持更多场景，例如 LLM 训练与推理的混合部署。</p>
+<h2 id="3-Non-stacked-Dual-ToR"><a href="#3-Non-stacked-Dual-ToR" class="headerlink" title="3. Non-stacked Dual-ToR"></a>3. Non-stacked Dual-ToR</h2><p>在传统数据中心网络中，每张 NIC 的两个端口通常通过一根线缆连接到同一台 ToR 交换机，称为 单 ToR 设计。然而，单 ToR 设计对交换机或链路故障极为敏感，会严重影响 LLM 训练。相比之下，双 ToR 设计将每张 NIC 的两个端口以 active-active 方式连接到两台不同的 ToR。这两个端口配置相同的 IP 和 MAC 地址。当其中一台 ToR（或端口）发生故障时，另一台仍可正常工作。此外，由于同一张 NIC 的两个端口共享相同的 Queue Pair（QP）上下文，流量切换不会中断现有数据流，对上层应用完全透明。</p>
+<p><img src="/images/HPN/image-3.png" alt="alt text"></p>
+<p>图 8a 展示了一种典型的双 ToR 设计，称为 堆叠式双 ToR（stacked dual-ToR）。但ToR 之间的直连链路故障或某台 ToR 故障可能导致异常，使该双 ToR 下所有 NIC 离线。在双 ToR 升级过程中，可能出现一台运行新版本、另一台运行旧版本的情况。此时，控制平面通过 RPC 同步信息时，因版本字段不兼容，可能导致 ToR 崩溃。根据内部故障报告，过去三年中，超过 40% 的关键故障源于上述两类堆叠式双 ToR 引入的问题。</p>
+<p>为消除这一故障根源，我们设计了 非堆叠式双 ToR（图 8b），移除了两台 ToR 之间的直连链路。为实现非堆叠双 ToR，我们必须保证在 LACP 协商过程中，两台 ToR 使用相同的 MAC 地址和不同的 portID。</p>
+<h2 id="4-Tier1"><a href="#4-Tier1" class="headerlink" title="4. Tier1"></a>4. Tier1</h2><p>使用了最新的 51.2Tbps 以太网单芯片交换机（最早于 2023 年初发布）在 HPN 中。在 tier1 层，每台交换机拥有 128 个活跃 + 8 个备用 200Gbps 下行端口和 60 个上行 400Gbps 端口。这种设计确保了一个接近 1:1 的超配比（实际为 1.067:1）。每个 ToR 交换机预留了 8 个备用下行端口，用于连接备用主机，以便在主机侧故障时（包括 CPU、内存、GPU、PCIe、NVLINK 和 NIC 故障）快速替换。</p>
+<p>为了充分利用不同的转发能力，NVIDIA 首次提出了 rail 优化网络的概念，该概念已在训练集群中广泛应用。在 rail 优化网络中，相同 rail 的 NIC 通过同一组双 ToR 交换机连接。不同 rail 的 NIC 可以通过主机内+主机间转发组合进行通信。例如，在图 11 中，如果 host1 中的 GPU1 想要与 host3 中的 GPU2 通信，转发路径将是：host1 中的 GPU1 → host1 中的 GPU2 → ToR3 → host3 中的 GPU2。</p>
+<p><img src="/images/HPN/image-4.png" alt="alt text"></p>
+<p>图 11 展示了我们在实践中如何应用 rail 优化网络，这使得单个主机的 3.2Tbps（8×400Gbps） 可以分布在多达 16 个 ToR 交换机 上（在双 ToR 设计下）。与原始拓扑相比，一个 segment 可容纳的 GPU 数量增加了 8 倍，在原始拓扑中，单个主机的 3.2Tbps 是由 2 个 ToR 交换机提供的。每组双 ToR 交换机可以服务 128 块 GPU，16 个 ToR 共同连接了 segment 中的 1024 块 GPU，大幅减少了转发延迟并提供了最佳性能。更重要的是，它显著减少了穿越聚合层的流量，降低了网络负载不平衡的可能性。</p>
+<h2 id="5-Tier2"><a href="#5-Tier2" class="headerlink" title="5. Tier2"></a>5. Tier2</h2><p>在 tier1 网络中采用双 ToR（dual-ToR）设计后，如果 tier2 层简单地使用传统的 Clos 拓扑（如图 12a 所示），仍然会出现 哈希极化（hash polarization） 问题。在 ECMP（等价多路径）路由中，流量根据五元组（5-tuple）哈希分配到不同路径。但由于哈希算法的局限性，大量流可能被映射到少数几条路径上，导致某些链路过载、其他链路空闲——这就是“哈希极化”。</p>
+<p><img src="/images/HPN/image-5.png" alt="alt text"></p>
+<p>在下游方向（Aggregation → ToR），由于每个 dual-ToR 组只有 2 台 ToR，而上游有 60 台 Aggregation 交换机汇聚流量，极易造成流量集中。如图 13a 所示，在真实 GPT-3 175B 变体模型训练任务中，通往同一 NIC 的两个 ToR 下行端口流量相差 3 倍，严重拖累训练性能。</p>
+<p>如图 12b 所示，HPN 将每个 dual-ToR 组中的 ToR 划分为 两个独立平面（Plane 1 / Plane 2）：每个流一旦从某 ToR 的上行链路进入 Pod，其在整个 Pod 内的转发路径就被唯一确定。两个平面物理隔离，互不干扰。</p>
+<h2 id="6-支持更大规模"><a href="#6-支持更大规模" class="headerlink" title="6. 支持更大规模"></a>6. 支持更大规模</h2><p>为满足未来支持 十万个级别 GPU 的长期规划，HPN 设计了 tier3 网络，用于连接多个 Pod。</p>
+<p>⚖️ 权衡：Pod 规模 vs. tier3 带宽<br>当前 HPN 牺牲了 Agg-Core 层的带宽（超配比 15:1），以换取更大的单 Pod 规模；但分析 LLM 训练通信模式发现：跨数十万 GPU 的单个训练任务，对 tier3 带宽需求其实很低。</p>
+<p>为避免 tier3 引入新的不均衡风险，HPN 做了两项增强：1. Core 层延续 dual-plane 设计；2. 每台 Core 交换机采用“端口优先哈希”。</p>
+<h2 id="7-前端网络"><a href="#7-前端网络" class="headerlink" title="7. 前端网络"></a>7. 前端网络</h2><p>在 HPN 中，每台主机额外配备一块 2×200Gbps 的 NIC，用于接入独立的前端网络。前端网络主要承载管理流量和存储流量。为保障最优训练性能，存储集群被部署在前端网络中。</p>
+<p>HPN 的核心优势：</p>
+<ul>
+<li>消除 single-ToR 单点故障；</li>
+<li>通过 两层 dual-plane 架构，在单 Pod 内互联 15,000 块 GPU；</li>
+<li>彻底解决哈希极化问题；</li>
+<li>简化最优路径选择；</li>
+<li>端到端 LLM 训练性能提升 14.9%。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Network-Architecture/" rel="tag"># Network Architecture</a>
+              <a href="/tags/AI-Infrastructure/" rel="tag"># AI Infrastructure</a>
+              <a href="/tags/Data-Center-Networks/" rel="tag"># Data Center Networks</a>
+              <a href="/tags/Model-Training/" rel="tag"># Model Training</a>
+              <a href="/tags/Large-Language-Model/" rel="tag"># Large Language Model</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/10/RailX/" rel="prev" title="RailX">
+                  <i class="fa fa-angle-left"></i> RailX
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/05/22/Agentic-AI-Andrew-Ng/" rel="next" title="Agentic AI - Andrew Ng">
+                  Agentic AI - Andrew Ng <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

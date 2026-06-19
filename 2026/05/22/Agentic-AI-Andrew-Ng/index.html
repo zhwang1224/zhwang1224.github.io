@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. Agentic AI 1.1 Reflection 1.2 Tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agentic AI - Andrew Ng">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/05/22/Agentic-AI-Andrew-Ng/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="1. Agentic AI 1.1 Reflection 1.2 Tools">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/AgenticAI/image.png">
+<meta property="article:published_time" content="2026-05-22T07:59:42.000Z">
+<meta property="article:modified_time" content="2026-05-26T09:11:57.686Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/AgenticAI/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/05/22/Agentic-AI-Andrew-Ng/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/05/22/Agentic-AI-Andrew-Ng/","path":"2026/05/22/Agentic-AI-Andrew-Ng/","title":"Agentic AI - Andrew Ng"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Agentic AI - Andrew Ng | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Agentic-AI"><span class="nav-number">1.</span> <span class="nav-text">1. Agentic AI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Reflection"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Reflection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Tools"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Tools</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/05/22/Agentic-AI-Andrew-Ng/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Agentic AI - Andrew Ng | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Agentic AI - Andrew Ng
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-22 15:59:42" itemprop="dateCreated datePublished" datetime="2026-05-22T15:59:42+08:00">2026-05-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-05-26 17:11:57" itemprop="dateModified" datetime="2026-05-26T17:11:57+08:00">2026-05-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#1-agentic-ai">1. Agentic AI</a><ul>
+<li><a href="#11-reflection">1.1 Reflection</a></li>
+<li><a href="#12-tools">1.2 Tools</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<h2 id="1-Agentic-AI"><a href="#1-Agentic-AI" class="headerlink" title="1. Agentic AI"></a>1. Agentic AI</h2><p>普通的 LLM 应用通常是“ 用户提问 -&gt; 模型回答 -&gt; （循环）结束”的单轮生成模式，而 Agentic AI 更强调“用户提出目标 -&gt; 系统拆解子任务 -&gt; 调用工具&#x2F;搜索&#x2F;代码&#x2F;数据库 -&gt; 结果检查 -&gt; 反思修正 -&gt; 输出最终结果” 的多步骤（并可包含多 agent 并行执行）执行流程。</p>
+<p>Agentic AI 的价值已经充分体现，它已经被用于企业客户支持、深度研究、法律文档处理、医疗辅助判断等复杂任务中。而真正有效的 Agent 应用，需要通过工作流设计、任务分解、工具调用、评估与误差分析，让大模型从单纯的“文本生成器”升级为能够持续行动、迭代改进并完成复杂任务的“任务执行系统”。</p>
+<p>Agent 有不同的自主性程度，可以理解的是对于高自主度的 Agent 拥有更多的选择，甚至可以在执行过程中创建新的工具或流程；而对于低自主度的 Agent 而言，其执行步骤通常提前设置，其调用的工具也通常是硬编码，其自主性主要体现在 LLM 生成的文本内容。</p>
+<p>Agentic workflows 的最大价值可能就是模块化（灵活），通过模块化的执行步骤可以达到比使用单独的 LLM 应用所得到的性能要好；可以并行执行人力要花巨大时间完成的复杂或工作量很大的任务。</p>
+<p>课程总结了四个智能体工作流的设计模式：1. Reflection; 2. Tool use; 3. Planning; 4. Multi-agent collaboration。通过单个 LLM&#x2F;agent 的迭代通常可以提高输出质量；LLM 可以调用越来越多的工具，通过多模态的输入来完成特定任务；不同任务的规划；多 Agent 的协作。</p>
+<h3 id="1-1-Reflection"><a href="#1-1-Reflection" class="headerlink" title="1.1 Reflection"></a>1.1 Reflection</h3><p>相较于零样本提示（zero-shot prompting），当 Reflection 迭代过程中可输入额外信息时，输出的结果会大幅改善。</p>
+<h3 id="1-2-Tools"><a href="#1-2-Tools" class="headerlink" title="1.2 Tools"></a>1.2 Tools</h3><p>当我们询问大模型有关于当前时事热点的问题时，大模型的资料库中通常不会有最新的热点信息，但当我们允许大模型调用相应函数去获得这些信息时，这些信息会反馈给LLM，而此时大模型便可以给到我们想要的输出。即工具就是我们提供给大模型的函数，而函数可以请求调用。</p>
+<p>在 LLM 原生不支持使用工具的情况下，若要使用 tools，则流程为 首先实现相应功能函数，并把函数提供给 LLM；当需要使用该工具时，LLM会生成一个特定输出，告知需要为LLM调用函数；调用后获取函数输出，并反馈给LLM，LLM会用这个结果继续执行后续操作。</p>
+<p>例如获取当前时间的函数可为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_current_time</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Returns current time for the given time zone&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>课程演示了如何使用 AI 开源库，让大模型去调用工具。另外，大模型本身不调用函数，而是请求你去调用工具，虽然有时候直接说让大模型调用工具，但是过程并不是这样。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> aisuite <span class="keyword">as</span> ai</span><br><span class="line">client = ai.Client()</span><br><span class="line"></span><br><span class="line">response = client.chat.comletions.create(</span><br><span class="line">    model=<span class="string">&#x27;openai:gpt-4o&#x27;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    tools=[get_current_time],</span><br><span class="line">    max_turns=<span class="number">5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Moedel Context Protocol(MCP) 大模型上下文协议设置一套标准，让不同团队开发的应用可以统一访问工具和数据源。MCP的初衷就是让 LLM 可以访问更多的资源。例如 Cursor、Claude Desktop可作为 MCP 客户端；Slack、Google Driver、Github 可作为 MCP 服务端。</p>
+<p><img src="/images/AgenticAI/image.png" alt="alt text"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/24/HPN/" rel="prev" title="HPN">
+                  <i class="fa fa-angle-left"></i> HPN
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/05/26/ZCube/" rel="next" title="ZCube">
+                  ZCube <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Regional Congestion Awareness for Load Balance in Networks-on-Chip 背景和动机 创新点 实验评估及结论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【HPCA&#39;2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip">
+<meta property="og:url" content="https://zhwang1224.github.io/2024/03/16/RCA/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="Regional Congestion Awareness for Load Balance in Networks-on-Chip 背景和动机 创新点 实验评估及结论">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RCA/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RCA/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RCA/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RCA/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RCA/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RCA/image-5.png">
+<meta property="article:published_time" content="2024-03-15T16:08:07.000Z">
+<meta property="article:modified_time" content="2025-09-25T15:37:39.377Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="NoC">
+<meta property="article:tag" content="routing algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/RCA/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2024/03/16/RCA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2024/03/16/RCA/","path":"2024/03/16/RCA/","title":"【HPCA'2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【HPCA'2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Regional-Congestion-Awareness-for-Load-Balance-in-Networks-on-Chip"><span class="nav-number">1.</span> <span class="nav-text">Regional Congestion Awareness for Load Balance in Networks-on-Chip</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%92%8C%E5%8A%A8%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">背景和动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">创新点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0%E5%8F%8A%E7%BB%93%E8%AE%BA"><span class="nav-number">1.3.</span> <span class="nav-text">实验评估及结论</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2024/03/16/RCA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【HPCA&#39;2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【HPCA'2008】Regional Congestion Awareness for Load Balance in Networks-on-Chip
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-16 00:08:07" itemprop="dateCreated datePublished" datetime="2024-03-16T00:08:07+08:00">2024-03-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-09-25 23:37:39" itemprop="dateModified" datetime="2025-09-25T23:37:39+08:00">2025-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/routing/" itemprop="url" rel="index"><span itemprop="name">routing</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#regional-congestion-awareness-for-load-balance-in-networks-on-chip">Regional Congestion Awareness for Load Balance in Networks-on-Chip</a><ul>
+<li><a href="#%E8%83%8C%E6%99%AF%E5%92%8C%E5%8A%A8%E6%9C%BA">背景和动机</a></li>
+<li><a href="#%E5%88%9B%E6%96%B0%E7%82%B9">创新点</a></li>
+<li><a href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0%E5%8F%8A%E7%BB%93%E8%AE%BA">实验评估及结论</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Regional-Congestion-Awareness-for-Load-Balance-in-Networks-on-Chip"><a href="#Regional-Congestion-Awareness-for-Load-Balance-in-Networks-on-Chip" class="headerlink" title="Regional Congestion Awareness for Load Balance in Networks-on-Chip"></a>Regional Congestion Awareness for Load Balance in Networks-on-Chip</h1><p>片上网络负载平衡的区域拥塞感知 HPCA’2008</p>
+<h2 id="背景和动机"><a href="#背景和动机" class="headerlink" title="背景和动机"></a>背景和动机</h2><p>文章背景片上互连网络 (NOC) 正在迅速取代芯片多处理器和片上系统设计中的其他形式的互连。</p>
+<ol>
+<li>摩尔定律稳步提高了片上晶体管的密度，并实现了在单个芯片上集成数十个组件。这些组件包括多芯片处理器 (CMP) 中的常规处理器阵列和缓存组以及片上系统 (SoC) 设计中的异构资源。更大程度一体化的成果之一是互连网络已开始取代共享总线和其他以长全局线路为特征的通信形式。片上网络 (NOC) 的扩展能力比传统形式的片上互连更好，并且具有卓越的性能和容错特性。</li>
+<li>NOC 可以使用大位宽的最近邻点对点链路来构建，从而促进自然流水线、高带宽通信。迄今为止，大多数 NOC 都采用了简单的拓扑，例如二维网格和环，部分原因是这两种设计都与平面硅制造工艺良好匹配并支持短链路长度。</li>
+<li>为了最大限度地减少路由器开销，NOC 倾向于使用简单的路由器设计，其中包括有限的虚拟通道、每个虚拟通道的浅 flit 缓冲区、较短的路由器管道阶段以及具有有限数量 flit 的消息。</li>
+</ol>
+<p>现有的互连网络使用 oblivious 或自适应的路由算法来确定数据包到达其目的地所采取的路由。尽管实现复杂性较高，但在面对不均匀或突发流量时，与不经意的策略相比，自适应路由具有更好的容错特性，提高了网络吞吐量，并减少了延迟。</p>
+<p>然而，自适应路由可能会通过贪婪的本地决策扰乱固有的全局负载平衡，从而损害性能。为了改善适应路由的负载平衡，文章提出了区域拥塞感知（RCA），这是一种改善全局网络平衡的轻量级技术。 RCA不仅仅依赖于本地拥塞信息，还利用相邻路由器之外的部分网络拥塞的路由策略。</p>
+<ol>
+<li>现有自适应路由器性能的关键障碍是对全局网络状态的无知，导致路由器输出端口选择仅基于本地可用的拥塞估计。这种短视的路由决策往往会破坏许多流量模式中的全局负载平衡。</li>
+<li>在本文中，文章介绍了区域拥塞感知（RCA），这是一种以可扩展的方式在网络中传播拥塞信息的方法，提高了自适应路由器分散网络负载的能力。</li>
+<li>将本地计算的拥塞指标与从邻居传播的拥塞指标聚合起来，然后再将其传输到上游路由器，并且附有权重</li>
+<li>非最小自适应路由有潜力改善负载平衡，超越最小路由的限制，但代价是实现更大的复杂性以及可能更高的每数据包延迟和能量。因此，将评估限制在最小路由上，但这里提出的一般原则也可以应用于非最小路由网络。</li>
+</ol>
+<p>实验表明，RCA 在所有检查的工作负载中均达到或超过了传统自适应路由的性能，在 49 核 CMP 上运行的 SPLASH-2 基准测试中，平均延迟降低了 16%，最大延迟降低了 71%。与基线自适应路由器相比，RCA 的逻辑和布线开销可以忽略不计.</p>
+<p>图 1 展示了路由策略的分类。根据是否考虑输出链路需求，自适应路由策略可以分为拥塞忽略策略和拥塞感知策略。</p>
+<p><img src="/images/RCA/image.png" alt="alt text"></p>
+<ol>
+<li>拥塞感知路由策略可以根据它们是纯粹依赖本地拥塞信息还是考虑网络中其他点的拥塞状态来进一步分类。在这种情况下，本地信息被定义为在给定节点处容易获得的信息，表示该节点或其直接邻居的状态。物理链路另一端的可用虚拟通道或缓冲区的计数也是本地信息。</li>
+</ol>
+<h2 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h2><ol>
+<li><p>将非本地信息定义为源自节点的直接邻居之外的信息。据文章所知，现有的自适应路由互连网络评估要么忽略拥塞，要么在输出端口选择中仅考虑本地拥塞指标。区域拥塞意识（RCA）是第一个对非本地信息的效用进行全面评估的工作，以改善完全自适应最小路由网络的动态负载平衡特性。</p>
+</li>
+<li><p>DOR 路由器微架构</p>
+<ol>
+<li>规范的 NOC 虚拟通道路由器首先由 Peh 和 Dally 描述，该路由器采用输入队列，有 5 个端口，其中 4 个是网络端口，1 个是注入端口。</li>
+<li>路由器的关键架构元素包括虚拟通道 FIFO、路由计算单元、VC 分配逻辑、交叉开关分配逻辑和交叉开关本身。</li>
+<li>管道由四个阶段组成：路由计算（RT）、VC分配（VA）、交换机分配（SA）和交换机遍历（ST）。 （缓冲区写入BW 链路遍历LT）<ol>
+<li>路由前瞻：提前一跳执行路由计算，将所需要的阶段数从四级减小到三级</li>
+<li>推测 speculation：允许VA 和SA重叠，如果两个分配请求都被批准，则交换机分配的延迟将被隐藏。和路由前瞻结合时，推测在最好的情况下流水线减少到两个周期</li>
+<li>如果将VA SA 和 ST并行执行，乐观地可以将路由器延迟减少到单个周期。</li>
+<li>推测仅在低负载时才会成功，错误会受到一个周期的惩罚。</li>
+</ol>
+</li>
+<li>本文使用基于预选的两周期自适应路由器设计</li>
+</ol>
+</li>
+<li><p>自适应路由器微架构<br><img src="/images/RCA/image-1.png" alt="alt text"></p>
+<ol>
+<li>图 2 显示了基于 Kim 等人的设计的两级自适应路由器的管道，其中具有自适应阴影所需的额外逻辑。路由器使用下游节点处的空闲缓冲区计数来进行拥塞估计。每个端口的计数在每个周期更新并存储在四个拥塞值寄存器 (CVR) 中。在每个周期开始时，端口预选逻辑会读取 CVR，并通过寄存器之间的简单成对比较来计算每个象限的首选输出端口。具有更多空闲缓冲区的端口是首选输出，并且该结果被锁存在首选输出寄存器（POR）中。</li>
+<li>这种路由器设计可以推广到任何可以快速计算其值的拥塞度量。例如，使用空闲 VC 计数而不是缓冲区可用性作为拥塞度量</li>
+</ol>
+</li>
+<li><p>拥塞信息指标</p>
+<ol>
+<li>考虑三个原子拥塞指标：空闲虚拟通道数、可用缓冲区数和交叉开关需求。所有三个指标都提供了有关下游争用的一些信息，并且在任何合理的虚拟通道路由器设计中都可以轻松使用。空闲虚拟通道 (vc)：空闲虚拟通道的计数首先由 Dally 和 Aoki 提出作为拥塞指标，他们指出分配的 VC 越少意味着给定链路上的复用越少。空闲缓冲区 (bf)：Kim 等人。在其低延迟自适应路由器中使用了空闲缓冲区的计数。缓冲区计数指示下游节点的输入端口所经历的背压量。交叉开关需求 (xb)：交叉开关需求是文章提出和评估的一个新指标，用于衡量给定输出端口的活跃请求者数量。交叉开关需求捕获新数据包可能经历的实际通道复用量。对输出端口的多个并发请求表明存在聚合流量模式，这可能是瓶颈。由于文章的路由器采用推测，因此推测和非推测的切换请求都会被计算在内。</li>
+<li>复合指标：每个原子指标都有优点和缺点。文章提出了原子指标的简单配对，以发挥它们的优点并消除它们的缺点。原子度量的三种组合是： 空闲 VC 和空闲缓冲区 (vc bf )；免费 VC 和交叉开关需求 (xb vc)；以及空闲缓冲区和交叉开关需求 (xb bf )。文章使用这些拥塞指标在各种工作负载中比较了本地自适应路由器的性能。在非组合指标中，bf 和 vc 表现相似，而 xb 表现稍好。组合指标通常优于非组合指标，其中 xb vc 在最广泛的工作负载中表现最佳。</li>
+</ol>
+</li>
+<li><p>RCA variants<br> <img src="/images/RCA/image-2.png" alt="alt text"></p>
+<p>研究了具有不同性价比特征的三种有前途的 RCA 变体。 </p>
+<ol>
+<li>RCA 1D：这种简单的设计沿着每个维度独立地聚合和传播拥塞信息。 RCA 1D 提供了沿数据包路由象限边界轴的出色可视性，但无法直接了解象限中间的网络状态。图 3(a) 显示了 RCA 1D 如何向西方向传播拥塞状态。虽然仅提供有限的网络可见性，但此方法在 RCA 设计空间中具有最低的实现复杂性。 </li>
+<li>RCA Fanin：RCA Fanin 的目标是以最小的逻辑开销提供比 RCA 1D 更多的网络状态信息。 RCA Fanin 通过将传播轴上的拥塞估计值与正交方向上的拥塞估计值进行聚合，提供了区域拥塞的粗略视图，如图 3(b) 所示。虽然 RCA Fanin 涵盖的网络区域比 RCA 1D 的单向拥塞向量大得多，但它还通过组合来自互斥路由象限的信息将噪声引入其估计中。</li>
+<li>RCA Quadrant：如图 3(c) 所示，RCA 象限旨在通过为每个网络象限维护单独的拥塞值来最大限度地提高拥塞估计的准确性。与 RCA 1D 相比，这样做可以减少因组合 RCA Fanin 中存在的互斥路由区域的信息而产生的噪声，同时最大化覆盖范围。由于每个端口属于两个不同的象限，因此必须在每个网络接口处接收、更新和传播两个单独的拥塞值，从而导致逻辑和布线复杂性的开销是 RCA 1D 或 RCA Fanin 的两倍</li>
+</ol>
+</li>
+<li><p>RCA 路由器<br><img src="/images/RCA/image-3.png" alt="alt text"></p>
+<ol>
+<li><p>图 4 显示了对 RCA 2 级自适应路由器的修改。文章添加的两个新模块是拥塞状态聚合和传播。<br><img src="/images/RCA/image-4.png" alt="alt text"></p>
+</li>
+<li><p>图5(a)详细显示了聚合模块。聚合模块的输入来自下游路由器和本地 CVR，反映本地拥塞估计。聚合逻辑组合两个拥塞值。最简单的权重分配（50-50）是在各种基准测试中表现最一致的。因此，聚合是一个简单的问题，即找到本地和非本地值的。</p>
+</li>
+<li><p>5(b) 详细介绍了 RCA Fanin 的传播模块。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="实验评估及结论"><a href="#实验评估及结论" class="headerlink" title="实验评估及结论"></a>实验评估及结论</h2><ol>
+<li><p>对两周期路由器微体系结构进行建模。路由器模型用于收集第 3.3 节中提出的拥塞指标，并支持所有 RCA 变体。文章测量了三种基线架构的性能：（1）DOR，一个维度有序的不经意路由器； (2) Local，使用vc拥塞度量的本地自适应路由器； (3) Local Best，这是一个使用文章的 xb vc 组合拥塞度量的自适应路由器。 RCA 1D、RCA Fanin 和 RCA Quadrant 也使用 xb vc 拥塞指标。<br><img src="/images/RCA/image-5.png" alt="alt text"></p>
+</li>
+<li><p>更少的虚拟通道以及更少的 flit 缓冲区会降低各种争用指标的分辨率，并导致 RCA 性能下降。另一个问题是由于 Y 方向存在逸出 VC 导致虚​​拟通道利用率不平衡。逃逸 VC 是为网络遍历最后一段的数据包保留的，不能以其他方式使用。文章的争用指标没有考虑到这些 VC 的特殊状态，最终会提供一个误导性的资源可用性图景。随着 VC 数量的减少，预留 VC 对拥塞估计准确性的衰减效应会被放大，模拟每个物理信道两个 VC 的实验证实了这一趋势。</p>
+</li>
+<li><p>RCA 在贪婪的本地决策可能会损害全局负载平衡的工作负载（例如位补码流量）上也表现良好。当网络直径较大或拥塞高度短暂时，RCA 的影响会降低。大的网络直径会降低 RCA 设计的有效性，因为在本地和传播竞争指标的权重为 50-50 的情况下，本地指标的小波动可能会超过强大的远程趋势。为了提高 RCA 在大型网格中的性能，人们可能会考虑调整局部与非局部权重，增加 RCA 位宽以获得更大的可视性，或使用集中来减小网络直径。</p>
+</li>
+<li><p>RCA 的面积开销已经非常低，文章发现与传统的自适应路由器相比，RCA 可以减少路由器面积要求。在许多模拟工作负载中，4-VC RCA 设计能够匹配或超过 8-VC 本地路由器的性能，从而使 RCA 成为面积受限设计的有吸引力的选择。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NoC/" rel="tag"># NoC</a>
+              <a href="/tags/routing-algorithm/" rel="tag"># routing algorithm</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/31/An-efficient-thermal-model/" rel="next" title="An-efficient-thermal-model">
+                  An-efficient-thermal-model <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

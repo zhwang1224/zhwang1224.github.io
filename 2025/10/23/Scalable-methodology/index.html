@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets 1. 芯粒互连网络 A. 芯粒内部网络（On-Chiplet Network） B. 接口分组（Interface Grouping） C. 芯粒间互连（Chiplets Interconnections）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scalable methodology">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/10/23/Scalable-methodology/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets 1. 芯粒互连网络 A. 芯粒内部网络（On-Chiplet Network） B. 接口分组（Interface Grouping） C. 芯粒间互连（Chiplets Interconnections）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-6.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-7.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-8.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-9.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-10.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-11.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image-12.png">
+<meta property="article:published_time" content="2025-10-23T03:27:33.000Z">
+<meta property="article:modified_time" content="2025-11-06T14:02:50.936Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Chiplet">
+<meta property="article:tag" content="MCM">
+<meta property="article:tag" content="NOC">
+<meta property="article:tag" content="Routing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/Scalable-methodology/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/10/23/Scalable-methodology/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/10/23/Scalable-methodology/","path":"2025/10/23/Scalable-methodology/","title":"Scalable methodology"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Scalable methodology | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HPCA%E2%80%99-23-A-Scalable-Methodology-for-Designing-Efficient-Interconnection-Network-of-Chiplets"><span class="nav-number">1.</span> <span class="nav-text">HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C"><span class="nav-number">1.1.</span> <span class="nav-text">1. 芯粒互连网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-%E8%8A%AF%E7%B2%92%E5%86%85%E9%83%A8%E7%BD%91%E7%BB%9C%EF%BC%88On-Chiplet-Network%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">A. 芯粒内部网络（On-Chiplet Network）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E6%8E%A5%E5%8F%A3%E5%88%86%E7%BB%84%EF%BC%88Interface-Grouping%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">B. 接口分组（Interface Grouping）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E8%8A%AF%E7%B2%92%E9%97%B4%E4%BA%92%E8%BF%9E%EF%BC%88Chiplets-Interconnections%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">C. 芯粒间互连（Chiplets Interconnections）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%B7%AF%E7%94%B1%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2. 路由设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-MFR-%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">A.MFR 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E7%AD%89%E6%A0%87%E7%AD%BE%E4%BF%A1%E9%81%93%E7%9A%84%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.2.</span> <span class="nav-text">B. 等标签信道的死锁问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E7%BB%93%E5%90%88%E5%AE%89%E5%85%A8-%E4%B8%8D%E5%AE%89%E5%85%A8%E6%B5%81%E6%8E%A7%E7%9A%84-MFR"><span class="nav-number">1.2.3.</span> <span class="nav-text">C. 结合安全&#x2F;不安全流控的 MFR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BD%91%E7%BB%9C%E4%BA%A4%E9%94%99%EF%BC%88Network-Interleaving%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">3. 网络交错（Network Interleaving）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">4. 评估方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%8E%A2%E7%B4%A2%E5%88%86%E6%9E%90%EF%BC%88Explorations%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">5. 探索分析（Explorations）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A8%A1%E6%8E%A2%E7%B4%A2"><span class="nav-number">1.5.1.</span> <span class="nav-text">A. 系统规模探索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E8%8A%AF%E7%B2%92%E9%97%B4%E9%93%BE%E8%B7%AF%E9%85%8D%E7%BD%AE%E6%8E%A2%E7%B4%A2"><span class="nav-number">1.5.2.</span> <span class="nav-text">B. 芯粒间链路配置探索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E7%BD%91%E7%BB%9C%E4%BA%A4%E9%94%99%E6%8E%A2%E7%B4%A2"><span class="nav-number">1.5.3.</span> <span class="nav-text">C. 网络交错探索</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/23/Scalable-methodology/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Scalable methodology | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Scalable methodology
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-10-23 11:27:33" itemprop="dateCreated datePublished" datetime="2025-10-23T11:27:33+08:00">2025-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-06 22:02:50" itemprop="dateModified" datetime="2025-11-06T22:02:50+08:00">2025-11-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#hpca-23-a-scalable-methodology-for-designing-efficient--interconnection-network-of-chiplets">HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets</a><ul>
+<li><a href="#1-%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C">1. 芯粒互连网络</a><ul>
+<li><a href="#a-%E8%8A%AF%E7%B2%92%E5%86%85%E9%83%A8%E7%BD%91%E7%BB%9Con-chiplet-network">A. 芯粒内部网络（On-Chiplet Network）</a></li>
+<li><a href="#b-%E6%8E%A5%E5%8F%A3%E5%88%86%E7%BB%84interface-grouping">B. 接口分组（Interface Grouping）</a></li>
+<li><a href="#c-%E8%8A%AF%E7%B2%92%E9%97%B4%E4%BA%92%E8%BF%9Echiplets-interconnections">C. 芯粒间互连（Chiplets Interconnections）</a></li>
+</ul>
+</li>
+<li><a href="#2-%E8%B7%AF%E7%94%B1%E8%AE%BE%E8%AE%A1">2. 路由设计</a><ul>
+<li><a href="#amfr-%E7%AE%97%E6%B3%95">A.MFR 算法</a></li>
+<li><a href="#b-%E7%AD%89%E6%A0%87%E7%AD%BE%E4%BF%A1%E9%81%93%E7%9A%84%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98">B. 等标签信道的死锁问题</a></li>
+<li><a href="#c-%E7%BB%93%E5%90%88%E5%AE%89%E5%85%A8%E4%B8%8D%E5%AE%89%E5%85%A8%E6%B5%81%E6%8E%A7%E7%9A%84-mfr">C. 结合安全/不安全流控的 MFR</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%BD%91%E7%BB%9C%E4%BA%A4%E9%94%99network-interleaving">3. 网络交错（Network Interleaving）</a></li>
+<li><a href="#4-%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95">4. 评估方法</a></li>
+<li><a href="#5-%E6%8E%A2%E7%B4%A2%E5%88%86%E6%9E%90explorations">5. 探索分析（Explorations）</a><ul>
+<li><a href="#a-%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A8%A1%E6%8E%A2%E7%B4%A2">A. 系统规模探索</a></li>
+<li><a href="#b-%E8%8A%AF%E7%B2%92%E9%97%B4%E9%93%BE%E8%B7%AF%E9%85%8D%E7%BD%AE%E6%8E%A2%E7%B4%A2">B. 芯粒间链路配置探索</a></li>
+<li><a href="#c-%E7%BD%91%E7%BB%9C%E4%BA%A4%E9%94%99%E6%8E%A2%E7%B4%A2">C. 网络交错探索</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="HPCA’-23-A-Scalable-Methodology-for-Designing-Efficient-Interconnection-Network-of-Chiplets"><a href="#HPCA’-23-A-Scalable-Methodology-for-Designing-Efficient-Interconnection-Network-of-Chiplets" class="headerlink" title="HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets"></a>HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets</h1><p>提出了一种可灵活构建高径数（high-radix）互连网络的方法，该方法基于常见的二维网格 NoC 芯粒。</p>
+<p>文章提出主要面临的两个挑战：</p>
+<ul>
+<li>可扩展性问题：芯粒复用（chiplet reuse）是该架构的一大优势。如果一个芯粒可以用于构建多种系统，将大幅降低设计成本与迭代周期。二维网格拓扑因易于实现而被广泛用于片上网络，但对于包含上千核的大规模系统（如晶圆级系统），其性能极差，因为网络直径呈 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="7.425ex" height="2.758ex" role="img" focusable="false" viewBox="0 -969 3282 1219"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"></path></g><g data-mml-node="mo" transform="translate(763,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="msqrt" transform="translate(1152,0)"><g transform="translate(853,0)"><g data-mml-node="mi"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g></g><g data-mml-node="mo" transform="translate(0,109)"><path data-c="221A" d="M95 178Q89 178 81 186T72 200T103 230T169 280T207 309Q209 311 212 311H213Q219 311 227 294T281 177Q300 134 312 108L397 -77Q398 -77 501 136T707 565T814 786Q820 800 834 800Q841 800 846 794T853 782V776L620 293L385 -193Q381 -200 366 -200Q357 -200 354 -197Q352 -195 256 15L160 225L144 214Q129 202 113 190T95 178Z"></path></g><rect width="888" height="60" x="853" y="849"></rect></g><g data-mml-node="mo" transform="translate(2893,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container>  增长。大规模与小规模网络的设计思路差异显著，因而难以用同一芯粒设计覆盖多种系统规模。</li>
+<li>路由设计：传统路由方法无法直接应用于多芯粒系统。将多个片上网络（NoC）相连可能导致潜在的死锁与拥塞问题。此外，路由算法与系统拓扑和规模紧密相关，难以扩展。目前多数研究仍采用简单但低效的方案，如二维网格上的维度优先路由（DOR），其性能与可扩展性均受限，也缺乏<strong>容错能力</strong>。</li>
+</ul>
+<p>为应对这些挑战，本文提出一种基于软件定义接口分组的多芯粒互连设计方法，可重新定义传统二维网格 NoC 芯粒的拓扑特性。通过将芯粒的接口节点划分为抽象接口组，可灵活构建高径数拓扑结构。针对这种结构，本文提出了一种基于“减号优先路由（Minus-First Routing, MFR）”的可扩展无死锁自适应路由算法，并进一步提出安全/不安全流控机制以及网络交错方法，以提升带宽利用率。</p>
+<h2 id="1-芯粒互连网络"><a href="#1-芯粒互连网络" class="headerlink" title="1. 芯粒互连网络"></a>1. 芯粒互连网络</h2><h3 id="A-芯粒内部网络（On-Chiplet-Network）"><a href="#A-芯粒内部网络（On-Chiplet-Network）" class="headerlink" title="A. 芯粒内部网络（On-Chiplet Network）"></a>A. 芯粒内部网络（On-Chiplet Network）</h3><p>受限于芯片的布局与布线能力，大多数片上互连网络（on-chip network）采用平面拓扑结构（flat topology）。本文在芯粒内部采用最常见的二维网格（2D-mesh）作为片上网络拓扑。如图 3(a) 所示，二维网格中的所有节点被划分为两类：边缘节点（edge nodes）与内部节点（internal nodes）。</p>
+<p><img src="/images/Scalable-methodology/image.png" alt="alt text"></p>
+<ul>
+<li><p>边缘节点（又称接口节点 interface nodes）是与外部接口（如芯粒间互连或内存控制器）相连的路由器；</p>
+</li>
+<li><p>内部节点（又称核心节点 core nodes）则连接至功能模块（如 CPU 核或 AI 核）。</p>
+</li>
+</ul>
+<p>路由器的微架构采用典型的虚拟信道路由器（Virtual Channel Router），在每个输入端口配置若干独立缓冲区。交换技术使用**虚拟直通（Virtual Cut-Through, VCT）机制。</p>
+<h3 id="B-接口分组（Interface-Grouping）"><a href="#B-接口分组（Interface-Grouping）" class="headerlink" title="B. 接口分组（Interface Grouping）"></a>B. 接口分组（Interface Grouping）</h3><p>文章提出一种称为 “接口分组（Interface Grouping）” 的方法，将相邻的边缘节点聚合为若干组。<br>每组中的所有物理接口被视为一个软件定义的抽象接口（software-defined interface），并与其他芯粒上的相同规模接口相连。</p>
+<p>如图 3(c) 所示，一个 6×6 的 2D-mesh 芯粒有 20 个边缘节点，可以将它们分为 4 组或 10 组。<br>经过接口分组后，芯粒可以视为一个具有灵活径数的大节点，从而在系统设计中可根据需要灵活调整节点径数和边缘带宽。这种分组方法完全是软件定义的，并不改变原有 NoC 的硬件架构。然而，软件分组方式可能导致带宽利用率不足。</p>
+<h3 id="C-芯粒间互连（Chiplets-Interconnections）"><a href="#C-芯粒间互连（Chiplets-Interconnections）" class="headerlink" title="C. 芯粒间互连（Chiplets Interconnections）"></a>C. 芯粒间互连（Chiplets Interconnections）</h3><p>经过接口分组后，每个芯粒可视为一个高径数节点，从而能支持更短直径的高效网络拓扑。</p>
+<ul>
+<li><p>若能使具有相同标签的接口节点相连，则“减号优先路由（MFR）”可以无缝地从一个芯粒延伸到另一个芯粒；</p>
+</li>
+<li><p>在经过中间芯粒路由时，入口与出口接口之间的距离越近，通信延迟越低</p>
+</li>
+</ul>
+<ol>
+<li>超立方体拓扑（Hypercube）</li>
+<li>蜻蜓拓扑（Dragonfly） 即全连接</li>
+<li>n 维网格拓扑（nD-Mesh）</li>
+<li>非规则与异构拓扑（Irregular and Heterogeneous Topologies）</li>
+</ol>
+<p><img src="/images/Scalable-methodology/image-1.png" alt="alt text"><br><img src="/images/Scalable-methodology/image-2.png" alt="alt text"><br><img src="/images/Scalable-methodology/image-3.png" alt="alt text"></p>
+<h2 id="2-路由设计"><a href="#2-路由设计" class="headerlink" title="2. 路由设计"></a>2. 路由设计</h2><p>列出了一系列定义：</p>
+<p>定义 1. 从较大标签节点指向较小标签节点的物理或虚拟信道称为负向信道（minus channel）；<br>从较小标签节点指向较大标签节点的物理或虚拟信道称为正向信道（plus channel）；<br>连接相同标签节点的物理或虚拟信道称为等标签信道（equal channel）。</p>
+<p>定义 2. 2D-mesh NoC 内部的节点称为 Core；2D-mesh NoC 边缘的节点称为 Interface（IF）。</p>
+<p>定义 3. 减号优先路由（Minus-First Routing, MFR）：当当前行进方向为正（plus）时，禁止转向负（minus）。换言之，消息应先经过若干负向跳，再经过若干正向跳到达目的地；遵循此规则的路径称为减号优先路径。</p>
+<p>定义 4. 若某分组（packet）从当前信道到目的地存在一条减号优先路径，则该分组在下一跳输入缓冲中被视为安全分组（safe）；否则为不安全分组（unsafe）。</p>
+<p>定义 5. 等标签组（equal label group）：一组由相同标签且连通的节点构成的集合。</p>
+<h3 id="A-MFR-算法"><a href="#A-MFR-算法" class="headerlink" title="A.MFR 算法"></a>A.MFR 算法</h3><p>MFR 的总体思想：基于标签，为任意一对源–目的节点找到一条**“先负后正”的路径。第三章 A 节指出，Core 的标签与传统 2D-mesh 一致，IF 的标签在边缘形成一个负数环**。因此可概括信道属性（图 7 中红色为 minus，绿色为 plus）。从 minus 转向 plus 的“转折”可归纳为六类情形。</p>
+<p><img src="/images/Scalable-methodology/image-4.png" alt="alt text"></p>
+<p>跨芯粒路由见算法 2，芯粒内路由见算法 3。</p>
+<p>对芯粒内通信，遵守“先负后正”较为直接。对跨芯粒通信，路径需更谨慎：以 Core→Core 为例，先调用 CORE TO IF(C,P) 走全负向路径到“外出 IF”；随后在 IF→IF 的环上跨芯粒传输，直至到达目标芯粒；通过芯粒间链路后，调用 IF TO CORE(C,P)。</p>
+<h3 id="B-等标签信道的死锁问题"><a href="#B-等标签信道的死锁问题" class="headerlink" title="B. 等标签信道的死锁问题"></a>B. 等标签信道的死锁问题</h3><p>若在路由设计中为组内所有节点分配相同标签，则会引入一种新的信道类型：等标签信道（equal）。当两芯粒的同标签接口相连时，芯粒间也会出现 equal 信道。于是可能形成 plus→equal→minus 或 equal→equal 的依赖链，从而潜在死锁。图 8 展示了 nD-mesh 中的一个死锁构型：同一维度、同一标签的接口组之间形成环形依赖。</p>
+<p>定理 1. 若满足下列条件，带有等标签信道的 MFR 算法无死锁：</p>
+<p>分组一旦经过 plus 信道，禁止再转回 minus；</p>
+<p>在等标签组内部，使用**虚拟信道（VC）**将“沿 plus 进入”的分组（若存在）与其他分组隔离；</p>
+<p>等标签组内部本身无死锁。</p>
+<p>证明思路. 反设存在信道依赖环。由条件 3，环中至少有一条非 equal 信道，因此必有一段从 plus 到 minus 的依赖链。由于 MFR 禁止 plus→minus 的直接转折，链中必然夹有 equal，即必穿过某等标签组。按条件 2，“沿 plus 进入”的分组会被导入另一个虚拟子网；按条件 1，该子网内的分组离开时不能转回 minus。于是无法闭合依赖环，故全局无死锁。</p>
+<p><img src="/images/Scalable-methodology/image-5.png" alt="alt text"></p>
+<p>故需满足：</p>
+<ul>
+<li>跨组死锁可在接口节点处增设 VC以隔离解决；</li>
+<li>组内死锁因其依赖被外部隔离，只需单独设计组内路由即可。</li>
+</ul>
+<p>对 nD-mesh：报文按维度有序、沿负向路径到达目标芯粒之前无需经过 plus，故条件 2 的 VC 并非必需；为避免组内 d⁺/d⁻ 相互依赖，只需 1 个 VC 将 d⁺ 与 d⁻ 分开，即可实现全局无死锁。<br>对 Hypercube 与 Dragonfly：既无跨组也无组内的 equal 死锁，无需 VC 即可全局无死锁</p>
+<h3 id="C-结合安全-不安全流控的-MFR"><a href="#C-结合安全-不安全流控的-MFR" class="headerlink" title="C. 结合安全/不安全流控的 MFR"></a>C. 结合安全/不安全流控的 MFR</h3><p>在多种拓扑（尤指不规则网络）下，为任意源–目的对显式寻找“先负后正”路径既繁琐，且为满足该原则往往偏离最短路。为化简设计，我们给出一种只需至少两个“未分类缓冲”即可实现的通用无死锁流控方法。该方法基于流量控制，其最初用于 2D-mesh 以平衡缓冲利用率</p>
+<p>D. 结合安全/不安全流控的 MFR</p>
+<p>在多种拓扑（尤指不规则网络）下，为任意源–目的对显式寻找“先负后正”路径既繁琐，且为满足该原则往往偏离最短路。为化简设计，我们给出一种只需至少两个“未分类缓冲”即可实现的通用无死锁流控方法。该方法基于流量控制，其最初用于 2D-mesh 以平衡缓冲利用率。</p>
+<p>按定义 4，所有 safe 分组都存在符合原路由规则的到达路径。见算法 5，在 VC 分配阶段，安全/不安全流控按如下策略判定是否放行：</p>
+<ul>
+<li><p>若目标输入端口可用 VC 数 ≥ 2，放行；</p>
+</li>
+<li><p>若可用 VC 数 = 1且该端口已有至少一个 safe 分组，放行；</p>
+</li>
+<li><p>若可用 VC 数 = 1且当前端口无 safe，则若到达下一跳后分组为 safe，亦放行；</p>
+</li>
+<li><p>否则阻塞。</p>
+</li>
+</ul>
+<p>由于每个输入端口要么有空 VC，要么存在 safe 分组，且基于定义 3、4 与定理 1，safe 分组不可能形成死锁环，因此 safe 分组不会永久阻塞。<br>对 unsafe 分组而言，出现死锁需要许多 unsafe 分组共同形成依赖环；此时只要有任一分组能被推进到相邻节点并转为 safe，死锁即被打破。要形成死锁，必须同时满足：</p>
+<ul>
+<li><p>分组构成依赖环；</p>
+</li>
+<li><p>环上每个分组从当前信道到目的地均无减号优先路径；</p>
+</li>
+<li><p>环上每个分组从任一相邻信道到目的地亦无减号优先路径。</p>
+</li>
+</ul>
+<p>这组条件极为苛刻，现实中难以同时满足。因此，安全/不安全流控在放宽部分死锁限制的同时，显著简化了路由设计：</p>
+<p>报文无需拘泥于“先负后正”，而是可优先走最短路；甚至允许某些源–目的对之间不存在严格的减号优先路径。该流控技术对将 MFR 推广至更一般的网络结构大有裨益。</p>
+<h2 id="3-网络交错（Network-Interleaving）"><a href="#3-网络交错（Network-Interleaving）" class="headerlink" title="3. 网络交错（Network Interleaving）"></a>3. 网络交错（Network Interleaving）</h2><p>由于这种分组是软件定义的，传统通信方式中每条消息只能从其中一个物理通道发出，从而导致接口分组带来的带宽提升被严重浪费。为提升芯粒间通信效率，我们提出一种新方法——网络交错（Network Interleaving）。</p>
+<p>如图 9 所示，当源节点需要向另一芯粒上的目标节点发送消息时，我们将通信流量均匀分布在整个抽象接口的所有物理通道上。这样，芯粒间的通信带宽可以被充分利用。</p>
+<p>交错路由的实现非常直接，只需在调用 CORE_TO_IF(C, P) 算法时改变目标接口即可。在硬件层面，只需在消息封装阶段修改分组头部，为其添加不同的交错标签（interleaving-tags），路由器便会根据这些标签将分组发送到不同的接口节点。</p>
+<p>与内存交错（memory interleaving）类似，网络交错也存在不同的粒度（granularity）。细粒度交错的思想是：将一条消息的所有分组（packets）依次分配到抽象接口的多个物理接口上，但容易出现更严重的乱序（out-of-order）问题。粗粒度交错以更大的单位进行分配。如图 10 所示，路由器可以每若干个分组甚至每条消息重新分配一次交错标签。与细粒度交错相比，粗粒度交错在高负载（heavy load）的网络环境下更具优势。<br>对于单条消息，通常只会使用一个或少数几条物理通道。粒度交错也无法避免乱序问题。</p>
+<p><img src="/images/Scalable-methodology/image-6.png" alt="alt text"><br><img src="/images/Scalable-methodology/image-7.png" alt="alt text"></p>
+<h2 id="4-评估方法"><a href="#4-评估方法" class="headerlink" title="4. 评估方法"></a>4. 评估方法</h2><p>面向芯粒架构的周期精确（cycle-accurate）C++ 仿真器。基于典型的虚拟信道路由器（Virtual Channel Router）。交换技术采用虚拟直通（Virtual Cut-Through, VCT）。交叉开关（Crossbar）采用抢占式调度，并通过<strong>先来先服务（First-Come-First-Serve）策略</strong>避免饥饿。流量控制采用基于信用（Credit-based）**的机制，每个输出端口都能获知其对应输入缓冲的占用情况。</p>
+<p>在跨芯粒通信过程中，虚拟信道分配与消息传输阶段会消耗更多时钟周期。与通用网络仿真器（如 BookSim）相比，本仿真器支持非均匀链路配置，以反映芯粒内外通信特性的不同。每个端口的带宽、延迟与缓冲区大小均可单独配置，同时也可为跨芯粒的流水阶段引入更长的延迟。</p>
+<p>基线采用 Duato 协议 的自适应负向优先路由（Adaptive Negative-First Routing, NFR），运行在 2D-mesh 拓扑上。</p>
+<p><img src="/images/Scalable-methodology/image-8.png" alt="alt text"></p>
+<p>通信模式包括Uniform、Uniform-hotspot以及四种置换流量（Permutation Traffic）。节点标签是全局统一的，因此通信包含**芯粒内（intra-chiplet）与芯粒间（inter-chiplet）**两部分。系统规模为 64 个芯粒，每个芯粒为 4×4 的 2D-mesh。</p>
+<ul>
+<li><p>2D-mesh（8×8，基线）；</p>
+</li>
+<li><p>3D-mesh（4×4×4，radix-6 分组）；</p>
+</li>
+<li><p>Hypercube 超立方体（2⁶，radix-6 分组）。</p>
+</li>
+</ul>
+<p>如图 11 所示，在所有流量模式下，本方法的平均延迟显著低于传统 2D-mesh 自适应路由。其中，基于 Hypercube 拓扑的 MFR 在所有模式下的饱和注入率均超过基线的两倍；3D-mesh 在特定模式（如 Bit-reverse）下也表现出优势。本方法在各种流量负载下均优于传统 2D-mesh，尤其是在存在**大量跨芯粒通信（global traffic）**时，优势更加显著。</p>
+<p><img src="/images/Scalable-methodology/image-9.png" alt="alt text"></p>
+<h2 id="5-探索分析（Explorations）"><a href="#5-探索分析（Explorations）" class="headerlink" title="5. 探索分析（Explorations）"></a>5. 探索分析（Explorations）</h2><h3 id="A-系统规模探索"><a href="#A-系统规模探索" class="headerlink" title="A. 系统规模探索"></a>A. 系统规模探索</h3><p><img src="/images/Scalable-methodology/image-10.png" alt="alt text"></p>
+<p>作者在三种拓扑下评估了四种不同系统规模。芯粒间链路带宽设置为 64 bits/cycle（2 flits/cycle），并启用了粗粒度交错（coarse-grained interleaving）。如图 12(a) 与 (b) 所示，当片上网络规模从 4×4 扩大到 8×8 时，延迟降低幅度变小，因为芯粒内传输延迟占比提高。随后作者将芯粒数量扩大至 64 与 256（见图 12(c)(d)）。结果表明：</p>
+<ul>
+<li><p>nD-mesh 与 2D-mesh 的饱和注入率相近；</p>
+</li>
+<li><p>但 MFR 在 nD-mesh 上的延迟仍显著更低：3D-mesh 降低约 35%，4D-mesh 降低约 55%；</p>
+</li>
+<li><p>而在 Hypercube 拓扑下，性能提升最为显著，饱和注入率提升可达 2×，平均延迟低于 50%。</p>
+</li>
+</ul>
+<p>在能耗方面，作者基于 130nm？ 工艺对不同规模系统进行了估算。片上能耗采用的模型：在 2mm 连线长度下，单跳传输能耗为</p>
+<ul>
+<li>每个路由器约 0.98 pJ/bit，</li>
+<li>每条链路约 0.63 pJ/bit。<br>跨芯粒链路的能耗根据最新研究估算为 2.4 pJ/bit。</li>
+</ul>
+<p>基于这些数据，对 2D-mesh 与 Hypercube 网络的平均能耗进行评估（图 13）。结果显示：无论芯片内外，本方法在功耗上均有明显优势，尤其在大规模网络中表现突出。对于 256 芯粒的 Hypercube 系统，功耗比 2D-mesh 降低约 60%。</p>
+<h3 id="B-芯粒间链路配置探索"><a href="#B-芯粒间链路配置探索" class="headerlink" title="B. 芯粒间链路配置探索"></a>B. 芯粒间链路配置探索</h3><p>另一个对性能影响显著的因素是芯粒间链路配置。作者在 64 个 4×4 芯粒上测试了四种不同的带宽配置：分别为芯粒内部链路带宽的 1/4×、1/2×、1×、2×。所有实验均启用粗粒度交错。</p>
+<p>结果如下：</p>
+<ul>
+<li><p>当带宽不足时（图 14(a)），网络性能受限严重。2D 与 3D-mesh 很快饱和，而 Hypercube 的饱和注入率仍是前者的两倍。</p>
+</li>
+<li><p>当带宽提升至 64 bits/cycle（图 14(b)），整体性能关系不变：Hypercube 的饱和注入率约为两倍，延迟减半。</p>
+</li>
+<li><p>但当带宽继续增加（图 14(c)(d)），性能提升趋于饱和，甚至略低于 2D-mesh，因为此时瓶颈不在跨芯粒通信，而转向芯粒内部网络。</p>
+</li>
+</ul>
+<p><img src="/images/Scalable-methodology/image-11.png" alt="alt text"></p>
+<p>进一步测试链路延迟与缓冲大小的影响：2D-mesh 链路延迟设为 5 个周期、缓冲区为 2048 bits；<br>Hypercube 组采用不同延迟配置。</p>
+<p>结果（图 15）表明：</p>
+<ul>
+<li><p>随链路延迟增加，平均消息延迟迅速上升；</p>
+</li>
+<li><p>链路缓冲大小对性能影响很小；</p>
+</li>
+<li><p>即便在 15-cycle 延迟下，64 芯粒 Hypercube 的性能仍优于 5-cycle 的 2D-mesh，但优势缩小。</p>
+</li>
+</ul>
+<p><img src="/images/Scalable-methodology/image-12.png" alt="alt text"></p>
+<h3 id="C-网络交错探索"><a href="#C-网络交错探索" class="headerlink" title="C. 网络交错探索"></a>C. 网络交错探索</h3><p>作者进一步测试了无交错与不同交错粒度下的性能差异，实验对象仍为 64 个 4×4 芯粒，链路延迟为 5 个周期，测试带宽为 64 与 128 bits/cycle 两种配置。结果如图 16：</p>
+<ul>
+<li><p>禁用交错时，平均延迟增加约 15%，饱和注入率下降约 20%；</p>
+</li>
+<li><p>包级交错（packet-level interleaving） 比 消息级交错（message-level interleaving） 带来约 10% 注入率提升，同时平均延迟减少约 5%；</p>
+</li>
+<li><p>在 64 bits/cycle 带宽下，交错带来的性能提升最为明显，因为带宽利用率提升在受限带宽场景下尤为关键。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Chiplet/" rel="tag"># Chiplet</a>
+              <a href="/tags/MCM/" rel="tag"># MCM</a>
+              <a href="/tags/NOC/" rel="tag"># NOC</a>
+              <a href="/tags/Routing/" rel="tag"># Routing</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/10/22/chiplet-actuary/" rel="prev" title="Chiplet Actuary">
+                  <i class="fa fa-angle-left"></i> Chiplet Actuary
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/10/23/CNsim/" rel="next" title="CNsim">
+                  CNsim <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

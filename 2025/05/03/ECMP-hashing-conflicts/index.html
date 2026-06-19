@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="ECMP 是什么 ECMP 的隐含假设 什么是 Hashing Conflict(哈希冲突) HPN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMP-hashing-conflicts">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/05/03/ECMP-hashing-conflicts/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="ECMP 是什么 ECMP 的隐含假设 什么是 Hashing Conflict(哈希冲突) HPN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPN/image-hash.png">
+<meta property="article:published_time" content="2025-05-03T13:38:28.000Z">
+<meta property="article:modified_time" content="2026-06-03T14:08:31.111Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="ECMP">
+<meta property="article:tag" content="Hashing Conflict">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/HPN/image-hash.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/05/03/ECMP-hashing-conflicts/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/05/03/ECMP-hashing-conflicts/","path":"2025/05/03/ECMP-hashing-conflicts/","title":"ECMP-hashing-conflicts"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ECMP-hashing-conflicts | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ECMP-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">ECMP 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ECMP-%E7%9A%84%E9%9A%90%E5%90%AB%E5%81%87%E8%AE%BE"><span class="nav-number">2.</span> <span class="nav-text">ECMP 的隐含假设</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Hashing-Conflict-%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81"><span class="nav-number">3.</span> <span class="nav-text">什么是 Hashing Conflict(哈希冲突)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HPN"><span class="nav-number">4.</span> <span class="nav-text">HPN</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/05/03/ECMP-hashing-conflicts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ECMP-hashing-conflicts | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ECMP-hashing-conflicts
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-03 21:38:28" itemprop="dateCreated datePublished" datetime="2025-05-03T21:38:28+08:00">2025-05-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-03 22:08:31" itemprop="dateModified" datetime="2026-06-03T22:08:31+08:00">2026-06-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" itemprop="url" rel="index"><span itemprop="name">负载均衡</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#ecmp-%E6%98%AF%E4%BB%80%E4%B9%88">ECMP 是什么</a></li>
+<li><a href="#ecmp-%E7%9A%84%E9%9A%90%E5%90%AB%E5%81%87%E8%AE%BE">ECMP 的隐含假设</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF-hashing-conflict%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81">什么是 Hashing Conflict(哈希冲突)</a></li>
+<li><a href="#hpn">HPN</a></li>
+</ul>
+<span id="more"></span>
+
+
+<h2 id="ECMP-是什么"><a href="#ECMP-是什么" class="headerlink" title="ECMP 是什么"></a>ECMP 是什么</h2><p>ECMP（Equal-Cost Multi-Path，等价多路径路由）是传统数据中心网络中最常用的负载均衡机制。当源和目的之间存在多条代价相同的路径时，交换机需要把流量分摊到这些路径上。</p>
+<p>ECMP 的核心做法是哈希:交换机对每个数据包的<strong>五元组（源IP、目的IP、源端口、目的端口、协议号</strong>计算哈希值,再用哈希结果对可用路径数取模,决定这个流走哪条路。<br>关键特性:</p>
+<p>同一条流的所有包走同一条路径(因为五元组不变,哈希结果不变),这保证了不会乱序。<br>哈希是无状态的,交换机不需要记录每条流的状态,因此可扩展性好。</p>
+<h2 id="ECMP-的隐含假设"><a href="#ECMP-的隐含假设" class="headerlink" title="ECMP 的隐含假设"></a>ECMP 的隐含假设</h2><p>ECMP 能均匀分摊流量,依赖一个统计假设:网络中存在大量的流。</p>
+<p>当流的数量足够多时,即使哈希函数把某几条流碰撞到了同一条路径,从统计平均看,各条路径上的流数量和流量仍会趋于均衡——这就是”大数定律”在起作用。文中描述传统云计算正好满足这个前提:它产生数百万条流,每条流连续且低利用率(通常低于网卡容量的 20%),网络呈现高熵(high entropy)特征,ECMP 工作良好。</p>
+<h2 id="什么是-Hashing-Conflict-哈希冲突"><a href="#什么是-Hashing-Conflict-哈希冲突" class="headerlink" title="什么是 Hashing Conflict(哈希冲突)"></a>什么是 Hashing Conflict(哈希冲突)</h2><p>哈希冲突指的是:两条或多条不同的流,经过哈希计算后被映射到了同一条出口路径上。在流数量很多时,这种冲突无关紧要;但在流数量很少时,一次冲突就可能让某条路径过载、另一些路径闲置。</p>
+<p>LLM 训练的流量模式呈现如下特征：</p>
+<ol>
+<li>流数量极少(低熵)<br>传统云计算每个实例产生数十万连接,而 LLM 训练中每个 GPU 只用几十到几百条连接。流的总数从”百万级”塌缩到”几十级”。</li>
+<li>突发性大象流(elephant flow)<br>LLM 训练的流量来自梯度同步(AllReduce 等集合通信),呈周期性突发,瞬间就能打满网卡 400Gbps 的全部容量,持续几秒到几十秒。每条流都是”大象流”,数据量巨大。</li>
+</ol>
+<p>当少数几条大象流经过 ECMP 哈希时,大数定律失效了。如果两条 400Gbps 的大象流被哈希到同一条物理链路上,这条链路立刻过载丢包,而其他等价路径却完全空闲。这种流量分布不均直接拖慢整个训练。</p>
+<p>而传统数据中心是 3 层 Clos 架构(ToR → Aggregation → Core)。一条大象流跨 Pod 通信时,要在三层各做一次哈希,共计三次哈希。问题在于:每一层哈希的输入(五元组)是完全相同的。</p>
+<p>如果各层交换机使用相似的哈希算法,相同的输入就倾向于产生相关联的、非独立的输出。本来期望三层哈希像三次独立掷骰子那样把流量充分打散,但实际上由于输入不变、算法相关,流量会被”极化”——系统性地、反复地汇聚到某些路径上,而非随机分散。</p>
+<p>级联哈希(cascading hashing)会导致比单层更严重的负载不均。文中观察到大量负载不均案例,尤其集中在需要穿越全部三层的跨 Pod 通信场景。</p>
+<p><img src="/images/HPN/image-hash.png" alt="alt text"></p>
+<h2 id="HPN"><a href="#HPN" class="headerlink" title="HPN"></a>HPN</h2><ol>
+<li><p>用 2 层架构替代 3 层<br>HPN 用一个 2 层双平面架构就容纳 15K GPU(传统需要 3 层 Clos)。层数减少,哈希次数随之减少,从源头上降低了级化的机会。</p>
+</li>
+<li><p>Rail-optimized + 单芯片大交换机<br>靠 51.2Tbps 单芯片交换机和轨道优化网络,1024 个 GPU 装进一个 segment(单层网络)。96.3% 的训练任务规模小于 1K GPU,因此能完全放进一个 segment,根本不需要跨层哈希。</p>
+</li>
+<li><p>Dual-plane(双平面)消除 Aggregation 层极化<br>这是最直接针对哈希极化的设计。把每个 dual-ToR 中的两个 ToR 分入两个物理隔离的平面。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ECMP/" rel="tag"># ECMP</a>
+              <a href="/tags/Hashing-Conflict/" rel="tag"># Hashing Conflict</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/20/Dragonfly%E6%8B%93%E6%89%91/" rel="prev" title="Dragonfly拓扑">
+                  <i class="fa fa-angle-left"></i> Dragonfly拓扑
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/09/24/UB-Mesh-0/" rel="next" title="UB Mesh">
+                  UB Mesh <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

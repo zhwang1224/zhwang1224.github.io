@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU 1. 算法优化 2. 3D 并行通信重叠 3. 高效算子 4. 网络性能调优 5. 容错 6. 实验与部署经验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Megascale">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/06/01/Megascale/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU 1. 算法优化 2. 3D 并行通信重叠 3. 高效算子 4. 网络性能调优 5. 容错 6. 实验与部署经验">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Megascale/image.png">
+<meta property="article:published_time" content="2026-06-01T13:19:41.000Z">
+<meta property="article:modified_time" content="2026-06-03T14:08:28.491Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="模型优化">
+<meta property="article:tag" content="算子优化">
+<meta property="article:tag" content="网络调优">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/Megascale/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/06/01/Megascale/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/06/01/Megascale/","path":"2026/06/01/Megascale/","title":"Megascale"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Megascale | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MegaScale%EF%BC%9A%E5%B0%86%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%89%A9%E5%B1%95%E5%88%B0%E8%B6%85%E8%BF%87-10-000-%E4%B8%AA-GPU"><span class="nav-number">1.</span> <span class="nav-text">MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">1. 算法优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3D-%E5%B9%B6%E8%A1%8C%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0"><span class="nav-number">1.2.</span> <span class="nav-text">2. 3D 并行通信重叠</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%AB%98%E6%95%88%E7%AE%97%E5%AD%90"><span class="nav-number">1.3.</span> <span class="nav-text">3. 高效算子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98"><span class="nav-number">1.4.</span> <span class="nav-text">4. 网络性能调优</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%AE%B9%E9%94%99"><span class="nav-number">1.5.</span> <span class="nav-text">5. 容错</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%AE%9E%E9%AA%8C%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%BB%8F%E9%AA%8C"><span class="nav-number">1.6.</span> <span class="nav-text">6. 实验与部署经验</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/01/Megascale/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Megascale | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Megascale
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-01 21:19:41" itemprop="dateCreated datePublished" datetime="2026-06-01T21:19:41+08:00">2026-06-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-03 22:08:28" itemprop="dateModified" datetime="2026-06-03T22:08:28+08:00">2026-06-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">系统方案</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#megascale%E5%B0%86%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%89%A9%E5%B1%95%E5%88%B0%E8%B6%85%E8%BF%87-10000-%E4%B8%AA-gpu">MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</a><ul>
+<li><a href="#1-%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96">1. 算法优化</a></li>
+<li><a href="#2-3d-%E5%B9%B6%E8%A1%8C%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0">2. 3D 并行通信重叠</a></li>
+<li><a href="#3-%E9%AB%98%E6%95%88%E7%AE%97%E5%AD%90">3. 高效算子</a></li>
+<li><a href="#4-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98">4. 网络性能调优</a></li>
+<li><a href="#5-%E5%AE%B9%E9%94%99">5. 容错</a></li>
+<li><a href="#6-%E5%AE%9E%E9%AA%8C%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%BB%8F%E9%AA%8C">6. 实验与部署经验</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<h1 id="MegaScale：将大语言模型训练扩展到超过-10-000-个-GPU"><a href="#MegaScale：将大语言模型训练扩展到超过-10-000-个-GPU" class="headerlink" title="MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU"></a>MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</h1><p>文章从系统视角阐明了 LLM 训练的巨大规模引入的两个具体挑战。第一个挑战是在规模化条件下实现高训练效率，即如何提高模型利用率 MFU。第二个挑战是在规模化条件下实现高训练稳定性。</p>
+<p>MegaScale 是一个为 LLM 训练定制的算法—系统协同设计的专用系统。应用两个系统原则：算法—系统协同设计(algorithm-system co-design)和深入可观测性(in-depth observability)。</p>
+<p>主要工作包括对模型架构进行了若干修改，并纳入了有效的优化技术，包括并行 transformer block、滑动窗口注意力 和 LAMB 优化器；利用混合并行策略；基于每种并行策略的模式设计了定制技术，以最大化通信和计算之间的重叠；应用预取和基于树的加载来优化数据流水线；利用非阻塞异步操作，并消除用于大规模集合通信组初始化的全局屏障；设计了一种定制网络拓扑，减少 ECMP 哈希冲突，定制拥塞控制，并调优重传超时参数以获得高网络性能。</p>
+<p>针对稳定性问题，应用深入可观测性的原则来构建一组诊断工具。所谓“深入可观测性”，是指一种综合性的监控和可视化策略，它穿透表层指标，收集系统栈中每个组件的详细、细粒度数据，目标是创建系统性能的多维视图。这组工具允许通过揭示导致稳定性问题的复杂交互和依赖关系来诊断系统并识别根因；开发了一个鲁棒训练框架，以自动化故障定位和恢复；设计了封装多种信息形式的心跳消息，以促进实时异常检测并提供早期预警；实现了一套诊断测试，用于识别造成中断的节点；优化了检查点和恢复流程，以减少中断等。</p>
+<h2 id="1-算法优化"><a href="#1-算法优化" class="headerlink" title="1. 算法优化"></a>1. 算法优化</h2><p>在算法层面对模型做了一些修改，并纳入了近期优化，以提高训练效率，同时不损害准确性。采用 transformer block 的并行版本，而不是标准的串行形式。通过这种方法，attention block 和 MLP block 的计算可以并行执行，从而减少计算时间。</p>
+<p>滑动窗口注意力（SWA）。 滑动窗口注意力是一种稀疏注意力机制，它在输入序列中的每个 token 周围使用一个固定大小的窗口。其计算复杂度为 O(s × w)，其中 s 是输入序列长度，w 是固定窗口大小。在 w ≪ s 的情况下，滑动窗口注意力比完整自注意力更高效，后者的计算复杂度为 O(s × s)。这使得训练更快，同时不损害准确性。</p>
+<p>大规模高效训练通常会受到 batch size 约束的阻碍。特别是，增加 batch size 可能会对模型收敛产生不利影响。LAMB 优化器已被证明能够将 BERT 训练的 batch size 扩展到 64K，同时不损害准确性。在 LLM 场景下，我们的实验发现 LAMB 可以在不损失准确性的情况下将 batch size 扩展到 4×。MegaScale 也通过 LAMB 优化器减少了 87.5% 的流水线气泡。</p>
+<h2 id="2-3D-并行通信重叠"><a href="#2-3D-并行通信重叠" class="headerlink" title="2. 3D 并行通信重叠"></a>2. 3D 并行通信重叠</h2><p><img src="/images/Megascale/image.png" alt="在这里插入图片描述"></p>
+<h2 id="3-高效算子"><a href="#3-高效算子" class="headerlink" title="3. 高效算子"></a>3. 高效算子</h2><p>把零碎的小 kernel(计算单元)融合成大的。比如 attention 用 FlashAttention-2,LayerNorm 和 GeLU 这些原来由很多小 kernel 拼成,融合后减少了启动开销、内存访问也更高效</p>
+<h2 id="4-网络性能调优"><a href="#4-网络性能调优" class="headerlink" title="4. 网络性能调优"></a>4. 网络性能调优</h2><p>数据中心网络由基于 Broadcom Tomahawk 4 芯片的高性能交换机构建。每个 Tomahawk 芯片的总带宽为 25.6Tbps，具有 64×400Gbps 端口。三层交换机以类似 CLOS 的拓扑连接，以连接超过 10,000 个 GPU。对于每一层的交换机，下行链路与上行链路之间的带宽比例为 1:1。也就是说，32 个端口用作下行链路，32 个端口用作上行链路。该网络以较小直径提供高带宽。每个节点都可以在有限跳数内与其他节点通信。</p>
+<p>首先，在 top-of-rack（ToR）交换机层面，一个 400G 下行端口通过特定 AOC 线缆拆分为两个 200G 下行端口。由于每条上行链路的带宽是下行链路带宽的两倍，冲突概率降低。其次，服务器上的八个 200G NIC 以 multi-rail 方式连接到八个不同交换机。由同一组 ToR 交换机连接的 GPU 服务器数量可以达到 64。并且我们策略性地调度训练任务中的数据密集型节点，使其在同一 Top of Rack（ToR）交换机下运行。这种方法显著减少了通信所需的交换机跳数，并进一步降低了 ECMP 哈希冲突概率。</p>
+<p>拥塞控制。 在分布式训练中，当在规模化条件下采用默认 DCQCN 协议时，all-to-all 通信可能导致拥塞和更高水平的 Priority Flow Control（PFC）。过度使用 PFC 可能导致 head-of-line（HoL）阻塞，从而降低网络吞吐量。为了缓解这些问题，我们开发了一种结合 Swift 和 DCQCN 原则的算法，该算法将 Round-Trip Time（RTT）的精确测量与 Explicit Congestion Notification（ECN）的快速拥塞响应能力相结合。这种方法显著提升了吞吐量，并最小化了与 PFC 相关的拥塞。</p>
+<p>重传超时设置。 NCCL 中的参数可以被设置以控制重传计时器和重试次数。我们调优这些参数，以在链路抖动下实现快速恢复。为了进一步减少恢复时间，我们在 NIC 上启用 adap_retrans 特性。该特性支持以更短间隔进行重传，并在链路抖动周期较短时帮助更快恢复传输。</p>
+<h2 id="5-容错"><a href="#5-容错" class="headerlink" title="5. 容错"></a>5. 容错</h2><ol>
+<li><p>自动化恢复流程<br>搭了一套”监工”体系:driver(总指挥)通过 Kubernetes 分配资源,每个节点配一个 executor(管家),管家上跑个 daemon 定期发心跳汇报状态。一旦 driver 发现某进程异常、或某节点心跳超时不回,就触发恢复:暂停所有训练→让各节点跑自检诊断→揪出坏节点→通知 Kubernetes 驱逐坏节点、补上等量的健康节点→从最新检查点恢复训练。也支持人工手动踢节点。</p>
+</li>
+<li><p>数据收集与监控<br>心跳里塞了多种信息用来提前发现问题:节点基本信息、训练进程状态、实时聚合分析的 stdout&#x2F;stderr 日志(命中 warning&#x2F;error 关键词就报警),还有 RDMA 流量指标。<br>RDMA 流量是个巧妙的招:有些异常不报错,表面看训练在正常跑,但因为训练有周期性,每步流量模式应该差不多——所以流量突然下降或异常波动就是出问题的信号,完全停了就自动触发恢复。<br>还做了一套毫秒级精度的监控系统:秒级监控看整体健康(查 ECN&#x2F;PFC&#x2F;QoS 配置、链路抖动、网卡问题等);毫秒级监控判断网络是否拥塞、并行传输是否到了物理极限。</p>
+</li>
+<li><p>诊断测试<br>设计原则是又轻又全:太慢会浪费训练时间,误报率高又会误踢好机器。包含两类:</p>
+</li>
+</ol>
+<p>主机内网络测试:Loopback 测试(测网卡到内存&#x2F;GPU 的回环带宽,全互联覆盖所有链路,定位掉速链路和 PCIe 异常);RNIC-to-RNIC 测试(测同主机不同网卡间的连通性和带宽)。<br>NCCL 测试:节点内 GPU 间跑 all-to-all 看带宽是否达标;通过后再和同一 ToR 交换机下的邻机跑 all-reduce,测节点间 GPU 通信。</p>
+<ol start="4">
+<li>快速检查点与恢复<br>用”两阶段存 + 广播读”把检查点和恢复的开销压到最低。</li>
+</ol>
+<h2 id="6-实验与部署经验"><a href="#6-实验与部署经验" class="headerlink" title="6. 实验与部署经验"></a>6. 实验与部署经验</h2><ol>
+<li><p>训练性能<br>对于弱扩展性：MegaScale 靠 3D 并行通信重叠做到了近似线性扩展。<br>强扩展性：MegaScale 全程比 Megatron-LM 快 1.23×~1.34×。</p>
+</li>
+<li><p>稳定性<br>真实生产运行(&gt;1 万卡、数千亿参数、数万亿 token、跑了数周):loss 持续收敛,期间因故障重启超过 100 次,其中90% 以上的软硬件故障由容错框架自动处理,其余靠第 5 章的诊断工具解决。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/" rel="tag"># 模型优化</a>
+              <a href="/tags/%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96/" rel="tag"># 算子优化</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E8%B0%83%E4%BC%98/" rel="tag"># 网络调优</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/26/ZCube/" rel="prev" title="ZCube">
+                  <i class="fa fa-angle-left"></i> ZCube
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/02/Algorithm-Hot100/" rel="next" title="Algorithm-Hot100-哈希">
+                  Algorithm-Hot100-哈希 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="RailX: A Flexible, Scalable, and Low-Cost Network  Architecture for Hyper-Scale LLM Training Systems 1. Motivation 1.1 硬件封装技术 1.2 现有AI网络架构的挑战   3. RailX Architecture 3.1 Rail-ring-based interconnnect">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RailX">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/11/10/RailX/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="RailX: A Flexible, Scalable, and Low-Cost Network  Architecture for Hyper-Scale LLM Training Systems 1. Motivation 1.1 硬件封装技术 1.2 现有AI网络架构的挑战   3. RailX Architecture 3.1 Rail-ring-based interconnnect">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-6.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RailX/image-7.png">
+<meta property="article:published_time" content="2025-11-10T09:42:44.000Z">
+<meta property="article:modified_time" content="2025-11-24T03:21:52.589Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM Training">
+<meta property="article:tag" content="Topology">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/RailX/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/11/10/RailX/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/11/10/RailX/","path":"2025/11/10/RailX/","title":"RailX"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RailX | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RailX-A-Flexible-Scalable-and-Low-Cost-Network-Architecture-for-Hyper-Scale-LLM-Training-Systems"><span class="nav-number">1.</span> <span class="nav-text">RailX: A Flexible, Scalable, and Low-Cost Network  Architecture for Hyper-Scale LLM Training Systems</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Motivation"><span class="nav-number">1.1.</span> <span class="nav-text">1. Motivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%A1%AC%E4%BB%B6%E5%B0%81%E8%A3%85%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 硬件封装技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%8E%B0%E6%9C%89AI%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 现有AI网络架构的挑战</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-RailX-Architecture"><span class="nav-number">1.2.</span> <span class="nav-text">3. RailX Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Rail-ring-based-interconnnection"><span class="nav-number">1.2.1.</span> <span class="nav-text">3.1 Rail-ring-based interconnnection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">3.2 物理架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%8B%93%E6%89%91%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">3.3 拓扑配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-3-Dragonfly"><span class="nav-number">1.2.4.</span> <span class="nav-text">3.3.3 Dragonfly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-4-%E9%AB%98%E7%BB%B4%E5%BC%82%E6%9E%84%E6%8B%93%E6%89%91"><span class="nav-number">1.2.5.</span> <span class="nav-text">3.3.4 高维异构拓扑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-5-%E5%B0%86%E4%BA%8C%E7%BB%B4-mesh-%E4%BD%9C%E4%B8%BA%E9%AB%98%E5%B8%A6%E5%AE%BD%E8%99%9A%E6%8B%9F%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="nav-number">1.2.6.</span> <span class="nav-text">3.3.5 将二维 mesh 作为高带宽虚拟交换机</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/11/10/RailX/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RailX | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RailX
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-11-10 17:42:44" itemprop="dateCreated datePublished" datetime="2025-11-10T17:42:44+08:00">2025-11-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-24 11:21:52" itemprop="dateModified" datetime="2025-11-24T11:21:52+08:00">2025-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#railx-a-flexible-scalable-and-low-cost-network--architecture-for-hyper-scale-llm-training-systems">RailX: A Flexible, Scalable, and Low-Cost Network  Architecture for Hyper-Scale LLM Training Systems</a><ul>
+<li><a href="#1-motivation">1. Motivation</a><ul>
+<li><a href="#11-%E7%A1%AC%E4%BB%B6%E5%B0%81%E8%A3%85%E6%8A%80%E6%9C%AF">1.1 硬件封装技术</a></li>
+<li><a href="#12-%E7%8E%B0%E6%9C%89ai%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E7%9A%84%E6%8C%91%E6%88%98">1.2 现有AI网络架构的挑战</a></li>
+</ul>
+</li>
+<li><a href="#3-railx-architecture">3. RailX Architecture</a><ul>
+<li><a href="#31-rail-ring-based-interconnnection">3.1 Rail-ring-based interconnnection</a></li>
+<li><a href="#32-%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84">3.2 物理架构</a></li>
+<li><a href="#33-%E6%8B%93%E6%89%91%E9%85%8D%E7%BD%AE">3.3 拓扑配置</a></li>
+<li><a href="#333-dragonfly">3.3.3 Dragonfly</a></li>
+<li><a href="#334-%E9%AB%98%E7%BB%B4%E5%BC%82%E6%9E%84%E6%8B%93%E6%89%91">3.3.4 高维异构拓扑</a></li>
+<li><a href="#335-%E5%B0%86%E4%BA%8C%E7%BB%B4-mesh-%E4%BD%9C%E4%B8%BA%E9%AB%98%E5%B8%A6%E5%AE%BD%E8%99%9A%E6%8B%9F%E4%BA%A4%E6%8D%A2%E6%9C%BA">3.3.5 将二维 mesh 作为高带宽虚拟交换机</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="RailX-A-Flexible-Scalable-and-Low-Cost-Network-Architecture-for-Hyper-Scale-LLM-Training-Systems"><a href="#RailX-A-Flexible-Scalable-and-Low-Cost-Network-Architecture-for-Hyper-Scale-LLM-Training-Systems" class="headerlink" title="RailX: A Flexible, Scalable, and Low-Cost Network  Architecture for Hyper-Scale LLM Training Systems"></a>RailX: A Flexible, Scalable, and Low-Cost Network  Architecture for Hyper-Scale LLM Training Systems</h1><h2 id="1-Motivation"><a href="#1-Motivation" class="headerlink" title="1. Motivation"></a>1. Motivation</h2><h3 id="1-1-硬件封装技术"><a href="#1-1-硬件封装技术" class="headerlink" title="1.1 硬件封装技术"></a>1.1 硬件封装技术</h3><p>先进的集成封装技术，如 面板级封装（Panel-Level Packaging） 和 晶圆级系统（System-on-Wafer），能够将大量芯片集成到单一封装中。同时，高速互连接口技术也实现了芯片间高带宽、低功耗、低延迟的通信。</p>
+<p>UCIe 芯粒间接口提供超高带宽密度，远超传统的芯片间互连方式，且成本更低。该类封装内互连的延迟与功耗也显著降低。与此同时，协同封装光学（Co-Packaged Optics, CPO） 技术也极大提升了封装外带宽密度，并且无需独立光模块。</p>
+<p>然而，充分利用这些技术仍存在挑战。首先，高线密度与短距离连接导致布线与布局难度大，因此在封装内可行的拓扑结构仅限于二维平面结构。其次，封装内外带宽之间存在显著差距。当系统扩展到封装级之外的规模化网络时，这种带宽不匹配可能导致整体利用率降低。此外，如何在此类网络上高效映射高度并行化的 AI 训练任务，也是一个复杂问题。</p>
+<h3 id="1-2-现有AI网络架构的挑战"><a href="#1-2-现有AI网络架构的挑战" class="headerlink" title="1.2 现有AI网络架构的挑战"></a>1.2 现有AI网络架构的挑战</h3><ol>
+<li>广泛使用的胖树成本高昂<br>在现有系统中，节点内的处理器通常通过高带宽、低延迟的 Fat-Tree 网络 互连（如 NVLink 网络）。如图 2 所示，在 Rail 优化的 Fat-Tree 结构中，每个节点的第 i 个 GPU&#x2F;NIC 端口都连接到同一个轨道交换机 i（其中 i &#x3D; 1, …, V，V 为每节点 GPU 数量）。通过合理的映射，大多数通信无需跨轨（cross-rail）传输，从而减少网络不均衡和跨轨交换机数量。</li>
+</ol>
+<p>对于需要大量跨轨通信的任务（如混合专家模型 MOE 或排序模型中的全互通信），可利用节点内局部网络提供不同轨道之间的带宽。例如，节点 1 的 GPU-1 向节点 R 的 GPU-V 发送消息时，可先通过节点内网络传至 GPU-V，再经局部 rail 发送，而无需跨轨交换机。</p>
+<p><img src="/images/RailX/image.png" alt="alt text"></p>
+<p>尽管 Rail 优化 Fat-Tree 比传统 Fat-Tree 成本更低，但可扩展性仍受限。若每个 Rail 交换机拥有 R 个下行端口，节点含 V 个 GPU，则一个 Rail 段最多支持 R × V 个 GPU。最新的阿里巴巴 HPN 系统使用 360 台 51.2T 交换机 实现 15,000 个 GPU 间 400 Gb&#x2F;s 带宽。同时，还需 7,500 台 NVLink 交换机才能提供 400–900 GB&#x2F;s 的节点内带宽。Scale up 和 scale out 的扩展均十分昂贵。</p>
+<p>同时胖树多层交换结构还会带来显著的能耗与延迟开销。综上，基于分组交换的 Fat-Tree 架构在超大规模下成本过高、能效过低，难以支撑高带宽需求。</p>
+<ol start="2">
+<li>直接拓扑的带宽和灵活性受限</li>
+</ol>
+<p>AI 训练任务通常结合 张量并行（TP）、数据并行（DP） 与 流水线并行（PP） 三种策略，形成三维通信模式。因此，Torus（环形）拓扑 能在不依赖昂贵交换机的情况下，提供良好的环形集合通信性能。</p>
+<p><img src="/images/RailX/image-1.png" alt="alt text"></p>
+<p>如图 3 所示，为兼顾可用性与可靠性，Google TPUv4 集群 引入了成本较低的 光电路交换机（OCS），用于重构多个 3D 计算立方体间的互连。通过此方式，可以针对不同任务构造不同形态的三维 Torus（常规或扭曲结构），同时具备一定的故障绕行能力。</p>
+<p>Torus 拓扑虽然成本较低，但仍存在扩展性瓶颈。随着模型和数据规模的扩大，新的并行策略被引入并结合使用：</p>
+<ul>
+<li>专家并行（EP）（用于 MOE 模型，通信模式为全互通信）；</li>
+<li>序列并行（SP）与上下文并行（CP）（用于长序列处理）；</li>
+<li>多种混合并行策略在大模型训练中交织应用。</li>
+</ul>
+<p>如图 4 所示，在超大规模 LLM 训练中，引入了高维混合并行策略，不同层（如注意力层与 FFN&#x2F;专家层）采用异构的并行方式。由于专家并行需要频繁的全互通信（参见第 5 节图 12），其通信范围、体量与频率差异巨大。例如，TP 通常带宽需求远高于 DP，且难与计算重叠。</p>
+<p><img src="/images/RailX/image-2.png" alt="alt text"></p>
+<p><img src="/images/RailX/image-3.png" alt="alt text"></p>
+<p>然而，Torus 的拓扑维度与链路带宽均固定，无法根据并行类型灵活调整，导致映射高维异构并行任务复杂且低效。此外，Torus 的直径较大、双向带宽不足，无法支撑 MOE、排序模型及上下文并行中常见的全互通信。如图 3(c)，TPUv4 采用 扭曲 Torus（Twisted Torus） 改进带宽：在 2n×n 的网格中横向连接 (2n−1, y) 与 (0, y)，纵向连接 (x, n−1) 与 ((x+n)%2n, 0)，使双向带宽提升不超过 2 倍。但这种连接方式要求不同立方体行&#x2F;列共用同一组 OCS，导致网络规模受限于 OCS 的端口数 R，即 最大节点数 N &#x3D; R&#x2F;2，提升有限。</p>
+<p>此外，Torus 上的环形集合通信无法充分利用节点内直接互连提供的潜在高带宽优势。</p>
+<h2 id="3-RailX-Architecture"><a href="#3-RailX-Architecture" class="headerlink" title="3. RailX Architecture"></a>3. RailX Architecture</h2><h3 id="3-1-Rail-ring-based-interconnnection"><a href="#3-1-Rail-ring-based-interconnnection" class="headerlink" title="3.1 Rail-ring-based interconnnection"></a>3.1 Rail-ring-based interconnnection</h3><p>设计思路来源于完全图的哈密顿分解理论（Hamiltonian Decomposition of Complete Graphs）。在一个具有 𝑘 个顶点（且 𝑘≠4,6）的有向完全图中，其边集可以被分解为 𝑘−1 个有向哈密顿环（即每个环恰好遍历所有顶点一次）。</p>
+<p><img src="/images/RailX/image-4.png" alt="alt text"></p>
+<p>如图 5(a) 所示，每个节点拥有 4 条 rail（每条 rail 含正负两个端口 +&#x2F;−），所有节点间的物理链路仅连接同一编号的 rail。如图 5(b)，每条 rail 分别形成一个独立的环形网络（ring），但节点连接顺序不同。五个节点便可形成一个全互连（all-to-all）拓扑，并且任意两个节点都在两条不同的 rail 环上直接相连（例如 node-0 与 node-1 分别在 rail-0 和 rail-3 上直接连接）。</p>
+<p>这种全互连结构的网络直径更小、双向带宽更高，相比 Torus 拓扑拥有显著性能优势；但其最大规模仍受限于 rail（端口）数量。同时可将端口划分为若干“逻辑维度组”，可以灵活调整每个维度的带宽与拓扑形态。如图 5(c)，若将 4 条 rail 分为两组，每组形成一个独立的 all-to-all 环，则可以构成一个 3×3 节点的二维全互连结构（类似 HyperX）。此外，不同 rail 组的数量与连接方式可以不同，从而灵活调整拓扑结构与带宽配置，提高网络可扩展性。</p>
+<h3 id="3-2-物理架构"><a href="#3-2-物理架构" class="headerlink" title="3.2 物理架构"></a>3.2 物理架构</h3><p>RailX 是一个平面化的光电路交换网络（flat optical-circuit-switched network），由三个物理层次组成：芯片层（chip）、节点层（node）、系统层（system）。</p>
+<p><img src="/images/RailX/image-5.png" alt="alt text"></p>
+<p>如图 6(a)，每个芯片为一个处理器或加速器，其原生 I&#x2F;O 接口为高密度短距离连接（如 UCIe）。在节点内部，𝑚×𝑚 个芯片通过这些高带宽短链路直接互连，形成一个二维 Mesh 网络。</p>
+<p>节点边缘的接口由 I&#x2F;O 模块或芯粒（chiplet&#x2F;module）转换为长距离光端口，以供更高层级互连使用。若每个芯片边缘有 𝑛 个端口，则整个节点每边共有 𝑟&#x3D;𝑚×𝑛 个端口。每对行&#x2F;列方向的正负端口 (+&#x2F;−) 定义为一条 rail。先进封装技术（如 CoWoS、InFO）可提升密度与性能，但不是 RailX 的必需条件——只要节点内部直接互连的带宽成本比长距离互连更低（如 NVLink、UALink），即可获得优势。</p>
+<p>RailX系统中所有的节点按二维方式连接至高基数的光电路交换机（OCS）。节点(i,j)的X-rail 端口 a 连接至 X-方向的OCS(j,a), Y-rail 端口 b 连接至 Y-方向的OCS(i,b)。形式上  $a, b \in [1, r], i, j \in [1, R&#x2F;2]$。即每一行节点与每一列节点各自连接到一组 OCS（共 r 台交换机），具有相同 rail-ID 的端口连接到同一台交换机。</p>
+<p>因此，RailX 的物理架构可视为电路交换版 HammingMesh（选择了电路交换（circuit switching）而非传统分组交换／包交换），与 TPUv4 在形态上类似，但有两点关键差异：</p>
+<ol>
+<li>节点内部连接更强大</li>
+</ol>
+<ul>
+<li><p>RailX 的芯片间采用高带宽二维 Mesh，而非 HammingMesh 或 TPUv4 的等带宽立方体连接。</p>
+</li>
+<li><p>短距直连链路带宽更高、功耗更低、延迟更小。</p>
+</li>
+<li><p>这种 2D Mesh 还能作为高带宽“虚拟交换层”，无需额外分组交换机即可构建低直径拓扑。</p>
+</li>
+<li><p>这种结构也被视作一种新的层级，用于灵活映射具有混合&#x2F;异构并行策略的训练任务（详见 §3.3.4、§4.2、§5）。</p>
+</li>
+</ul>
+<ol start="2">
+<li>节点间采用二维 OCS 组织</li>
+</ol>
+<ul>
+<li><p>TPUv4 采用集中式 OCS 层，支持扭曲 Torus；而 RailX 采用二维组织，分别连接不同行列，从而提升可扩展性。</p>
+</li>
+<li><p>RailX 能在不依赖 twisted Torus 的情况下提供更高的双向带宽，因此无需集中化交换</p>
+</li>
+</ul>
+<p>系统中芯片总数 $N$ 与光交换机数量 $N_s$ 可表示为：</p>
+<p>$$<br>N &#x3D; (R&#x2F;2)^2 \times m^2, \quad N_s &#x3D; rR<br>$$</p>
+<p>其中 $R$ 表示节点行（或列）数，$m$ 表示每节点芯片阵列的维度。当 $R&#x3D;128$、$m&#x3D;5$ 时，$N&#x3D;102,400$ 芯片，即超过 10 万规模。即便采用常规 PCB 级集成，只要使用高端口数光交换机（如 $R&#x3D;320$、$m&#x3D;2$），仍可实现 &gt;10 万芯片的规模。相比之下，TPUv4 的集中式 3D-Torus 架构受限于单维 OCS 层，其规模为</p>
+<p>$$<br>N_{TPUv4} &#x3D; R&#x2F;2 \times m^3<br>$$</p>
+<p>可扩展性明显受限。</p>
+<h3 id="3-3-拓扑配置"><a href="#3-3-拓扑配置" class="headerlink" title="3.3 拓扑配置"></a>3.3 拓扑配置</h3><p>与 TPUv4 类似，RailX 的光交换机在大型训练任务启动时预先配置；节点内的片上路由器（低通道数分组交换器）则负责具体路由。由于这种配置仅在训练初始化阶段完成，光电路交换延迟（OCS setup time）几乎可以忽略（光电路交换机的主要劣势是 重新配置光路的延迟过高（毫秒级以上），但它一旦建立连接，数据传输几乎零延迟、带宽极高、功耗极低）。通过灵活配置光交换机，可构建并组合多种逻辑拓扑结构，包括Torus、Dragonfly、HyperX。其他基于光交换的拓扑优化方法（如 TopoOpt）也能集成到 RailX 框架中使用。</p>
+<ol>
+<li>2D torus</li>
+</ol>
+<p>Torus 拓扑可以很自然地通过将 X-rails 和 Y-rails 连接成并行环来构建，这一点与 TPUv4 类似。由于 Torus 仅连接相邻节点，系统中所有节点都可以连接成一个整体的 $R_{2m} \times R_{2m}$ 的二维 Torus。虽然 Torus 能提供最优的 All-Reduce 带宽，但其直径可达到 $R(H_o + (m-1)H_i)$，并且其在全互通信场景下的理论极限吞吐量为</p>
+<p>$$<br>T_{Torus} &#x3D; \frac{2B_c}{N} &#x3D; \frac{4Rmn}{R^2 \cdot 2 \cdot m^2} &#x3D; \frac{16n}{Rm}<br>$$</p>
+<p>（单位为每芯片），且会随着规模增大显著下降。因此，二维 Torus 不适用于包含非环形集合通信流量（例如在 EP 维度存在全互通信的 MOE 模型）的复杂工作负载。</p>
+<p>RailX-Torus 的工作负载映射与集合通信算法不同于常规 Torus，后者通常将各并行维度直接对齐到拓扑维度规模上。以拓扑为 $8 \times 16 \times 16$ 的 TPUv4 Pod 切片为例，张量并行可以 8 路映射到规模为 8 的维度，或者 16 路映射到规模为 16 的维度。而在 RailX-Torus 中，高带宽的二维 mesh 可以被用来执行层次化集合通信，或者被视为一个高带宽的本地维度。具体细节将在第 3.3.4 节和第 4.2 节中说明。</p>
+<ol start="2">
+<li>二维 HyperX（2D-HyperX）</li>
+</ol>
+<p>常规 HyperX 是一种由 $S^D$ 个交换机构成的直接网络，其中属于同一维度的交换机之间是全互连的。例如，在一个 $S \times S$ 的 HyperX 中，每一行和每一列中的 S 个交换机之间都是全互连的。与 Torus 相比，HyperX 具有更短的直径（等于维度数 $D$）以及更高的双向带宽。</p>
+<p><img src="/images/RailX/image-6.png" alt="alt text"></p>
+<p>基于第 3.1 节中描述的互连方法，可以在 RailX 中构建“无交换机的 HyperX”。如图 7 所示，X-rails 和 Y-rails 分别互连成基于 rail-ring 的全互连结构（每一维度中任意节点对之间都有两条直接链路），从而形成一个 $(r+1) \times (r+1)$ 的二维 HyperX。与常规 HyperX 不同的是，RailX-HyperX 中不存在额外的高端口数分组交换机，并且在每个维度中任意一对节点之间都有两条直接链路。</p>
+<p>RailX-2D-HyperX 拓扑的最大规模为 $(r+1)^2 m^2$，受限于每个节点的 rail 数量。如果 r 足够大（即 $r+1&#x3D;R&#x2F;2$），整个系统可以被配置为一个单一的二维 HyperX。借助先进的 CPO 技术（例如 Broadcom 在单芯片边缘上实现了 32 个光端口），单个节点的 rail 数可以比光交换机还多；因此，在全互连对之间可以配置更多物理信道。通过使用 $2a$ 条 rails，可构造出 $r^a+1$ 个节点的全互连结构。对于最大规模配置，每一行&#x2F;列 HyperX 的双向带宽可达到 $4 \cdot \frac{r+1}{2} \cdot \frac{r+1}{2}$。</p>
+<p>因此，全互通信的双向吞吐量为</p>
+<p>$$<br>T_{HyperX} &#x3D; \frac{2 \times (r+1) \times 4 \cdot \frac{r+1}{2} \cdot \frac{r+1}{2}}{(r+1)^2 m^2} \approx \frac{2n}{m}<br>$$</p>
+<p>（单位为每芯片），比二维 Torus 更具可扩展性。评估结果见第 6.3 节。此外，二维 HyperX 的直径仅为 $2H_o + (5m-6)H_i$（详细推导见第 4.1 节），也远小于二维 Torus。</p>
+<h3 id="3-3-3-Dragonfly"><a href="#3-3-3-Dragonfly" class="headerlink" title="3.3.3 Dragonfly"></a>3.3.3 Dragonfly</h3><p>常规 Dragonfly 是另一种低直径拓扑，其中交换机在每个组内局部全互连，而各组之间也实现全局全互连。如图 8 所示，Dragonfly 的局部全互连与二维 HyperX 的第一维是相同的。然而，在第二维（全局互连）上，Dragonfly 并不是将每组内所有交换机与其他组互连，而是每组仅有一个交换机与其他组连接。因此，在电路交换机端口数 R 非常大或 rail 数 r 很小时，Dragonfly 能支持更大的网络规模。</p>
+<p><img src="/images/RailX/image-7.png" alt="alt text"></p>
+<p>一个由 $r+1$ 个节点组成的局部全互连组，在进行全局互连时拥有 $r(r+1)$ 条 rails。因此，组的总数为 $\min(r^2+r+1, R&#x2F;2)$。由此，可以同时使用两种不同类型的光交换机：快速低端口数交换机（例如 AWGR）[21, 40, 79] 和慢速高端口数交换机 [3, 70]。本文主要讨论慢速交换机，因为其更加成熟且实用。具体来说，如果本地（Y 向）电路交换机的端口数为 $R_l &#x3D; 2(r+1)$，而全局（X 向）电路交换机的端口数为 $R_g &#x3D; 2[r(r+1)+1]$，则整个系统可以配置为一个单一的 Dragonfly 拓扑，规模为 $(r+1)(r^2+r+1)m^2$ 个芯片。对于最大规模配置，全互通信的双向吞吐量为</p>
+<p>$$<br>T_{Dragonfly} &#x3D; \frac{2 \times (r+1) \cdot \frac{R}{2} \times r(r+1)}{\frac{R}{2} m^2} \approx \frac{2n}{m}<br>$$</p>
+<p>（单位为每芯片），与二维 HyperX 相同，也比二维 Torus 更具可扩展性。</p>
+<h3 id="3-3-4-高维异构拓扑"><a href="#3-3-4-高维异构拓扑" class="headerlink" title="3.3.4 高维异构拓扑"></a>3.3.4 高维异构拓扑</h3><p>如第 2.2.2 节所述，为了支持超大规模 LLM 训练工作负载，引入了高维异构并行策略，因此二维拓扑已不再充分。基于第 3.1 节中第二种互连方法，可以通过将两个物理维度上的 rails 拆分为多个逻辑维度来构建高维拓扑。</p>
+<p>如图 9 所示，每个维度上的 r 条 rails 被划分为两个 rail 组，每组有 $r&#x2F;2$ 条 rail，每个 rail 组可以被互连成 Torus（规模不受限）或基于 rail-ring 的全互连（最大规模为 $r&#x2F;2+1$）。因此，在使用 $r&#x3D;4$ 的节点时，可以构建一个规模为 $4 \times 3 \times 3 \times D \times P$ 芯片的 5 维网络，其中：</p>
+<ol>
+<li>第 0 维为节点内部的二维 mesh；</li>
+<li>第 2 维为规模为 3 的全互连；</li>
+<li>第 1 &#x2F; 3 &#x2F; 4 维为规模分别为 3 &#x2F; D &#x2F; P 的 Torus。</li>
+</ol>
+<p>两个拆分维度的总规模仍然受光交换机端口数限制：$D \times P \le R&#x2F;2$。</p>
+<p>通常为了平衡起见，我们会以相同比例拆分每个芯片行&#x2F;列上的 n 条 rail，使得所有芯片在每个维度上拥有相同的直连带宽。另一种方法是将整个节点视为一个整体，并对 rails 进行不均匀拆分。例如，可以将图 9 中的 2×2 rails 按照 3:1 的比例划分。</p>
+<p>根据工作负载的形状（通信维度数以及各维度流量），可以灵活配置拓扑并调整每个维度的带宽。例如，如果两个维度上的通信量分别为 $V_1$ 和 $V_2$，则可以通过将 n 条 rails 拆分为 $n_1$ 和 $n_2$ 条端口分配给两个 rail 组，来最小化总通信时间 $T_{Total} &#x3D; \frac{V_1}{n_1} + \frac{V_2}{n_2}$ 或最慢维度的时间 $T_{Slow} &#x3D; \max(\frac{V_1}{n_1}, \frac{V_2}{n_2})$。</p>
+<p>如果两个维度的通信不重叠，还可以通过重新配置光交换机，将全部带宽先分配给一个维度，再分配给另一个维度。更多细节将在第 5 节中讨论。</p>
+<h3 id="3-3-5-将二维-mesh-作为高带宽虚拟交换机"><a href="#3-3-5-将二维-mesh-作为高带宽虚拟交换机" class="headerlink" title="3.3.5 将二维 mesh 作为高带宽虚拟交换机"></a>3.3.5 将二维 mesh 作为高带宽虚拟交换机</h3><p>上述所有低直径拓扑都是通过将节点内部的二维 mesh 作为高端口数交换机来构建的 [16, 36]。因此，为实现节点间通信，不可避免地会引入额外的节点内流量。为了防止二维 mesh 成为瓶颈，节点内部带宽必须更大。由每端口双向带宽估计：</p>
+<p>$$<br>\frac{2 \times k m n}{4 m n} &gt; 1 \Rightarrow k &gt; 2,<br>$$</p>
+<p>可知二维 mesh 的节点内带宽应至少为节点间带宽的两倍。根据第 6.3 节中的评估结果，$2 \sim 4$ 倍的带宽提升即可提供无阻塞的交换能力，而这在采用短距直连链路时很容易实现。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Topology/" rel="tag"># Topology</a>
+              <a href="/tags/LLM-Training/" rel="tag"># LLM Training</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/10/CambriconLLM/" rel="prev" title="CambriconLLM">
+                  <i class="fa fa-angle-left"></i> CambriconLLM
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/24/HPN/" rel="next" title="HPN">
+                  HPN <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

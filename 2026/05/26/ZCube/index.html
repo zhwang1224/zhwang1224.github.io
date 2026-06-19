@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化 1. 背景 2. 大模型训练通信模式 3. 自动化拓扑设计 4. 拓扑建模：从人工直觉到 11 类可搜索超参数 5. 拓扑优化器：NSGA-II 多目标搜索 6. 拓扑评估器：流级仿真 + 两阶段评估 7. ATOP 的三个主要使用场景 8. ZCube：ATOP 发现的新型高性价比拓扑 8.1 ZCube 的递归构造 8.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZCube">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/05/26/ZCube/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化 1. 背景 2. 大模型训练通信模式 3. 自动化拓扑设计 4. 拓扑建模：从人工直觉到 11 类可搜索超参数 5. 拓扑优化器：NSGA-II 多目标搜索 6. 拓扑评估器：流级仿真 + 两阶段评估 7. ATOP 的三个主要使用场景 8. ZCube：ATOP 发现的新型高性价比拓扑 8.1 ZCube 的递归构造 8.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-26T09:11:08.000Z">
+<meta property="article:modified_time" content="2026-05-26T09:20:35.588Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/05/26/ZCube/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/05/26/ZCube/","path":"2026/05/26/ZCube/","title":"ZCube"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ZCube | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E-ATOP-%E5%88%B0-ZCube%EF%BC%9A%E9%9D%A2%E5%90%91%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">2. 大模型训练通信模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%8B%93%E6%89%91%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">3. 自动化拓扑设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%8B%93%E6%89%91%E5%BB%BA%E6%A8%A1%EF%BC%9A%E4%BB%8E%E4%BA%BA%E5%B7%A5%E7%9B%B4%E8%A7%89%E5%88%B0-11-%E7%B1%BB%E5%8F%AF%E6%90%9C%E7%B4%A2%E8%B6%85%E5%8F%82%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">4. 拓扑建模：从人工直觉到 11 类可搜索超参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%8B%93%E6%89%91%E4%BC%98%E5%8C%96%E5%99%A8%EF%BC%9ANSGA-II-%E5%A4%9A%E7%9B%AE%E6%A0%87%E6%90%9C%E7%B4%A2"><span class="nav-number">1.5.</span> <span class="nav-text">5. 拓扑优化器：NSGA-II 多目标搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%8B%93%E6%89%91%E8%AF%84%E4%BC%B0%E5%99%A8%EF%BC%9A%E6%B5%81%E7%BA%A7%E4%BB%BF%E7%9C%9F-%E4%B8%A4%E9%98%B6%E6%AE%B5%E8%AF%84%E4%BC%B0"><span class="nav-number">1.6.</span> <span class="nav-text">6. 拓扑评估器：流级仿真 + 两阶段评估</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-ATOP-%E7%9A%84%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.7.</span> <span class="nav-text">7. ATOP 的三个主要使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-ZCube%EF%BC%9AATOP-%E5%8F%91%E7%8E%B0%E7%9A%84%E6%96%B0%E5%9E%8B%E9%AB%98%E6%80%A7%E4%BB%B7%E6%AF%94%E6%8B%93%E6%89%91"><span class="nav-number">1.8.</span> <span class="nav-text">8. ZCube：ATOP 发现的新型高性价比拓扑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-ZCube-%E7%9A%84%E9%80%92%E5%BD%92%E6%9E%84%E9%80%A0"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 ZCube 的递归构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-ZCube-%E7%9A%84%E7%9B%B4%E5%BE%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 ZCube 的直径优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-ZCube-%E7%9A%84%E6%88%90%E6%9C%AC%E4%BC%98%E5%8A%BF"><span class="nav-number">1.8.3.</span> <span class="nav-text">8.3 ZCube 的成本优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-ZCube-%E7%9A%84%E6%95%85%E9%9A%9C%E5%AE%B9%E5%BF%8D%E8%83%BD%E5%8A%9B"><span class="nav-number">1.8.4.</span> <span class="nav-text">8.4 ZCube 的故障容忍能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.9.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/05/26/ZCube/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ZCube | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ZCube
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-05-26 17:11:08 / 修改时间：17:20:35" itemprop="dateCreated datePublished" datetime="2026-05-26T17:11:08+08:00">2026-05-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#%E4%BB%8E-atop-%E5%88%B0-zcube%E9%9D%A2%E5%90%91%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96">从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化</a><ul>
+<li><a href="#1-%E8%83%8C%E6%99%AF">1. 背景</a></li>
+<li><a href="#2-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%BC%8F">2. 大模型训练通信模式</a></li>
+<li><a href="#3-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%8B%93%E6%89%91%E8%AE%BE%E8%AE%A1">3. 自动化拓扑设计</a></li>
+<li><a href="#4-%E6%8B%93%E6%89%91%E5%BB%BA%E6%A8%A1%E4%BB%8E%E4%BA%BA%E5%B7%A5%E7%9B%B4%E8%A7%89%E5%88%B0-11-%E7%B1%BB%E5%8F%AF%E6%90%9C%E7%B4%A2%E8%B6%85%E5%8F%82%E6%95%B0">4. 拓扑建模：从人工直觉到 11 类可搜索超参数</a></li>
+<li><a href="#5-%E6%8B%93%E6%89%91%E4%BC%98%E5%8C%96%E5%99%A8nsga-ii-%E5%A4%9A%E7%9B%AE%E6%A0%87%E6%90%9C%E7%B4%A2">5. 拓扑优化器：NSGA-II 多目标搜索</a></li>
+<li><a href="#6-%E6%8B%93%E6%89%91%E8%AF%84%E4%BC%B0%E5%99%A8%E6%B5%81%E7%BA%A7%E4%BB%BF%E7%9C%9F--%E4%B8%A4%E9%98%B6%E6%AE%B5%E8%AF%84%E4%BC%B0">6. 拓扑评估器：流级仿真 + 两阶段评估</a></li>
+<li><a href="#7-atop-%E7%9A%84%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">7. ATOP 的三个主要使用场景</a></li>
+<li><a href="#8-zcubeatop-%E5%8F%91%E7%8E%B0%E7%9A%84%E6%96%B0%E5%9E%8B%E9%AB%98%E6%80%A7%E4%BB%B7%E6%AF%94%E6%8B%93%E6%89%91">8. ZCube：ATOP 发现的新型高性价比拓扑</a><ul>
+<li><a href="#81-zcube-%E7%9A%84%E9%80%92%E5%BD%92%E6%9E%84%E9%80%A0">8.1 ZCube 的递归构造</a></li>
+<li><a href="#82-zcube-%E7%9A%84%E7%9B%B4%E5%BE%84%E4%BC%98%E5%8A%BF">8.2 ZCube 的直径优势</a></li>
+<li><a href="#83-zcube-%E7%9A%84%E6%88%90%E6%9C%AC%E4%BC%98%E5%8A%BF">8.3 ZCube 的成本优势</a></li>
+<li><a href="#84-zcube-%E7%9A%84%E6%95%85%E9%9A%9C%E5%AE%B9%E5%BF%8D%E8%83%BD%E5%8A%9B">8.4 ZCube 的故障容忍能力</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="从-ATOP-到-ZCube：面向大模型训练的数据中心网络拓扑自动优化"><a href="#从-ATOP-到-ZCube：面向大模型训练的数据中心网络拓扑自动优化" class="headerlink" title="从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化"></a>从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化</h1><p>论文：From ATOP to ZCube: Automated Topology Optimization Pipeline and A Highly Cost-Effective Network Topology for Large Model Training，SIGCOMM 2025。本文关注一个非常现实的问题：当大模型训练集群扩展到数千、上万张 GPU 时，数据中心网络拓扑应该如何设计，才能在训练性能、硬件成本、故障容忍能力之间取得更优权衡。论文提出了自动化拓扑优化流水线 ATOP，并基于 ATOP 搜索结果发现了一种新的高性价比拓扑 ZCube。论文实验显示，ZCube 相比 ROFT、Rail-only、HPN 等已有拓扑，可以将端到端 LLM 训练速度提升 3%–7%，同时将网络硬件成本降低 26%–46%；真实测试床结果也显示，ZCube 在保持 all-reduce 和 all-to-all 性能相同的情况下，相比 Rail-Optimized Topology 降低约 25% 的硬件成本。</p>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>随着生成式 AI 和大语言模型的快速发展，训练集群规模迅速扩大。论文提到，ByteDance 已构建超过 10k GPU 的集群，Meta 为 Llama-3 训练构建了 24k GPU 集群，X.AI 也在 AI 基础设施上投入了巨额资金。随着 GPU 数量增长，网络拓扑不再只是“把 GPU 连起来”的工程问题，而变成一个多目标优化问题。</p>
+<p>在大规模训练场景中，拓扑设计至少需要同时考虑三个核心目标：</p>
+<p>第一是性能。大模型训练中存在大量 collective communication，例如 all-gather、reduce-scatter、all-to-all，以及 pipeline parallelism 中的点对点通信。如果拓扑直径大、负载均衡差或跨层路径拥塞，就会直接拉长训练 iteration time。</p>
+<p>第二是成本。网络成本不仅包括交换机，还包括 NIC、光模块、铜缆、光纤等。对于上万 GPU 集群，网络硬件成本是非常大的投入，因此仅仅追求全带宽或最低延迟并不现实。</p>
+<p>第三是故障容忍能力。GPU 集群中单个 ToR switch 或链路故障并不少见。一个拓扑即使在无故障时性能很好，如果一个交换机故障后训练性能大幅下降，也会影响实际可用性。</p>
+<p>论文指出，现有常见拓扑如 ROFT、Rail-only、HPN 等在不同维度上各有取舍，但并不一定处于 Pareto 最优前沿。也就是说，可能存在一些拓扑同时在性能和成本上优于它们。ATOP 的目标正是自动化地搜索这些更优拓扑。</p>
+<h2 id="2-大模型训练通信模式"><a href="#2-大模型训练通信模式" class="headerlink" title="2. 大模型训练通信模式"></a>2. 大模型训练通信模式</h2><p>论文首先分析了 LLM 训练中的典型通信模式。大模型训练通常由多种并行策略组成，不同策略产生不同流量：</p>
+<p>Data Parallelism，DP 将训练数据切分到不同 GPU，每个 GPU 计算局部梯度，然后通过 all-gather 和 reduce-scatter 等 collective communication 聚合参数或梯度。</p>
+<p>Pipeline Parallelism，PP 将模型层切分到不同设备，前向传播时激活值沿 pipeline 传递，反向传播时梯度反向传递，因此产生点对点通信。</p>
+<p>Expert Parallelism，EP 常用于 MoE 模型，会产生 all-to-all 流量。</p>
+<p>论文基于生产集群中的 4k GPU 训练 trace、SimAI 中的 AICB workload generator，以及对 LLM 研究者和实践者的访谈，发现实际训练中主要有五类流量周期：DP-only、PP-only、EP-only、Mixed DP-PP、Mixed DP-EP。</p>
+<p>更重要的是，论文观察到这些流量有一个共同特点：跨服务器通信通常发生在具有相同 GPU index 的 GPU 之间。例如，Server_1 上的 GPU_2 往往与 Server_64 上的 GPU_2 通信。这一特征称为 rail-aligned。即使在 all-to-all 场景中，由于 NCCL PXN 会先通过 NVLink 将流量转发到相同 index 的 GPU，再发往目标服务器，因此也会呈现 rail-aligned 特征。</p>
+<h2 id="3-自动化拓扑设计"><a href="#3-自动化拓扑设计" class="headerlink" title="3. 自动化拓扑设计"></a>3. 自动化拓扑设计</h2><p>传统拓扑设计主要依赖人工专家经验。专家通常会从 HPC 和 DCN 文献中选择已有拓扑，例如 CLOS、Fat-Tree、ROFT、Rail-only、HPN、BCube、Dragonfly 等，然后根据硬件约束进行工程化调整。</p>
+<p>但论文认为，人工设计存在三个明显问题：</p>
+<p>第一，大规模 GPU 集群的拓扑设计空间极其庞大，人工很难高效探索。</p>
+<p>第二，专家往往偏好对称、规整、易解释的拓扑结构，可能忽略一些不直观但性能和成本更优的非对称拓扑。</p>
+<p>第三，人工设计很难同时考虑训练性能、成本、故障容忍、硬件约束等多个目标。</p>
+<p>朴素的自动化方法也不可行。如果直接用邻接矩阵建模拓扑，对于 N 个节点，搜索空间会呈指数级增长。论文指出，在 16k GPU 规模下，用邻接矩阵搜索拓扑甚至需要数亿个参数，搜索 10 小时仍无法产生连通拓扑。</p>
+<p>已有工作 Condor 使用 DSL 和约束求解来辅助拓扑设计，但它仍然依赖专家用约束语言表达设计意图。对于硬件约束，例如每台交换机端口数，DSL 比较容易表达；但对于“最小化 LLM 训练 iteration time”这种应用级端到端性能目标，则很难通过约束语言直观表达。</p>
+<p>因此，ATOP 的核心思想是：把专家拓扑设计直觉转化为可搜索的超参数空间，然后用多目标优化算法和高保真仿真器自动搜索拓扑。</p>
+<p>ATOP，全称 Automated Topology Optimization Pipeline，由三个主要模块组成：</p>
+<p>Topology Hyperparameterization Modeling：将拓扑建模为一组可搜索超参数；<br>Topology Optimizer：使用优化算法搜索拓扑；<br>Topology Evaluator：用仿真和理论分析评估拓扑性能。</p>
+<h2 id="4-拓扑建模：从人工直觉到-11-类可搜索超参数"><a href="#4-拓扑建模：从人工直觉到-11-类可搜索超参数" class="headerlink" title="4. 拓扑建模：从人工直觉到 11 类可搜索超参数"></a>4. 拓扑建模：从人工直觉到 11 类可搜索超参数</h2><p>ATOP 的建模方式来自对已有 DCN 和 HPC 拓扑的抽象。论文认为，很多经典拓扑都有两个共性：</p>
+<p>第一，存在分层结构。例如第一层是 GPU 或服务器，上层是 ToR、aggregation、spine 等交换机层。</p>
+<p>第二，存在层内连接或维度结构。例如 Dragonfly、HyperX、Torus、DCell 等拓扑中，不只是简单上下层连接，还存在同层节点之间的复杂连接模式。</p>
+<p>因此，ATOP 的拓扑建模分为两部分：节点分层与层间连接，以及层内连接。</p>
+<h2 id="5-拓扑优化器：NSGA-II-多目标搜索"><a href="#5-拓扑优化器：NSGA-II-多目标搜索" class="headerlink" title="5. 拓扑优化器：NSGA-II 多目标搜索"></a>5. 拓扑优化器：NSGA-II 多目标搜索</h2><p>ATOP 的优化目标可以由用户自定义。论文实验中主要使用 4 类、共 14 个目标：</p>
+<p>第一类是 LLM 训练流量下的 job completion time，包括 DP-only、PP-only、EP-only、Mixed DP-PP、Mixed DP-EP 等流量模式。</p>
+<p>第二类是 ForestColl all-gather 的理论最优完成时间，用于评估 collective communication 性能。</p>
+<p>第三类是单交换机故障下的平均路径长度，用于衡量 fault tolerance。</p>
+<p>第四类是网络硬件成本，包括交换机、铜缆、光纤、光模块、NIC 等。</p>
+<p>ATOP 使用 NSGA-II 作为多目标优化算法。NSGA-II 是一种经典的多目标进化算法，可以通过 non-dominated sorting 和 crowding distance 在多个目标之间寻找 Pareto-optimal 解集。</p>
+<p>在拓扑搜索中，ATOP 并不是寻找唯一最优拓扑，而是寻找一组 Pareto 最优拓扑。用户可以根据预算、性能目标、故障容忍要求，在 Pareto frontier 上选择适合自己的设计。</p>
+<h2 id="6-拓扑评估器：流级仿真-两阶段评估"><a href="#6-拓扑评估器：流级仿真-两阶段评估" class="headerlink" title="6. 拓扑评估器：流级仿真 + 两阶段评估"></a>6. 拓扑评估器：流级仿真 + 两阶段评估</h2><p>大规模拓扑评估的难点在于仿真成本。NS-3 这类 packet-level simulator 在小规模拓扑上可以使用，但面对数千、上万 GPU 时，时间和内存成本过高。</p>
+<p>因此，论文实现了一个 flow-level network simulator。它将 GPU 间通信建模为 flow，并使用 max-min fairness bandwidth allocation 计算带宽分配，同时参考 SimGrid 的方法建模拥塞和交换机延迟。论文在附录中将该 flow-level simulator 与 NS-3 对比，显示在 LLM 训练场景下平均 job completion time 误差约为 1.5%。</p>
+<p>为了进一步降低搜索成本，ATOP 使用两阶段评估：</p>
+<p>第一阶段，用代表性训练流量片段、故障容忍指标和网络成本快速筛选拓扑，得到 Pareto-optimal topologies。</p>
+<p>第二阶段，对第一阶段筛出的 Pareto 最优拓扑运行完整的大模型训练仿真，得到最终端到端训练时间。</p>
+<p>论文称，这种两阶段评估可以将 full-scale model training simulation 的数量减少约 95%，显著提升搜索效率。ATOP 在单台 256 核 CPU 服务器上，可以在约 3 天内完成 16k GPU 集群的拓扑搜索。</p>
+<h2 id="7-ATOP-的三个主要使用场景"><a href="#7-ATOP-的三个主要使用场景" class="headerlink" title="7. ATOP 的三个主要使用场景"></a>7. ATOP 的三个主要使用场景</h2><p>论文重点展示了 ATOP 在三个实际数据中心设计场景中的用途。</p>
+<p>7.1 新建数据中心</p>
+<p>在新建数据中心场景中，ATOP 分别搜索 256、1024、4096、16384 GPU 规模下的拓扑。搜索结果显示，在不同规模下，ATOP 都能找到训练时间和网络成本之间的 Pareto frontier。</p>
+<p>一个重要发现是：在不同 GPU 规模下，位于 Pareto frontier 拐点处的最具性价比拓扑结构非常相似。论文将这类拓扑抽象并命名为 ZCube。</p>
+<p>7.2 调整已有数据中心</p>
+<p>第二个场景是优化已有 4k GPU 数据中心。初始拓扑是 3-layer non-blocking ROFT。目标是在不购买额外交换机和 NIC 的前提下，通过重新布线提升性能并降低成本。</p>
+<p>在这个受限搜索空间中，ATOP 发现 ZCube 同时是性能最优和最具成本效率的拓扑。</p>
+<p>7.3 扩容已有数据中心</p>
+<p>第三个场景是将已有 1k GPU 数据中心扩展到 4k GPU。ATOP 需要保留原有交换机和 NIC，并考虑新增交换机吞吐限制。同时，论文引入了修改链路数量作为新的优化目标，以降低人工改造成本。</p>
+<p>结果显示，ATOP 仍然能够找到训练时间、网络成本和改造成本之间的 Pareto frontier，并且 ZCube 依然是最具成本效率的拓扑之一。</p>
+<p>此外，附录还展示了 ATOP 在多租户数据中心和异构 GPU 数据中心中的应用。在 16k GPU 多租户场景下，ZCube 仍位于 Pareto frontier 的拐点，是最具成本效率的拓扑；在 H100&#x2F;A100 异构 4k GPU 数据中心场景中，ATOP 也能在严格约束下找到优于 ROFT 或更具性价比的拓扑。</p>
+<h2 id="8-ZCube：ATOP-发现的新型高性价比拓扑"><a href="#8-ZCube：ATOP-发现的新型高性价比拓扑" class="headerlink" title="8. ZCube：ATOP 发现的新型高性价比拓扑"></a>8. ZCube：ATOP 发现的新型高性价比拓扑</h2><p>ZCube 是论文最重要的结果之一。它并不是作者手工设计出的拓扑，而是 ATOP 在自动化搜索过程中发现的一类高性价比网络结构。随后，作者对 ZCube 进行了形式化定义、性能分析与成本评估。</p>
+<h3 id="8-1-ZCube-的递归构造"><a href="#8-1-ZCube-的递归构造" class="headerlink" title="8.1 ZCube 的递归构造"></a>8.1 ZCube 的递归构造</h3><p>ZCube 采用递归式构造方式。</p>
+<p>最小单元 <code>ZCube(n, 1)</code> 是一个由单个交换机连接 <code>n</code> 个 GPU 的结构。</p>
+<p>一般地，<code>ZCube(n, k+1)</code> 由以下两部分组成：</p>
+<ul>
+<li><code>n</code> 个 <code>ZCube(n, k)</code> 子结构；</li>
+<li><code>n^k</code> 个新增交换机。</li>
+</ul>
+<p>因此，<code>ZCube(n, k+1)</code> 一共包含：</p>
+<ul>
+<li><code>n^(k+1)</code> 个 GPU；</li>
+<li><code>k+1</code> 层交换机；</li>
+<li>每一层包含 <code>n^k</code> 个交换机。</li>
+</ul>
+<p>在 <code>ZCube(n, k+1)</code> 中，每个 GPU 拥有 <code>k+1</code> 个 NIC port，编号为 <code>level-0</code> 到 <code>level-k</code>。GPU 的不同 NIC port 分别连接到不同层级的交换机。</p>
+<p>ZCube 的一个重要特点是<strong>非对称性</strong>。在 <code>ZCube(n, k)</code> 中：</p>
+<ul>
+<li><code>level-0</code> 和 <code>level-(k−1)</code> 的交换机需要 <code>2n</code> 个端口；</li>
+<li>中间层交换机需要 <code>3n</code> 个端口。</li>
+</ul>
+<p>这与 Fat-Tree、BCube、Dragonfly 等传统拓扑通常偏好的对称结构不同。论文认为，这种<strong>非对称但高性能的拓扑结构</strong>，正体现了自动化拓扑搜索相对于人工设计的价值：它能够发现一些不符合传统设计直觉、但在成本和性能上更优的网络结构。</p>
+<hr>
+<h3 id="8-2-ZCube-的直径优势"><a href="#8-2-ZCube-的直径优势" class="headerlink" title="8.2 ZCube 的直径优势"></a>8.2 ZCube 的直径优势</h3><p>论文证明，<code>ZCube(n, k)</code> 的网络直径为 <code>k</code>。这意味着 ZCube 可以在较低 hop count 下连接大规模 GPU 集群。</p>
+<p>例如，<code>ZCube(128, 2)</code> 使用 256-port 交换机即可连接：</p>
+<ul>
+<li><code>128^2 = 16,384</code> 个 GPU；</li>
+<li>网络直径仅为 <code>2</code>。</li>
+</ul>
+<p>相比之下，3-layer Fat-Tree 使用 128-port 交换机时可以连接：</p>
+<ul>
+<li><code>524,288</code> 个 GPU；</li>
+<li>网络直径为 <code>5</code>。</li>
+</ul>
+<p>对于大规模模型训练而言，较低的网络直径有助于减少跨节点通信的 hop count，降低 Pipeline Parallelism（PP）等通信流量的完成时间，从而提升端到端训练性能。</p>
+<hr>
+<h3 id="8-3-ZCube-的成本优势"><a href="#8-3-ZCube-的成本优势" class="headerlink" title="8.3 ZCube 的成本优势"></a>8.3 ZCube 的成本优势</h3><p>在相同 GPU 规模下，ZCube 相比 ROFT、Rail-only 和 HPN 等拓扑需要更少的交换机，并且可以使用更低带宽的链路。</p>
+<p>例如，在 <code>16,384</code> GPU、<code>51.2 Tbps</code> switch 场景下，论文比较了 ROFT、Rail-only、HPN 和 ZCube 的交换机数量与线缆数量：</p>
+<table>
+<thead>
+<tr>
+<th>拓扑</th>
+<th align="right">交换机数量</th>
+<th>链路数量与带宽</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ROFT</td>
+<td align="right">640 台</td>
+<td>49,152 条 400G 链路</td>
+</tr>
+<tr>
+<td>ZCube</td>
+<td align="right">256 台</td>
+<td>49,152 条 200G 链路</td>
+</tr>
+</tbody></table>
+<p>可以看到，ZCube 不仅显著减少了交换机数量，也降低了单链路带宽需求。</p>
+<p>论文总结认为，ZCube 可以带来以下成本收益：</p>
+<ul>
+<li>交换机数量减少约 <code>33%–60%</code>；</li>
+<li>光模块成本降低约 <code>25%–50%</code>。</li>
+</ul>
+<p>这说明 ZCube 在保持较好通信性能的同时，能够显著降低大规模 GPU 集群网络的硬件建设成本。</p>
+<hr>
+<h3 id="8-4-ZCube-的故障容忍能力"><a href="#8-4-ZCube-的故障容忍能力" class="headerlink" title="8.4 ZCube 的故障容忍能力"></a>8.4 ZCube 的故障容忍能力</h3><p>ZCube 还具备较强的故障容忍能力。</p>
+<p>当单个交换机发生故障时，连接到故障交换机的 GPU 可以切换到另一个 NIC port 继续通信。因此，单点交换机故障不会直接导致大量 GPU 完全失联。</p>
+<p>论文在 <code>4,096</code> GPU、GPT-3 175B 训练场景下进行了流级仿真。结果显示，在单个 ToR 交换机故障情况下：</p>
+<table>
+<thead>
+<tr>
+<th>拓扑</th>
+<th align="right">训练性能下降</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ZCube</td>
+<td align="right">2.8%</td>
+</tr>
+<tr>
+<td>ROFT</td>
+<td align="right">46.9%</td>
+</tr>
+<tr>
+<td>HPN</td>
+<td align="right">9.0%</td>
+</tr>
+</tbody></table>
+<p>可以看到，ZCube 在单交换机故障下的性能损失显著低于 ROFT 和 HPN。</p>
+<p>此外，由于 ZCube 所需交换机数量更少，其潜在故障点数量也相对更少。这进一步提升了 ZCube 在大规模训练集群中的可靠性和部署吸引力。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我认为这篇论文的价值可以概括为四点。</p>
+<p>第一，它没有只提出一个新拓扑，而是提出了一个自动化拓扑优化框架 ATOP。这使得论文不只是针对某个固定集群配置做手工设计，而是提供了一种面向不同规模、不同硬件约束、不同 workload 的通用搜索方法。</p>
+<p>第二，它将已有 DCN 和 HPC 拓扑中的专家经验转化为可搜索超参数空间。这一步非常关键，因为它避免了邻接矩阵搜索空间过大的问题，同时又比纯人工设计更灵活。</p>
+<p>第三，它提出了一个工程上可行的两阶段评估机制。通过先用代表性 workload fragment 筛选 Pareto-optimal topologies，再进行完整训练仿真，ATOP 在可接受时间内完成了 16k GPU 规模拓扑搜索。</p>
+<p>第四，它发现并形式化了 ZCube。ZCube 的意义在于，它说明大规模 GPU 网络拓扑不一定必须沿着传统对称结构设计。非对称拓扑如果能降低直径、减少交换机和光模块成本，并保持 collective communication 性能，就可能在真实大模型训练集群中更具性价比。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/22/Agentic-AI-Andrew-Ng/" rel="prev" title="Agentic AI - Andrew Ng">
+                  <i class="fa fa-angle-left"></i> Agentic AI - Andrew Ng
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/01/Megascale/" rel="next" title="Megascale">
+                  Megascale <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

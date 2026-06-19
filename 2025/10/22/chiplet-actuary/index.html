@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Chiplet Actuary 1. 模型验证与讨论 1.1 RE 成本的验证与比较 1.2 单一系统的总成本比较   2. 芯粒复用方案探索 2.1 单芯粒多系统 2.2 单中心多扩展 2.3 多插槽多协同   主要结论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chiplet Actuary">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/10/22/chiplet-actuary/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="Chiplet Actuary 1. 模型验证与讨论 1.1 RE 成本的验证与比较 1.2 单一系统的总成本比较   2. 芯粒复用方案探索 2.1 单芯粒多系统 2.2 单中心多扩展 2.3 多插槽多协同   主要结论">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-6.png">
+<meta property="article:published_time" content="2025-10-22T10:03:53.000Z">
+<meta property="article:modified_time" content="2025-10-23T12:24:47.263Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Chiplet">
+<meta property="article:tag" content="MCM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/10/22/chiplet-actuary/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/10/22/chiplet-actuary/","path":"2025/10/22/chiplet-actuary/","title":"Chiplet Actuary"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Chiplet Actuary | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chiplet-Actuary"><span class="nav-number">1.</span> <span class="nav-text">Chiplet Actuary</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81%E4%B8%8E%E8%AE%A8%E8%AE%BA"><span class="nav-number">1.1.</span> <span class="nav-text">1. 模型验证与讨论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-RE-%E6%88%90%E6%9C%AC%E7%9A%84%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%AF%94%E8%BE%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 RE 成本的验证与比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%8D%95%E4%B8%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%BB%E6%88%90%E6%9C%AC%E6%AF%94%E8%BE%83"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 单一系统的总成本比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%8A%AF%E7%B2%92%E5%A4%8D%E7%94%A8%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2"><span class="nav-number">1.2.</span> <span class="nav-text">2. 芯粒复用方案探索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%8D%95%E8%8A%AF%E7%B2%92%E5%A4%9A%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 单芯粒多系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8D%95%E4%B8%AD%E5%BF%83%E5%A4%9A%E6%89%A9%E5%B1%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 单中心多扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%A4%9A%E6%8F%92%E6%A7%BD%E5%A4%9A%E5%8D%8F%E5%90%8C"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 多插槽多协同</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E8%AE%BA"><span class="nav-number">1.3.</span> <span class="nav-text">主要结论</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/22/chiplet-actuary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Chiplet Actuary | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Chiplet Actuary
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-10-22 18:03:53" itemprop="dateCreated datePublished" datetime="2025-10-22T18:03:53+08:00">2025-10-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-23 20:24:47" itemprop="dateModified" datetime="2025-10-23T20:24:47+08:00">2025-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#chiplet-actuary">Chiplet Actuary</a><ul>
+<li><a href="#1-%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81%E4%B8%8E%E8%AE%A8%E8%AE%BA">1. 模型验证与讨论</a><ul>
+<li><a href="#11-re-%E6%88%90%E6%9C%AC%E7%9A%84%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%AF%94%E8%BE%83">1.1 RE 成本的验证与比较</a></li>
+<li><a href="#12-%E5%8D%95%E4%B8%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%BB%E6%88%90%E6%9C%AC%E6%AF%94%E8%BE%83">1.2 单一系统的总成本比较</a></li>
+</ul>
+</li>
+<li><a href="#2-%E8%8A%AF%E7%B2%92%E5%A4%8D%E7%94%A8%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2">2. 芯粒复用方案探索</a><ul>
+<li><a href="#21-%E5%8D%95%E8%8A%AF%E7%B2%92%E5%A4%9A%E7%B3%BB%E7%BB%9F">2.1 单芯粒多系统</a></li>
+<li><a href="#22-%E5%8D%95%E4%B8%AD%E5%BF%83%E5%A4%9A%E6%89%A9%E5%B1%95">2.2 单中心多扩展</a></li>
+<li><a href="#23-%E5%A4%9A%E6%8F%92%E6%A7%BD%E5%A4%9A%E5%8D%8F%E5%90%8C">2.3 多插槽多协同</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E8%AE%BA">主要结论</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Chiplet-Actuary"><a href="#Chiplet-Actuary" class="headerlink" title="Chiplet Actuary"></a>Chiplet Actuary</h1><p>多芯片集成被广泛认为是摩尔定律的延伸。节约成本是人们经常提到的一个优势，但以往的研究很少在定量层面上展示多芯片集成相较于单片 SoC 的成本优势。这篇文章建立了一个定量成本模型（Chiplet Actuary），并基于三种典型的多芯片集成技术提出一种多芯片系统的分析方法，用于评估来自良率提升、芯粒与封装复用以及异构性带来的成本收益。从多个角度重新审视多芯片系统的实际成本，并展示如何通过合适的多芯片架构降低整个 VLSI 系统的总成本。</p>
+<p>以往的研究主要关注芯片和硅中介层（interposer）的制造成本，却忽略了其他重要部分，如基板成本、D2D 接口开销以及非经常性工程成本 NRE。</p>
+<p>为更好地指导 VLSI 系统设计并解释体系结构挑战如划分问题，提出了一个基于三种典型多芯片集成技术的定量模型——Chiplet Actuary，用于成本评估。基于该模型，从多种角度探讨不同集成方案的总体成本。模型结合了外部数据以及内部数据，以提供较为准确的总成本估计。</p>
+<h2 id="1-模型验证与讨论"><a href="#1-模型验证与讨论" class="headerlink" title="1. 模型验证与讨论"></a>1. 模型验证与讨论</h2><h3 id="1-1-RE-成本的验证与比较"><a href="#1-1-RE-成本的验证与比较" class="headerlink" title="1.1 RE 成本的验证与比较"></a>1.1 RE 成本的验证与比较</h3><p><img src="/images/chiplet-actuary/image.png" alt="alt text"> </p>
+<p>如图 5 所示，文中的模型实验结果与AMD的数据进行了对比，大致吻合。AMD 声称其基于芯粒的产品相比单片 SoC 具有显著的成本优势。然而，AMD 的宣传中未包含**重新集成（reintegration）**的额外成本。当将封装开销纳入考虑后，多芯片的成本优势被削弱。</p>
+<p><img src="/images/chiplet-actuary/image-1.png" alt="alt text"></p>
+<p>图5得出两个重要的结论：</p>
+<ul>
+<li>对任何工艺节点而言，随着总芯片面积增大，成本优势逐渐提升；且先进制程的拐点出现得更早。但随着芯粒数量增加（例如从 3 个增加到 5 个），良率提升带来的收益呈现边际递减。</li>
+<li>此外，InFO 与 2.5D 集成由于使用了大型单片中介层（interposer），自身也受到复杂封装工艺带来的低良率影响；再加上键合缺陷会浪费 KGD，因此在 7nm、900 mm²、2.5D 条件下，封装成本已与芯片成本相当（约 50%）。<br>因此，先进封装技术只有在先进工艺下才具备经济性。</li>
+</ul>
+<h3 id="1-2-单一系统的总成本比较"><a href="#1-2-单一系统的总成本比较" class="headerlink" title="1.2 单一系统的总成本比较"></a>1.2 单一系统的总成本比较</h3><p><img src="/images/chiplet-actuary/image-2.png" alt="alt text"></p>
+<p>尽管 RE 成本是主要考虑因素，但在缺乏大规模产量保障的系统中，NRE 成本往往是决定性因素。以一个模块总面积为 800 mm² 的系统为例，分别以单片 SoC 与由两个芯粒组成的 MCM 方案实现。假设 D2D 接口开销为 10%，并根据模块与芯片数量摊销 NRE 成本。所有成本均归一化到 SoC 的 RE 成本。</p>
+<p>对于 5nm 工艺，当产量达到 200 万 时，多芯片架构开始真正实现成本回收。对于更小的系统，盈亏平衡点（turning point）更高。即除非系统面积或生产数量足够大，单片 SoC 仍是单一系统的更佳选择。</p>
+<h2 id="2-芯粒复用方案探索"><a href="#2-芯粒复用方案探索" class="headerlink" title="2. 芯粒复用方案探索"></a>2. 芯粒复用方案探索</h2><p><img src="/images/chiplet-actuary/image-3.png" alt="alt text"></p>
+<h3 id="2-1-单芯粒多系统"><a href="#2-1-单芯粒多系统" class="headerlink" title="2.1 单芯粒多系统"></a>2.1 单芯粒多系统</h3><p>如图 8 所示，由于芯粒复用，芯片 NRE 成本大幅降低——4X 系统的 NRE 成本节约接近 75%，相比单片 SoC 优势显著。</p>
+<p><img src="/images/chiplet-actuary/image-4.png" alt="alt text"></p>
+<p>SCMS 的优势在于：</p>
+<ul>
+<li>只需一种芯粒即可构建多个系统，因此可立即见效，无需重新设计多个芯片。</li>
+<li>这种架构适合同一生产线中不同性能档次的产品系列。</li>
+</ul>
+<p>但其缺点是：</p>
+<ul>
+<li>D2D 互连导致显著开销；</li>
+<li>仅有一种芯粒，无法实现异构集成。</li>
+</ul>
+<p>是否复用封装取决于 RE 成本与摊销后 NRE 成本孰为主导。对于高成本封装（如 2.5D），若在 1X 系统中复用 4X 的中介层，封装成本将超过 50%，因此封装复用在高端封装中并不经济；但 2.5D 架构仍能从芯粒复用中获益。</p>
+<h3 id="2-2-单中心多扩展"><a href="#2-2-单中心多扩展" class="headerlink" title="2.2 单中心多扩展"></a>2.2 单中心多扩展</h3><p><img src="/images/chiplet-actuary/image-5.png" alt="alt text"></p>
+<p>如图 9 所示，SoC、普通 MCM、封装复用 MCM 及异构封装复用 MCM的摊销总成本被比较。</p>
+<p>OCME 的复用收益不如 SCMS 明显（NRE 节省 &lt; 50%），因为系统中包含三个不同芯粒，平均复用次数较少，因此需要更多系统才能发挥效果。但支持异构集成。<br>如图 9 所示，在引入异构封装后，总成本进一步降低 10% 以上；尤其在单 C 系统中，成本节约几乎达到 50%。对于那些包含大量不需要先进工艺节点的模块的系统，采用 OCME 架构更具成本效益。</p>
+<h3 id="2-3-多插槽多协同"><a href="#2-3-多插槽多协同" class="headerlink" title="2.3 多插槽多协同"></a>2.3 多插槽多协同</h3><p><img src="/images/chiplet-actuary/image-6.png" alt="alt text"></p>
+<p>只需 6 个芯粒 + 1 个四插槽封装，理论上即可构建多达 119 种不同系统。<br>我们假设所有复用可能性都被充分利用，每种系统产量为 50 万，并比较不同复用程度下的平均归一化成本。</p>
+<p>如图 10 所示，芯粒复用次数越多，NRE 成本摊销带来的收益越大。<br>当复用性被充分发挥时，摊销后的 NRE 成本几乎可以忽略，此时多芯片架构的巨大节省潜力显现。<br>其成本优势不仅来自 RE 成本降低，也来自 NRE 成本摊销。</p>
+<h2 id="主要结论"><a href="#主要结论" class="headerlink" title="主要结论"></a>主要结论</h2><ul>
+<li>当芯片缺陷带来的成本超过封装开销时，多芯片架构开始显现成本优势。<br>越接近摩尔极限（Moore Limit）（即最大芯片面积与最先进制程），成本收益越大。</li>
+<li>对于单一系统，除非产量足够大以摊平多芯粒的 NRE 开销，否则单片 SoC通常更划算。</li>
+<li>是否复用封装取决于 RE 成本或摊销后 NRE 成本的主导性。</li>
+<li>基本原则是：用更少的芯粒构建更多系统。当需求划分更细时，芯粒复用带来的成本效益更为明显。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Chiplet/" rel="tag"># Chiplet</a>
+              <a href="/tags/MCM/" rel="tag"># MCM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/10/11/MCM/" rel="prev" title="【HPCA&#39;2024】Enhancing Collective Communication in MCM  Accelerators for Deep Learning Training">
+                  <i class="fa fa-angle-left"></i> 【HPCA'2024】Enhancing Collective Communication in MCM  Accelerators for Deep Learning Training
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/10/23/Scalable-methodology/" rel="next" title="Scalable methodology">
+                  Scalable methodology <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

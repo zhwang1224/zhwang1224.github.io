@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="RNG：大规模扁平化数据中心网络 1. 主要工作 2. 背景与动机 3. 扁平化扩展图的潜力 4. 需求与挑战 5.RNG 5.1 Spraypoint 路由   6. RNG 的布线 7.理论分析 8. 生产网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RNG">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/06/05/RNG/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="RNG：大规模扁平化数据中心网络 1. 主要工作 2. 背景与动机 3. 扁平化扩展图的潜力 4. 需求与挑战 5.RNG 5.1 Spraypoint 路由   6. RNG 的布线 7.理论分析 8. 生产网络">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image-0.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/RNG/image-4.png">
+<meta property="article:published_time" content="2026-06-05T06:24:16.000Z">
+<meta property="article:modified_time" content="2026-06-05T14:36:05.636Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="互连网络">
+<meta property="article:tag" content="拓扑">
+<meta property="article:tag" content="路由">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/RNG/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/06/05/RNG/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/06/05/RNG/","path":"2026/06/05/RNG/","title":"RNG"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RNG | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RNG%EF%BC%9A%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%89%81%E5%B9%B3%E5%8C%96%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">RNG：大规模扁平化数据中心网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">1. 主要工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">2. 背景与动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%89%81%E5%B9%B3%E5%8C%96%E6%89%A9%E5%B1%95%E5%9B%BE%E7%9A%84%E6%BD%9C%E5%8A%9B"><span class="nav-number">1.3.</span> <span class="nav-text">3. 扁平化扩展图的潜力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%9C%80%E6%B1%82%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-number">1.4.</span> <span class="nav-text">4. 需求与挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-RNG"><span class="nav-number">1.5.</span> <span class="nav-text">5.RNG</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Spraypoint-%E8%B7%AF%E7%94%B1"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 Spraypoint 路由</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-RNG-%E7%9A%84%E5%B8%83%E7%BA%BF"><span class="nav-number">1.6.</span> <span class="nav-text">6. RNG 的布线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90"><span class="nav-number">1.7.</span> <span class="nav-text">7.理论分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E7%94%9F%E4%BA%A7%E7%BD%91%E7%BB%9C"><span class="nav-number">1.8.</span> <span class="nav-text">8. 生产网络</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/05/RNG/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RNG | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RNG
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-06-05 14:24:16 / 修改时间：22:36:05" itemprop="dateCreated datePublished" datetime="2026-06-05T14:24:16+08:00">2026-06-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">互连网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#rng%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%89%81%E5%B9%B3%E5%8C%96%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C">RNG：大规模扁平化数据中心网络</a><ul>
+<li><a href="#1-%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C">1. 主要工作</a></li>
+<li><a href="#2-%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA">2. 背景与动机</a></li>
+<li><a href="#3-%E6%89%81%E5%B9%B3%E5%8C%96%E6%89%A9%E5%B1%95%E5%9B%BE%E7%9A%84%E6%BD%9C%E5%8A%9B">3. 扁平化扩展图的潜力</a></li>
+<li><a href="#4-%E9%9C%80%E6%B1%82%E4%B8%8E%E6%8C%91%E6%88%98">4. 需求与挑战</a></li>
+<li><a href="#5rng">5.RNG</a><ul>
+<li><a href="#51-spraypoint-%E8%B7%AF%E7%94%B1">5.1 Spraypoint 路由</a></li>
+</ul>
+</li>
+<li><a href="#6-rng-%E7%9A%84%E5%B8%83%E7%BA%BF">6. RNG 的布线</a></li>
+<li><a href="#7%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90">7.理论分析</a></li>
+<li><a href="#8-%E7%94%9F%E4%BA%A7%E7%BD%91%E7%BB%9C">8. 生产网络</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="RNG：大规模扁平化数据中心网络"><a href="#RNG：大规模扁平化数据中心网络" class="headerlink" title="RNG：大规模扁平化数据中心网络"></a>RNG：大规模扁平化数据中心网络</h1><p>Giacomo Bernardi</p>
+<p>Amazon Web Services</p>
+<h2 id="1-主要工作"><a href="#1-主要工作" class="headerlink" title="1. 主要工作"></a>1. 主要工作</h2><p>在生产环境中部署了首个扁平化数据中心网络。我们的设计称为 RNG，基于准随机图（quasi-random graphs）。尽管此类拓扑在成本和容错方面的优势早已为人所知，但由于缺乏可扩展的路由和布线方法，其实际落地一直受到阻碍。RNG 拥有一种新型分布式路由协议，它利用随机图的特性，在端点对之间找到大量边不相交（edge disjoint）路径。它使用一种新颖的无源光学器件，在内部对线缆进行洗牌（shuffle），使其布线复杂度与胖树（fat tree）相当。我们的实验表明，RNG 在一系列流量模式下的性能可以匹敌甚至超越胖树，而成本却最多可降低 45%。RNG 现已成为 Amazon 大多数工作负载的默认数据中心网络。</p>
+<h2 id="2-背景与动机"><a href="#2-背景与动机" class="headerlink" title="2. 背景与动机"></a>2. 背景与动机</h2><p>胖树拓扑一般由于成本过高，倾向于构建超额订阅网络。文章认为根本原因在于胖树拓扑缺乏容量可替代性（capacity fungibility）。即流量被限制在一小部分链路上，这些链路可能拥塞，而其他链路却处于闲置状态。容量可替代性的缺失需要增加一致、无拥塞体验的成本。即便在任意给定时刻只有一小部分端点对需要高容量，运营商也必须在各处都配备充足容量。</p>
+<p>研究人员针对此问题提出了可重构拓扑。这些设计使用光交换机、可转向无线天线和自由空间光学器件等硬件，来动态改变端点之间的容量。此类硬件（尚）未在大规模环境中得到验证。</p>
+<p>一种能提供容量可替代性的有前景的替代方案，是使用作为扩展图（expander graph）相连的商用路由器构成的扁平拓扑。除了成本更低之外，此类拓扑还具有容错性，因为任何故障的影响半径（blast radius）都很小，这与胖树中上层故障的影响不同。扩展网络拓扑的这些优势已为人所知超过十年，但由于三个未解决的挑战，这些拓扑一直未能成为现实。</p>
+<ol>
+<li>路由。 常用于胖树的最短路径路由并不适合扩展图，因为它无法利用其中存在的路径多样性。某些节点对之间只有一条最短路径，因此最短路径路由可能导致拥塞。先前的工作推荐使用 k-最短路径路由，即在源和目的地之间将流量分散到 k 条最短路径上。但是 k-最短路径路由无法在大型网络中使用商用交换机来实现。它所需的（高速、昂贵的）内存比当今可用的要多一个数量级。</li>
+<li>布线。 扩展图连接的是物理空间中可能相距甚远的设备对。这样的布线复杂且昂贵。更糟的是，当更多机架进场时，增量式部署需要打断现有连接。如果每个路由器有 d 条连接到其他路由器的链路，那么每当一个路由器进场时，我们就需要打断 d&#x2F;2 条现有链路，而这些链路的端点在物理上分散于整个数据中心。这类工作有连带损坏的风险，并会拖慢机架安装的速度——而这正是数据中心运营商关注的一个关键问题。</li>
+<li>性能可预测性。 先前关于扩展图基准测试的工作聚焦于参数固定的具体拓扑。目前尚不清楚一个网络在其他参数下会有怎样的表现，这使得运营商难以设计出满足特定性能目标的拓扑。他们将需要使用仿真在组合参数空间中进行搜索，而这对于大型网络是不可行的。相比之下，胖树设计可以根据性能目标自动生成。</li>
+</ol>
+<p>Amazon 解决了这些挑战，并部署了（据我们所知）首批基于扩展图的生产级数据中心网络。我们的设计称为 RNG，它使用随机化与确定性布线段的混合方式来连接路由器。这种构造产生了准随机图，模拟了真正随机图的统计特性。路由算法称为 Spraypoint，专为随机图设计，并允许在商用硬件上实现完全分布式部署。它在端点对之间找到大量——接近节点度数（node degree）——的边不相交路径，并且这些路径在不同端点对之间的重叠极小。这些特性带来了容量可替代性和高吞吐量。</p>
+<p>开发了一种基于新型无源光学器件的布线方法，该器件称为 ShuffleBox，它在内部混合路由器之间的连接。将 ShuffleBox 放置在数据中心少数几个规划好的位置。这使得物理连接的位置对数量（布线复杂度的一个关键驱动因素）能够与胖树相当。</p>
+<p>随机图的集中性（concentration）特性以及 Spraypoint 路由的去相关性（decorrelation），使得能够精确地将 RNG 网络性能建模为拓扑参数（如图大小、节点度数等）的函数。我们建立了路径长度、边不相交路径数量和超额订阅的模型。这些模型使各种参数和设计权衡（如路径长度与超额订阅之间的权衡）的影响变得清晰透明。运营商可以利用它们来设计满足其性能目标的拓扑。</p>
+<p>部署了两个基于 RNG 的生产网络。传输层和应用层基准测试证实，RNG 的性能与胖树相当，并且不受扩展图特有问题（如端点对之间路径长度可变）的影响。这种端到端验证在扩展图拓扑领域尚属首次。分析表明，在超额订阅比相同的情况下，RNG 拓扑比胖树便宜 9–45%。成本降低的幅度取决于超额订阅比，且与网络规模和交换机端口数无关。我们还发现，在超额订阅比相同的情况下，RNG 在一系列流量模式下提供的吞吐量高于胖树。</p>
+<h2 id="3-扁平化扩展图的潜力"><a href="#3-扁平化扩展图的潜力" class="headerlink" title="3. 扁平化扩展图的潜力"></a>3. 扁平化扩展图的潜力</h2><p>文章粗略地估计了一下一个超额订阅比为3:1的胖树，在alltoall模式下闲置了约 60%的ToR上行容量。图 1a 中把 T1–T3 连同它们的聚合层父节点看成一个子集 S,这个 S 通向网络其余部分的全部出口,就是聚合层到骨干层的那 2 条链路，所以割天然很窄。</p>
+<p>扩展图的不同:任何子集的割都很大。图 1b 里 T1–T12 之间是一张随机图(没有聚合层、没有骨干层,ToR 之间直接互连成准随机拓扑)。扩展图的定义性质就是边扩展性:对任意一个不太大的节点子集 S,从 S 引出的边数都很多,跟 S 内部的节点数成正比,而不是被压缩成区区两三条上行链路。</p>
+<p>随机图里,T1–T3 各自有多条边直接散向 T4–T12 的不同节点,它们对外的割很宽,因此基本只受自身本地容量。扩展图里没有”骨干瓶颈”这一层,流量可以沿着大量边不相交的路径散布到全网每一条链路上。于是不再有一小撮链路成为所有远端流量的必经之路,<strong>拓扑里的每条链路都能被用起来</strong>。</p>
+<p>容量可替代性之所以降低成本，是因为部署的容量得到了更高效的利用，从而允许更小规模的部署。对于扁平化扩展图成本更低的一个简单看法是：所有上层路由器都被移除了。但是，一个性能与胖树相当的扩展图可能需要更多的 ToR 上行链路（面向网络的端口），因为部分上行容量被用于为其他 ToR 中继的流量所消耗。因此，在每个 ToR 端口数固定的情况下，它可能需要更多的 ToR 来支持相同数量的服务器。尽管存在这一影响，扩展图仍可将成本降低多达 45%。</p>
+<p>扩展图拓扑还具有更强的容错性。边扩展性使网络难以被分割，而扁平结构降低了故障的影响。即不存在类似于骨干路由器这样的上层路由器。</p>
+<p>Amazon 聚焦于具有异构工作负载的多租户数据中心。未来，我们将研究将扩展图用于大规模 AI 训练等专用工作负载。</p>
+<p><img src="/images/RNG/image.png" alt="alt text"></p>
+<h2 id="4-需求与挑战"><a href="#4-需求与挑战" class="headerlink" title="4. 需求与挑战"></a>4. 需求与挑战</h2><p>扩展图拓扑要在实际大规模环境中部署，需要以下需求：</p>
+<ol>
+<li>可使用商用交换机实现。网络应能使用内存有限的商用交换机和转发 ASIC 来实现。之前的k-最短路径路由需要上十万条转发表项，而当前交换机仅支持4-16k此类表项。</li>
+<li>部署与运维简便性。对于控制平面，倾向于（如当今一样）需求无关（demand-oblivious）的完全分布式路由。对于部署和扩展，希望布线步骤数量少且快速，以最小化风险并加快扩展速度。随机图拓扑天生布线杂乱。</li>
+<li>可预测的性能。Amazon 运营商部署网络时是为了满足特定的容量（服务器数量）和性能（如超额订阅）目标。先前的工作对具有特定参数的拓扑进行基准测试，但并未展示如何为特定性能目标创建拓扑。</li>
+</ol>
+<p>RNG 通过以下方式满足这三项需求：(1) 一种名为 Spraypoint 的新路由算法，能找到大量边不相交路径。如同 OSPF 和 BGP，它是需求无关的，并允许在商用硬件上完全分布式运行。(2) 一种基于无源光学器件 ShuffleBox 的布线方法。它限制了数据中心扩展时被物理布线&#x2F;重新布线的端点数量。(3) 针对吞吐量和路径长度等关键性能指标的高保真模型。</p>
+<h2 id="5-RNG"><a href="#5-RNG" class="headerlink" title="5.RNG"></a>5.RNG</h2><p>RNG 的控制平面和负载均衡遵循当今通用的范式。路由协议 Spraypoint 在每个路由器上为所有目的地计算下一跳；路由器使用 ECMP（等价多路径）将流量分散到该目的地的所有下一跳上。</p>
+<h3 id="5-1-Spraypoint-路由"><a href="#5-1-Spraypoint-路由" class="headerlink" title="5.1 Spraypoint 路由"></a>5.1 Spraypoint 路由</h3><p>Spraypoint 适用于任何扩展图。它基于这样一个观察：在源端的高扇出（high fan-out）和目的端的高扇入（high fan-in）足以在扩展图中创建许多边不相交路径。Spraypoint 通过在源端喷洒（spraying）数据包来实现高扇出——所有邻居都是合格的下一跳，并基于 ECMP 哈希选择其一。它通过将流量经由分布在目的地周围各处的路径点进行引导来实现高扇入。</p>
+<ol>
+<li>节点分层<br>Spraypoint 有两个参数 p 和 h，分别控制每个目的地的路径点数量和喷洒步骤后合格的下一跳数量。还有一个辅助参数 ℓ，它取决于这些参数和图大小（n）。</li>
+</ol>
+<p>WP₀(t)： 基础路径点层级，包含 t 的所有邻居。<br>WPₗ ∈ l,ℓ： 高层级路径点。WPₗ(t) 包含 WPₗ₋₁(t) 中每个节点的 p 个随机选择的邻居。位于较早路径点层级中的邻居以及 t 本身不可被选择。<br>IR(t)： 内环（inner ring），包含 WPₗ(t) 的所有不在前述层级中的邻居。<br>OR(t)： 外环（outer ring），包含不在上述任何层级中的所有节点。</p>
+<p>图 3 展示了 ℓ&#x3D;1 且 p&#x3D;2 时的一个示例图。</p>
+<p><img src="/images/RNG/image1.png" alt="alt text"></p>
+<ol start="2">
+<li>数据包喷洒</li>
+</ol>
+<p>第一步是喷洒，即 s 转发给一个随机选择的邻居（即 ECMP）。喷洒与 t 无关，即使 s 和 t 相邻也会发生，与VLB类似。喷洒之后，每个中间节点 u 遵循”指向”（pointing）规则：</p>
+<p>若 u ∈ WP₀(t)，转发给 t。<br>若 u ∈ WPₗ ∈ l,ℓ，转发（ECMP）给从 WPₗ₋₁(t) 中随机选择的 h 个邻居之一。<br>若 u ∈ IR(t)，转发给从 WPₗ(t) 中随机选择的 h 个邻居之一。<br>若 u ∈ OR(t)，转发给从那些到 IR(t) 节点有最短路径者中随机选择的 h 个邻居之一。</p>
+<p>喷洒好处在于充分利用边不相交的短路径，从 s 的所有邻居出发沿最短路径到达 t。而路径点waypoints保证了极端情况（即源节点为目标节点邻居时）下路径不会拥塞。同时参数 p 把流量铺到 t 的众多邻居上。设置 ℓ。ℓ&#x3D;max(1, ⌈log_p(n&#x2F;2d²)⌉)。在此 ℓ 取值下，集合 WPₗ(t)∪IR(t) 的大小将至少为 n&#x2F;2，以缩短路径长度。</p>
+<p>文章简单提及了路径长度可变性。这不会影响单路径传输协议，多路径的延迟差相比主机端延迟极低，在生产网络上的基准测试证实，多路径协议不存在性能问题。</p>
+<ol start="3">
+<li>spraypoint 分布式实现</li>
+</ol>
+<p>Spraypoint 允许作为链路状态协议进行完全分布式实现，其中每个节点都拥有拓扑的完整视图。节点可以为每个目的地计算层级，然后通过应用指向规则计算本地下一跳。所有节点通过对共享密钥进行确定性哈希来做出相同的路径点选择，从而确保所有指向图（pointing graph）无环。</p>
+<p>使用 VRF（虚拟路由与转发）来实现喷洒，VRF 能为不同接口启用不同的路由逻辑。（应与VC同义）。路由器所有面向服务器的接口使用一个 VRF，将进入的流量喷洒到所有面向网络的接口。所有面向网络的接口使用第二个 VRF，遵循指向规则。这种设置允许数据包重访其源端（至多一次）而不会无限循环。</p>
+<ol start="4">
+<li>资源需求</li>
+</ol>
+<p>Spraypoint 使用两类路由器内存。第一类是最长前缀匹配（LPM）内存，它将进入数据包的目的地址映射到一个 ECMP 组 ID。LPM 内存的使用量取决于网络前缀的数量，与胖树类似。第二类内存用于将 ECMP 组 ID 映射到下一跳集合。其所需大小取决于 ECMP 组的设置方式。定义所有可能的 d^h 个组，并为每个目的地使用相应的那个组，消耗 O(hd^h) 内存。根据 n 和 d，选择能在内存容量内支持更大 h 的方法。</p>
+<h2 id="6-RNG-的布线"><a href="#6-RNG-的布线" class="headerlink" title="6. RNG 的布线"></a>6. RNG 的布线</h2><p>数据中心布线。 数据中心空间通常被划分为 O(10) 个房间（不一定有隔墙）。每个房间容纳一定数量的机架。在服务器机架进场之前，房间会经过准备，即安装电力、冷却和基础布线设施，包括配线架（patch panel）和房间间干线缆。当服务器机架进场时，会安装额外的线缆来连接它们。</p>
+<p>三个因素：(1) 连接器和端点对的数量，其中配线架是一个端点，ToR 也是；(2) 线缆的长度以及房间内（intra-room）相对于房间间（inter-room）线缆的比例——房间间布线更昂贵，因为它需要额外的基础设施；(3) 可在房间准备阶段完成的布线量相对于机架进场时才能完成的布线量——后期布线风险更大、速度更慢。</p>
+<p>RNG 中的物理连接。使用 ShuffleBox（图 4）来构建准随机图。为了通过 ShuffleBox 连接路由器，我们在每个房间部署一组 ShuffleBox，称为洗牌面板（shuffle panel）（图 5）。路由器上行链路连接到面板中随机选择的 r-port。不同房间面板的 c-port 也随机相连。如果有 R 个面板，每个面板有 C 个 ShuffleBox，我们将每个面板大约 (R−1)Cd_c&#x2F;R 个 c-port 连接到其他面板，从本质上构建了面板之间的随机图。ShuffleBack 处理这些悬空端口的”特殊连接器”，在内部就近”折返&#x2F;短接”回去。</p>
+<p><img src="/images/RNG/image-0.png" alt="alt text"></p>
+<p>图 6 展示了两个路由器逻辑上相连的三种方式：(a) 同一房间内的路由器连接到同一个 ShuffleBox，其 FP 被洗牌到一个配有 ShuffleBack 的 c-port；⁶ (b) 不同房间内的路由器，其 FP 被洗牌到相连的 c-port；(c) 路由器的 FP 最终落在另一个房间中同一个配有 ShuffleBack 的 r-port 上。在最后这种模式中，两个 ToR 可能位于同一房间。甚至可以产生更长的端到端路径。</p>
+<p><img src="/images/RNG/image-1.png" alt="alt text"></p>
+<p>RNG 的物理连接可以增量完成。ShuffleBox 配置。使用 f_r&#x3D;4，即一个 400 Gbps 物理端口的拆分通道数。RNG 的布线复杂度与胖树相当。重新平衡面板间连接是 RNG 特有的活动，但它只在准备新房间时需要进行少数几次。</p>
+<p>成本。 ShuffleBox 和 ShuffleBack 是 RNG 用来简化布线的新型无源光学组件。由于是无源的，其成本相对于交换机和收发器很低，并且与常用于简化胖树布线的传统配线架  和环回器（loopback）相似。</p>
+<h2 id="7-理论分析"><a href="#7-理论分析" class="headerlink" title="7.理论分析"></a>7.理论分析</h2><p>为随机图 + Spraypoint 路由建立一套可计算的性能模型,把三个关键指标(边不相交路径数、路径长度、超额订阅比)都写成关于设计参数 (n, d, p, h, ℓ) 的近似公式。</p>
+<p>前提:界定一个”可预测的运行区间”，参数范围(d 要足够大 ≥ 2(ln n+5)、p 和 h 各有约束)。</p>
+<p>边不相交路径的建模决定 h 的大小，一个不大的 h(&gt;1)就够。</p>
+<p>路径长度的建模得出结论:在实用区间 ℓ&#x3D;1 时,最长才 5 跳,且 5 跳的比例小到可忽略(例子里约 0.0003);RNG 的平均路径长度短于三层胖树(后者绝大多数 ToR-ToR 要 4 跳)</p>
+<p>以及吞吐量（超额订阅比）。</p>
+<p>进一步把模型反用为一套”按性能与成本目标反推 n、d、p、h”的网络设计流程——让 RNG 在建造之前就能被精确地规划和预测。不过依旧非常繁琐。</p>
+<h2 id="8-生产网络"><a href="#8-生产网络" class="headerlink" title="8. 生产网络"></a>8. 生产网络</h2><p>部署了两张独立的 RNG 网络</p>
+<ul>
+<li><p>服务器网格(server mesh):把 ToR 连成一张扩展图,是承载服务器流量的主网。其超额订阅比与 Amazon 最新的胖树网络相同(性能对标)。</p>
+</li>
+<li><p>边缘网格(edge mesh):连接服务器网格和远程数据中心,在两者之间做中转;它是非阻塞的(超额订阅目标更高)。<br>之所以拆成两张网,是因为二者超额订阅目标不同;两张网之间的互连端口分散在各路由器上。</p>
+</li>
+</ul>
+<ol>
+<li>性能</li>
+</ol>
+<p><img src="/images/RNG/image-2.png" alt="alt text"></p>
+<p>图 9 展示了基于一个实验的吞吐量分布，该实验在随机服务器对之间有 127 条无限需求的并发流。RNG 和胖树的结果相同。两个网络的路径延迟的任何差异对应用性能而言都无关紧要。</p>
+<p>图 10（左）比较了服务器对之间小尺寸（64 字节）数据包的每秒数据包数（PPS）。RNG 略高，因为它的背景流量较少。图 10（右）展示了从客户端到多个服务器的存储读取的每秒 I&#x2F;O 操作数（IOPS）。RNG 在此工作负载下的性能也与胖树相当。</p>
+<p>RNG 的性能与胖树相当（且成本更低、容错性更高）。</p>
+<p>评估流量的三种类型是：</p>
+<p>团（Clique）： 一组节点彼此之间交换流量（例如，all-reduce 等集合通信、存储服务器之间的复制流量）。<br>枢纽（Hubs）： 某些节点（如 Web 或存储服务器）向所有其他节点发送并从其接收。<br>匹配（Matchings）： 节点将所有流量发送给恰好另一个节点，如之前研究的。</p>
+<p><img src="/images/RNG/image-3.png" alt="alt text"></p>
+<p>图 13 展示了 RNG 和胖树的结果。曲线表示均值，阴影区域表示最小值和最大值。两个拓扑都设计为支持跨 960 个 ToR 的 61.4K 台服务器，最坏情况超额订阅为 3:1。在此配置下，RNG 使用的交换机减少 45%。</p>
+<p>看到，在团和枢纽模式下的广泛区间内，RNG 的性能最多可高出 30%。例外是 f&lt;0.1 的情况，此时胖树要好 5-10%。在这些情况下，胖树上的最短路径路由能找到等于 ToR 度数的边不相交路径。在 h&#x3D;2 时，RNG 的相应数量要低 10%（见 §9.2）。当网络中发送方很少时，边不相交路径的数量最为关键。对于匹配模式，当 f&lt;0.4 时胖树更好，否则 RNG 更好。</p>
+<ol start="2">
+<li>成本</li>
+</ol>
+<p><img src="/images/RNG/image-4.png" alt="alt text"></p>
+<p>使用两种拓扑所用交换机数量之比作为相对成本的度量。这个度量自动涵盖了收发器，因为其数量与交换机数量成正比。它忽略了线缆、连接器和配线架等无源光学组件；这些组件的成本占少数。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8B%93%E6%89%91/" rel="tag"># 拓扑</a>
+              <a href="/tags/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" rel="tag"># 互连网络</a>
+              <a href="/tags/%E8%B7%AF%E7%94%B1/" rel="tag"># 路由</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/03/Algorithm-Hot100-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3-%E5%AD%90%E4%B8%B2-%E6%95%B0%E7%BB%84/" rel="prev" title="Algorithm-Hot100-滑动窗口\子串\数组">
+                  <i class="fa fa-angle-left"></i> Algorithm-Hot100-滑动窗口\子串\数组
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/08/JupiterRising/" rel="next" title="JupiterRising">
+                  JupiterRising <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

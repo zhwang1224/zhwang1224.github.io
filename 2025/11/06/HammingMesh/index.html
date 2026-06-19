@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="HammingMesh: A Network Topology for Large-Scale Deep Learning 1. Motivation 2. 分布式深度学习中的通信 3. HammingMesh 3.1 Bisection and Global Bandwidth 3.2 Network Diameter 3.3 成本模型（Cost Model） 3.4 示例拓扑 3.5 HxM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HammingMesh">
+<meta property="og:url" content="https://zhwang1224.github.io/2025/11/06/HammingMesh/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="HammingMesh: A Network Topology for Large-Scale Deep Learning 1. Motivation 2. 分布式深度学习中的通信 3. HammingMesh 3.1 Bisection and Global Bandwidth 3.2 Network Diameter 3.3 成本模型（Cost Model） 3.4 示例拓扑 3.5 HxM">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-6.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-7.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-8.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-9.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-10.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-11.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-12.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HammingMesh/image-13.png">
+<meta property="article:published_time" content="2025-11-06T14:02:15.000Z">
+<meta property="article:modified_time" content="2025-11-07T12:15:55.153Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Clusters">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Networking">
+<meta property="article:tag" content="Topology">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/HammingMesh/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2025/11/06/HammingMesh/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/11/06/HammingMesh/","path":"2025/11/06/HammingMesh/","title":"HammingMesh"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HammingMesh | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HammingMesh-A-Network-Topology-for-Large-Scale-Deep-Learning"><span class="nav-number">1.</span> <span class="nav-text">HammingMesh: A Network Topology for Large-Scale Deep Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Motivation"><span class="nav-number">1.1.</span> <span class="nav-text">1. Motivation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%88%86%E5%B8%83%E5%BC%8F%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2. 分布式深度学习中的通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-HammingMesh"><span class="nav-number">1.3.</span> <span class="nav-text">3. HammingMesh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Bisection-and-Global-Bandwidth"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 Bisection and Global Bandwidth</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Network-Diameter"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 Network Diameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B%EF%BC%88Cost-Model%EF%BC%89"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 成本模型（Cost Model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%A4%BA%E4%BE%8B%E6%8B%93%E6%89%91"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 示例拓扑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-HxMesh%E4%B8%AD%E7%9A%84%E9%80%BB%E8%BE%91%E4%BD%9C%E4%B8%9A%E6%8B%93%E6%89%91%E4%B8%8E%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 HxMesh中的逻辑作业拓扑与容错机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#a-%E5%AE%B9%E9%94%99%E6%80%A7%EF%BC%88Fault-Tolerance%EF%BC%89"><span class="nav-number">1.3.5.1.</span> <span class="nav-text">a) 容错性（Fault Tolerance）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E7%BB%B4%E5%BA%A6%E7%BC%A9%E5%87%8F"><span class="nav-number">1.3.6.</span> <span class="nav-text">3.6 维度缩减</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%9C%A8%E5%AE%9E%E8%B7%B5%E4%B8%AD%E4%BD%BF%E7%94%A8-HammingMesh"><span class="nav-number">1.4.</span> <span class="nav-text">4. 在实践中使用 HammingMesh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-%E5%9C%A8-HammingMesh-%E4%B8%8A%E5%88%86%E9%85%8D%E4%BD%9C%E4%B8%9A"><span class="nav-number">1.4.1.</span> <span class="nav-text">A. 在 HammingMesh 上分配作业</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#a-%E4%BD%9C%E4%B8%9A%E5%B9%B2%E6%89%B0"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">a) 作业干扰</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#b-%E7%A2%8E%E7%89%87%E6%95%B4%E7%90%86"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">b) 碎片整理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD"><span class="nav-number">1.4.2.</span> <span class="nav-text">B. 实验性工作负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-Routing-on-HammingMesh"><span class="nav-number">1.4.3.</span> <span class="nav-text">C. Routing on HammingMesh</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%90%8C%E6%9D%BF%E8%B7%AF%E7%94%B1%EF%BC%88Routing-on-the-Same-Board%EF%BC%89"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">1) 同板路由（Routing on the Same Board）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%B7%A8%E6%9D%BF%E8%B7%AF%E7%94%B1%EF%BC%88Routing-Between-Different-Boards%EF%BC%89"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">2) 跨板路由（Routing Between Different Boards）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%BB%93%E6%9E%9C"><span class="nav-number">1.5.</span> <span class="nav-text">5. 结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-%E5%BE%AE%E5%9F%BA%E5%87%86%E6%B5%81%E9%87%8F%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.1.</span> <span class="nav-text">A. 微基准流量模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-DNN-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD"><span class="nav-number">1.5.2.</span> <span class="nav-text">B. DNN 工作负载</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/11/06/HammingMesh/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="HammingMesh | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HammingMesh
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-11-06 22:02:15" itemprop="dateCreated datePublished" datetime="2025-11-06T22:02:15+08:00">2025-11-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-07 20:15:55" itemprop="dateModified" datetime="2025-11-07T20:15:55+08:00">2025-11-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#hammingmesh-a-network-topology-for-large-scale-deep-learning">HammingMesh: A Network Topology for Large-Scale Deep Learning</a><ul>
+<li><a href="#1-motivation">1. Motivation</a></li>
+<li><a href="#2-%E5%88%86%E5%B8%83%E5%BC%8F%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E9%80%9A%E4%BF%A1">2. 分布式深度学习中的通信</a></li>
+<li><a href="#3-hammingmesh">3. HammingMesh</a><ul>
+<li><a href="#31-bisection-and-global-bandwidth">3.1 Bisection and Global Bandwidth</a></li>
+<li><a href="#32-network-diameter">3.2 Network Diameter</a></li>
+<li><a href="#33-%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8Bcost-model">3.3 成本模型（Cost Model）</a></li>
+<li><a href="#34-%E7%A4%BA%E4%BE%8B%E6%8B%93%E6%89%91">3.4 示例拓扑</a></li>
+<li><a href="#35-hxmesh%E4%B8%AD%E7%9A%84%E9%80%BB%E8%BE%91%E4%BD%9C%E4%B8%9A%E6%8B%93%E6%89%91%E4%B8%8E%E5%AE%B9%E9%94%99%E6%9C%BA%E5%88%B6">3.5 HxMesh中的逻辑作业拓扑与容错机制</a></li>
+<li><a href="#36-%E7%BB%B4%E5%BA%A6%E7%BC%A9%E5%87%8F">3.6 维度缩减</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%9C%A8%E5%AE%9E%E8%B7%B5%E4%B8%AD%E4%BD%BF%E7%94%A8-hammingmesh">4. 在实践中使用 HammingMesh</a><ul>
+<li><a href="#a-%E5%9C%A8-hammingmesh-%E4%B8%8A%E5%88%86%E9%85%8D%E4%BD%9C%E4%B8%9A">A. 在 HammingMesh 上分配作业</a></li>
+<li><a href="#b-%E5%AE%9E%E9%AA%8C%E6%80%A7%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD">B. 实验性工作负载</a></li>
+<li><a href="#c-routing-on-hammingmesh">C. Routing on HammingMesh</a></li>
+</ul>
+</li>
+<li><a href="#5-%E7%BB%93%E6%9E%9C">5. 结果</a><ul>
+<li><a href="#a-%E5%BE%AE%E5%9F%BA%E5%87%86%E6%B5%81%E9%87%8F%E6%A8%A1%E5%BC%8F">A. 微基准流量模式</a></li>
+<li><a href="#b-dnn-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD">B. DNN 工作负载</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="HammingMesh-A-Network-Topology-for-Large-Scale-Deep-Learning"><a href="#HammingMesh-A-Network-Topology-for-Large-Scale-Deep-Learning" class="headerlink" title="HammingMesh: A Network Topology for Large-Scale Deep Learning"></a>HammingMesh: A Network Topology for Large-Scale Deep Learning</h1><h2 id="1-Motivation"><a href="#1-Motivation" class="headerlink" title="1. Motivation"></a>1. Motivation</h2><p><strong>由加速器微体系结构转向系统层面</strong></p>
+<p>深度学习中存在多种不同类型的模型，它们在计算结构上具有相似性——都由层状算子组成，并且本质上是数据密集型的。许多领域专用的加速器利用了深度学习工作负载的特性，例如矩阵乘单元（“tensor cores”）、专用向量核心或特定的低精度数据类型。这些优化可以带来数量级级别的效率提升。然而，随着此类微体系结构改进逐渐逼近极限，文章必须将注意力转向系统层面。</p>
+<p><strong>当今的训练任务已经受到数据传输带宽的限制</strong></p>
+<p>内存和网络带宽都十分昂贵，它们已成为现代系统中成本最高的组成部分。InfiniBand以及以太网路由器每个端口提供高达 400 Gb&#x2F;s 的带宽，但现代深度学习训练系统提供的带宽要高得多。Google 的 TPUv2（七年前设计）具有 1 Tbps 的片外带宽；AWS 的 Trainium 每个 Tm1n 实例可达 1.6 Tbps；NVIDIA 的 A100 与 H100 芯片分别提供 4.8 Tbps 和 7.2 Tbps 的本地 NVLINK 连接。而 Tesla 的 Dojo 深度学习超级计算机芯片甚至拥有 128 Tbps 的片外带宽——超过了一台网络交换机。在合理成本下将这些极高带宽的芯片互连是一项艰巨的任务，如今的解决方案（例如 NVLINK）仅能提供局部的高带宽“岛屿”。</p>
+<p><strong>通用的 HPC 与数据中心拓扑结构在这种终端注入带宽下已不再具备成本效益</strong><br>正如微体系结构优化中存在“专用化”的趋势一样，针对特定工作负载的网络专用化也能带来高效的设计，从而提供所需的高带宽互连。当今 HPC 网络（为提供满全局带宽而优化）的低效性：其全局带宽被严重过度配置，而局部带宽却供给不足。</p>
+<p>基于以上开发了 HammingMesh——一种能够针对深度学习工作负载灵活调整局部与全局带宽比例的网络拓扑。HammingMesh 融合了环形（torus）与高全局带宽拓扑（例如 fat tree）的思想，实现如图 1 所示的灵活性与成本权衡。</p>
+<p><img src="/images/HammingMesh/image.png" alt="alt text"></p>
+<h2 id="2-分布式深度学习中的通信"><a href="#2-分布式深度学习中的通信" class="headerlink" title="2. 分布式深度学习中的通信"></a>2. 分布式深度学习中的通信</h2><p>使用随机梯度下降（Stochastic Gradient Descent，SGD）进行一次深度学习训练迭代主要包含两个阶段：前向传播（forward pass）与反向传播（backward pass）。前向传播在包含 𝑀 个样本的数据集上计算网络函数 𝑓(𝑥)，这些样本也被称为一个“minibatch”。反向传播计算平均损失 𝐿，并将误差信号 𝑒 反向传播，通过网络调整参数 𝑃。</p>
+<p>并行性与数据分布可从三个维度进行划分：数据并行（data parallelism）、流水线并行（pipeline parallelism）与算子并行（operator parallelism）。后两者常被统称为模型并行（model parallelism），其中算子并行有时也被称为张量并行（tensor parallelism）</p>
+<ul>
+<li><p>数据并行<br>当沿着训练数据维度进行并行化时，系统会训练 𝐷 份相同的模型副本，每份副本使用不同的训练样本。为了得到与串行训练完全相同的结果，需要在每次迭代结束时将所有副本的梯度相加后再更新权重。如果网络具有 𝑁_𝑃 个参数，则此步通信的数据量为 𝑊𝑁_𝑃。已有数十种不同技术被提出以改进该通信操作——但本质上它们都执行某种形式的分布式求和操作，例如 MPI 的 Allreduce。</p>
+</li>
+<li><p>流水线并行<br>深度神经网络按层进行计算，层 𝑖 的输出作为层 𝑖+1 的输入。反向传播则按相反方向进行，从最后一层的损失函数 𝐿 开始，依次向前传播误差梯度。文章可以将整个网络抽象为一个具有 𝑃 个阶段（stage）的流水线，每个阶段包含一个或多个层。前向与反向传播可以在每个处理单元上交错执行，从而形成双向训练流水线。</p>
+</li>
+<li><p>算子并行<br>对于非常大的层计算（算子），可将其分布到 𝑂 个处理器上执行。大多数深度学习层算子都遵循多维线性代数或张量收缩的计算模式，通常需要（紧耦合的）分布式规约或邻居间通信。</p>
+</li>
+<li><p>整体通信模式<br>当三种并行形式同时使用时，训练任务将包含 D×P×O 个加速器，每个加速器的逻辑地址为 (1..D,1..P,1..O)。综合这些通信模式后，其整体拓扑可形成一个**环面（torus）**结构，如图 2 右侧 3×3×3 示例所示：</p>
+</li>
+</ul>
+<p><img src="/images/HammingMesh/image-1.png" alt="alt text"></p>
+<p>虽然可以将这种逻辑环面映射到具备完整带宽的网络拓扑，但为稀疏通信提供满带宽显然浪费。例如，一个具有 16,384 个端点的非阻塞 fat tree 网络，其总双向带宽可达：410TB&#x2F;s。而一个 32×32×16 的三维环形通信仅需：51.2TB&#x2F;s。</p>
+<h2 id="3-HammingMesh"><a href="#3-HammingMesh" class="headerlink" title="3. HammingMesh"></a>3. HammingMesh</h2><p>采用二维物理拓扑结构。以一个现代深度学习加速器封装为例，该芯片具有 16 条 400 Gb&#x2F;s 的片外网络链路，总网络注入带宽为 800 GB&#x2F;s（见图 3 左上角）。文章的拓扑设计同时考虑了技术与成本：类似 Dragonfly 拓扑通过结合局部短铜缆与全局长光缆来获得性价比最优的设计，文章也将这种思想用于结合局部与全局拓扑结构。但HammingMesh 采用了两种截然不同的拓扑层级：局部组由在印刷电路板（PCB）上使用短金属走线形成的高带宽二维网格（2D mesh），即“板级互连”；而全局拓扑用于在这些板之间互连。</p>
+<p><img src="/images/HammingMesh/image-2.png" alt="alt text"></p>
+<p>换言之，HammingMesh 是一种在维度方向上稀疏互连的分层设计：多个局部板按行和列方向通过独立的交换结构相连，行与列之间互不完全耦合。这种结构可抽象为二维 Hamming 图（Hamming graph），其中每个维度在逻辑上是全连接的（例如通过 fat tree 实现）。所有加速器端口被划分为若干“平面”，每个平面具有四个方向（N, S, E, W）。</p>
+<p>文章的示例加速器拥有 4 个平面（图 3 左上角），例如平面 1 包含端口 E₁、W₁、N₁、S₁。文章假设每个加速器能在平面内部转发分组（类似小型交换机），但不需要在平面之间转发。例如，抵达 N₁ 的数据包只能转发至 E₁、W₁ 或 S₁，而不会跨至其它平面。因此，每个加速器只需一个简单的 4×4 交换单元。图 3 展示了这一结构细节。</p>
+<p>一个二维 HammingMesh 由其平面数以及四个维度参数确定：(a, b) 表示板内维度，(x, y) 表示全局拓扑维度。它连接的加速器总数为 a×b×x×y。文章用 HxMesh 表示 HammingMesh，例如一个 2×2 板构成的 HxMesh 称为 H2x2Mesh。对于方形板（a &#x3D; b），可简写为 Hx2Mesh，例如 10×10 板阵列连接成的网络可表示为 10×10 Hx2Mesh。HammingMesh 拥有广阔的设计空间：不同板拓扑和全局拓扑可任意组合，例如 3D mesh 板 + 全局 Slim Fly 拓扑。本研究主要关注在 PCB 上最实用的二维设计。可将电路板布局简化为一个一维HxMesh结构，其中y&#x3D;1且每个Nk链路与对应Sk链路相连（”环形连接”）。类似地，全局拓扑也可跨多行或多列。文章采用两级 fat tree作为全局拓扑连接板的行与列；若某行（或列）能由单个 64 端口交换机连接，则直接使用该交换机而非两级结构。</p>
+<h3 id="3-1-Bisection-and-Global-Bandwidth"><a href="#3-1-Bisection-and-Global-Bandwidth" class="headerlink" title="3.1 Bisection and Global Bandwidth"></a>3.1 Bisection and Global Bandwidth</h3><p>对分带宽定义为将网络划分为两个等规模部分时，需要切断的链路数乘以链路带宽。假设单平面的 x×y HxaMesh（方形板，a &#x3D; b），且 x≤y，y 为偶数。文章取 y 坐标为 1 到 y&#x2F;2 的下半部分板。要将网络平分，只需切断这些下半部分板在 y 方向上的 2a 条链路，总切割宽度为 axy。</p>
+<p>每个加速器在每个平面拥有 4 条链路，每个板的注入带宽为 $ 4a^2 $。在下半部分共有 $ \frac{xy}{2} $ 块板，总注入带宽为 $ 2xya^2 $。因此，相对对分带宽为：</p>
+<p>$$<br>\frac{axy}{2xya^2} &#x3D; \frac{1}{2a}<br>$$</p>
+<p>这种“最坏情况”截面通信（即所有通信都跨过分界）在实践中很少出现。更常见的模式是 Alltoall，即每个进程向所有其他进程发送数据。  该模式是许多并行算法（如转置、FFT、图计算）的基础。 用于 Alltoall 模式的理论极限带宽通常称为“全局带宽（global bandwidth）”。 <strong>一些拓扑结构通过优化全局带宽而非截面带宽实现成本节省</strong>。</p>
+<p>例如，Prisacari 等人证明，全全局带宽的 fat tree 相比非阻塞 fat tree 可节省约 25% 的交换机数量。Dragonfly 、Slim Fly 及其他低直径拓扑能在维持全局带宽的同时进一步减少交换机数量。本文采用分组级（packet-level）模拟来评估这些拓扑在 Alltoall 流量下的性能。</p>
+<h3 id="3-2-Network-Diameter"><a href="#3-2-Network-Diameter" class="headerlink" title="3.2 Network Diameter"></a>3.2 Network Diameter</h3><p>网络**直径（diameter）**指两个节点之间最远路径上的链路数。例如，两级 fat tree 的直径为 4。为了公平比较，文章将端点到交换机的链路也计入直径，以便与直接互连拓扑（如环面）对比。计算 HxMesh 的直径时，考虑位于不同板上的两个加速器，它们分别位于各自板的内部区域（离边缘最远）。</p>
+<p>计算 HxMesh 的直径时，考虑位于不同板上的两个加速器，它们分别位于各自板的内部区域（离边缘最远）。<br>设源板与目标板在不同的行和列上，则路径可分为以下几个阶段：</p>
+<ol>
+<li><p><strong>板内横向跳数</strong>：从源节点到达所在板的东西边缘需（跳）<br>$$<br>\left\lfloor \frac{a - 1}{2} \right\rfloor<br>$$</p>
+</li>
+<li><p><strong>跨板连接（行方向）</strong>：经交换机通过两条线缆跨越到中间板（保持行与列对应关系）。</p>
+</li>
+<li><p><strong>中间板内跳数（列方向）</strong>：在中间板内行走（跳）以抵达目标列<br>$$<br>\left\lfloor \frac{a - 1}{2} \right\rfloor<br>$$  </p>
+</li>
+<li><p><strong>板内纵向跳数</strong>：再行走（跳）以抵达南或北边缘。<br>$$<br>\left\lfloor \frac{b - 1}{2} \right\rfloor<br>$$  </p>
+</li>
+<li><p><strong>跨板连接（列方向）</strong>：经交换机通过两条链路到达目标板。</p>
+</li>
+<li><p><strong>目标板内跳数</strong>：最后在目标板内再行走（跳）到达目标节点。<br>$$<br>\left\lfloor \frac{b - 1}{2} \right\rfloor<br>$$</p>
+</li>
+</ol>
+<p>若全局拓扑采用<strong>平坦全连接</strong>（all-to-all），上述路径即为最短路径。但在大型系统中，这种结构不现实。若采用由端口数为 $ k $ 的路由器构成的<strong>满带宽 fat tree</strong>，其直径为：</p>
+<p>$$<br>2 \left( \left\lceil \log_{k&#x2F;2} \left( \frac{q}{k} \right) \right\rceil + 1 \right),<br>$$</p>
+<p>其中 $ q $ 为端点数量。在 HxMesh 中，fat tree 结构仅连接<strong>同列或同行的板</strong>，且每棵树连接至板的两条对边，因此：</p>
+<ul>
+<li>行方向的端点数为 $ q &#x3D; 2x $，</li>
+<li>列方向的端点数为 $ q &#x3D; 2y $。</li>
+</ul>
+<p>因此，HxMesh 的总直径为：</p>
+<p>$$<br>2 \left( \left\lfloor \frac{a - 1}{2} \right\rfloor + \left\lfloor \frac{b - 1}{2} \right\rfloor \right) +<br>2 \left( \left\lceil \log_{k&#x2F;2} \left( \frac{2x}{k} \right) \right\rceil + 1 \right) +<br>2 \left( \left\lceil \log_{k&#x2F;2} \left( \frac{2y}{k} \right) \right\rceil + 1 \right).<br>$$</p>
+<h3 id="3-3-成本模型（Cost-Model）"><a href="#3-3-成本模型（Cost-Model）" class="headerlink" title="3.3 成本模型（Cost Model）"></a>3.3 成本模型（Cost Model）</h3><p>文章分析系统建设时的资本支出。假设加速器的网络接口（NIC）、端口与 PCB 已包含在终端封装成本中，因此成本主要来自网络设备：光模块、线缆与交换机。<br>文章采用三种类型的线缆与一种交换机型号，价格来自 Colfaxdirect（2022 年 4 月数据）：</p>
+<ul>
+<li><p>单台 64 端口交换机：14,280 美元；</p>
+</li>
+<li><p>20 米有源光缆（AoC）：603 美元；</p>
+</li>
+<li><p>5 米直连铜缆（DAC）：272 美元。</p>
+</li>
+</ul>
+<p>所有拓扑均可在标准 19 英寸机架中使用这两种线缆构建。在表 II 的成本计算中，文章使用 DAC 连接终端与交换机，AoC 连接交换机之间。</p>
+<h3 id="3-4-示例拓扑"><a href="#3-4-示例拓扑" class="headerlink" title="3.4 示例拓扑"></a>3.4 示例拓扑</h3><p>文章以两个具体规模为例比较网络设计：</p>
+<ul>
+<li><p>小型集群：约 1,000 个加速器；</p>
+</li>
+<li><p>大型集群：约 16,000 个加速器。</p>
+</li>
+</ul>
+<p>比较对象包括：多种 fat tree（非阻塞、50%、75% 截流）、全带宽 Dragonfly、二维环面（2D Torus）、以及 Hx2Mesh 与 Hx4Mesh。</p>
+<p><img src="/images/HammingMesh/image-3.png" alt="alt text"></p>
+<p>表 II 总结了主要的成本与带宽结果。全局与 allreduce 带宽通过分组级仿真获得（见第 V 章）。在实验中，文章为 HammingMesh 模拟单平面，为其他拓扑模拟四平面（即总注入带宽均为 4×400 Gb&#x2F;s）。fat tree 自第二层起采用渐缩连接（tapered），端点通过 DAC，交换机间用 AoC；Dragonfly 拓扑每组包含 16 个路由器、每路由器 8 个端点、8 条组间链路；环面与 Hx2Mesh 类似，使用 2×2 板和短 PCB 互连，仅用 DAC 连接板间；HxMesh 在一个维度上使用 DAC 连接端点至交换机，另一维度使用 AoC，全局交换机之间也用 AoC。</p>
+<h3 id="3-5-HxMesh中的逻辑作业拓扑与容错机制"><a href="#3-5-HxMesh中的逻辑作业拓扑与容错机制" class="headerlink" title="3.5 HxMesh中的逻辑作业拓扑与容错机制"></a>3.5 HxMesh中的逻辑作业拓扑与容错机制</h3><p>如第二章 D 节所述，深度学习的通信模式可被建模为一组循环（<em>cycles</em>）。典型训练作业使用的逻辑通信拓扑包括：</p>
+<ul>
+<li><strong>一维循环（1D rings）</strong>：适用于仅使用数据并行的小型模型；</li>
+<li><strong>二维环面（2D tori）</strong>：适用于结合数据+流水线并行的中等规模模型，或结合流水线+模型并行的更大模型；</li>
+<li><strong>三维拓扑（3D）</strong>：在极大规模模型中使用。</li>
+</ul>
+<p>每个具体训练作业的最优划分方式不同，因而在实践中会生成 1D、2D 甚至 3D 的逻辑通信拓扑。</p>
+<p>文章假设每个训练作业使用二维逻辑拓扑。每个作业占用若干块板（<em>boards</em>），并请求一个 $ u \times v $ 的布局（其中 $ u, v $ 能整除物理网格的维度）。若应用的通信模式为 1D 或 3D，也可以通过标准的<strong>折叠（folding）技术</strong>映射到二维作业。</p>
+<p><img src="/images/HammingMesh/image-4.png" alt="alt text"></p>
+<p>图 4 给出了一个 3D 虚拟拓扑映射到物理 Hx2Mesh 的例子：左侧为虚拟 $ 4 \times 4 \times 2 $ 拓扑，右侧为其在 Hx2Mesh 上的实际分配。在映射时，可将第三维度的进程切片分配到不同板上。跨切片通信可沿着列或行方向的 fat tree 路由（取决于映射方式）。为了最小化延迟，建议让相邻切片物理上相邻。文章将在第五章 A2 节展示如何在二维环面上加速 <code>allreduce</code>，而不依赖简单环算法。</p>
+<p>显然，在二维 HxMesh 中，任意连续的 $ u \times v $ 板块子集与完整 $ u \times v $ HxMesh 具有相同特性。文章称这种子网络为<strong>虚拟子 HxMesh</strong>（<em>virtual sub-HxMesh</em>）。这是 HxMesh 相较于环面（<em>torus</em>）网络的一大优势：不仅在容错性方面，在作业分配时也更灵活。在环面网络中，子网络必须是连续块；而在 HxMesh 中，只要同一行的所有板具有相同的列坐标序列，就能组成虚拟子网。</p>
+<p>下面文章通过容错案例进一步说明这一点。</p>
+<h4 id="a-容错性（Fault-Tolerance）"><a href="#a-容错性（Fault-Tolerance）" class="headerlink" title="a) 容错性（Fault Tolerance）"></a>a) 容错性（Fault Tolerance）</h4><p>文章假设在 HxMesh 中，“板（<em>board</em>）”是最小的故障单元。即一旦某板上的加速器或链路出现故障，该整块板都视为失效。这一假设简化了系统设计与维护。更细粒度的故障（例如单平面失效）超出本文范围。</p>
+<p><img src="/images/HammingMesh/image-5.png" alt="alt text"></p>
+<p>图 5 左侧展示了一个 $ 4 \times 4 $ 的 Hx2Mesh，其中三块板失效。文章示意了两种可行的虚拟子网络（实际上可能更多）：</p>
+<ul>
+<li><strong>蓝色部分</strong>：由 (1,1)、(1,4)、(2,1)、(2,4)、(3,1)、(3,4)、(4,1)、(4,4) 组成的 $ 2 \times 4 $ 子网；</li>
+<li><strong>黄色部分</strong>：由 (1,1)、(1,2)、(1,4)、(2,1)、(2,2)、(2,4)、(4,1)、(4,2)、(4,4) 组成的 $ 3 \times 3 $ 子网。</li>
+</ul>
+<p>每个虚拟子网内的板都会重新编号，以形成连续逻辑坐标。这种**重映射（<em>remapping</em>）**对上层应用完全透明：用户程序无法感知虚拟与物理 HxMesh 之间的差别，性能一致。</p>
+<p>图 5 右侧展示了文章的自动映射工具输出结果示例，其中多组不同大小的作业被分配（如编号 1–3 的 $ 3 \times 3 $ 作业等）。文章将在第四章 B 节详细分析因板失效导致的<strong>碎片化</strong>（<em>fragmentation</em>）影响。</p>
+<h3 id="3-6-维度缩减"><a href="#3-6-维度缩减" class="headerlink" title="3.6 维度缩减"></a>3.6 维度缩减</h3><p>如第二章 D 节讨论，深度学习工作负载对全局带宽的需求并不高。因此，HxMesh 的全局带宽可以进一步**按维度削减（tapering）**以节省成本。首先观察：若要在 HxMesh 的一个维度上映射单个环（ring），相邻交换机之间只需两条端口相连。<br>以图 6 为例：此 Hx2Mesh 采用两级 fat tree 实现全局连接，展示了一个沿 x 方向的环通信（仅示出 8 条物理环之一以便说明）。</p>
+<p>文章可以看到，最上层交换机仅路由相邻交换机间的两条连接，因此只有 50% 链路被实际利用。通常，文章无需在全局拓扑上提供满带宽，仅在需要支持全局通信或**碎片化分配（non-consecutive allocations）**时才需要。例如，在大型深度学习系统中，仅提供约 20% 的全局带宽即可同时支持必要的全局通信与适度的碎片容忍性。这为设计提供了第二个可调旋钮：在保持性能的前提下进一步降低成本。</p>
+<p><img src="/images/HammingMesh/image-6.png" alt="alt text"></p>
+<h2 id="4-在实践中使用-HammingMesh"><a href="#4-在实践中使用-HammingMesh" class="headerlink" title="4. 在实践中使用 HammingMesh"></a>4. 在实践中使用 HammingMesh</h2><p>训练作业通常会请求一个二维的板块集合。在二维环面（2D torus）上分配矩形作业的问题等价于一个强 NP-困难的二维装箱问题（2D bin packing problem）。然而，HxMesh 的分配机制支持如图 5 所示的块拆分（block splitting），这使得问题大大简化。下面文章提出一种简单而高效的贪心分配策略（greedy allocation strategy）。</p>
+<h3 id="A-在-HammingMesh-上分配作业"><a href="#A-在-HammingMesh-上分配作业" class="headerlink" title="A. 在 HammingMesh 上分配作业"></a>A. 在 HammingMesh 上分配作业</h3><p>对于一个 $ a \times b $ 大小的作业，请求 $ u \times v $ 的逻辑布局（即划分为 $ u $ 行 $ v $ 列的虚拟子 HxMesh），在 $ x \times y $ 的物理 HxMesh 上，文章采用简单的贪心分配算法。<strong>实现效率</strong>：该算法用不到 50 行 Python 代码实现，在普通笔记本电脑上可在 <strong>1 秒内完成</strong>对一个 $ 1000 \times 1000 $ HxMesh 的作业分配。为提升 HxMesh 的资源利用率并减少碎片化，文章引入启发式优化策略。</p>
+<h4 id="a-作业干扰"><a href="#a-作业干扰" class="headerlink" title="a) 作业干扰"></a>a) 作业干扰</h4><p>这种分配策略的一个宝贵特性是：能避免不同作业间的网络干扰。因为每块板在同一时间最多只被一个作业使用，所以在板内不会产生干扰。即使源与目的地位于同一行（或同一列）的不同板上，非阻塞的 fat tree 配合**数据包喷射（packet spraying）**机制也能避免干扰。当源板与目标板位于不同的行和列时，数据包会经过一个中间板（见第 IV-C 节）。该分配策略保证每块板至少与同一作业的另一块板共享行或列（例如图 5 所示），因此数据包永远不会穿越属于其他作业的板来到达目的地。</p>
+<h4 id="b-碎片整理"><a href="#b-碎片整理" class="headerlink" title="b) 碎片整理"></a>b) 碎片整理</h4><p>现代集群与云系统支持高效的**检查点 &#x2F; 重启（checkpoint &#x2F; restart）**机制。因此，文章可以通过保存作业状态、重新调度并在更优布局下恢复运行，实现系统碎片化的整理。以文中示例的加速器为例，它能在不到 80 毫秒内发送 64 GiB 数据。</p>
+<p>因此，对于一个具备合理全局带宽（例如 10%）的系统来说，完整的碎片整理过程可在不到 1 秒内完成。考虑到深度学习任务通常运行时间为数小时甚至数天，这样的碎片整理几乎不会影响用户体验或系统整体利用率。</p>
+<h3 id="B-实验性工作负载"><a href="#B-实验性工作负载" class="headerlink" title="B. 实验性工作负载"></a>B. 实验性工作负载</h3><p>为了评估分配算法的质量，文章使用了来自阿里巴巴 MLaaS（机器学习即服务）集群的两个月工作负载日志（包含 6,742 个 GPU。目标是模拟：当集群满载时，一个典型的作业混合（job mix）能多好地在 HxMesh 上被分配。</p>
+<p>文章从该作业规模分布中随机抽取 1,000 组作业混合：每次从分布中采样一个作业大小，将其乘以单板大小后添加到集群中，重复直到填满整个目标集群。若某个样本放不下，则留待下一组混合使用。文章记录这些随机抽样的顺序，形成一个作业轨迹（job trace）。</p>
+<p><img src="/images/HammingMesh/image-7.png" alt="alt text"></p>
+<p>图 7 展示了原始分布与填满阿里巴巴集群的采样分布下，不同作业规模占用板块比例的累积分布函数（CDF）。</p>
+<p>图 8 展示了文章在表 II 所示的不同 HxMesh 拓扑上使用贪心分配算法及不同优化启发式后的系统利用率分布（共 1,000 次随机作业轨迹）。满全局带宽拓扑（full-global-bandwidth topology）理论上可达到 100% 利用率。</p>
+<p><img src="/images/HammingMesh/image-8.png" alt="alt text"></p>
+<p>在默认情况下，文章让作业尽可能接近正方形。宽高比优化允许作业的形状调整幅度最高达 8 倍。结果表明，即使在没有任何优化的情况下，贪心算法也能达到约 90% 系统利用率。在启用转置后，利用率可进一步提升 5–8%。若再根据作业大小进行排序，平均与中位利用率均超过 98%，第 99 百分位超过 95%。</p>
+<p>文章进一步研究大型集群中 fat tree 上层的负载情况。图 9 展示了运行 alltoall 与 allreduce 流量时，上层交换机的流量比例。结果表明，在两种情况下，上层链路上的流量比例均低于 50%，因此对这类工作负载使用 2:1 的带宽收缩（tapering） 是合理的。</p>
+<p><img src="/images/HammingMesh/image-9.png" alt="alt text"></p>
+<p>最后，文章研究了随机板块故障（failures）导致的系统利用率下降（碎片化效应）。<br>图 10 重复了上述实验，但加入不同数量的随机失效板块。<br>结果以“被成功分配给作业的、未失效的板块比例”衡量系统利用率。</p>
+<h3 id="C-Routing-on-HammingMesh"><a href="#C-Routing-on-HammingMesh" class="headerlink" title="C. Routing on HammingMesh"></a>C. Routing on HammingMesh</h3><p>在 HxMesh 上，数据包会自适应（adaptive）地沿所有最短路径路由。文章假设系统采用类似 Cray Slingshot 或 InfiniBand 那样的分组级自适应路由机制。为了减少数据包乱序（packet reordering），在以太网中可采用 flowlet-level adaptive routing 作为近似实现。不失一般性，文章假设使用输入缓存交换机（input-buffered switch）与基于信用的流控（credit-based flow control）</p>
+<h4 id="1-同板路由（Routing-on-the-Same-Board）"><a href="#1-同板路由（Routing-on-the-Same-Board）" class="headerlink" title="1) 同板路由（Routing on the Same Board）"></a>1) 同板路由（Routing on the Same Board）</h4><p>当源与目的加速器位于同一块板上时，采用环面网络上的自适应路由算法：在每个加速器（4×4 交换单元）处，沿所有最短路径中选择当前负载最低的输出端口。数据包可能经过 fat tree 交换机（类似二维环面中的情况），也可能仅在板内链路上传输。</p>
+<h4 id="2-跨板路由（Routing-Between-Different-Boards）"><a href="#2-跨板路由（Routing-Between-Different-Boards）" class="headerlink" title="2) 跨板路由（Routing Between Different Boards）"></a>2) 跨板路由（Routing Between Different Boards）</h4><p>当源板与目标板位于同一行时，数据包会在源板中被自适应地路由到最近的边缘（西或东），然后通过 fat tree 到达目标板中最靠近目的地的端口。在 fat tree 中，采用上下自适应路由（up&#x2F;down adaptive routing）。到达目标板后，数据包再被自适应地路由至最终目的加速器。</p>
+<p>需要注意的是，数据包可能需要在源板或目标板（或两者）内部沿南北方向转发，这取决于局部负载情况。当源板与目标板位于同一列时，过程类似，只是方向相反。</p>
+<p>若源板与目标板既不在同一行也不在同一列，则数据包需经过一个中间板。该中间板必须位于源板的同一行且目标板的同一列（或相反）。路径选择依然是最短且自适应的，数据包将穿越两个 fat tree，分别对应两个维度。</p>
+<p>为保证板内无死锁，采用 north-last routing（北向最后） 策略，即仅当交换机位于与目标板同列时才允许向北方向转发。在 fat tree 内部，上下路由（up&#x2F;down routing）保证无死锁。然而，尽管 mesh 与 fat tree 各自都是无死锁的，两者结合时仍可能产生死锁。一种简单的解决方法是使用多个虚拟信道（virtual channels），并在每跳后增加其编号。但这会要求虚拟信道数量等于网络直径。为避免开销，文章观察到：由于板内和 fat tree 本身均无死锁，仅需在**跨板时（即注入 fat tree 时）**增加虚拟信道编号即可。由于每个数据包最多穿越两个 fat tree，因此只需 三个虚拟信道 即可确保整个网络无死锁。</p>
+<h2 id="5-结果"><a href="#5-结果" class="headerlink" title="5. 结果"></a>5. 结果</h2><p>使用SST进行模拟</p>
+<h3 id="A-微基准流量模式"><a href="#A-微基准流量模式" class="headerlink" title="A. 微基准流量模式"></a>A. 微基准流量模式</h3><p>尽管其全局带宽较低，即便是大规模 HxMesh，在“单位全局带宽成本（cost-per global bandwidth）”上仍具有竞争力，甚至在某些情况下比 fat tree 更具成本优势。</p>
+<p><img src="/images/HammingMesh/image-10.png" alt="alt text"></p>
+<p>图 12 展示了小型集群配置中 1,000 个加速器的接收带宽分布。</p>
+<p><img src="/images/HammingMesh/image-11.png" alt="alt text"></p>
+<p>对 ring 算法来说，所有拓扑都能接近满带宽。对于大消息，HxMesh 在“单位带宽成本”上比非阻塞 fat tree 便宜约 2.8 倍到 14.5 倍（见表 II）。</p>
+<p><img src="/images/HammingMesh/image-12.png" alt="alt text"></p>
+<h3 id="B-DNN-工作负载"><a href="#B-DNN-工作负载" class="headerlink" title="B. DNN 工作负载"></a>B. DNN 工作负载</h3><p>文章选择了三个具有代表性的、大型模型：ResNet-152、CosmoFlow 以及 Transformer（GPT-3），均使用 FP32 训练。文章在 NVIDIA A100 GPU 上对算子运行时间进行基准测试，并根据数据量对通信时间进行建模。</p>
+<p><img src="/images/HammingMesh/image-13.png" alt="alt text"></p>
+<p>Hx2Mesh 和 Hx4Mesh 都能显著降低 DNN 工作负载的网络成本。随着网络规模的扩大，尤其在存在 alltoall 流量时，Hx4Mesh 的成本效率会显著优于 Hx2Mesh。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Topology/" rel="tag"># Topology</a>
+              <a href="/tags/Networking/" rel="tag"># Networking</a>
+              <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+              <a href="/tags/Clusters/" rel="tag"># Clusters</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/04/DOJO-supercompute/" rel="prev" title="DOJO supercompute">
+                  <i class="fa fa-angle-left"></i> DOJO supercompute
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/10/CambriconLLM/" rel="next" title="CambriconLLM">
+                  CambriconLLM <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="SimAI 通过集成主流训练框架与集合通信库的关键流程,实现了与真实结果平均 98.1% 的吻合度;通过无锁多线程优化保障了可扩展性与性能;并已在阿里云生产环境广泛应用、产出了实用的运营指导。  SimAI 1. 研究背景与问题动机 2. 四个挑战 3. 模拟的应用场景与设计目标 4. SimAI 4.1 工作负载生成器 4.2 计算模拟 4.3 通信模拟 4.4 大规模模拟加速   5. 评估">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SimAI">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/06/18/SimAI/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="SimAI 通过集成主流训练框架与集合通信库的关键流程,实现了与真实结果平均 98.1% 的吻合度;通过无锁多线程优化保障了可扩展性与性能;并已在阿里云生产环境广泛应用、产出了实用的运营指导。  SimAI 1. 研究背景与问题动机 2. 四个挑战 3. 模拟的应用场景与设计目标 4. SimAI 4.1 工作负载生成器 4.2 计算模拟 4.3 通信模拟 4.4 大规模模拟加速   5. 评估">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-6.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SimAI/image-7.png">
+<meta property="article:published_time" content="2026-06-18T07:45:48.000Z">
+<meta property="article:modified_time" content="2026-06-18T10:51:47.353Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Simulator">
+<meta property="article:tag" content="模拟器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/SimAI/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/06/18/SimAI/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/06/18/SimAI/","path":"2026/06/18/SimAI/","title":"SimAI"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SimAI | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SimAI"><span class="nav-number">1.</span> <span class="nav-text">SimAI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98%E5%8A%A8%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">1. 研究背景与问题动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%9B%9B%E4%B8%AA%E6%8C%91%E6%88%98"><span class="nav-number">1.2.</span> <span class="nav-text">2. 四个挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A8%A1%E6%8B%9F%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-number">1.3.</span> <span class="nav-text">3. 模拟的应用场景与设计目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-SimAI"><span class="nav-number">1.4.</span> <span class="nav-text">4. SimAI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 工作负载生成器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 计算模拟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 通信模拟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A8%A1%E6%8B%9F%E5%8A%A0%E9%80%9F"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4 大规模模拟加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E8%AF%84%E4%BC%B0"><span class="nav-number">1.5.</span> <span class="nav-text">5. 评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 通信模拟的精度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 计算模拟的精度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 端到端模拟的精度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E6%94%B6%E7%9B%8A"><span class="nav-number">1.6.</span> <span class="nav-text">6. 生产环境中的收益</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/18/SimAI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SimAI | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SimAI
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-06-18 15:45:48 / 修改时间：18:51:47" itemprop="dateCreated datePublished" datetime="2026-06-18T15:45:48+08:00">2026-06-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%A8%A1%E6%8B%9F%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">模拟器</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>SimAI 通过集成主流训练框架与集合通信库的关键流程,实现了与真实结果平均 98.1% 的吻合度;通过无锁多线程优化保障了可扩展性与性能;并已在阿里云生产环境广泛应用、产出了实用的运营指导。</p>
+<ul>
+<li><a href="#simai">SimAI</a><ul>
+<li><a href="#1-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98%E5%8A%A8%E6%9C%BA">1. 研究背景与问题动机</a></li>
+<li><a href="#2-%E5%9B%9B%E4%B8%AA%E6%8C%91%E6%88%98">2. 四个挑战</a></li>
+<li><a href="#3-%E6%A8%A1%E6%8B%9F%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87">3. 模拟的应用场景与设计目标</a></li>
+<li><a href="#4-simai">4. SimAI</a><ul>
+<li><a href="#41-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E7%94%9F%E6%88%90%E5%99%A8">4.1 工作负载生成器</a></li>
+<li><a href="#42-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F">4.2 计算模拟</a></li>
+<li><a href="#43-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F">4.3 通信模拟</a></li>
+<li><a href="#44-%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A8%A1%E6%8B%9F%E5%8A%A0%E9%80%9F">4.4 大规模模拟加速</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%AF%84%E4%BC%B0">5. 评估</a><ul>
+<li><a href="#51-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.1 通信模拟的精度</a></li>
+<li><a href="#52-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.2 计算模拟的精度</a></li>
+<li><a href="#53-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.3 端到端模拟的精度</a></li>
+</ul>
+</li>
+<li><a href="#6-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E6%94%B6%E7%9B%8A">6. 生产环境中的收益</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="SimAI"><a href="#SimAI" class="headerlink" title="SimAI"></a>SimAI</h1><h2 id="1-研究背景与问题动机"><a href="#1-研究背景与问题动机" class="headerlink" title="1. 研究背景与问题动机"></a>1. 研究背景与问题动机</h2><p>大语言模型训练对计算资源的需求已达到极高量级,单次 GPT-4 训练据报道需约 2.5 万张高端 GPU。在如此规模下,任何架构与配置决策——GPU 选型、单卡网络带宽、单机 GPU 数量、并行策略划分——都难以通过真实集群进行直接验证,因为大规模实验在成本与时间上均不可承受。模拟器因此成为关键工具:在投资决策阶段用于估算达成性能目标所需的规模与架构,在运营阶段用于提升资源利用率、保障投资回报。</p>
+<p>当前实践普遍采用分粒度建模的策略,即针对不同目标使用不同模拟器:容量规划在流级或作业级进行,忽略报文级行为;性能调优则依赖报文级模拟,以分析流量模式、时延与丢包等指标。然而,作者基于工程实践指出,这种多粒度、多工具的方式存在三方面固有缺陷:其一,粗细粒度各自只覆盖部分信息,导致成本-性能分析失准,难以预测负载均衡行为并评估系统故障;其二,细粒度模拟器执行效率低、粗粒度模拟器精度不足,二者共同制约了大规模部署下的优化能力;其三,多套工具并存使开发与测试流程割裂,加剧了模拟结果与真实结果之间的偏差风险。由此,提出在单一框架内统一容量规划与性能调优的研究目标。</p>
+<p>对既有方案的局限,作者亦作了针对性评述:基于追踪的方法(如 Chakra)精度高,但仅适用于参数与规模一致的模型;传统网络模拟器(如 NS-3、OMNeT++)提供报文级能力,却不涵盖分布式训练所依赖的集合通信;指令级 GPU 模拟器(如 GPGPU-Sim)对大规模场景过于耗时,而 ASTRA-sim 等方案则在 GPU 支持与精度上存在不足。作为量化佐证,现有方法组合(PyTorch 追踪生成器配合 ASTRA-sim)模拟 128 GPU 下 GPT-3 的单次迭代需耗时约一天,而真实硬件仅需两秒。</p>
+<h2 id="2-四个挑战"><a href="#2-四个挑战" class="headerlink" title="2. 四个挑战"></a>2. 四个挑战</h2><p>统一建模并非简单地集成既有工具,而需在整个 AI 训练技术栈上实现高保真建模。作者将其归纳为四项相互关联的挑战,并分别对应后续技术章节:一是以高精度生成能够反映真实训练行为的工作负载;二是在多样化 GPU 架构上实现准确的计算模拟;三是对通信进行精确建模,以刻画网络流量模式与时延;四是保证模拟器具备可扩展性,能够高效支持大规模配置。SimAI 在各类测试场景下相对真实结果的平均偏差为 1.9%,并已应用于阿里云生产环境,作为对上述目标达成程度的总体度量。</p>
+<h2 id="3-模拟的应用场景与设计目标"><a href="#3-模拟的应用场景与设计目标" class="headerlink" title="3. 模拟的应用场景与设计目标"></a>3. 模拟的应用场景与设计目标</h2><p>在硬件基础设施评估方面,涉及三类典型场景:GPU 选型,即在采购前评估新型号在大规模 AI 工作负载下的性能;网络架构设计,即在 GPU 与主机内互联确定后,通过高精度模拟回答单卡理想网络带宽等成本敏感的问题;主机架构设计,即在不构建物理原型的前提下确定单机最优 GPU 数量与主机内互联方案。在优化方案验证方面,模拟可用于低成本的参数调优,以及对新框架、新集合通信方法、新拥塞控制算法等机制的有效性评估。</p>
+<p>为系统各部分分别构建专用模拟器易导致洞见不一致或不完整——例如仅建模 GPU 而忽略网络瓶颈将得出错误结论,因而统一平台是必要的。在此基础上,作者明确了四项设计目标:工作负载生成器需具备对不同模型、参数与规模的灵活性与精确性(目标一);集合通信模拟器需纳入关键优化与增强以保证精度(目标二);计算模拟器需同时兼顾精度与可扩展性(目标三);整体系统需具备高效执行大规模模拟的能力(目标四)。</p>
+<h2 id="4-SimAI"><a href="#4-SimAI" class="headerlink" title="4. SimAI"></a>4. SimAI</h2><p>SimAI 的整体流程可概括为输入描述、工作负载生成与执行引擎三个阶段。每个模拟请求包含模型及其参数、训练框架配置、集合通信库参数,以及主机内与主机间网络拓扑。工作负载生成器(SimAI-WG)据此产出工作负载描述文件,其中列出算法模块、集合通信操作及其依赖关系。该文件随后由执行引擎以离散事件方式模拟计算与通信操作的执行,其中计算模拟器(SimAI-CP)将子模块转化为细粒度内核并基于自建操作库进行模拟,通信模拟器(SimAI-CM)则集成 NCCL 的部分流程,将集合通信分解为点对点操作。在此之上,系统通过多线程加速与无锁全局上下文共享进一步提升执行效率。</p>
+<h3 id="4-1-工作负载生成器"><a href="#4-1-工作负载生成器" class="headerlink" title="4.1 工作负载生成器"></a>4.1 工作负载生成器</h3><p><strong>生成策略</strong>。工作负载文件的精确性直接决定模拟保真度,二者间的微小差异即可引入显著误差。基于追踪的方法虽然准确,但依赖物理集群运行。SimAI-WG 采用”劫持”既有训练框架的方式,在单台主机上生成与真实任务一致的工作负载,目前已对生产环境中的主流框架 Megatron 与 DeepSpeed 实现该机制。其关键在于对框架与 NCCL 作两处修改:一是使框架认为自身运行于具有目标 GPU 数量的集群之中,并将主机间拓扑设置为通用集群配置;二是跳过 NCCL 中的全部真实通信,且对涉及流水线并行的工作负载须配置相应的 rank 编号。经此处理,框架可生成包含算法子模块与集合&#x2F;点对点通信的完整操作序列。</p>
+<p><strong>依赖关系建模</strong>。框架输出的操作序列本身缺乏依赖描述,而计算与通信在执行中存在重叠,故需在工作负载文件中显式嵌入依赖信息。依赖关系依据所采用的并行化框架确定,并在 1024-GPU 集群上经 NVIDIA Nsight Systems 验证。其中存在两类关系:一类为严格的”先于发生”(happened-before)依赖,例如 MLP 反向子模块须在注意力反向子模块与 AllReduce 操作均完成后方可启动;另一类为可重叠依赖,即通信在相应计算开始后即可启动,这正是 Megatron 反向阶段实现通信-计算重叠优化的基础。如图2所示。</p>
+<p><img src="/images/SimAI/image.png" alt="alt text"></p>
+<p><strong>与框架解耦的取舍</strong>。SimAI 未将模拟代码侵入式嵌入框架(如 Owl),而是用 SimAI-WG 抽取工作负载、在独立执行引擎中模拟,以理解各框架算子生成机制为代价,换取灵活性与独立演进能力。此外,作者观察到通信特征呈两类:TP&#x2F;PP&#x2F;EP 的模式与通信量固定、不随集群规模变化,消息为数十至数百 MB;DP 的通信范围随集群扩张,常为横跨数百至数千节点的 GB 级集合通信。</p>
+<p><img src="/images/SimAI/image-1.png" alt="alt text"></p>
+<p><strong>基准测试套件</strong>。 基于过去六个月任务分布(表 2),作者选取覆盖小&#x2F;中&#x2F;大三类规模、以 GPT-3 与 LLaMA 变体为主的开源模型,围绕影响工作负载模式的模型参数与框架参数,构建了一组最小化但具代表性的基准套件(表 3),作为全文评估的统一基础。</p>
+<p><img src="/images/SimAI/image-2.png" alt="alt text"></p>
+<h3 id="4-2-计算模拟"><a href="#4-2-计算模拟" class="headerlink" title="4.2 计算模拟"></a>4.2 计算模拟</h3><p>面向现有 GPU。 由于每块 GPU 在实际训练中专服务单一任务,SimAI-CP 可依工作负载文件为各子模块填入在对应 GPU 上实测的执行时间,从而精确还原整个计算过程,精度区间为 96.9%–99.5%。这些实测数据沉淀为一个操作数据库(表 4),套件之外的工作负载则需补充针对性测试。当新策略重组或细化内核时,系统进一步借助模块-内核转换器将子模块分解为更小的内核分别测试,以支撑对高级优化的精确模拟。</p>
+<p>面向未发布 GPU。出于采购决策需求,SimAI 需模拟尚无法物理获取、仅有规格表的 GPU。直接按规格缩放已知数值的朴素做法误差可达 25.1%。作者据此提出按瓶颈类型分治:依据 Roofline 模型,将内核区分为计算密集型(如 flash attention)与内存带宽密集型(如更新 KV cache 的 Gemm),分别以 FLOPS 比值或带宽比值,从基准 GPU 的实测时间外推至新 GPU。该方法(称为 SimAI-CP-Model)建议在架构相似的 GPU 之间使用,而非跨厂商泛化。</p>
+<h3 id="4-3-通信模拟"><a href="#4-3-通信模拟" class="headerlink" title="4.3 通信模拟"></a>4.3 通信模拟</h3><p><strong>问题与思路</strong>。NCCL 将集合通信(AllReduce、AllGather、ReduceScatter)翻译为网络级操作,并依节点数、消息大小与参数选择最优算法;实际执行与模拟间的微小不匹配即可造成显著偏差。为忠实复现算法选择,SimAI 直接集成 NCCL 关键流程,使用修改版 NCCL(称为 SimCCL)拦截关键操作并生成点对点通信列表。</p>
+<p><strong>单机仿真的五个环节</strong>。在单台主机上,SimCCL 以”劫持”方式完成:(1) 初始化时拦截 NcclCommInitAll,为每块 GPU 创建虚拟通信器,使系统表现如真实多 GPU 集群;(2) 拓扑发现时读取用户指定拓扑文件而非搜索真实 PCIe 设备,各虚拟通信器独立处理、无需同步;(3) 创建主机内通信通道并存入隔离信息表;(4) 因已掌握全部主机信息,绕过 AllGather 直接创建主机间通道;(5) 拦截集合通信调用并重构为底层通信,跳过实际数据传输,仅捕获数据大小、收发 rank 与路由等事件以仿真 RDMA 层行为。如图3所示，SimCCL 将集合通信被拆解成一张点对点通信操作列表。</p>
+<p>整张图描述的是一条转换流水线:输入一个集合通信操作和集群配置 → SimCCL 通过劫持 NCCL、读取模拟拓扑、复现 NCCL 的初始化与算法选择 → 把集合通信展开成一张精确到链路和字节的点对点操作表 → 交由 SimAI-CM 模拟,算出通信时间。</p>
+<p><strong>参数覆盖与工程代价</strong>。SimCCL 覆盖绝大多数 NCCL 参数,并增强支持 PXN 等特性(可将经中间 rank 转发的传输拆分为多条流,反映在 FlowModel 中)。由于跳过真实数据,EP 场景下门控模块的 token 分发以均衡分布近似,对结果影响极小。整体构建逾 10,000 行代码,但除需随 CCL 版本重新适配的 SimCCL 外大多可复用;且对原始 NCCL 代码库无侵入式修改,仅 572 行为必需。</p>
+<p><img src="/images/SimAI/image-3.png" alt="alt text"></p>
+<h3 id="4-4-大规模模拟加速"><a href="#4-4-大规模模拟加速" class="headerlink" title="4.4 大规模模拟加速"></a>4.4 大规模模拟加速</h3><p>动机与方案选择。开发初期,128 GPU 下 GPT-3 单次迭代的模拟需逾 24 小时,而真机仅两秒。为支持千卡以上规模,SimAI-CM 引入<strong>多线程加速</strong>,并在 PDES 与 UNISON 等方案中选择了 UNISON——因其开源、构建于 NS-3、可自动分区拓扑并调度任务,且具备更优可扩展性。</p>
+<p><strong>无锁全局变量共享</strong>。集成 UNISON 的主要障碍在于:规模增大后大量全局配置与上下文需跨线程共享,而以全局锁(即便原子操作)更新这些追踪主机间通信元数据(如节点间数据量、交换机队列长度)的变量,会拖慢并发执行。作者观察到大多数全局变量仅被特定线程访问,遂将其隔离至以节点 ID 为索引的表中,使每个节点的单线程模拟得以无锁访问相关数据。该优化相比单线程版本带来 23 倍加速,相比多线程版本再提升 15%。</p>
+<h2 id="5-评估"><a href="#5-评估" class="headerlink" title="5. 评估"></a>5. 评估</h2><p>基于模拟的精度和可扩展性对 SimAI 进行评估,并以开源模拟器 ASTRA-sim 作为对比，以真实集群的结果作为基准真值。</p>
+<p>测试平台。实验在两个测试平台上进行,二者共享类似的多轨道(multi-rail)、胖树(fat-tree)、主机间 RoCEv2 网络,架构上与阿里巴巴 HPN 相仿。集群 A100 与集群 H100 均由 128 台主机组成,每台 8 块 GPU,差异主要在 GPU 型号、网卡配置(A100 为 4 块 CX-6&#x2F;2×100Gbps 且两卡共享一块 NIC,H100 为 8 块 CX-7&#x2F;2×200Gbps)以及 NVLink 带宽(600 vs. 900 GBps)。关键前提是:模拟环境与物理集群共享完全一致的主机内与主机间拓扑,以保证对比的公平性。</p>
+<p>对照与基准。 为使 ASTRA-sim 可比,作者为其增配了工作负载适配器以解析 SimAI-WG 生成的工作负载文件。物理集群侧则运行模型、框架与 NCCL 参数均与工作负载文件相匹配的真实 LLM 任务。评估覆盖 128、512、1024 三种集群规模;虽运行了全部工作负载,但正文以 GPT-3 13B、LLaMA 65B、GPT-3 175B 三个代表性模型呈现结果。</p>
+<h3 id="5-1-通信模拟的精度"><a href="#5-1-通信模拟的精度" class="headerlink" title="5.1 通信模拟的精度"></a>5.1 通信模拟的精度</h3><p>整体优势。在主机内集合通信(图 6,涵盖 8MB 至 8GB 消息)上,SimAI 显著优于 ASTRA-sim 并与真值高度吻合:平均偏差在 A100 上为 3.9% 对 74.8%,在 H100 上为 2.3% 对 51.7%。</p>
+<p><img src="/images/SimAI/image-4.png" alt="alt text"></p>
+<p>小消息是 ASTRA-sim 的主要短板。 即便在其表现最好的 A100、8GB 大消息场景,ASTRA-sim 的 AllGather&#x2F;ReduceScatter 仍偏离真值逾 21.8%,不利条件下误差高达 210.5%;在 8MB 小消息时偏差更达 204.3%。作者将此归因于 ASTRA-sim 对实际传输流程的大幅简化——未建模运行时软件(如 libibverbs)与 NIC 流水线,而小消息性能恰恰对这些因素更敏感。这一点也反向印证了 SimAI 集成 NCCL 关键流程、模拟至 RDMA 层行为的设计价值。</p>
+<p>误差随规模放大。 主机间通信(图 7)进一步显示,ASTRA-sim 的偏差不仅在小消息上明显,且随集群规模扩大而急剧恶化:以 8MB 消息的 AllGather 为例,128 块 A100 上误差为 45.9%,增至 512 块时跃升至 530.2%;AllReduce 与 ReduceScatter 呈相同趋势。相比之下,SimAI 始终贴近真值。</p>
+<h3 id="5-2-计算模拟的精度"><a href="#5-2-计算模拟的精度" class="headerlink" title="5.2 计算模拟的精度"></a>5.2 计算模拟的精度</h3><p><strong>两档精度</strong>。SimAI 的计算模拟存在两种模式,精度差异明显，如图8所示:基于实测的 SimAI-CP 对所有内核估算高度准确,总执行时间偏差仅 0.5%–3.1%;而面向未发布 GPU 的外推方法 SimAI-CP-Model 偏差较大(13%–15%),在 Attention−QKV 与 MLP−linear 内核上尤为突出。据此,作者给出明确使用建议:SimAI-CP-Model 仅在无可用 GPU 时使用,这与 §3.3 中将其定位为”未发布 GPU 评估手段”的设计意图一致。</p>
+<p><img src="/images/SimAI/image-5.png" alt="alt text"></p>
+<p>对照方法的局限。 ASTRA-sim 所依赖的 SCALE-sim 仅能运行矩阵乘法内核,其数据须通过”GPU 有效 FLOPS 与 TPU 有效 FLOPS 之比”换算得到,误差很大——H100 为 49.8%、A100 为 117.9%、H20 高达 224%。作者将根因归结为 GPU 计算流水线的内部封闭特性,使这类方法难以精确估算计算时间。另一替代方案 Accel-Sim 则因仅支持六年前的 PyTorch 0.4 而无法运行最新 LLM 任务。</p>
+<h3 id="5-3-端到端模拟的精度"><a href="#5-3-端到端模拟的精度" class="headerlink" title="5.3 端到端模拟的精度"></a>5.3 端到端模拟的精度</h3><p>端到端结果是前两节的综合体现。图 9 显示,SimAI 在各类工作负载上的迭代时间均贴近真实集群,即便在 1024 块 GPU 规模下差距仍小于 4%;SimAI 与真值的偏差小于 3.9%,较 ASTRA-sim 提升 36.1 倍,而后者对 A100 与 H100 的迭代时间估计均不准确。</p>
+<p><img src="/images/SimAI/image-6.png" alt="alt text"></p>
+<p>一个值得点出的规律是:SimAI 的精度随模型规模增大而提升(从 GPT-3 13B 到 175B)。作者将其归因于大模型的集合通信消息更大,而 §4.2 已表明 SimAI 对大消息的模拟更为精确——这恰好与”大规模工业场景”的实际需求方向一致,凸显了该模拟器在真实部署中的适用性。</p>
+<h2 id="6-生产环境中的收益"><a href="#6-生产环境中的收益" class="headerlink" title="6. 生产环境中的收益"></a>6. 生产环境中的收益</h2><p>一是用模拟替代昂贵的硬件原型来指导主机设计,二是用模拟替代暴力穷举来优化训练参数。</p>
+<p><strong>为新 GPU 指导主机设计</strong>。 核心问题是:当单卡算力跃升后,应为每块 GPU 配置多少网络带宽,才能在充分发挥其性能与控制总体资本支出之间取得平衡?作者以三代 GPU 为例展示了模拟驱动的决策过程:</p>
+<ul>
+<li>H100:在 1024 卡集群上模拟 100&#x2F;200&#x2F;400Gbps 三档配置,发现从 200Gbps 升至 400Gbps 仍带来 19% 的性能提升,相对资本支出而言依然显著;同时指出无需模拟更高带宽,因为 H100 的 PCIe 带宽(512Gbps,Gen5×16)决定了单卡实际上限约为 400Gbps。这一结论直接支撑了最终的主机设计(8 卡 + 8 块 2×200Gbps CX-7)。</li>
+<li>H20:由于算力低于 H100,所需带宽随之降低——100→200Gbps 提升 11%,而 200→400Gbps 仅提升 6%,据此权衡后选择为每卡配置 200Gbps。</li>
+</ul>
+<p><img src="/images/SimAI/image-7.png" alt="alt text"></p>
+<p>一个值得强调的工程价值是:即便对于尚未发布或缺货、无法用 SimAI-CP 实测的 GPU,精度略低的 SimAI-CP-Model(精度低 5% 以上但趋势一致)仍能给出有意义的设计结论,从而使采购决策得以前置。</p>
+<p><strong>量化扩展收益</strong>。生产实践通常默认将 TP 组大小设为单机内 NVSwitch 互联的 GPU 数量,但缺乏定量依据。作者在 8&#x2F;16&#x2F;32&#x2F;64 卡配置下对三个模型系统实验(图 11),得到三点观察:8 卡主机下三个模型的最优 TP 分别为 4、8、8;同一 TP 下主机内 GPU 越多性能越好;但 GPU 数量更多时,若 TP 设置不当性能反而下降。由此提炼出两条可操作的指导:其一,<strong>TP 应恰好容纳完整一层模型,但不宜继续增大(增大 TP 会降低端到端吞吐,更优策略是扩展 DP 组)</strong>;其二,<strong>主机设计应顺应 LLM 的演进,以已知的单层最大规模来反推单机 GPU 数量,优先保障横向扩展性能</strong>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A8%A1%E6%8B%9F%E5%99%A8/" rel="tag"># 模拟器</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/Simulator/" rel="tag"># Simulator</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/18/ISCA2025-CrammingaDataCenter/" rel="prev" title="ISCA2025-CrammingaDataCenter">
+                  <i class="fa fa-angle-left"></i> ISCA2025-CrammingaDataCenter
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

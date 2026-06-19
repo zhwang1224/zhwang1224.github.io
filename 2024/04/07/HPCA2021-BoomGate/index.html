@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks Abstract INTRODUCTION BACKGROUND MOTIVATION RINR 受限中间节点非最小路由 B RINR 机会性流量控制 OPPOTUNISTIC FLOW CONTROL 评估    BoomGate: Dead">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HPCA2021-BoomGate">
+<meta property="og:url" content="https://zhwang1224.github.io/2024/04/07/HPCA2021-BoomGate/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks Abstract INTRODUCTION BACKGROUND MOTIVATION RINR 受限中间节点非最小路由 B RINR 机会性流量控制 OPPOTUNISTIC FLOW CONTROL 评估    BoomGate: Dead">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPCA2021-BoomGate/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPCA2021-BoomGate/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPCA2021-BoomGate/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPCA2021-BoomGate/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/HPCA2021-BoomGate/image-4.png">
+<meta property="article:published_time" content="2024-04-07T09:55:19.000Z">
+<meta property="article:modified_time" content="2026-06-15T09:35:14.296Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="无死锁">
+<meta property="article:tag" content="自适应路由">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="高基数拓扑">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/HPCA2021-BoomGate/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2024/04/07/HPCA2021-BoomGate/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2024/04/07/HPCA2021-BoomGate/","path":"2024/04/07/HPCA2021-BoomGate/","title":"HPCA2021-BoomGate"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HPCA2021-BoomGate | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BoomGate-Deadlock-Avoidandce-in-Non-Minimal-Routing-for-High-Radix-Networks"><span class="nav-number">1.</span> <span class="nav-text">BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#INTRODUCTION"><span class="nav-number">1.2.</span> <span class="nav-text">INTRODUCTION</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BACKGROUND"><span class="nav-number">1.3.</span> <span class="nav-text">BACKGROUND</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MOTIVATION"><span class="nav-number">1.4.</span> <span class="nav-text">MOTIVATION</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RINR-%E5%8F%97%E9%99%90%E4%B8%AD%E9%97%B4%E8%8A%82%E7%82%B9%E9%9D%9E%E6%9C%80%E5%B0%8F%E8%B7%AF%E7%94%B1"><span class="nav-number">1.5.</span> <span class="nav-text">RINR 受限中间节点非最小路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#B-RINR"><span class="nav-number">1.6.</span> <span class="nav-text">B RINR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E4%BC%9A%E6%80%A7%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-OPPOTUNISTIC-FLOW-CONTROL"><span class="nav-number">1.7.</span> <span class="nav-text">机会性流量控制 OPPOTUNISTIC FLOW CONTROL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0"><span class="nav-number">1.8.</span> <span class="nav-text">评估</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2024/04/07/HPCA2021-BoomGate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="HPCA2021-BoomGate | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HPCA2021-BoomGate
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-07 17:55:19" itemprop="dateCreated datePublished" datetime="2024-04-07T17:55:19+08:00">2024-04-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-15 17:35:14" itemprop="dateModified" datetime="2026-06-15T17:35:14+08:00">2026-06-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E5%9F%BA%E6%95%B0%E6%8B%93%E6%89%91/" itemprop="url" rel="index"><span itemprop="name">高基数拓扑</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#boomgate-deadlock-avoidandce-in-non-minimal-routing-for-high-radix-networks">BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks</a><ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#introduction">INTRODUCTION</a></li>
+<li><a href="#background">BACKGROUND</a></li>
+<li><a href="#motivation">MOTIVATION</a></li>
+<li><a href="#rinr-%E5%8F%97%E9%99%90%E4%B8%AD%E9%97%B4%E8%8A%82%E7%82%B9%E9%9D%9E%E6%9C%80%E5%B0%8F%E8%B7%AF%E7%94%B1">RINR 受限中间节点非最小路由</a></li>
+<li><a href="#b-rinr">B RINR</a></li>
+<li><a href="#%E6%9C%BA%E4%BC%9A%E6%80%A7%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-oppotunistic-flow-control">机会性流量控制 OPPOTUNISTIC FLOW CONTROL</a></li>
+<li><a href="#%E8%AF%84%E4%BC%B0">评估</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="BoomGate-Deadlock-Avoidandce-in-Non-Minimal-Routing-for-High-Radix-Networks"><a href="#BoomGate-Deadlock-Avoidandce-in-Non-Minimal-Routing-for-High-Radix-Networks" class="headerlink" title="BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks"></a>BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks</h1><p>Author: Gyuyoung Kwauk, …<br>Organization: KAIST</p>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ol>
+<li>对于高基数拓扑的大型系统，通常使用虚拟通道VC来防止路由死锁，但深度缓冲区和VC的成本很高。</li>
+<li>这篇文章提出了BoomGate来避免大规模网络中的死锁，主要由两部分组成：<ol>
+<li>受限的中间节点非最小路由 RINR</li>
+<li>机会流量控制 OFC</li>
+</ol>
+</li>
+<li>这两部分都利用高基数网络的低直径的特性，同时最大化拓扑内的路径多样性。</li>
+<li>首先确定了全连接拓扑中的路由死锁是由非最小路由引起的，并限制非最小路由以确保没有额外虚拟通道的情况下避免死锁，提出算法RINR确保多路径同时实现负载平衡。并通过OFC机会流量控制来补充RINR算法，当且仅当可保证足够的缓冲区以确保不会发生循环依赖时，才允许非法路由。</li>
+<li>评估了BoomGate的性能，并证明与<strong>全局自适应路由</strong>相比，性能损失最小，同时将所需的缓冲区数量减小到50%。</li>
+</ol>
+<h2 id="INTRODUCTION"><a href="#INTRODUCTION" class="headerlink" title="INTRODUCTION"></a>INTRODUCTION</h2><ul>
+<li>互连网络是大型系统的重要组成部分，可影响整体的可扩展性和性能。</li>
+<li>互连网络的拓扑决定了网络直径在内的性能界限。</li>
+<li>鉴于路由器管脚带宽的增加，大型系统拓扑已经利用高基路由器的可用性来创建高基拓扑，Butterfly, Dragonfly, HyperX, Slimfly, Megafly… 高基拓扑的特点-拓扑内完全连接。</li>
+</ul>
+<ol>
+<li>这项工作利用高基拓扑中的全连接性来避免路由死锁，无需额外的VC通道。拓扑决定了网络性能的界限，路由决定了可以实现多少性能。</li>
+<li>而最近提出的高基拓扑依赖全局自适应路由，并需要非最小路由来充分利用对抗性流量模式的路径多样性，然而具有非最小路由的全局自适应路由引入了路由死锁。虽然通过引入VC可以避免，但一些研究建议不使用VC避免路由。</li>
+<li>因此提出了Balanced, Oblivious, Non-Minimal, Global Adaptive Routing. RINR OFC</li>
+</ol>
+<h2 id="BACKGROUND"><a href="#BACKGROUND" class="headerlink" title="BACKGROUND"></a>BACKGROUND</h2><ol>
+<li>高基数拓扑和路由<ol>
+<li>路由器中端口带宽的增加导致具有高端口数的高基数路由器，低基数拓扑2Dmesh等不一定会利用高端口数。</li>
+<li>高基数拓扑的关键组成部分是拓扑实现的高路径多样性。通常完全连接。同时为了充分利用这些完全连接的拓扑，需要非最小路由。并且全局自适应路由通常用于在最小路径和非最小路径之间进行适应。</li>
+</ol>
+</li>
+<li>相关工作<ol>
+<li>死锁<ol>
+<li>当且仅当网络CDG图中存在一个或多个循环依赖。创建无死锁可以创建非循环CDG。一个方法是引入虚拟通道并严格排序VC占用。</li>
+<li>另一个方法是死锁恢复，解决死锁条件保证前进。死锁回复不应频繁，可能影响性能，因为必须执行死锁检测盒恢复。</li>
+<li>此外，大规模网络的约束条件也有很大不同。例如，片上网络通常具有单周期通道延迟，但在大规模网络中，通道延迟不仅更高，而且存在纠错、链路层协议、准同步、时钟边界跨越等，增加了路由器到路由器的通信复杂性。因此，先前提出的技术不一定适用于大规模网络。</li>
+</ol>
+</li>
+<li>气泡流控制</li>
+<li>up&#x2F;down routing:<ol>
+<li>将所有通道标记为上行或下行通道，合法路由为零个或多个上行路由后跟零个或多个下行路由。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="MOTIVATION"><a href="#MOTIVATION" class="headerlink" title="MOTIVATION"></a>MOTIVATION</h2><ol>
+<li><p>Observations</p>
+<ol>
+<li>非最小路由和死锁：<ol>
+<li>在完全连接的拓扑中，最小路由数据包不会导致网络内死锁，因为不会跨多个通道创建依赖关系。</li>
+<li>而非最小路由会产生死锁，非最小路由由一个错误路由组成，最大跳数为2，也需要三个以上路由器创建循环依赖。而非最小路由对于高基数拓扑实现对抗流量模式的高性能是必要的。VC可以用，VC0用于mis路由，VC1用于到目的地的路由，VC按递增访问，以VC为代价避免了路由死锁。</li>
+</ol>
+</li>
+<li>死锁的频率可能会随节点数量的增加&#x2F;或数据包的大小增加而变化。(可做实验证明)<br><img src="/images/HPCA2021-BoomGate/image.png" alt="alt text"></li>
+</ol>
+</li>
+<li><p>虚拟通道的开销</p>
+<ol>
+<li>limited VCs: 虽然在全连接拓扑中只需要一个额外的VC来避免死锁，但是避免路由死锁所需的VC数量会随每个流量类别而增加。则每个流量类别需要额外的VC来避免路由死锁，并且需要t额外的VC来避免路由死锁（可以以valiant为例）。但是大型系统中的VC数量很少，鉴于 VC 资源数量有限，如果它们不用于路由死锁而是用于隔离流量和实现流量类别，则会更有利。</li>
+<li>深度缓冲区：互连网络中的输入缓冲区需要覆盖信用往返延迟。考虑到大型系统的电缆很长，往返延迟可能非常高，从而导致输入缓冲区很深。</li>
+<li>缓冲区利用率：使用专用缓冲区来避免路由死锁的另一个挑战是缓冲区利用率。</li>
+</ol>
+</li>
+</ol>
+<h2 id="RINR-受限中间节点非最小路由"><a href="#RINR-受限中间节点非最小路由" class="headerlink" title="RINR 受限中间节点非最小路由"></a>RINR 受限中间节点非最小路由</h2><ol>
+<li><p>合法的非最小路由<br><img src="/images/HPCA2021-BoomGate/image-1.png" alt="alt text"></p>
+<ol>
+<li>编号</li>
+<li>定义1：合法非最小路由：按升序访问通道的非最小路由</li>
+<li>定义2：不合法非最小路由：按降序访问。</li>
+<li>基于这些定义，提出了RINR路由，它利用拓扑中的合法非最小路由。</li>
+<li>定义3：受限中间节点非最小路由RINR：仅允许合法的非最小路由 并且随机选择。</li>
+<li>定理：如果使用 RINR 实现非最小路由的全局自适应路由，则路由算法在全连接拓扑中只有 1 个 VC 时不会出现死锁。</li>
+<li>证明：全局自适应路由[51]由最小路由和非最小路由组成。情况一：最小路由：最小路由只遍历一个网络通道，不会造成路由死锁。情况二：非最小路由：基于通道依赖图（CDG）[15]，如果通道资源中不存在循环依赖，则可以避免死锁。如果所有资源都严格排序，则可以避免死锁。通过仅使用合法的非最小路由，网络接入通道中的所有非最小路由都按照严格递增的顺序排列，因此不会出现循环通道依赖。</li>
+<li>算法流程：<ol>
+<li>选择一个合法的随机的中间节点</li>
+<li>确定中间节点后，根据最短和非最短的拥塞信息：跳数×占用率，选择最小和非最小路由。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>负载平衡限制</p>
+<ol>
+<li><p>六节点 1D flattened butterfly 的例子中，非最小路由的最大路径多样性为4，最左边的节点可选择所有中间节点，而最右边的节点则会收到限制，例如R5到R4所有的非最小路径都不可用，会严重限制吞吐量。<br><img src="/images/HPCA2021-BoomGate/image-2.png" alt="alt text"></p>
+</li>
+<li><p>一般来说，对于 N 节点全连接拓扑，最小非最小路径多样性为 0，最大路径多样性为 N − 2。可以创建死锁的节点（或通道）的最小数量是 3。因此，选择的 3 个通道的不同可能组合是 NP3，因为死锁中的顺序很重要。对于每种死锁可能性，必须禁用 3 个路径中的 1 个，因此，使用 RINR 禁用 1&#x2F;3 NP3 非最小路径。每个节点采用RINR路由算法的非最小路由的平均数量为2&#x2F;3 (N − 2)。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="B-RINR"><a href="#B-RINR" class="headerlink" title="B RINR"></a>B RINR</h2><p>由于不需要非最小路由，RINR 算法可将负载平衡（良性）流量的性能损失降至最低。然而，由于某些源-目的地的路径多样性受到限制，因此对抗性流量的性能可能受到限制。</p>
+<ol>
+<li><p>重新平衡通道</p>
+<ol>
+<li>通过重新编号通道，并采用相同的路由限制，定义三 即可实现更好的负载平衡。bRINR<br><img src="/images/HPCA2021-BoomGate/image-3.png" alt="alt text"></li>
+</ol>
+</li>
+<li><p>负载均衡算法</p>
+<ol>
+<li>平衡非最小路径的目标是确保所有节点至少有 2(n − 2)&#x2F;3c(向下取整) 个非最小路径</li>
+<li>通过有效地牺牲源自 Rx 的路径的非最小路径，可以启用可通过 Rx 路由的其他非最小路径（或 Rx 为中间节点的非最小路径）。</li>
+<li>替代channel编号：基线RINR从规律分配信道编号开始，并描述了如恶化实现平衡的RINR。然而RINR不限于任何特定的信道分配，甚至可以随机编号，但只要避免非法路由，路由算法将不会出现死锁。</li>
+<li>实际意义：非最小全局自适应路由提供了实用的替代方案。</li>
+</ol>
+</li>
+</ol>
+<h2 id="机会性流量控制-OPPOTUNISTIC-FLOW-CONTROL"><a href="#机会性流量控制-OPPOTUNISTIC-FLOW-CONTROL" class="headerlink" title="机会性流量控制 OPPOTUNISTIC FLOW CONTROL"></a>机会性流量控制 OPPOTUNISTIC FLOW CONTROL</h2><p>提出了一种流量控制，可以利用非法路由，而不会产生路由死锁的可能性。</p>
+<ol>
+<li><p>缓冲区利用<br>由于需要非法路由来避免死锁，因此未能利用拓扑的完整路径多样性。非法路由路径中的路由器缓冲区没得到充分利用。为提高非法路由的缓冲区利用率并解决通道的负载不平衡问题。<br><img src="/images/HPCA2021-BoomGate/image-4.png" alt="alt text"></p>
+</li>
+<li><p>静态sOFC</p>
+<ul>
+<li>其中一些缓冲区专用于或“保留”给非法非最小路由。将信用分为两种不同类型的信用——合法路线信用（CRL）和非法路线信用（CRI）。由于不会创建跨多个缓冲区的通道依赖性，因此可以保证无死锁。</li>
+<li>当bRINR与OFC结合时，路由算法的唯一区别是算法1中的合法路由位掩码。bRINR仅选择合法的非最小路径，但如果有足够的CRI用于非法路由，则bRINR+sOFC会考虑非法的非最小路径。否则，将使用相同的路由算法。</li>
+</ul>
+</li>
+<li><p>动态dOFC</p>
+<ul>
+<li>sOFC 的信用往返延迟增加了 2 倍。</li>
+<li>中间路由器非法信用 (CRI) 在收到来自目标路由器的信用之前无法向上游发送。然而，如果有额外的合法信用 (CRL)，dOFC 就会利用额外的信用来用完额外的 CRL（即 CRL– 和 CRI++）。</li>
+<li>如果 CRL 不可用，则 dOFC 无法提前向上游返回积分。</li>
+</ul>
+</li>
+<li><p>死锁避免</p>
+<ul>
+<li>在所提出的 OFC 中，当且仅当相邻路由器和下游路由器资源（即信用）都可以通过 OFC 获得时，数据包才会穿过非法非最小路由。因此，利用非法路由的数据包不能参与循环依赖。</li>
+</ul>
+</li>
+</ol>
+<h2 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h2><ol>
+<li><p>方法论</p>
+<ol>
+<li>Booksim2</li>
+<li>提出的RINR和bRINR 以及机会流量控制在模拟器中实现。</li>
+<li>评估针对64节点以及1024节点的1D扁平蝶形网络或全连接网络。</li>
+<li>设置路由器单周期延迟和single-flit数据包，并评估了数据包大小的影响。</li>
+<li>对比的路由算法包括：最小路由MIN Valiant路由VAL 通用全局自适应路由UGAL。其中VAL和UGAL使用2VC去避免路由死锁，RINR使用1VC。因此输入缓冲区只是UGAL的一半。</li>
+<li>对于真实的工作负载的评估，使用了与 SST&#x2F;Macro 集成的修改后的 BookSim，使用以下 MPI 工作负载跟踪：HILO（中子传输评估和测试套件）[32]、BigFFT（具有 2D 域分解模式的大型 3D FFT）[41]、FB（生产 PDE 求解器的填充边界操作）[7]、 MG（来自生产椭圆求解器的几何多重网格 v 循环）[7]、CNS（来自 BoxLib 库的可压缩 Navier Stokes）[7] 和 NB（Nekbone：使用共轭梯度迭代且无预处理器的毒方程求解器）[11]。</li>
+</ol>
+</li>
+<li><p>结果</p>
+<ol>
+<li>对于均匀随机流量模式，所有路由方案都显示出高饱和率，而VAL仅实现50％的吞吐量和高零负载延迟。</li>
+<li>对于最坏的流量模式，RINR 显示的性能与 MIN 非常相似，因为只能利用少数非最小路径。正如预期的那样，由于 RINR 中的非最小路由限制，VAL（和 UGAL）在最差流量模式下提供比 RINR 更高的网络吞吐量。然而，bRINR 通过平衡所有节点之间的合法路由数量来提高吞吐量。如图 9d 所示，随着节点数量的增加，通过非最小路由实现更好的路径多样性带来的性能提升也随之增加。</li>
+<li>由于 bRINR 不能完全提供所有路径分集，因此可以实现的吞吐量明显低于 VAL 可以实现的吞吐量。相比之下，UGAL 性能几乎与 UR 流量的 MIN 和 WC 流量的 VAL 相当。</li>
+<li>BoomGATE——一种高基数网络的死锁避免机制，不需要额外的 VC 资源，由路由算法和流量控制组成。特别是，我们提出了一种受限自适应路由，它定义了非法路由，但演示了如何平衡路径多样性，并提出了新颖的流量控制，使非法路由能够在“安全”时使用，并在高基拓扑中实现完整的路径多样性被利用来最大化整体性能。</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/" rel="tag"># 自适应路由</a>
+              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag"># 负载均衡</a>
+              <a href="/tags/%E9%AB%98%E5%9F%BA%E6%95%B0%E6%8B%93%E6%89%91/" rel="tag"># 高基数拓扑</a>
+              <a href="/tags/%E6%97%A0%E6%AD%BB%E9%94%81/" rel="tag"># 无死锁</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/02/DATE2023-TheNextEra/" rel="prev" title="DATE2023-TheNextEra">
+                  <i class="fa fa-angle-left"></i> DATE2023-TheNextEra
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/08/Algorithm-Dijkstra/" rel="next" title="Algorithm-Dijkstra">
+                  Algorithm-Dijkstra <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
