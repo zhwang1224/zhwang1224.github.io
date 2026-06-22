@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文探讨了晶圆级系统的制造缺陷及其对 NoW 的影响。  具有多重系统故障的晶圆级交换网络建模与分析 主要思路 1. 网络架构 2. 路由策略 3. 具有网络故障的吞吐量模型   实验评估 结论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ISCAS-MA-WSN">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/06/22/ISCAS-MA-WSN/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="本文探讨了晶圆级系统的制造缺陷及其对 NoW 的影响。  具有多重系统故障的晶圆级交换网络建模与分析 主要思路 1. 网络架构 2. 路由策略 3. 具有网络故障的吞吐量模型   实验评估 结论">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-6.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image-7.png">
+<meta property="article:published_time" content="2026-06-22T07:38:02.000Z">
+<meta property="article:modified_time" content="2026-06-22T08:53:42.990Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="chiplet">
+<meta property="article:tag" content="on-wafer interconnect networks">
+<meta property="article:tag" content="routing algorithm">
+<meta property="article:tag" content="waferscale system">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/ISCAS-MA-WSN/image.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/06/22/ISCAS-MA-WSN/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/06/22/ISCAS-MA-WSN/","path":"2026/06/22/ISCAS-MA-WSN/","title":"ISCAS-MA-WSN"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ISCAS-MA-WSN | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B7%E6%9C%89%E5%A4%9A%E9%87%8D%E7%B3%BB%E7%BB%9F%E6%95%85%E9%9A%9C%E7%9A%84%E6%99%B6%E5%9C%86%E7%BA%A7%E4%BA%A4%E6%8D%A2%E7%BD%91%E7%BB%9C%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">具有多重系统故障的晶圆级交换网络建模与分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.</span> <span class="nav-text">主要思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 网络架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%B7%AF%E7%94%B1%E7%AD%96%E7%95%A5"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 路由策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%85%B7%E6%9C%89%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E7%9A%84%E5%90%9E%E5%90%90%E9%87%8F%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 具有网络故障的吞吐量模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0"><span class="nav-number">1.2.</span> <span class="nav-text">实验评估</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">1.3.</span> <span class="nav-text">结论</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/22/ISCAS-MA-WSN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ISCAS-MA-WSN | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ISCAS-MA-WSN
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-06-22 15:38:02 / 修改时间：16:53:42" itemprop="dateCreated datePublished" datetime="2026-06-22T15:38:02+08:00">2026-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%99%B6%E5%9C%86%E7%BA%A7%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">晶圆级系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%99%B6%E5%9C%86%E7%BA%A7%E7%B3%BB%E7%BB%9F/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文探讨了晶圆级系统的制造缺陷及其对 NoW 的影响。</p>
+<ul>
+<li><a href="#%E5%85%B7%E6%9C%89%E5%A4%9A%E9%87%8D%E7%B3%BB%E7%BB%9F%E6%95%85%E9%9A%9C%E7%9A%84%E6%99%B6%E5%9C%86%E7%BA%A7%E4%BA%A4%E6%8D%A2%E7%BD%91%E7%BB%9C%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%88%86%E6%9E%90">具有多重系统故障的晶圆级交换网络建模与分析</a><ul>
+<li><a href="#%E4%B8%BB%E8%A6%81%E6%80%9D%E8%B7%AF">主要思路</a><ul>
+<li><a href="#1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84">1. 网络架构</a></li>
+<li><a href="#2-%E8%B7%AF%E7%94%B1%E7%AD%96%E7%95%A5">2. 路由策略</a></li>
+<li><a href="#3-%E5%85%B7%E6%9C%89%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E7%9A%84%E5%90%9E%E5%90%90%E9%87%8F%E6%A8%A1%E5%9E%8B">3. 具有网络故障的吞吐量模型</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0">实验评估</a></li>
+<li><a href="#%E7%BB%93%E8%AE%BA">结论</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="具有多重系统故障的晶圆级交换网络建模与分析"><a href="#具有多重系统故障的晶圆级交换网络建模与分析" class="headerlink" title="具有多重系统故障的晶圆级交换网络建模与分析"></a>具有多重系统故障的晶圆级交换网络建模与分析</h1><p>文章以 CoWoS 作为晶圆级系统可行的封装技术。图 1 展示了 2.5D CoWoS 集成技术的示意图。带有硅通孔（through silicon vias, TSVs）的中介层用于连接裸片和基板&#x2F;PCB。中介层和裸片均为硅，具有相同的热膨胀系数。硅中介层可以提供精细的微凸点间距和高密度互连。</p>
+<p><img src="/images/ISCAS-MA-WSN/image.png" alt="alt text"><br><img src="/images/ISCAS-MA-WSN/image-1.png" alt="alt text"></p>
+<p>典型中介层的最大尺寸为 858 mm²（1 倍光罩尺寸）。相比之下，晶圆级中介层的最大尺寸可以达到 70650 mm²（12 英寸晶圆），实现约 80 倍的面积扩展。文章总结了两个晶圆级中介层面临的挑战，第一个挑战是晶圆级中介层的翘曲。晶圆级中介层的显著翘曲会导致晶圆与基板&#x2F;PCB 之间的系统组装问题。第二个挑战是生产可靠性。单片硅中介层会带来良率方面的担忧，尤其是在将整片晶圆视为单个中介层时。除了上述挑战之外，晶圆级中介层还会在供电和散热方面带来高密度挑战。这些制造缺陷会将普遍使用的 2D Mesh 拓扑转化为不规则拓扑。</p>
+<p>文章聚焦于以 2D Mesh 拓扑为主要基准的晶圆上互连网络（interconnection network on wafer, NoW），分析并建模了晶圆级交换系统中由制造缺陷引起的多重系统故障。该系统由多个交换裸片和一个无源晶圆级中介层组成。</p>
+<h2 id="主要思路"><a href="#主要思路" class="headerlink" title="主要思路"></a>主要思路</h2><h3 id="1-网络架构"><a href="#1-网络架构" class="headerlink" title="1. 网络架构"></a>1. 网络架构</h3><p>以两种自研交换芯片（芯片 A， 13.95 mm × 7.44 mm；芯片 B，13.95 mm × 13.95 mm 。芯片 A 只用两侧可用于IO）构建了一个由多个交换裸片组成、采用 2D Mesh 拓扑的晶圆级交换系统。A 和 B 裸片的容量分别为 320 Gbps 和 640 Gbps。图 2(a) 展示了 A 和 B Die 在 12 英寸晶圆上的布局。考虑到良率问题和晶圆翘曲，在边缘以及每个裸片之间分别预留了 9 mm 和 1 mm 的间距。晶圆级交换系统中布置了 52 个 A 裸片和 168 个 B 裸片，输出容量为 8.32 Tbps（阻塞拓扑结构是否性能损耗？）。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-2.png" alt="alt text"></p>
+<p>考虑晶圆级系统中的四类制造缺陷，并研究故障对 NoW 的影响：1. 晶圆级中介层制造缺陷；2. 裸片与中介层之间的键合缺陷；3. 中介层与基板&#x2F;PCB 之间的系统组装缺陷；4. 系统过热缺陷。</p>
+<p>如图 3(a) 所示，晶圆制造缺陷随机分布在晶圆上，这会在 NoW 中引起随机故障。具有多层金属层的碗形晶圆如图 3(b) 所示。晶圆翘曲会导致裸片与中介层之间的键合缺陷，这可能在 NoW 中引起环状故障。裸片键合后，晶圆呈现不规则翘曲，如图 3(c) 所示。晶圆翘曲会导致中介层与基板&#x2F;PCB 之间的组装缺陷，这将在 NoW 中引起随机故障。图 3(d) 展示了采用双螺旋液体通道散热器的系统温度分布。温度分布会随液体通道类型不同而变化。系统过热缺陷会在 NoW 中引起集中故障。</p>
+<h3 id="2-路由策略"><a href="#2-路由策略" class="headerlink" title="2. 路由策略"></a>2. 路由策略</h3><p>针对不规则网络拓扑提出了一种确定性变体 BFS（variant BFS, v-BFS）路由算法。在普通 BFS（normal-BFS, n-BFS）算法中，父节点在生成 BFS 树期间按照特定顺序访问邻居节点，例如节点 ID 递增顺序，这可能导致特定链路拥塞。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-3.png" alt="alt text"></p>
+<p>图 4(a) 展示了一个不规则 3 × 3 Mesh 拓扑，其中节点 2 和节点 5 之间存在一条故障链路。BFS算法中只生成一种 BFS Tree-1，链路 0-1 更可能发生拥塞。而v-BFS 算法中，父节点以随机顺序访问邻居节点，以平衡网络链路的使用。提出的 v-BFS 算法实现了最短路由，并在不同链路之间均衡流量。但其实由于故障的存在部分链路仍可能会存在拥塞。</p>
+<h3 id="3-具有网络故障的吞吐量模型"><a href="#3-具有网络故障的吞吐量模型" class="headerlink" title="3. 具有网络故障的吞吐量模型"></a>3. 具有网络故障的吞吐量模型</h3><p>影响输出吞吐量的故障模式主要有三个因素：1. 数量；2. 位置；3. 集中度。本文选择故障节点与最近 A 裸片节点之间的最小距离 d 来表示位置的影响。m、mx 和 my 分别用于表示集中故障数量、x 维度中的集中故障数量以及 y 维度中的集中故障数量。如图 2(b) 所示，对于 fault-1，最小距离 d 为 2。对于 fault-2，m、mx 和 my 分别为 8、5 和 3。</p>
+<p>文章认为 NoW 中的故障对吞吐量的影响主要由三类因素决定：</p>
+<p>故障数量：坏掉的节点&#x2F;链路越多，吞吐量通常越低。<br>故障位置：故障离 A die 越近，影响越大。A die 是系统的输出节点，所以作者用故障节点到最近 A die 的最小距离 d 来刻画故障位置。<br>故障集中度：故障如果集中在一片区域，对网络破坏更严重；如果分散在中心区域，影响相对较小。</p>
+<p>实际吞吐量可以抽象表示为：</p>
+<p>$$<br>Tpt &#x3D; Tpt_{\text{initial}} - f(\text{故障位置影响}) - g(\text{故障集中度影响})<br>$$</p>
+<p>输出吞吐量 Tpt 可以表示为：</p>
+<p>$$<br>Tpt &#x3D; Tpt_{\text{initial}}</p>
+<ul>
+<li>f\left(\sum_i (d_i + 1)^\alpha\right)</li>
+<li>g\left(<br>\sum_j \left(<br>(m_{xj}-1)^\beta + (m_{yj}-1)^\beta + \gamma \cdot (m_j-1)<br>\right)<br>\right)<br>\tag{1}<br>$$</li>
+</ul>
+<p>拟合优度表示为：</p>
+<p>$$<br>R^2 &#x3D;<br>\frac{<br>\sum_i (\hat{y}_i - \bar{y})^2<br>}{<br>\sum_i (y_i - \bar{y})^2<br>}<br>\tag{2}<br>$$</p>
+<h2 id="实验评估"><a href="#实验评估" class="headerlink" title="实验评估"></a>实验评估</h2><p>实验系统基于 OMNeT++，以展示所提出的基于 v-BFS 的流量均衡路由算法和吞吐量模型的性能。为了简化流控制实现，超过缓冲区的包会被丢弃。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-4.png" alt="alt text"></p>
+<ol>
+<li>具有多重故障的系统性能</li>
+</ol>
+<p>在无网络故障情况下 n-BFS 和 v-BFS 算法的性能。网络吞吐量和延迟随流量注入率的变化如图 5(a) 和图 5(b) 所示。当流量注入率达到 160 Gbps（即最大注入率）时，n-BFS 实现了 4.4 Tbps 吞吐量，而 BFT-like 拓扑实现了 6.46 Tbps 吞吐量，传输延迟降低了 57%。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-5.png" alt="alt text"></p>
+<p>采用不同路由算法时的系统热力图如图 5(c) 和图 5(d) 所示，其中不同颜色表示每个节点的交换包数量。n-BFS 算法使流量集中在边缘 B 节点之间。v-BFS 算法能够很好地在近中心节点之间均衡流量，从而避免边缘 B 节点上的热点。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-6.png" alt="alt text"></p>
+<p>其次研究了不同网络故障的影响。具有不同故障的不规则网络拓扑如图 6(e) 所示。在 Topo 0-1 到 Topo 0-3 中，研究了边缘 B 节点故障的影响。如图 6(a) 所示，对于两种路由算法，吞吐量都会随着边缘故障数量的增加而线性下降。</p>
+<p>在 Topo 1-1 和 Topo 1-2 中，研究了节点故障位置的影响。如图 8(b) 所示，Topo 1-2 和无故障 Topo 实现了几乎相同的网络性能。本文得出结论：故障越靠近边缘，对网络性能的影响越大。</p>
+<p>在 Topo 2-1 到 Topo 2-3 中，研究了节点故障数量的影响。如图 8(c) 所示，本文发现故障数量会轻微影响网络性能，而故障位置发挥更重要的作用。</p>
+<p>在 Topo 3-1 和 Topo 3-2 中，研究了集中故障的影响。如图 8(d) 所示，故障越集中，对网络性能的影响越大。总之，近边缘故障和集中故障会严重降低 NoW 性能。分布式近中心故障对 NoW 性能的影响较小。</p>
+<ol start="2">
+<li>吞吐量模型评估</li>
+</ol>
+<p><img src="/images/ISCAS-MA-WSN/image-7.png" alt="alt text"></p>
+<p>由于网络输出吞吐量与最小距离 d 成反比，α 设置为 -1。在分析 Topo 3-1 和 Topo 3-2 的吞吐量之后，本文将 β 设置为 2。论文选择指数函数表示 $f(\cdot)$ 和 $g(\cdot)$，因此可以写为：</p>
+<p>$$<br>Tpt &#x3D; a \cdot b^x + c \cdot d^y + e<br>\tag{4}<br>$$</p>
+<p>其中：</p>
+<p>$$<br>x &#x3D; \sum_i \frac{1}{d_i+1}<br>$$</p>
+<p>$$<br>y &#x3D; \sum_j \left(<br>(m_{xj}-1)^2 + (m_{yj}-1)^2 + \gamma \cdot (m_j-1)<br>\right)<br>$$</p>
+<p>其中，x、y 表示故障位置和集中度的预处理数据。a、b、c、d、e 为常数，将使用非线性最小二乘法（NLLS）确定。拟合优度指标随常数 γ 的变化如图 7(a) 所示。最优 γ 为 -0.8，拟合优度为 0.98。经过 NLLS 后，常数 a、b、c、d、e 分别为 1.435、0.858、1.253、0.959、3.304。因此，采用 v-BFS 算法的晶圆级交换系统输出吞吐量模型表示为：</p>
+<p>$$<br>Tpt &#x3D;<br>1.43467 \times 0.858349^x</p>
+<ul>
+<li>1.25346 \times 0.958981^y</li>
+<li>3.30372<br>\tag{5}<br>$$</li>
+</ul>
+<p>模型估计吞吐量曲线与真实吞吐量如图 7(b) 所示。当 γ &#x3D; -0.8 时，x 和 y 表示故障位置和故障集中度。红色圆点是用于构建模型的训练数据，蓝色方块分别是 Test Topo 1 和 Test Topo 2 的测试数据。这两个拓扑的吞吐量预测误差分别为 0.001 Tbps 和 0.1 Tbps，这证明了模型的准确性。注意，式 (5) 的输出吞吐量模型仅在故障位置和集中度参数不太大时有效。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>晶圆系统的故障分类很有借鉴意义。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/routing-algorithm/" rel="tag"># routing algorithm</a>
+              <a href="/tags/waferscale-system/" rel="tag"># waferscale system</a>
+              <a href="/tags/on-wafer-interconnect-networks/" rel="tag"># on-wafer interconnect networks</a>
+              <a href="/tags/chiplet/" rel="tag"># chiplet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/18/SimAI/" rel="prev" title="SimAI">
+                  <i class="fa fa-angle-left"></i> SimAI
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
