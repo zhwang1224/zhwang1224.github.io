@@ -19,23 +19,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法 动机与当前工作">
+    <meta name="description" content="DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法 1. 动机与当前工作 2. 2.5D Chiplet 系统中的路由模型 3. 基于虚拟网络分离的无死锁保证 4. 容错与拥塞感知的 VL 选择 5. 实验评估 6. 主要价值">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DATE2021-DeFT">
 <meta property="og:url" content="https://zhwang1224.github.io/2026/06/22/DATE2021-DeFT/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法 动机与当前工作">
+<meta property="og:description" content="DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法 1. 动机与当前工作 2. 2.5D Chiplet 系统中的路由模型 3. 基于虚拟网络分离的无死锁保证 4. 容错与拥塞感知的 VL 选择 5. 实验评估 6. 主要价值">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zhwang1224.github.io/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image-2.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image-4.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image-5.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image-6.png">
 <meta property="article:published_time" content="2026-06-22T09:07:11.000Z">
-<meta property="article:modified_time" content="2026-06-22T09:17:59.673Z">
+<meta property="article:modified_time" content="2026-06-22T16:11:09.201Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="chiplet">
 <meta property="article:tag" content="deadlock free">
 <meta property="article:tag" content="fault tolerant">
 <meta property="article:tag" content="routing algorithm">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zhwang1224.github.io/image.png">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/DATE2021-DeFT/image.png">
 
 
 <link rel="canonical" href="https://zhwang1224.github.io/2026/06/22/DATE2021-DeFT/">
@@ -139,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DeFT%EF%BC%9A%E4%B8%80%E7%A7%8D%E7%94%A8%E4%BA%8E-2-5D-Chiplet-%E7%BD%91%E7%BB%9C%E7%9A%84%E6%97%A0%E6%AD%BB%E9%94%81%E4%B8%94%E5%AE%B9%E9%94%99%E7%9A%84%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">动机与当前工作</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DeFT%EF%BC%9A%E4%B8%80%E7%A7%8D%E7%94%A8%E4%BA%8E-2-5D-Chiplet-%E7%BD%91%E7%BB%9C%E7%9A%84%E6%97%A0%E6%AD%BB%E9%94%81%E4%B8%94%E5%AE%B9%E9%94%99%E7%9A%84%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">1. 动机与当前工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-5D-Chiplet-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">2. 2.5D Chiplet 系统中的路由模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%9F%BA%E4%BA%8E%E8%99%9A%E6%8B%9F%E7%BD%91%E7%BB%9C%E5%88%86%E7%A6%BB%E7%9A%84%E6%97%A0%E6%AD%BB%E9%94%81%E4%BF%9D%E8%AF%81"><span class="nav-number">1.3.</span> <span class="nav-text">3. 基于虚拟网络分离的无死锁保证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AE%B9%E9%94%99%E4%B8%8E%E6%8B%A5%E5%A1%9E%E6%84%9F%E7%9F%A5%E7%9A%84-VL-%E9%80%89%E6%8B%A9"><span class="nav-number">1.4.</span> <span class="nav-text">4. 容错与拥塞感知的 VL 选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0"><span class="nav-number">1.5.</span> <span class="nav-text">5. 实验评估</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%B8%BB%E8%A6%81%E4%BB%B7%E5%80%BC"><span class="nav-number">1.6.</span> <span class="nav-text">6. 主要价值</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -220,9 +226,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-06-22 17:07:11 / 修改时间：17:17:59" itemprop="dateCreated datePublished" datetime="2026-06-22T17:07:11+08:00">2026-06-22</time>
+      <time title="创建时间：2026-06-22 17:07:11" itemprop="dateCreated datePublished" datetime="2026-06-22T17:07:11+08:00">2026-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-23 00:11:09" itemprop="dateModified" datetime="2026-06-23T00:11:09+08:00">2026-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -249,15 +261,56 @@
     
     <div class="post-body" itemprop="articleBody"><ul>
 <li><a href="#deft%E4%B8%80%E7%A7%8D%E7%94%A8%E4%BA%8E-25d-chiplet-%E7%BD%91%E7%BB%9C%E7%9A%84%E6%97%A0%E6%AD%BB%E9%94%81%E4%B8%94%E5%AE%B9%E9%94%99%E7%9A%84%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95">DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法</a><ul>
-<li><a href="#%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C">动机与当前工作</a></li>
+<li><a href="#1-%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C">1. 动机与当前工作</a></li>
+<li><a href="#2-25d-chiplet-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%9E%8B">2. 2.5D Chiplet 系统中的路由模型</a></li>
+<li><a href="#3-%E5%9F%BA%E4%BA%8E%E8%99%9A%E6%8B%9F%E7%BD%91%E7%BB%9C%E5%88%86%E7%A6%BB%E7%9A%84%E6%97%A0%E6%AD%BB%E9%94%81%E4%BF%9D%E8%AF%81">3. 基于虚拟网络分离的无死锁保证</a></li>
+<li><a href="#4-%E5%AE%B9%E9%94%99%E4%B8%8E%E6%8B%A5%E5%A1%9E%E6%84%9F%E7%9F%A5%E7%9A%84-vl-%E9%80%89%E6%8B%A9">4. 容错与拥塞感知的 VL 选择</a></li>
+<li><a href="#5-%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0">5. 实验评估</a></li>
+<li><a href="#6-%E4%B8%BB%E8%A6%81%E4%BB%B7%E5%80%BC">6. 主要价值</a></li>
 </ul>
 </li>
 </ul>
 <span id="more"></span>
 
 <h1 id="DeFT：一种用于-2-5D-Chiplet-网络的无死锁且容错的路由算法"><a href="#DeFT：一种用于-2-5D-Chiplet-网络的无死锁且容错的路由算法" class="headerlink" title="DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法"></a>DeFT：一种用于 2.5D Chiplet 网络的无死锁且容错的路由算法</h1><p>Ebadollah Taheri、Sudeep Pasricha 和 Mahdi Nikdast<br>美国科罗拉多州立大学电气与计算机工程系</p>
-<h2 id="动机与当前工作"><a href="#动机与当前工作" class="headerlink" title="动机与当前工作"></a>动机与当前工作</h2><p><img src="/image.png" alt="alt text"></p>
+<h2 id="1-动机与当前工作"><a href="#1-动机与当前工作" class="headerlink" title="1. 动机与当前工作"></a>1. 动机与当前工作</h2><p>随着对算力需求的持续增长，传统二维片上系统（SoC）在向更高复杂度扩展时受制于较低的良率与较高的制造成本，可扩展性面临瓶颈。三维（3D）集成通过硅通孔（TSV，Through-Silicon Via）将单一 SoC 划分为可垂直堆叠的多个裸片，但同时带来了制造成本上升、功率密度增大以及散热导热能力下降等问题，容易形成热热点并损害可靠性。</p>
+<p><img src="/images/DATE2021-DeFT/image.png" alt="alt text"></p>
 <p>2.5D 集成方法通过在中介层上放置多个 chiplet 来提供一种模块化解决方案，兼具可扩展性以及高可靠性。然而2.5D 集成引入了两个主要挑战，包括死锁避免以及由垂直链路（VL）故障导致的低可靠性。1. chiplet 内部互连和 chiplet 之间互连，会在网络中出现请求的循环依赖时发生死锁。即使保证 chiplet 内部无死锁，然而 chiplet 间数据包仍然可能产生一些依赖关系；2. 在 2.5D chiplet 系统中，实现链路和路由器容错是必要的，但当前用于解决 2.5D chiplet 系统中死锁问题的路由算法限制了 VL 选择，并因此削弱了网络可靠性和性能。</p>
+<p>DeFT（Deadlock-free and Fault-Tolerant）是第一种同时面向 2.5D chiplet 系统、兼顾无死锁与容错的路由算法。其核心思想包含两部分：一是通过新的虚拟网络（VN，Virtual Network）分配策略保证无死锁，并使虚拟信道（VC，Virtual Channel）利用率高度均衡；二是引入一种动态的、同时具备容错与拥塞感知能力的 VL 选择策略，以在故障场景下改善负载分布并降低网络延迟。</p>
+<h2 id="2-2-5D-Chiplet-系统中的路由模型"><a href="#2-2-5D-Chiplet-系统中的路由模型" class="headerlink" title="2. 2.5D Chiplet 系统中的路由模型"></a>2. 2.5D Chiplet 系统中的路由模型</h2><p>在本文采用的基准系统中，有源中介层上集成了四个 CPU chiplet，每个 chiplet 通过四条双向 VL 连接到中介层，chiplet 上与 VL 相连的路由器称为边界路由器（border router）。基于 chiplet 的路由依赖两个中间目的地：一个位于源 chiplet 之上，另一个位于中介层之上。</p>
+<p>具体而言，源 chiplet 首先选定一条 VL 作为第一个中间目的地，数据包据此垂直路由至中介层；随后在中介层上选定第二个中间目的地，将数据包导向目标 chiplet；最终在目标 chiplet 内部完成到终点的路由。由此可见，一个跨 chiplet 数据包需经历两次垂直路由与三次层内路由，其垂直方向为“上→下→上”，这一点与 3D 网络中“上→下”或“下→上”的单向垂直传输存在本质差异，也是 3D 容错路由难以直接套用的原因之一。</p>
+<p>针对基于 mesh 的 2.5D 系统的死锁问题，已有两类代表性算法。模块化转向限制（MTR，Modular Turn Restriction）在边界路由器上禁止某些跨 chiplet 转向以打破循环依赖，但其代价是使中介层路由器与 chiplet 设计彼此耦合：每个中介层路由器都需在已知受限转向的前提下判断数据包能否经由某条 VL 到达目的地，这违背了 chiplet 系统所要求的模块化设计原则。远程控制（RC，Remote Control）则在边界路由器上增设可容纳整个数据包的 RC 缓冲区，借此切断跨 chiplet 循环依赖，但该缓冲区在多个路由器之间共享，因而需要额外的硬件与许可网络支持。更关键的是，MTR 与 RC 均对 VL 选择施加了限制，导致二者难以重新选择 VL，从而无法容忍 VL 故障。</p>
+<h2 id="3-基于虚拟网络分离的无死锁保证"><a href="#3-基于虚拟网络分离的无死锁保证" class="headerlink" title="3. 基于虚拟网络分离的无死锁保证"></a>3. 基于虚拟网络分离的无死锁保证</h2><p>DeFT 采用 VN 分离实现无死锁。VN 分离本身并非新概念，但在硬件开销与网络延迟约束下高效地运用它具有相当的挑战性，既有 chiplet 路由技术正是低估了 VN 分离的效率。DeFT 使用两个 VN，每个 VN 至少需要一个 VC（文中假设每个 VN 一个 VC，且该数量可在不失一般性的前提下增加），由此在仅引入可忽略硬件开销的同时实现公平的 VC 利用率。</p>
+<p>为表述路由规则，文中将端口划分为三类：从 chiplet 指向中介层的“下行”端口、从中介层指向 chiplet 的“上行”端口，以及位于 chiplet 内部或中介层内部的“水平”端口（东、西、南、北）。在此基础上，无死锁的 VN 利用由以下三条规则约束：</p>
+<ul>
+<li>规则 1：禁止从 VN.1 路由至 VN.0，但允许从 VN.0 转入 VN.1。</li>
+<li>规则 2：对于 VN.0 中的数据包，禁止从上行端口路由至水平端口。</li>
+<li>规则 3：对于 VN.1 中的数据包，禁止从水平端口路由至下行端口。</li>
+</ul>
+<p>相应的分配策略为：从非边界路由器注入的跨 chiplet 数据包在源路由器处被分配 VN.0，并在第一次垂直路由（离开源 chiplet）与第二次垂直路由（进入目标 chiplet）之间由 VN.0 切换至 VN.1。</p>
+<p>文中通过四条定理证明该分配在保证无死锁的同时仍具有高效的 VN 利用：chiplet 内部数据包不使用垂直端口，因而两个 VN 均可分配（定理 III.1）；中介层上路由的跨 chiplet 数据包既可保持在 VN.0 也可切换至 VN.1（定理 III.2）；源 chiplet 上的 chiplet 间数据包可以自由地经由任意 VL 路由到中介层；中介层上的 chiplet 间数据包可以自由地经由任意 VL 路由到目标 chiplet（定理 III.3、III.4）。后两条定理意味着 VL 选择的选项被最大化，这正是后续容错能力的基础。</p>
+<p>在两个 VN 均可分配时，DeFT 采用轮询（round-robin）分配以平衡两个 VN 的负载，从而获得高度均衡的 VC 利用率。无死锁性源于两点：VN.0 与 VN.1 内部均不存在跨 chiplet 循环依赖（规则 2、规则 3 分别消除了相应方向的转向），且 VN 之间不存在循环依赖（规则 1 禁止了 VN.1 到 VN.0 的回流）。无活锁性则源于跨 chiplet 数据包的唯一合法路径“源 chiplet → 中介层 → 目标 chiplet”，配合两个中间目的地之间的最小路由，使数据包必定在有限跳数内到达终点。</p>
+<h2 id="4-容错与拥塞感知的-VL-选择"><a href="#4-容错与拥塞感知的-VL-选择" class="headerlink" title="4. 容错与拥塞感知的 VL 选择"></a>4. 容错与拥塞感知的 VL 选择</h2><p><img src="/images/DATE2021-DeFT/image-1.png" alt="alt text"></p>
+<p>与传统 2.5D 路由算法不同，DeFT 不对 VL 选择施加任何用于实现无死锁的限制。因此，只要网络连通性得以保持（即不存在某个 chiplet 因其全部 VL 故障而被完全断开），任意 VL 故障模式都可被容忍。在此基础上，DeFT 进一步将 VL 选择设计为一个兼顾容错与拥塞感知的自适应过程。</p>
+<p>该 VL 选择由离线分析与在线选择两个阶段构成。在设计时，针对所有可能的 VL 故障场景，DeFT 在“VL 利用率均衡”与“距离（源到 VL 的跳数）最小化”两个目标下探索最优 VL 选择，并将结果保存到路由器中的查找表，供运行时使用。利用率均衡之所以重要，是因为它可减轻过载 VL 的额外负担，既改善网络延迟，又因避免 VL 过度利用而降低基于应力迁移的故障概率；距离最小化则有助于缩短路径长度，从而降低动态功耗与端到端延迟。</p>
+<p>形式上，给定故障场景与参与选择的源 chiplet 路由器集合，VL <code>v</code> 上的负载由选择该 VL 的各路由器的跨 chiplet 流量率之和给出：</p>
+<p>$$l_v &#x3D; \sum_{r \in R_C} T_r^{inter} \times U_r^v$$</p>
+<p>其中当路由器 <code>r</code> 选用 VL <code>v</code> 时 $U_r^v &#x3D; 1$，否则为 0。所有 VL 上的平均负载记为 $l_{avg}$，由此定义 VL <code>v</code> 的负载成本为其负载相对于平均值的归一化偏差：</p>
+<p>$$L_v &#x3D; \left| \frac{l_v - l_{avg}}{l_{avg}} \right|$$</p>
+<p>距离成本则基于 mesh 网络中路由器到 VL 的曼哈顿距离（跳数）累加得到，记为 $D_v$。综合二者，一个选择集合 <code>s</code> 的总体成本为：</p>
+<p>$$C_s &#x3D; \sum_{v \in VL_C} (\rho \times D_v) + L_v$$</p>
+<p>其中权重 $\rho$ 决定负载均衡目标相对于距离目标的相对重要性，文中通过实验确定 $\rho &#x3D; 0.01$ 为高效取值。由于搜索空间较小，DeFT 采用穷举搜索求解最小成本对应的最优选择集合，并将其保存以供运行时查表；对于规模更大、设计空间更广的网络，则建议改用高效搜索算法以降低优化复杂度。以基准系统中每个 chiplet 拥有四条 VL 为例，故障组合共有 14 种，因而每个路由器中需保存 14 个 VL 地址。</p>
+<h2 id="5-实验评估"><a href="#5-实验评估" class="headerlink" title="5. 实验评估"></a>5. 实验评估</h2><p>作者在周期精确的片上网络仿真器 Noxim 基础上进行扩展，使其支持上述 2.5D chiplet 系统，并以 MTR 与 RC 作为对照。为保证公平，所有算法均使用两个 VC，数据包大小为 8 个 flit、缓冲区为 4 个 flit、flit 宽度为 32 位。离线 VL 选择优化在最悲观的 Uniform 流量假设下完成，而仿真覆盖了多种流量场景。</p>
+<p><img src="/images/DATE2021-DeFT/image-2.png" alt="alt text"></p>
+<p>在延迟方面，得益于均衡的 VL 选择与 VC 利用率，DeFT 在 Uniform、Localized 与 Hotspot 三类合成流量下均取得最低平均延迟。在 Localized 流量中，由于约 40% 的数据包为 chiplet 内部数据包，其 VC 利用高度分散，DeFT 的优势尤为明显；在 Hotspot 流量中，由于进入 chiplet 的数据包仅允许使用第二个 VC，可能引发短暂反压，DeFT 的改进相对较小，但即便在三个热点、每点 10% 的较高热点率下，其 VC 利用率偏差仍低于 8%，而 Uniform 与 Localized 流量下的 VC 利用率均衡在 50% 左右，容差低于 0.4%。在以 GEM5 配合 PARSEC 基准生成的真实应用流量下，单应用运行时网络拥塞较低，改进有限；而当两个应用同时在 32 核上运行、拥塞概率升高时，DeFT 的改进随之扩大，在高流量负载组合下相较 MTR 与 RC 最高可降低 40% 的延迟。</p>
+<p><img src="/images/DATE2021-DeFT/image-3.png" alt="alt text"></p>
+<p>容错能力以网络可达性（成功路由的数据包数占注入总数之比）衡量。在排除会使 chiplet 完全断连的故障组合后，DeFT 在 3.125% 至 25% 的注入故障率（对应 1 至 8 条故障 VL）下均实现 100% 可达性。就平均情形而言，相较 RC 其可达性提升 3.1% 至 25%，相较 MTR 提升 0 至 8.1%；就最坏情形而言，相较 RC 提升 6.25% 至 50%，相较 MTR 提升最高达 75%。在 6-chiplet 系统中，DeFT 仍保持 100% 可达性，而 MTR 仅在 2.1% 故障率（单条故障 VL）下达到完全可达，RC 则无法容忍任何故障——其根源在于 MTR 的受限转向与 RC 的许可网络都限制了 VL 选择，进而限制了容错能力。</p>
+<p><img src="/images/DATE2021-DeFT/image-4.png" alt="alt text"></p>
+<p>在故障场景下的延迟对比中，作者还将完整的 DeFT 与采用基于距离选择（DeFT-Dis.）和随机选择（DeFT-Ran.）的变体相比较：在 12.5% 与 25% 故障率下，完整 DeFT 的延迟均显著更低，表明其 VL 选择策略在容错的同时有效兼顾了负载分布。</p>
+<p><img src="/images/DATE2021-DeFT/image-5.png" alt="alt text"></p>
+<p>在硬件与功耗方面，作者使用 Cadence Genus 与 ORION 3.0 在 45 nm 工艺、1 GHz 时钟频率下进行估计。相较 MTR 与 RC，DeFT 引入的硬件与功耗开销分别低于 2% 与 1%，其增量主要来自 VN 分配逻辑以及用于存储容错 VL 选择数据的查找表，相对于路由器整体规模可以忽略。</p>
+<p><img src="/images/DATE2021-DeFT/image-6.png" alt="alt text"></p>
+<h2 id="6-主要价值"><a href="#6-主要价值" class="headerlink" title="6. 主要价值"></a>6. 主要价值</h2><p>关键设计取舍是放弃以转向限制换取无死锁的传统思路，转而通过两个 VN 与三条路由规则在 VC 层面保证无死锁，从而为 VL 选择保留了完全的自由度；这一自由度既是容忍任意 VL 故障模式的前提，也为拥塞感知的负载分布提供了空间。</p>
 
     </div>
 
