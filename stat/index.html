@@ -26,8 +26,8 @@
 <meta property="og:site_name" content="正在输入">
 <meta property="og:description" content="站点访问地图">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-06-19T05:07:55.727Z">
-<meta property="article:modified_time" content="2026-06-19T05:07:55.727Z">
+<meta property="article:published_time" content="2026-06-22T16:23:47.783Z">
+<meta property="article:modified_time" content="2026-06-22T16:23:47.783Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta name="twitter:card" content="summary">
 
@@ -71,6 +71,7 @@
 <script src="/js/third-party/math/mathjax.js" defer></script>
 
 
+<script src="/js/visitor-map.js"></script>
 
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
@@ -206,79 +207,21 @@
 <script src="/stat/world.js"></script>
 <script>
 (function () {
-  /* 配置区：部署 Worker 后，把 VISITOR_API 改成 Worker 地址 */
-  var VISITOR_API = 'https://visitor-map-worker.visitor-map-worker.workers.dev';
-  var GIST_ID = '02768a3c8be0f39880b2c83d14a95345';
-
-  var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
-  var RD_HDR = { 'Accept': 'application/vnd.github.v3+json' };
   var MAP_EL = document.getElementById('visitor-map');
   var SUMMARY_EL = document.getElementById('visitor-summary');
 
   var chart = echarts.init(MAP_EL);
   chart.showLoading({ text: '加载中…', color: '#3a7bd5', textColor: '#ccc', maskColor: 'rgba(0,10,30,0.75)' });
 
-  recordOrFetchVisitors().then(renderMap);
-
-  function recordOrFetchVisitors() {
-    if (!VISITOR_API) return fetchGist();
-
-    if (hasRecordedToday()) {
-      return fetchWorkerVisitors().catch(fetchGist);
-    }
-
-    return fetch(apiUrl('/visit'), { method: 'POST', headers: { 'Accept': 'application/json' } })
-      .then(function (r) {
-        if (!r.ok) throw new Error('visit api failed');
-        return r.json();
-      })
-      .then(function (payload) {
-        markRecordedToday();
-        return normalizeVisitors(payload);
-      })
-      .catch(function () {
-        return fetchWorkerVisitors().catch(fetchGist);
-      });
-  }
-
-  function fetchWorkerVisitors() {
-    return fetch(apiUrl('/visitors'), { headers: { 'Accept': 'application/json' } })
-      .then(function (r) {
-        if (!r.ok) throw new Error('visitor api failed');
-        return r.json();
-      })
-      .then(normalizeVisitors);
-  }
-
-  function fetchGist() {
-    return fetch(GIST_API, { headers: RD_HDR })
-      .then(function (r) { return r.json(); })
-      .then(function (g) {
-        var raw = g.files && g.files['visitors.json'] && g.files['visitors.json'].content;
-        try { return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
-      })
-      .catch(function () { return {}; });
-  }
+  VisitorMap.record()
+    .then(normalizeVisitors)
+    .catch(function () { return VisitorMap.fetchVisitors().then(normalizeVisitors); })
+    .then(renderMap)
+    .catch(function () { renderMap({}); });
 
   function normalizeVisitors(payload) {
     if (!payload) return {};
     return payload.visitors || payload;
-  }
-
-  function apiUrl(path) {
-    return VISITOR_API.replace(/\/$/, '') + path;
-  }
-
-  function todayKey() {
-    return 'visitor-map-recorded-' + new Date().toISOString().slice(0, 10);
-  }
-
-  function hasRecordedToday() {
-    try { return localStorage.getItem(todayKey()) === '1'; } catch (e) { return false; }
-  }
-
-  function markRecordedToday() {
-    try { localStorage.setItem(todayKey(), '1'); } catch (e) {}
   }
 
   function renderMap(visitors) {
