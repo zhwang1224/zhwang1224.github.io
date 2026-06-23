@@ -19,12 +19,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="UB-mesh 1. Introduction 2. Background &amp; Motivation 2.1 通信墙问题 (Communication Wall) 2.2 数据流量的局部性 (Locality of Data Traffic) 2.3 现有数据中心架构的局限性   3. UB-Mesh 架构 (Architecture) 3.1 nD-FullMesh 拓扑 3.2 UB">
+    <meta name="description" content="UB-mesh 1. LLM 训练对数据中心网络的四重压力 2. 核心洞察：LLM 训练流量的分层局部性 2.1 通信墙问题 (Communication Wall) 2.2 数据流量的局部性 (Locality of Data Traffic) 2.3 现有数据中心架构的局限性   3. UB-Mesh 架构 (Architecture) 3.1 nD-FullMesh 拓扑 3.2 UB-M">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UB Mesh">
 <meta property="og:url" content="https://zhwang1224.github.io/2025/09/24/UB-Mesh-0/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="UB-mesh 1. Introduction 2. Background &amp; Motivation 2.1 通信墙问题 (Communication Wall) 2.2 数据流量的局部性 (Locality of Data Traffic) 2.3 现有数据中心架构的局限性   3. UB-Mesh 架构 (Architecture) 3.1 nD-FullMesh 拓扑 3.2 UB">
+<meta property="og:description" content="UB-mesh 1. LLM 训练对数据中心网络的四重压力 2. 核心洞察：LLM 训练流量的分层局部性 2.1 通信墙问题 (Communication Wall) 2.2 数据流量的局部性 (Locality of Data Traffic) 2.3 现有数据中心架构的局限性   3. UB-Mesh 架构 (Architecture) 3.1 nD-FullMesh 拓扑 3.2 UB-M">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhwang1224.github.io/images/UBmesh/image.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/UBmesh/image2.png">
@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://zhwang1224.github.io/images/UBmesh/image13.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/UBmesh/image14.png">
 <meta property="article:published_time" content="2025-09-24T04:46:44.000Z">
-<meta property="article:modified_time" content="2025-09-24T11:37:02.550Z">
+<meta property="article:modified_time" content="2026-06-23T09:28:30.445Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="互连网络">
 <meta property="article:tag" content="拓扑">
@@ -293,7 +293,7 @@ mjx-container[display="true"] + br {
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UB-mesh"><span class="nav-number">1.</span> <span class="nav-text">UB-mesh</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">1. Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Background-Motivation"><span class="nav-number">1.2.</span> <span class="nav-text">2. Background &amp; Motivation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%80%9A%E4%BF%A1%E5%A2%99%E9%97%AE%E9%A2%98-Communication-Wall"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 通信墙问题 (Communication Wall)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%95%B0%E6%8D%AE%E6%B5%81%E9%87%8F%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7-Locality-of-Data-Traffic"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 数据流量的局部性 (Locality of Data Traffic)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%8E%B0%E6%9C%89%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E6%9E%B6%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 现有数据中心架构的局限性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-UB-Mesh-%E6%9E%B6%E6%9E%84-Architecture"><span class="nav-number">1.3.</span> <span class="nav-text">3. UB-Mesh 架构 (Architecture)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-nD-FullMesh-%E6%8B%93%E6%89%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 nD-FullMesh 拓扑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-UB-Mesh-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9E%84%E4%BB%B6"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 UB-Mesh 的基本构件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%9E%B6%E6%9E%84%E5%AE%9E%E7%8E%B0-UB-Mesh-Pod"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 架构实现 (UB-Mesh-Pod)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%9E%B6%E6%9E%84%E5%AE%9E%E7%8E%B0-Enabling-The-Architecture"><span class="nav-number">1.4.</span> <span class="nav-text">4. 架构实现 Enabling The Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%85%A8%E8%B7%AF%E5%BE%84%E8%B7%AF%E7%94%B1%EF%BC%88All-Path-Routing-APR%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 全路径路由（All-Path Routing, APR）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%9F%BA%E4%BA%8E%E7%9B%B4%E6%8E%A5%E9%80%9A%E7%9F%A5%E7%9A%84%E5%BF%AB%E9%80%9F%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%EF%BC%88Fast-Fault-Recovery-via-Direct-Notification%EF%BC%89"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 基于直接通知的快速故障恢复（Fast Fault Recovery via Direct Notification）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%9C%80%E5%A4%A7%E5%8C%96%E6%80%A7%E8%83%BD%EF%BC%88Maximizing-The-Performance%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">5. 最大化性能（Maximizing The Performance）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E7%9A%84%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%EF%BC%88Topology-Aware-Collective-Communication%EF%BC%89"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 拓扑感知的集合通信（Topology-Aware Collective Communication）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E7%9A%84%E5%B9%B6%E8%A1%8C%E5%8C%96%EF%BC%88Topology-Aware-Parallelization%EF%BC%89"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 拓扑感知的并行化（Topology-Aware Parallelization）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0"><span class="nav-number">1.6.</span> <span class="nav-text">6. 性能评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 实验设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%9C%BA%E6%9E%B6%E5%86%85%E6%9E%B6%E6%9E%84%E6%8E%A2%E7%B4%A2%EF%BC%88Intra-Rack-Architecture-Exploration%EF%BC%89"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 机架内架构探索（Intra-Rack Architecture Exploration）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E6%9C%BA%E6%9E%B6%E9%97%B4%E6%9E%B6%E6%9E%84%E6%8E%A2%E7%B4%A2%EF%BC%88Inter-Rack-Architecture-Exploration%EF%BC%89"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 机架间架构探索（Inter-Rack Architecture Exploration）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%88%90%E6%9C%AC%E6%95%88%E7%8E%87%E6%AF%94%E8%BE%83%EF%BC%88Cost-Efficiency-Comparison%EF%BC%89"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 成本效率比较（Cost-Efficiency Comparison）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E7%BA%BF%E6%80%A7%E6%89%A9%E5%B1%95%E6%80%A7%E8%AF%84%E4%BC%B0%EF%BC%88Linearity-Evaluation%EF%BC%89"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.5 线性扩展性评估（Linearity Evaluation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E7%BD%91%E7%BB%9C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Network-Reliability-Analysis%EF%BC%89"><span class="nav-number">1.6.6.</span> <span class="nav-text">6.6 网络可靠性分析（Network Reliability Analysis）</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UB-mesh"><span class="nav-number">1.</span> <span class="nav-text">UB-mesh</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-LLM-%E8%AE%AD%E7%BB%83%E5%AF%B9%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C%E7%9A%84%E5%9B%9B%E9%87%8D%E5%8E%8B%E5%8A%9B"><span class="nav-number">1.1.</span> <span class="nav-text">1. LLM 训练对数据中心网络的四重压力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A0%B8%E5%BF%83%E6%B4%9E%E5%AF%9F%EF%BC%9ALLM-%E8%AE%AD%E7%BB%83%E6%B5%81%E9%87%8F%E7%9A%84%E5%88%86%E5%B1%82%E5%B1%80%E9%83%A8%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">2. 核心洞察：LLM 训练流量的分层局部性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%80%9A%E4%BF%A1%E5%A2%99%E9%97%AE%E9%A2%98-Communication-Wall"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 通信墙问题 (Communication Wall)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%95%B0%E6%8D%AE%E6%B5%81%E9%87%8F%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7-Locality-of-Data-Traffic"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 数据流量的局部性 (Locality of Data Traffic)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%8E%B0%E6%9C%89%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E6%9E%B6%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 现有数据中心架构的局限性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-UB-Mesh-%E6%9E%B6%E6%9E%84-Architecture"><span class="nav-number">1.3.</span> <span class="nav-text">3. UB-Mesh 架构 (Architecture)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-nD-FullMesh-%E6%8B%93%E6%89%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 nD-FullMesh 拓扑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-UB-Mesh-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9E%84%E4%BB%B6"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 UB-Mesh 的基本构件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%9E%B6%E6%9E%84%E5%AE%9E%E7%8E%B0-UB-Mesh-Pod"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 架构实现 (UB-Mesh-Pod)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%9E%B6%E6%9E%84%E5%AE%9E%E7%8E%B0-Enabling-The-Architecture"><span class="nav-number">1.4.</span> <span class="nav-text">4. 架构实现 Enabling The Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%85%A8%E8%B7%AF%E5%BE%84%E8%B7%AF%E7%94%B1%EF%BC%88All-Path-Routing-APR%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 全路径路由（All-Path Routing, APR）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%80%A7%E8%83%BD%E6%9C%80%E5%A4%A7%E5%8C%96%EF%BC%9A%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E7%9A%84%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E4%B8%8E%E5%B9%B6%E8%A1%8C%E5%8C%96"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 性能最大化：拓扑感知的集合通信与并行化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%9C%80%E5%A4%A7%E5%8C%96%E6%80%A7%E8%83%BD%EF%BC%88Maximizing-The-Performance%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">5. 最大化性能（Maximizing The Performance）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E7%9A%84%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%EF%BC%88Topology-Aware-Collective-Communication%EF%BC%89"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 拓扑感知的集合通信（Topology-Aware Collective Communication）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E7%9A%84%E5%B9%B6%E8%A1%8C%E5%8C%96%EF%BC%88Topology-Aware-Parallelization%EF%BC%89"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 拓扑感知的并行化（Topology-Aware Parallelization）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0"><span class="nav-number">1.6.</span> <span class="nav-text">6. 性能评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 实验设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E6%9C%BA%E6%9E%B6%E5%86%85%E6%9E%B6%E6%9E%84%E6%8E%A2%E7%B4%A2%EF%BC%88Intra-Rack-Architecture-Exploration%EF%BC%89"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 机架内架构探索（Intra-Rack Architecture Exploration）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E6%9C%BA%E6%9E%B6%E9%97%B4%E6%9E%B6%E6%9E%84%E6%8E%A2%E7%B4%A2%EF%BC%88Inter-Rack-Architecture-Exploration%EF%BC%89"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 机架间架构探索（Inter-Rack Architecture Exploration）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%88%90%E6%9C%AC%E6%95%88%E7%8E%87%E6%AF%94%E8%BE%83%EF%BC%88Cost-Efficiency-Comparison%EF%BC%89"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 成本效率比较（Cost-Efficiency Comparison）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E7%BA%BF%E6%80%A7%E6%89%A9%E5%B1%95%E6%80%A7%E8%AF%84%E4%BC%B0%EF%BC%88Linearity-Evaluation%EF%BC%89"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.5 线性扩展性评估（Linearity Evaluation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E7%BD%91%E7%BB%9C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Network-Reliability-Analysis%EF%BC%89"><span class="nav-number">1.6.6.</span> <span class="nav-text">6.6 网络可靠性分析（Network Reliability Analysis）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%88%9B%E6%96%B0%E4%B8%8E%E8%B4%A1%E7%8C%AE%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">7. 创新与贡献总结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -374,9 +374,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-09-24 12:46:44 / 修改时间：19:37:02" itemprop="dateCreated datePublished" datetime="2025-09-24T12:46:44+08:00">2025-09-24</time>
+      <time title="创建时间：2025-09-24 12:46:44" itemprop="dateCreated datePublished" datetime="2025-09-24T12:46:44+08:00">2025-09-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-23 17:28:30" itemprop="dateModified" datetime="2026-06-23T17:28:30+08:00">2026-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -399,8 +405,8 @@ mjx-container[display="true"] + br {
     
     <div class="post-body" itemprop="articleBody"><ul>
 <li><a href="#ub-mesh">UB-mesh</a><ul>
-<li><a href="#1-introduction">1. Introduction</a></li>
-<li><a href="#2-background--motivation">2. Background &amp; Motivation</a><ul>
+<li><a href="#1-llm-%E8%AE%AD%E7%BB%83%E5%AF%B9%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C%E7%9A%84%E5%9B%9B%E9%87%8D%E5%8E%8B%E5%8A%9B">1. LLM 训练对数据中心网络的四重压力</a></li>
+<li><a href="#2-%E6%A0%B8%E5%BF%83%E6%B4%9E%E5%AF%9Fllm-%E8%AE%AD%E7%BB%83%E6%B5%81%E9%87%8F%E7%9A%84%E5%88%86%E5%B1%82%E5%B1%80%E9%83%A8%E6%80%A7">2. 核心洞察：LLM 训练流量的分层局部性</a><ul>
 <li><a href="#21-%E9%80%9A%E4%BF%A1%E5%A2%99%E9%97%AE%E9%A2%98-communication-wall">2.1 通信墙问题 (Communication Wall)</a></li>
 <li><a href="#22-%E6%95%B0%E6%8D%AE%E6%B5%81%E9%87%8F%E7%9A%84%E5%B1%80%E9%83%A8%E6%80%A7-locality-of-data-traffic">2.2 数据流量的局部性 (Locality of Data Traffic)</a></li>
 <li><a href="#23-%E7%8E%B0%E6%9C%89%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E6%9E%B6%E6%9E%84%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7">2.3 现有数据中心架构的局限性</a></li>
@@ -414,7 +420,7 @@ mjx-container[display="true"] + br {
 </li>
 <li><a href="#4-%E6%9E%B6%E6%9E%84%E5%AE%9E%E7%8E%B0-enabling-the-architecture">4. 架构实现 Enabling The Architecture</a><ul>
 <li><a href="#41-%E5%85%A8%E8%B7%AF%E5%BE%84%E8%B7%AF%E7%94%B1all-path-routing-apr">4.1 全路径路由（All-Path Routing, APR）</a></li>
-<li><a href="#42-%E5%9F%BA%E4%BA%8E%E7%9B%B4%E6%8E%A5%E9%80%9A%E7%9F%A5%E7%9A%84%E5%BF%AB%E9%80%9F%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8Dfast-fault-recovery-via-direct-notification">4.2 基于直接通知的快速故障恢复（Fast Fault Recovery via Direct Notification）</a></li>
+<li><a href="#42-%E6%80%A7%E8%83%BD%E6%9C%80%E5%A4%A7%E5%8C%96%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E7%9A%84%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E4%B8%8E%E5%B9%B6%E8%A1%8C%E5%8C%96">4.2 性能最大化：拓扑感知的集合通信与并行化</a></li>
 </ul>
 </li>
 <li><a href="#5-%E6%9C%80%E5%A4%A7%E5%8C%96%E6%80%A7%E8%83%BDmaximizing-the-performance">5. 最大化性能（Maximizing The Performance）</a><ul>
@@ -431,12 +437,13 @@ mjx-container[display="true"] + br {
 <li><a href="#66-%E7%BD%91%E7%BB%9C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%88%86%E6%9E%90network-reliability-analysis">6.6 网络可靠性分析（Network Reliability Analysis）</a></li>
 </ul>
 </li>
+<li><a href="#7-%E5%88%9B%E6%96%B0%E4%B8%8E%E8%B4%A1%E7%8C%AE%E6%80%BB%E7%BB%93">7. 创新与贡献总结</a></li>
 </ul>
 </li>
 </ul>
 <span id="more"></span>
 
-<h1 id="UB-mesh"><a href="#UB-mesh" class="headerlink" title="UB-mesh"></a>UB-mesh</h1><h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h2><p>论文指出，大规模语言模型（LLMs）的训练对数据中心提出了 <strong>四大关键需求</strong>：  </p>
+<h1 id="UB-mesh"><a href="#UB-mesh" class="headerlink" title="UB-mesh"></a>UB-mesh</h1><h2 id="1-LLM-训练对数据中心网络的四重压力"><a href="#1-LLM-训练对数据中心网络的四重压力" class="headerlink" title="1. LLM 训练对数据中心网络的四重压力"></a>1. LLM 训练对数据中心网络的四重压力</h2><p>随着大语言模型（Large-scale Language Models，LLM）沿着缩放定律（Scaling Laws）持续扩张参数规模与训练数据量，底层训练系统所承受的压力被同步放大。论文将下一代 AI 数据中心需要同时满足的诉求归纳为四点：  </p>
 <ol>
 <li><strong>大规模 (R1)</strong> —— 需支持数十万级 NPU/GPU。  </li>
 <li><strong>高带宽 (R2)</strong> —— 单节点需要超过 3.2 Tbps 互连，总带宽比传统 CPU 系统高 10–100 倍。  </li>
@@ -446,8 +453,8 @@ mjx-container[display="true"] + br {
 <p>为应对上述挑战，作者提出了 <strong>三大设计原则</strong>：  </p>
 <ul>
 <li><strong>P1:</strong> 拓扑需贴合 LLM 流量模式，充分利用通信局部性。例如，Tensor Parallelism 产生的集体通信占总流量 50% 以上，且集中于 8–64 个相邻 NPU；而数据并行带来的长距离通信不足 2%。因此，需要分层、局部化的网络架构。</li>
-<li><strong>P2:</strong> 计算与通信需拓扑感知，避免拥塞与带宽浪费；  </li>
-<li><strong>P3:</strong> 系统需具备自愈能力，实现链路/节点级故障的快速恢复。</li>
+<li><strong>P2:</strong> 在分层局部化的网络上，并行策略、路由、集合通信与负载均衡都必须与网络拓扑精细对齐，否则会因拥塞或带宽利用不足而性能低下；  </li>
+<li><strong>P3:</strong> 在链路或 NPU 失效时，路由系统应自动切换至备用路径、备用 NPU 应能无缝接管，从而保障训练的连续性。</li>
 </ul>
 <p>为满足 R1–R4 并遵循 P1–P3，作者提出 <strong>UB-Mesh 架构</strong>：  </p>
 <ul>
@@ -461,24 +468,10 @@ mjx-container[display="true"] + br {
 <li>在性能损失不足 7% 的情况下，<strong>系统级成本效率提升 2.04 倍</strong>，<strong>可用性提升 7.2%</strong>；  </li>
 <li>在多种 LLM 训练任务中保持 <strong>95% 以上的线性扩展性</strong>。</li>
 </ul>
-<h2 id="2-Background-Motivation"><a href="#2-Background-Motivation" class="headerlink" title="2. Background & Motivation"></a>2. Background &amp; Motivation</h2><h3 id="2-1-通信墙问题-Communication-Wall"><a href="#2-1-通信墙问题-Communication-Wall" class="headerlink" title="2.1 通信墙问题 (Communication Wall)"></a>2.1 通信墙问题 (Communication Wall)</h3><ul>
-<li>LLM 训练规模空前，需要成千上万的 NPU/GPU。  </li>
-<li>每次训练迭代包含前向、反向和参数更新，大量依赖 <strong>跨 NPU 的数据交换</strong>。随着训练系统的规模增大，数据通信开销成为系统中最昂贵的部分。 </li>
-<li>随着集群规模扩大，<strong>通信成本成为主要瓶颈</strong>，即所谓的“通信墙”。</li>
-</ul>
-<h3 id="2-2-数据流量的局部性-Locality-of-Data-Traffic"><a href="#2-2-数据流量的局部性-Locality-of-Data-Traffic" class="headerlink" title="2.2 数据流量的局部性 (Locality of Data Traffic)"></a>2.2 数据流量的局部性 (Locality of Data Traffic)</h3><ul>
-<li>LLM 训练涉及多种并行方式：  <ul>
-<li><strong>Tensor Parallelism (TP)</strong>、<strong>Sequence Parallelism (SP)</strong>、<strong>Expert Parallelism (EP)</strong>、<strong>Pipeline Parallelism (PP)</strong>、<strong>Data Parallelism (DP)</strong>。</li>
-</ul>
-</li>
-<li>不同并行策略产生的数据量差异显著（作者在内部 MoE-2T 模型 上的分析）：  <ul>
-<li><strong>TP + SP 占总流量约 97%</strong>；  </li>
-<li>其余方式 (EP/PP/DP) 总计不足 2%。</li>
-</ul>
-</li>
-<li>说明 LLM 训练流量具有 <strong>强局部性与层次性</strong>，网络设计必须优先支持短距离高带宽通信。</li>
-</ul>
+<h2 id="2-核心洞察：LLM-训练流量的分层局部性"><a href="#2-核心洞察：LLM-训练流量的分层局部性" class="headerlink" title="2. 核心洞察：LLM 训练流量的分层局部性"></a>2. 核心洞察：LLM 训练流量的分层局部性</h2><h3 id="2-1-通信墙问题-Communication-Wall"><a href="#2-1-通信墙问题-Communication-Wall" class="headerlink" title="2.1 通信墙问题 (Communication Wall)"></a>2.1 通信墙问题 (Communication Wall)</h3><p>LLM 训练规模空前，需要成千上万的 NPU/GPU。每次训练迭代包含前向、反向和参数更新，大量依赖 <strong>跨 NPU 的数据交换</strong>。随着训练系统的规模增大，数据通信开销成为系统中最昂贵的部分。随着集群规模扩大，<strong>通信成本成为主要瓶颈</strong>，即所谓的“通信墙”。  </p>
+<h3 id="2-2-数据流量的局部性-Locality-of-Data-Traffic"><a href="#2-2-数据流量的局部性-Locality-of-Data-Traffic" class="headerlink" title="2.2 数据流量的局部性 (Locality of Data Traffic)"></a>2.2 数据流量的局部性 (Locality of Data Traffic)</h3><p>其次，LLM 训练通常并行使用多种并行化技术，而这些技术产生的数据流量并不均等。基于一个内部 MoE-2T 模型的分析，论文给出了如下流量分布。</p>
 <p><img src="/images/UBmesh/image.png" alt="alt text"></p>
+<p>TP 与 SP 合计约占总流量的 97%，而其余并行技术通常产生不足 2% 的流量。更重要的是，TP 与 SP 引发的集合通信往往发生在 8 至 64 个相邻 NPU 构成的簇内，呈现短程、密集的特征；而 DP 引发的通信虽占比极低（不足 2%），却通常需要长程传输。换言之，LLM 训练流量在物理空间上是分层且高度局部化的。因此，架构设计应当优先采用层次化方式来提供网络带宽。</p>
 <h3 id="2-3-现有数据中心架构的局限性"><a href="#2-3-现有数据中心架构的局限性" class="headerlink" title="2.3 现有数据中心架构的局限性"></a>2.3 现有数据中心架构的局限性</h3><ul>
 <li><strong>Clos</strong>：性能高，但对称互连成本过高（大量高性能交换机与光模块）。  </li>
 <li><strong>3D Torus</strong>：依赖直连，成本较低，但带宽不足，难支持复杂 All-to-All 通信。  </li>
@@ -497,9 +490,9 @@ mjx-container[display="true"] + br {
 </li>
 <li>优势：<ul>
 <li><strong>充分利用数据局部性与流量模式</strong>：nD-FullMesh 在每个网络维度上形成紧耦合的直连域，能够逐层提供超配带宽，从而充分利用 LLM 训练中固有的数据局部性和由密到疏的流量分布特性。还可以灵活调整每个维度的节点带宽分配；</li>
-<li><strong>利用数据局部性</strong>：大部分通信（通常为 TP 或 SP）在 0–2 跳内完成；</li>
-<li><strong>减少交换机/光模块依赖</strong>：短距离被动电缆约占总电缆使用量的 86.7%；</li>
-<li><strong>支持复杂集体通信</strong>：相比 Torus，FullMesh 更适合集体操作（如 All-to-All）。</li>
+<li><strong>利用数据局部性</strong>：直连拓扑显著缩短了传输距离：结合数据放置与集合通信优化，大多数传输（典型即 TP 或 SP）可在 0 至 2 跳内完成，从而大幅压低数据移动开销；</li>
+<li><strong>减少交换机/光模块依赖</strong>：相比 Clos，nD-FullMesh 削弱了对高基数交换机与长程光互连的依赖，转而最大化短程直连；</li>
+<li><strong>支持复杂集体通信</strong>：短程无源电缆占据了全部线缆消耗的 86.7%。由于电缆与连接器比光模块更稳定，这一设计在削减交换机与光模块成本的同时还提升了系统可靠性。此外，与同样依赖直连的 3D-Torus 不同，全互连拓扑能够高效支持 all-to-all 这类复杂的集合通信操作，弥补了 Torus 类拓扑在 MoE 场景下的短板。。</li>
 </ul>
 </li>
 </ul>
@@ -532,82 +525,36 @@ mjx-container[display="true"] + br {
 <h3 id="3-3-架构实现-UB-Mesh-Pod"><a href="#3-3-架构实现-UB-Mesh-Pod" class="headerlink" title="3.3 架构实现 (UB-Mesh-Pod)"></a>3.3 架构实现 (UB-Mesh-Pod)</h3><p>通过将表 3 中列出的硬件构件组合在一起，并使用统一总线（UB）进行互连，文章提出了 UB-Mesh 的整体架构设计。如图 7-(a) 所示，文章按照所提出的 nD-FullMesh 拓扑实现了一个 UB-Mesh-Pod。具体来说，在该架构中，在每个机架内部构建一个 2D-FullMesh，并将其扩展为跨机架的另一个 2D-FullMesh，最终形成 4D-FullMesh。在本代系统中，选择不将 UB-Mesh 扩展到 5D 或更高维度，以在成本效率与灵活性之间取得工程上的平衡；在 4D-FullMesh 之外，仍采用 Clos 拓扑。</p>
 <p><img src="/images/UBmesh/image5.png" alt="alt text"></p>
 <ul>
-<li><strong>机架级 (Rack)</strong>：<ul>
-<li>机架的核心由 8 块 NPU 板 组成，每块板上包含 8 个 NPU（见图 8-(a)），因此每个机架共有 64 个 NPU。这些 NPU 在机架内通过直连形成 2D-FullMesh 网络，确保 NPU 之间的高带宽通信；</li>
-<li>由于 UB I/O 控制器具备路由功能，因此每个 NPU 同时也可作为路由器，实现间接路由；</li>
-<li>除 NPU 外，机架还包含独立的 CPU 板（见图 8-(c)）；</li>
-<li>机架中配置了多个背板交换机，负责机架内与跨机架的连接。这些交换机采用低端口数设计（LRS），以降低成本，同时确保设备之间的无阻塞通信。整体上，这些背板交换机可导出 4 路 UB x256 I/O。</li>
-</ul>
+<li><p><strong>机架级 (Rack)</strong>：<br>机柜内的 2D-FullMesh 是构建的起点。每个机柜由 8 块 NPU 板卡组成，每板卡含 8 个 NPU，合计 64 个 NPU，经由电缆直连构成二维全互连（X-Fullmesh 与 Y-Fullmesh），以保障 NPU 间的高带宽。与 CPU、NPU 同板的传统设计不同，UB-Mesh 将 CPU 板卡独立出来，通过交换机与 NPU 相连，从而支持灵活的 CPU/NPU 配比以及 CPU/NPU/DDR 的资源池化。机柜内多块背板交换机（即 LRS）以非阻塞方式管理柜内与柜间连接，聚合输出四路 UB x256 IO。</p>
 </li>
-<li><strong>64+1 高可用设计</strong>：<ul>
-<li>系统在每个机架的 64 个常规 NPU 外，额外配备 1 个备用 NPU（见图 7-(b) 和图 8-(b)）；</li>
-<li>该备用 NPU 通过 LRS 与 64 个常规 NPU 相连，当某个 NPU 故障时，管理系统会激活备用 NPU 来接替其工作；</li>
-<li>虽增加一跳延迟，但对 LLM 训练整体性能影响极小。</li>
-</ul>
+<li><p><strong>64+1 高可用设计</strong>：<br>64+1 高可用设计 是机柜层面的容错机制。系统在 64 个常规 NPU 之外额外配置一个经由 LRS 接入的备用 NPU。当某个 NPU（如图示中的 NPU-3）失效时，管理系统激活备用 NPU 接管其角色，与该 NPU 相关的直连链路被重定向——例如原本的「5→3」路径被改写为「5→LRS→B」。这一策略将原先的一跳直连改为经交换机的一跳路由，略微增加了传输时延，但相比简单屏蔽故障 NPU、仅以剩余七个 NPU 运行任务的方案要优越得多；在以柜内带宽为首要考量的 LLM 训练场景下，这点额外时延对整体训练性能影响可忽略。</p>
 </li>
-<li><strong>Pod 级 (UB-Mesh-Pod)</strong>：<ul>
-<li>在机架内，文章将 64 个 NPU 组织为 2D-FullMesh。跨机架时再实现一个 2D-FullMesh，将机架组织成整体 4D-FullMesh 架构，即 UB-Mesh-Pod。</li>
-<li>16 个机架 → 组成 <strong>4D-FullMesh</strong>（共 1024 NPUs）；</li>
-<li>在该配置中，每条链路均为 UB x128 I/O。之所以选择“4 个机架一组、双维互连”，是基于有源电缆的物理可达性约束，这是工程上的最佳平衡点。</li>
-</ul>
+<li><p><strong>Pod 级 (UB-Mesh-Pod)</strong>：<br>Pod 级的 4D-FullMesh 在机柜之上再叠加一层二维全互连。一行内的四个相邻机柜经各柜 LRS 端口直连构成一维全互连，机柜列方向同样直连，最终形成 16 机柜的二维全互连；此处选择沿两个维度连接四个相邻机柜，是综合考虑有源电缆可达距离后的最优点，每条链路提供 UB x128 IO。由于每柜 64 NPU、每 Pod 16 柜，一个 4D-FullMesh 的 UB-Mesh-Pod 共含 1024 个 NPU。论文给出的带宽分配是：柜内 2D-FullMesh 约 UB x56/NPU，柜间 4D-FullMesh 约 UB x12/NPU。</p>
 </li>
-<li><strong>SuperPod / DCN 扩展</strong>：<ul>
-<li>多个 UB-Mesh-Pod 组成 SuperPod；</li>
-<li>Pod 之间采用 Clos 拓扑（保证租户隔离和灵活分配）；</li>
-<li>通过 UB 交换机或通过位于 CPU 板上的 NIC 接入大规模 DCN，可扩展至 10 万 NPU 级别。</li>
-</ul>
+<li><p><strong>SuperPod / DCN 扩展</strong>：<br>SuperPod 与更大规模 则在 Pod 之上改用对称拓扑。考虑到云场景中中小规模训练任务未必占满整个 SuperPod，论文在 Pod 级互连上不再延续全互连，而是采用对称的 Clos 拓扑，以高基数 Pod 交换机（HRS）连接各机柜，使云管理者能按需切分 SuperPod 并在每个划分域内保证满带宽，规模可达 8K NPU（约 UB x4/NPU）。再向上，SuperPod 内的机柜通过 UB 交换机（方案 a：UB-to-DCN）或 CPU 板卡上的 NIC（方案 b：NIC-to-DCN）接入大规模数据中心网络（Data-Center Network，DCN），DCN 通常承载大规模数据并行训练，以 Clos 组织，可扩展至 10 万 NPU 乃至更多。</p>
 </li>
 </ul>
+<p>由此，UB-Mesh 形成了「4D-FullMesh + Clos」的混合拓扑：短程、高占比流量走直连全互连，长程、低占比流量走交换式 Clos，与第二节揭示的流量结构精确对应。</p>
 <hr>
-<h2 id="4-架构实现-Enabling-The-Architecture"><a href="#4-架构实现-Enabling-The-Architecture" class="headerlink" title="4. 架构实现 Enabling The Architecture"></a>4. 架构实现 Enabling The Architecture</h2><ul>
-<li><p>支持混合拓扑：路由系统必须满足 UB-Mesh 的 4D-FullMesh + Clos 混合拓扑带来的需求。</p>
-</li>
-<li><p>高效转发：由于每个 NPU 也是一个路由器，整个系统包含大量 NPU。为了节省 NPU 硬件资源，路由系统必须高效处理路由表查找和转发操作。</p>
-</li>
-<li><p>支持非最短路径：在 nD-FullMesh 拓扑中，两端节点之间存在多条不同距离的路径。系统应能够启用非最短路径，以最大化网络带宽利用率。</p>
-</li>
-<li><p>快速故障恢复：为确保可靠性和可用性，路由系统必须能够快速从故障中恢复，降低对训练过程的影响。</p>
-</li>
-<li><p>无死锁：整个网络必须在无死锁风险下运行，保证数据流动顺畅不中断。</p>
-</li>
-</ul>
-<p>提出了 全路径路由（All-Path Routing, APR） 技术和 基于直接通知的快速故障恢复 技术，以满足这些要求</p>
+<h2 id="4-架构实现-Enabling-The-Architecture"><a href="#4-架构实现-Enabling-The-Architecture" class="headerlink" title="4. 架构实现 Enabling The Architecture"></a>4. 架构实现 Enabling The Architecture</h2><p>「4D-FullMesh + Clos」的混合拓扑对路由系统提出了五项要求：支持混合拓扑、高效转发（因每个 NPU 既是计算单元又是路由器，须节省其硬件资源）、支持非最短路径（以充分利用全互连提供的多条路径来最大化带宽利用）、快速故障恢复、以及无死锁。论文指出，Clos、Torus 与 DragonFly 上既有的最长前缀匹配（LPM）、基于主机的路由、维序路由（Dimension Ordered Routing，DOR）等技术均无法同时满足这五项要求，故提出 全路径路由（All-Path Routing，APR） 与基于直接通知的快速故障恢复。</p>
 <h3 id="4-1-全路径路由（All-Path-Routing-APR）"><a href="#4-1-全路径路由（All-Path-Routing-APR）" class="headerlink" title="4.1 全路径路由（All-Path Routing, APR）"></a>4.1 全路径路由（All-Path Routing, APR）</h3><p>UB-Mesh 的全互连网络架构在任意两个 NPU 之间提供多条路径。传统的路由策略（如最短路径优先 SPF，见图 10-(a)）往往导致网络带宽利用不足，并且容易受到链路故障的影响。为提升网络效率与鲁棒性，文章提出了 全路径路由（APR） 机制。</p>
 <p><img src="/images/UBmesh/image6.png" alt="alt text"></p>
-<p>如图 10-(b) 所示，APR 利用源节点与目的节点之间所有可用路径。这种灵活性允许动态切换路径，以应对故障或拥塞，从而提高网络健壮性。为了高效实现这一目标，APR 依赖以下三种机制：</p>
+<p>APR 的出发点是：全互连架构在任意两个 NPU 间提供了多条路径，而传统的最短路径优先（Shortest-Path First，SPF）路由既不能充分利用带宽，又易受链路失效影响。APR 转而利用源与目的之间的全部可用路径，实现动态路径切换以应对故障或拥塞。它依托三项底层机制。</p>
 <ul>
-<li><p>源路由（Source Routing, SR）机制：实现自适应路由。</p>
-<ul>
-<li>为了充分利用 APR 提供的多路径，一个可行的方式是采用源路由机制。如图 11 所示，在原始报文头中添加一个 8 字节的 SR 头部，其中包含转发指令。每个路由器使用一个 4-bit 指针（ptr） 来指示 12-bit 位图字段中的偏移位置。第 i 位的值决定了第 i 跳的转发方式（bit=1 表示该跳采用 SR 转发，bit=0 表示传统转发）。在 SR 转发情况下，位图字段还用于定位六个指令字段之一，指示如何转发该数据包。SR 信息高度压缩，因此开销较低。</li>
-</ul>
+<li><p>源路由（Source Routing, SR）机制：实现自适应路由。<br>第一是源路由（Source Routing，SR）。在原始包头之外附加一个 8 字节的 SR 头，其中包含转发指令。每个路由器用一个 4 比特的指针（ptr）在 12 比特的位图（bitmap）字段中定位偏移，第 ii 个比特决定第 ii 跳的转发方式（置 1 表示按 SR 转发，置 0 表示传统转发）；当按 SR 转发时，位图还用于定位六个指令字段之一，指示具体如何转发。SR 信息高度紧凑，开销很低。</p>
 </li>
-<li><p>结构化寻址与线性表查找：降低路由表查找和转发开销。</p>
-<ul>
-<li>APR 利用了 UB-Mesh 拓扑的结构化特点，采用了 结构化寻址与线性表查找 机制。</li>
-</ul>
+<li><p>结构化寻址与线性表查找：降低路由表查找和转发开销。<br>为压低每个 NPU 内 UB IO 控制器的路由表查找与转发开销，APR 依据网络元素（Pod、机柜、板卡）的物理位置将寻址空间划分为段。同一段内的 NPU 共享相同前缀，因此只需存储短段地址，段内 NPU 通过相对于段地址的线性偏移寻址。这一设计显著减小了表空间，加快了路由表的生成、分发与收敛，并使故障恢复等状态变更能够被迅速响应。</p>
 </li>
-<li><p>拓扑感知的无死锁流控（TFC）：保证全路径路由下的死锁规避。</p>
-<ul>
-<li>该算法在仅使用 2 个虚拟信道的情况下，就能实现无死锁的全路径路由；TFC 通过 信道依赖图（CDG） 对死锁进行建模，并将拓扑划分为子图；在子图内部，统一应用拓扑导向规则与虚拟信道约束；算法采用 跨维度环路消解原则 将子图分解为单 VL 的无环子集，再通过 同维度环路消解原则 来计算排列和笛卡尔积，生成所有路径组合与 VL 映射。</li>
-</ul>
+<li><p>拓扑感知的无死锁流控（TFC）：保证全路径路由下的死锁规避。<br>由于 nD-FullMesh 含有复杂的环结构、且 APR 允许多跳路由，在有限虚拟通道（Virtual Lane，VL）资源下实现无死锁流控颇具挑战。TFC 用通道依赖图（Channel Dependency Graph，CDG）对死锁建模，将拓扑划分为子图，在各子图内统一拓扑导向规则与 VL 约束，并施加 N 维跨维度断环原则将其分解为单 VL 无环子集，再以同维断环原则计算幂集元素的排列与笛卡尔积，由此生成全路径组合与 VL 映射。其结果是：仅用 2 个 VL 资源即可实现无死锁的全路径路由。</p>
 </li>
 </ul>
-<h3 id="4-2-基于直接通知的快速故障恢复（Fast-Fault-Recovery-via-Direct-Notification）"><a href="#4-2-基于直接通知的快速故障恢复（Fast-Fault-Recovery-via-Direct-Notification）" class="headerlink" title="4.2 基于直接通知的快速故障恢复（Fast Fault Recovery via Direct Notification）"></a>4.2 基于直接通知的快速故障恢复（Fast Fault Recovery via Direct Notification）</h3><p><img src="/images/UBmesh/image7.png" alt="alt text"></p>
+<h3 id="4-2-性能最大化：拓扑感知的集合通信与并行化"><a href="#4-2-性能最大化：拓扑感知的集合通信与并行化" class="headerlink" title="4.2 性能最大化：拓扑感知的集合通信与并行化"></a>4.2 性能最大化：拓扑感知的集合通信与并行化</h3><p><img src="/images/UBmesh/image7.png" alt="alt text"></p>
 <p>当网络链路发生故障时，传统路由系统通常采用逐跳通知机制。如图 12 左侧所示，当链路 1-3 出现故障时，该信息由节点 1 和 3 逐跳传播，通常会消耗较长延迟。</p>
 <p>在 UB-Mesh 中，由于每个节点都有确定的一组通信目标，文章可以通过直接通知这些节点来加速路由收敛。如图 12 右侧所示，当链路 1-3 出现故障时，该信息会根据预先计算的路由关系直接发送到节点 6。凭借这种 拓扑感知的直接通知，控制平面的开销大幅减少，从而显著加快了故障恢复。</p>
 <h2 id="5-最大化性能（Maximizing-The-Performance）"><a href="#5-最大化性能（Maximizing-The-Performance）" class="headerlink" title="5. 最大化性能（Maximizing The Performance）"></a>5. 最大化性能（Maximizing The Performance）</h2><p>本章节主要针对训练任务的分布以及集合通信的性能进行优化。文章提出了若干拓扑感知的优化策略，以提升性能表现。</p>
 <h3 id="5-1-拓扑感知的集合通信（Topology-Aware-Collective-Communication）"><a href="#5-1-拓扑感知的集合通信（Topology-Aware-Collective-Communication）" class="headerlink" title="5.1 拓扑感知的集合通信（Topology-Aware Collective Communication）"></a>5.1 拓扑感知的集合通信（Topology-Aware Collective Communication）</h3><p><img src="/images/UBmesh/image8.png" alt="alt text"></p>
 <p>All-Reduce 与 All-to-All 两个典型操作为例。</p>
-<ul>
-<li><p>All-Reduce：<br>文章提出了一种多环（Multi-Ring）算法，以实现高效的 All-Reduce。首先，将网络拓扑抽象为统一模型，考虑节点数量、节点互连关系、链路带宽和延迟等因素；接着，将集体通信与路径映射结合，采用逻辑多环算法，保证路径独占、避免冲突；如图 13-(a) 所示，原始路径为默认映射。APR 机制可利用这些路径之外的 空闲链路 来增强带宽；最终，如图 13-(b) 所示，文章通过在多条路径间优化流量划分，缓解瓶颈，并最大化 APR 所带来的额外带宽利用。</p>
-</li>
-<li><p>All-to-All：<br>文章考虑两类代表性用例：</p>
-<ul>
-<li>通用 All-to-All：如图 14-(a)，当 UB-Mesh 中的源节点（示例采用 2D mesh，方法可推广至更高维）向不同目标节点发送不同数据时，文章采用 多路径 All2All 优化。具体而言，每个数据元素（向量或张量）被分为两部分，分别通过 X-FullMesh 与 Y-FullMesh 并行传输，并在最多 1 跳内到达目标。该策略保证了 UB-Mesh nD-FullMesh 架构下的高带宽利用率。</li>
-<li>广播 + 规约（Broadcast + Reduce）：对于涉及 token 分发与专家数据收集的 All-to-All 操作，其语义等价于多次广播与规约操作的叠加。如图 14-(b)(c)，文章采用 分层广播/规约 策略，以节省带宽使用，并充分利用 UB-Mesh 的分层拓扑。</li>
-</ul>
-</li>
-</ul>
+<p>拓扑感知的集合通信 充分利用 APR 提供的多路径能力。对于 AllReduce，论文提出多环（Multi-Ring）算法：先以统一抽象对网络拓扑建模（计入节点数、节点间连接、链路带宽与时延），再用逻辑多环算法将集合通信与路径映射结合、确保各环路径互不冲突，并将默认映射之外的空闲链路经 APR 借用以增益带宽，最后在多条路径间做最优流量划分以缓解瓶颈。对于 All-to-All，论文区分两种典型场景：在一般 All-to-All 中采用多路径 All2All，将每个元素切分为两部分，分别沿 X-FullMesh 与 Y-FullMesh 同时传输并最多一跳到达，从而保证高带宽利用；在涉及 token 分发与专家数据收集的 All-to-All 中，其语义等价于多个 broadcast 与 reduce 的叠加，于是采用分层广播/归约以节省带宽。</p>
 <h3 id="5-2-拓扑感知的并行化（Topology-Aware-Parallelization）"><a href="#5-2-拓扑感知的并行化（Topology-Aware-Parallelization）" class="headerlink" title="5.2 拓扑感知的并行化（Topology-Aware Parallelization）"></a>5.2 拓扑感知的并行化（Topology-Aware Parallelization）</h3><p><img src="/images/UBmesh/image9.png" alt="alt text"></p>
 <p>提出 拓扑感知并行化机制，用于优化 LLM 训练中的模型与数据划分。其流程如图 15 所示：</p>
 <ul>
@@ -818,9 +765,20 @@ mjx-container[display="true"] + br {
 <li>可用性：提升 <strong>7.2%</strong>  </li>
 <li>线性扩展性：<strong>95%+</strong>，适用于多种 LLM 训练任务  </li>
 <li>性能损失始终 <strong>&lt;7%</strong></li>
-<li></li>
 </ul>
 <hr>
+<h2 id="7-创新与贡献总结"><a href="#7-创新与贡献总结" class="headerlink" title="7. 创新与贡献总结"></a>7. 创新与贡献总结</h2><ul>
+<li><p>在拓扑层面，论文提出 nD-FullMesh 这一递归构建、分层局部化的全互连拓扑，并将其落地为「4D-FullMesh + Clos」的 UB-Mesh-Pod。其根本贡献在于，把 LLM 训练流量「短程密集、长程稀疏」的结构性特征直接编码进网络拓扑，使高占比的 TP/SP 流量在 0 至 2 跳内的直连电缆上完成，从而以无源电缆占比 86.7% 的物理介质结构替代了 Clos 对高基数交换机与长程光模块的重度依赖。</p>
+</li>
+<li><p>在硬件与互连层面，论文以统一总线 UB 取代 PCIe/NVLink/IB/RoCE 的异构混合互连，配合 NPU、CPU、LRS、HRS 四类器件，实现了灵活的 IO 资源分配、跨组件的硬件资源池化与跨层优化，并让每个 NPU 兼任路由器。</p>
+</li>
+<li><p>在网络系统层面，论文提出全路径路由 APR，以源路由、结构化寻址与线性表查找、拓扑感知无死锁流控三项机制，满足了混合拓扑、高效转发、非最短路径、快速恢复与无死锁的全部要求，其中 TFC 仅以 2 个 VL 实现无死锁全路径路由、直接通知机制压缩了故障恢复时延，均为面向该拓扑的针对性设计。</p>
+</li>
+<li><p>在系统与算法层面，论文给出拓扑感知的集合通信（多环 AllReduce、多路径与分层 all-to-all）与拓扑感知的并行化（基于优先级的搜索 + 经校准的通信代价模型），将硬件能力转化为可观的端到端训练性能。</p>
+</li>
+<li><p>在工程效果层面，相较非超额订阅的 Clos，UB-Mesh 减少 98% 的高基数交换机与 93% 的光模块，取得 2.04× 的系统级成本效率提升与 7.2% 的可用性提升，性能损失控制在 7% 以内，并在多个 LLM 训练任务上达成 95% 以上的线性度。这表明，面向 LLM 训练这一具有确定性、强局部性流量的特定负载，以流量模式为先导、放弃对称带宽假设的专用网络架构，能够在成本、可用性与性能之间取得优于通用 Clos 的整体平衡。</p>
+</li>
+</ul>
 
     </div>
 
