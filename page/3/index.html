@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="正在输入">
@@ -48,7 +48,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -210,6 +212,7 @@ mjx-container[display="true"] + br {
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -218,11 +221,37 @@ mjx-container[display="true"] + br {
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -548,9 +577,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-10-09 11:13:28 / 修改时间：17:20:45" itemprop="dateCreated datePublished" datetime="2025-10-09T11:13:28+08:00">2025-10-09</time>
+      <time title="创建时间：2025-10-09 11:13:28" itemprop="dateCreated datePublished" datetime="2025-10-09T11:13:28+08:00">2025-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-23 15:52:27" itemprop="dateModified" datetime="2026-06-23T15:52:27+08:00">2026-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1205,7 +1240,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-15 17:35:15" itemprop="dateModified" datetime="2026-06-15T17:35:15+08:00">2026-06-15</time>
+      <time title="修改时间：2026-06-23 15:51:15" itemprop="dateModified" datetime="2026-06-23T15:51:15+08:00">2026-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1231,35 +1266,14 @@ mjx-container[display="true"] + br {
 <li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95gradient-descent">梯度下降算法(Gradient Descent)</a></li>
 <li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95%E5%87%A0%E7%A7%8D%E5%8F%98%E4%BD%93">梯度下降算法几种变体</a></li>
 </ul>
-<h1 id="梯度下降算法-Gradient-Descent"><a href="#梯度下降算法-Gradient-Descent" class="headerlink" title="梯度下降算法(Gradient Descent)"></a>梯度下降算法(Gradient Descent)</h1><p>梯度下降算法是一种用于求解函数最小值的一阶优化算法。在机器学习和深度学习中，梯度下降算法被广泛用于模型训练，通过迭代的方式调整模型参数，以最小化损失函数。</p>
-<p><img src="/images/Algorithm-GradientDescent/image.png" alt="alt text"></p>
-<p>梯度下降算法的基本思想是：在函数的梯度（或者说斜率）指向的方向上，函数值下降得最快。因此，如果我们想要找到函数的最小值，可以从函数的某个初始点出发，沿着梯度的反方向（因为我们要减小函数值）逐步迭代，最终达到函数的局部最小值点。</p>
-<p>梯度下降算法的迭代公式通常表示为：$x_{new} &#x3D; x_{old} - \alpha \nabla f(x_{old})$</p>
-<p>其中：</p>
-<ul>
-<li>$x_{old}$是当前迭代点的坐标。</li>
-<li>$\alpha$ 是学习率（步长），它决定了在梯度方向上每一步前进的距离。</li>
-<li>$\nabla f(x_{old})$ 是函数 $f(x)$ 在点 $x_{old}$的梯度，它是一个向量，指向函数增长最快的方向。</li>
-<li>$x_{new}$ 是下一个迭代点的坐标。</li>
-</ul>
-<h1 id="梯度下降算法几种变体"><a href="#梯度下降算法几种变体" class="headerlink" title="梯度下降算法几种变体"></a>梯度下降算法几种变体</h1><p>假设有一个损失函数 $J(\theta)$，其中 $\theta$ 是模型参数，我们的目标是通过调整 $\theta$ 来最小化损失函数。</p>
-<ol>
-<li><strong>批量梯度下降（Batch Gradient Descent）</strong>：</li>
-</ol>
-<p>批量梯度下降使用所有训练样本来计算梯度，然后更新参数。其更新规则可以表示为：</p>
-<p>$$<br>\theta &#x3D; \theta - \alpha \cdot \nabla J(\theta)<br>$$</p>
-<p>其中，$\alpha$ 是学习率，$\nabla J(\theta)$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 的梯度。批量梯度下降的更新规则考虑了所有样本的梯度信息，因此可以保证每次更新的方向是最优的，但计算量较大。</p>
-<ol start="2">
-<li><strong>随机梯度下降（Stochastic Gradient Descent）</strong>：</li>
-</ol>
-<p>随机梯度下降每次只使用一个随机样本来计算梯度，并根据该梯度更新参数。其更新规则可以表示为：</p>
-<p>$$<br>\theta &#x3D; \theta - \alpha \cdot \nabla J(\theta; x^{(i)}, y^{(i)})<br>$$</p>
-<p>其中，$(x^{(i)}, y^{(i)})$ 是随机选择的一个训练样本，$\nabla J(\theta; x^{(i)}, y^{(i)})$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 在样本 $(x^{(i)}, y^{(i)})$ 处的梯度。随机梯度下降每次更新只考虑一个样本，因此更新的方向可能不是最优的，但计算量较小。</p>
-<ol start="3">
-<li><strong>小批量梯度下降（Mini-batch Gradient Descent）</strong>：</li>
-</ol>
-<p>小批量梯度下降是批量梯度下降和随机梯度下降的折中，每次更新使用一小部分（批量）样本来计算梯度，并根据平均梯度更新参数。其更新规则可以表示为：<br>$$<br>\theta &#x3D; \theta - \alpha \cdot \frac{1}{|\mathcal{B}|} \sum_{(x^{(i)}, y^{(i)}) \in \mathcal{B}} \nabla J(\theta; x^{(i)}, y^{(i)})<br>$$<br>其中，$\mathcal{B}$ 是随机选择的小批量样本集合，$|\mathcal{B}|$ 是批量大小，$\nabla J(\theta; x^{(i)}, y^{(i)})$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 在批量样本 $(x^{(i)}, y^{(i)})$ 处的梯度。小批量梯度下降综合了批量梯度下降和随机梯度下降的优点，既可以保证一定的更新稳定性，又可以减少计算量。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/04/09/Algorithm-GradientDescent/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1321,7 +1335,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-15 17:35:27" itemprop="dateModified" datetime="2026-06-15T17:35:27+08:00">2026-06-15</time>
+      <time title="修改时间：2026-06-23 15:51:09" itemprop="dateModified" datetime="2026-06-23T15:51:09+08:00">2026-06-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1351,614 +1365,14 @@ mjx-container[display="true"] + br {
 </ul>
 </li>
 </ul>
-<h1 id="Dijkstra算法"><a href="#Dijkstra算法" class="headerlink" title="Dijkstra算法"></a>Dijkstra算法</h1><h2 id="相关背景知识"><a href="#相关背景知识" class="headerlink" title="相关背景知识"></a>相关背景知识</h2><ul>
-<li>Dijkstra算法是解决图论中的最短路径问题</li>
-<li>而最短路径问题是在图中找到两个节点之间的最短路径</li>
-<li>在导航中确定路线最短，在网络中路由器使用Dijkstra算法确定最短路径和转发端口。</li>
-<li>最短路径算法有Dijkstra算法和Floyd（弗洛伊德算法）</li>
-</ul>
-<h2 id="历史来源"><a href="#历史来源" class="headerlink" title="历史来源"></a>历史来源</h2><p>Dijkstra算法是一种计算图中单源最短路径的算法，由荷兰计算机科学家艾兹赫尔·戴克斯特拉在1956年提出。这个算法用于解决有向图中单个源点到其他各顶点的最短路径问题。</p>
-<p>算法的基本思想是，从源点出发，逐步探索源点到其他各顶点的最短路径。算法使用了一个优先队列来维护所有待访问的顶点，并按照路径长度递增的顺序进行访问。算法执行过程中，一旦找到从源点到某个顶点的最短路径，就将这个顶点从优先队列中移除，并将这个最短路径长度作为该顶点的“标签”。</p>
-<p>Dijkstra算法的步骤如下：</p>
-<ul>
-<li>初始化：将所有顶点的最短路径估计值设为无穷大，除了源点设为0。将所有顶点状态设为未访问。创建一个优先队列，并将源点加入优先队列。</li>
-<li>循环执行以下步骤直到优先队列为空： a. 从优先队列中取出具有最小估计值的顶点u。 b. 标记顶点u为已访问。 c. 对于顶点u的每一个邻接点v，执行以下操作： i. 计算通过u到达v的路径长度。 ii. 如果这个路径长度小于当前v的最短路径估计值，则更新v的最短路径估计值。 iii. 将顶点v及其新的最短路径估计值加入优先队列。</li>
-<li>算法结束，此时如果所有顶点都被访问过，那么每个顶点的最短路径估计值就是源点到该顶点的最短路径长度。</li>
-</ul>
-<h2 id="example"><a href="#example" class="headerlink" title="example"></a>example</h2><p><img src="/images/Algorithm-Dijkstra/image.png" alt="alt text"></p>
-<p>基于上图分析 Dijkstra 算法的过程，找到节点A到其他任意节点的最短路径。</p>
-<ol>
-<li>首先初始化所有节点的最短距离、是否访问以及先驱节点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">false</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="2">
-<li>由于节点A到其本身的距离为0且最短，将其加入最短路径中，并标记已访问。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="3">
-<li>接下来更新经过节点A的相邻节点距离到起始节点的距离，即BA DA，同时更新B点和A点的先驱节点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">false</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">false</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="4">
-<li>继续选择未访问节点中拥有最短的路径距离的节点，即D点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">false</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="5">
-<li>更新经过节点D的相邻节点距离到起始节点的距离，即EDA，通时更新E点的先驱节点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">false</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">9</td>
-<td align="center">D</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="6">
-<li>继续选择未访问节点中拥有最短的路径距离的节点，即B点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">9</td>
-<td align="center">D</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="7">
-<li>更新经过节点B的相邻节点距离到起始节点的距离，即CBA EBA，通时更新C点和E点的先驱节点。此时EBA这条路径更短，故进行更新。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">7</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">false</td>
-<td align="center">6</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="8">
-<li>继续选择未访问节点中拥有最短的路径距离的节点，即E点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">7</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">true</td>
-<td align="center">6</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">-</td>
-<td align="center">-</td>
-</tr>
-</tbody></table>
-<ol start="9">
-<li>更新经过节点E的相邻节点距离到起始节点的距离，判断DEBA FEBA BEDA，通时更新先驱节点。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">false</td>
-<td align="center">7</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">true</td>
-<td align="center">6</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">10</td>
-<td align="center">E</td>
-</tr>
-</tbody></table>
-<ol start="10">
-<li>继续选择未访问节点中拥有最短的路径距离的节点，即C点</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">true</td>
-<td align="center">7</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">true</td>
-<td align="center">6</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">10</td>
-<td align="center">E</td>
-</tr>
-</tbody></table>
-<ol start="11">
-<li>更新经过节点C的相邻节点距离到起始节点的距离。F点经过CE到达A点距离相同，故不再变化</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">true</td>
-<td align="center">7</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">true</td>
-<td align="center">6</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">false</td>
-<td align="center">10</td>
-<td align="center">E</td>
-</tr>
-</tbody></table>
-<ol start="12">
-<li>检查所有未标记节点中距离最短的节点F，将其加入最短路径中，并标记</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">节点</th>
-<th align="center">是否已访问</th>
-<th align="center">最短路径距离</th>
-<th align="center">先驱节点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">A</td>
-<td align="center">true</td>
-<td align="center">0</td>
-<td align="center">-</td>
-</tr>
-<tr>
-<td align="center">B</td>
-<td align="center">true</td>
-<td align="center">5</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">C</td>
-<td align="center">true</td>
-<td align="center">7</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">D</td>
-<td align="center">true</td>
-<td align="center">3</td>
-<td align="center">A</td>
-</tr>
-<tr>
-<td align="center">E</td>
-<td align="center">true</td>
-<td align="center">6</td>
-<td align="center">B</td>
-</tr>
-<tr>
-<td align="center">F</td>
-<td align="center">true</td>
-<td align="center">10</td>
-<td align="center">E</td>
-</tr>
-</tbody></table>
-<ol start="13">
-<li>至此算法结束，得到一个从源节点A到各个节点的最短距离和路径。路径集合可以通过先驱节点推导出来。例如F到A的最短路径距离为10，一步步推导得出最短路径为A - B - E - F。</li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/04/08/Algorithm-Dijkstra/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
