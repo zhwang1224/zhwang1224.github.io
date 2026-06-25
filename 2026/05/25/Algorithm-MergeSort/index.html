@@ -19,24 +19,24 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="P2933 第2题：日志严重性能逆序列题目描述在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。 系统会记录一段时间内每次合成请求的实时率 RTF： 1RTF &#x3D; 合成耗时 &#x2F; 目标文本的音频时长  实时率越高，代表性能越差。 给定一个整数数组 record，表示一段时间内每次请求的实时率乘以 100 后取整的结果，">
+    <meta name="description" content="P2933 第2题：日志严重性能逆序列 题目描述 输入描述 输入范围 输出描述 样例 1 输入 输出 说明   样例 2 输入 输出 说明   样例 3 输入 输出 说明   核心思路 代码示例">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Algorithm-MergeSort">
-<meta property="og:url" content="https://zhwang1224.github.io/2025/06/25/Algorithm-MergeSort/index.html">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/05/25/Algorithm-MergeSort/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="P2933 第2题：日志严重性能逆序列题目描述在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。 系统会记录一段时间内每次合成请求的实时率 RTF： 1RTF &#x3D; 合成耗时 &#x2F; 目标文本的音频时长  实时率越高，代表性能越差。 给定一个整数数组 record，表示一段时间内每次请求的实时率乘以 100 后取整的结果，">
+<meta property="og:description" content="P2933 第2题：日志严重性能逆序列 题目描述 输入描述 输入范围 输出描述 样例 1 输入 输出 说明   样例 2 输入 输出 说明   样例 3 输入 输出 说明   核心思路 代码示例">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-25T10:03:08.000Z">
-<meta property="article:modified_time" content="2026-06-25T10:09:52.028Z">
+<meta property="article:published_time" content="2026-05-25T10:03:08.000Z">
+<meta property="article:modified_time" content="2026-06-25T16:55:30.862Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="MergeSort">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://zhwang1224.github.io/2025/06/25/Algorithm-MergeSort/">
+<link rel="canonical" href="https://zhwang1224.github.io/2026/05/25/Algorithm-MergeSort/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2025/06/25/Algorithm-MergeSort/","path":"2025/06/25/Algorithm-MergeSort/","title":"Algorithm-MergeSort"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/05/25/Algorithm-MergeSort/","path":"2026/05/25/Algorithm-MergeSort/","title":"Algorithm-MergeSort"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Algorithm-MergeSort | 正在输入</title>
@@ -179,7 +179,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -190,7 +190,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,7 +217,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/06/25/Algorithm-MergeSort/">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/05/25/Algorithm-MergeSort/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -246,14 +246,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2025-06-25 18:03:08" itemprop="dateCreated datePublished" datetime="2025-06-25T18:03:08+08:00">2025-06-25</time>
+      <time title="创建时间：2026-05-25 18:03:08" itemprop="dateCreated datePublished" datetime="2026-05-25T18:03:08+08:00">2026-05-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-25 18:09:52" itemprop="dateModified" datetime="2026-06-25T18:09:52+08:00">2026-06-25</time>
+      <time title="修改时间：2026-06-26 00:55:30" itemprop="dateModified" datetime="2026-06-26T00:55:30+08:00">2026-06-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -274,7 +274,38 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="P2933-第2题：日志严重性能逆序列"><a href="#P2933-第2题：日志严重性能逆序列" class="headerlink" title="P2933 第2题：日志严重性能逆序列"></a>P2933 第2题：日志严重性能逆序列</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。</p>
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#p2933-%E7%AC%AC2%E9%A2%98%E6%97%A5%E5%BF%97%E4%B8%A5%E9%87%8D%E6%80%A7%E8%83%BD%E9%80%86%E5%BA%8F%E5%88%97">P2933 第2题：日志严重性能逆序列</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0">题目描述</a></li>
+<li><a href="#%E8%BE%93%E5%85%A5%E6%8F%8F%E8%BF%B0">输入描述</a></li>
+<li><a href="#%E8%BE%93%E5%85%A5%E8%8C%83%E5%9B%B4">输入范围</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA%E6%8F%8F%E8%BF%B0">输出描述</a></li>
+<li><a href="#%E6%A0%B7%E4%BE%8B-1">样例 1</a><ul>
+<li><a href="#%E8%BE%93%E5%85%A5">输入</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA">输出</a></li>
+<li><a href="#%E8%AF%B4%E6%98%8E">说明</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B7%E4%BE%8B-2">样例 2</a><ul>
+<li><a href="#%E8%BE%93%E5%85%A5-1">输入</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA-1">输出</a></li>
+<li><a href="#%E8%AF%B4%E6%98%8E-1">说明</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B7%E4%BE%8B-3">样例 3</a><ul>
+<li><a href="#%E8%BE%93%E5%85%A5-2">输入</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA-2">输出</a></li>
+<li><a href="#%E8%AF%B4%E6%98%8E-2">说明</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="P2933-第2题：日志严重性能逆序列"><a href="#P2933-第2题：日志严重性能逆序列" class="headerlink" title="P2933 第2题：日志严重性能逆序列"></a>P2933 第2题：日志严重性能逆序列</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。</p>
 <p>系统会记录一段时间内每次合成请求的实时率 <code>RTF</code>：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RTF = 合成耗时 / 目标文本的音频时长</span><br></pre></td></tr></table></figure>
 
@@ -350,13 +381,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2025/05/03/ECMP-hashing-conflicts/" rel="prev" title="ECMP-hashing-conflicts">
-                  <i class="fa fa-angle-left"></i> ECMP-hashing-conflicts
+                <a href="/2026/05/22/Agentic-AI-Andrew-Ng/" rel="prev" title="Agentic AI - Andrew Ng">
+                  <i class="fa fa-angle-left"></i> Agentic AI - Andrew Ng
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/09/24/UB-Mesh-0/" rel="next" title="UB Mesh">
-                  UB Mesh <i class="fa fa-angle-right"></i>
+                <a href="/2026/05/26/Algorithm-P4443/" rel="next" title="Algorithm-P4443">
+                  Algorithm-P4443 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

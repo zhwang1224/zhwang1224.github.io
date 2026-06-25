@@ -285,7 +285,7 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -296,7 +296,7 @@ mjx-container[display="true"] + br {
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -313,6 +313,236 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/23/CNsim/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/23/CNsim/" class="post-title-link" itemprop="url">CNsim</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-10-23 21:37:53 / 修改时间：22:54:38" itemprop="dateCreated datePublished" datetime="2025-10-23T21:37:53+08:00">2025-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#atc24-evaluating-chiplet-based-large-scale-interconnection-networks--via-cycle-accurate-packet-parallel-simulation">[ATC’24] Evaluating Chiplet-based Large-Scale Interconnection Networks  via Cycle-Accurate Packet-Parallel Simulation</a><ul>
+<li><a href="#2-%E5%BF%85%E8%A6%81%E6%80%A7">2. 必要性</a><ul>
+<li><a href="#21-%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E6%9E%B6%E6%9E%84">2.1 芯粒互连架构</a></li>
+<li><a href="#22-%E7%BD%91%E7%BB%9C%E6%A8%A1%E6%8B%9F%E5%99%A8">2.2 网络模拟器</a></li>
+<li><a href="#23-booksim-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90">2.3 BookSim 性能剖析</a></li>
+</ul>
+</li>
+<li><a href="#3-cnsim">3. CNSim</a><ul>
+<li><a href="#31-%E4%BB%A5%E6%95%B0%E6%8D%AE%E5%8C%85%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E4%BB%BF%E7%9C%9F">3.1 以数据包为中心的仿真</a></li>
+<li><a href="#32-%E6%95%B0%E6%8D%AE%E5%8C%85%E5%B9%B6%E8%A1%8C%E4%BB%BF%E7%9C%9F">3.2 数据包并行仿真</a></li>
+<li><a href="#33-%E5%BC%82%E6%9E%84%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B8%8E%E9%93%BE%E8%B7%AF">3.3 异构路由器与链路</a></li>
+<li><a href="#34-%E5%85%B6%E4%BB%96%E9%87%8D%E8%A6%81%E7%89%B9%E6%80%A7%E4%B8%8E%E5%8F%96%E8%88%8D">3.4 其他重要特性与取舍</a></li>
+</ul>
+</li>
+<li><a href="#4-%E9%AA%8C%E8%AF%81">4. 验证</a><ul>
+<li><a href="#41-%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BB%BF%E7%9C%9F">4.1 实现与性能仿真</a></li>
+<li><a href="#42-%E4%BB%BF%E7%9C%9F%E9%80%9F%E5%BA%A6%E4%B8%8E%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8">4.2 仿真速度与内存使用</a></li>
+<li><a href="#43-%E5%B9%B6%E8%A1%8C%E6%80%A7%E4%B8%8E%E4%B8%8D%E4%B8%80%E8%87%B4%E6%80%A7">4.3 并行性与不一致性</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%8A%AF%E7%B2%92%E7%BD%91%E7%BB%9C%E8%AF%84%E4%BC%B0">5. 芯粒网络评估</a><ul>
+<li><a href="#51-%E5%9F%BA%E4%BA%8E%E5%BC%82%E6%9E%84%E9%93%BE%E8%B7%AF%E7%9A%84%E7%BD%91%E7%BB%9C">5.1 基于异构链路的网络</a></li>
+<li><a href="#52-%E8%8A%AF%E7%B2%92%E5%8C%96-dragonfly">5.2 芯粒化 Dragonfly</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/10/23/CNsim/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/23/Scalable-methodology/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/10/23/Scalable-methodology/" class="post-title-link" itemprop="url">Scalable methodology</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-10-23 11:27:33" itemprop="dateCreated datePublished" datetime="2025-10-23T11:27:33+08:00">2025-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-11-06 22:02:50" itemprop="dateModified" datetime="2025-11-06T22:02:50+08:00">2025-11-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#hpca-23-a-scalable-methodology-for-designing-efficient--interconnection-network-of-chiplets">HPCA’ 23 A Scalable Methodology for Designing Efficient  Interconnection Network of Chiplets</a><ul>
+<li><a href="#1-%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C">1. 芯粒互连网络</a><ul>
+<li><a href="#a-%E8%8A%AF%E7%B2%92%E5%86%85%E9%83%A8%E7%BD%91%E7%BB%9Con-chiplet-network">A. 芯粒内部网络（On-Chiplet Network）</a></li>
+<li><a href="#b-%E6%8E%A5%E5%8F%A3%E5%88%86%E7%BB%84interface-grouping">B. 接口分组（Interface Grouping）</a></li>
+<li><a href="#c-%E8%8A%AF%E7%B2%92%E9%97%B4%E4%BA%92%E8%BF%9Echiplets-interconnections">C. 芯粒间互连（Chiplets Interconnections）</a></li>
+</ul>
+</li>
+<li><a href="#2-%E8%B7%AF%E7%94%B1%E8%AE%BE%E8%AE%A1">2. 路由设计</a><ul>
+<li><a href="#amfr-%E7%AE%97%E6%B3%95">A.MFR 算法</a></li>
+<li><a href="#b-%E7%AD%89%E6%A0%87%E7%AD%BE%E4%BF%A1%E9%81%93%E7%9A%84%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98">B. 等标签信道的死锁问题</a></li>
+<li><a href="#c-%E7%BB%93%E5%90%88%E5%AE%89%E5%85%A8%E4%B8%8D%E5%AE%89%E5%85%A8%E6%B5%81%E6%8E%A7%E7%9A%84-mfr">C. 结合安全/不安全流控的 MFR</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%BD%91%E7%BB%9C%E4%BA%A4%E9%94%99network-interleaving">3. 网络交错（Network Interleaving）</a></li>
+<li><a href="#4-%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95">4. 评估方法</a></li>
+<li><a href="#5-%E6%8E%A2%E7%B4%A2%E5%88%86%E6%9E%90explorations">5. 探索分析（Explorations）</a><ul>
+<li><a href="#a-%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A8%A1%E6%8E%A2%E7%B4%A2">A. 系统规模探索</a></li>
+<li><a href="#b-%E8%8A%AF%E7%B2%92%E9%97%B4%E9%93%BE%E8%B7%AF%E9%85%8D%E7%BD%AE%E6%8E%A2%E7%B4%A2">B. 芯粒间链路配置探索</a></li>
+<li><a href="#c-%E7%BD%91%E7%BB%9C%E4%BA%A4%E9%94%99%E6%8E%A2%E7%B4%A2">C. 网络交错探索</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/10/23/Scalable-methodology/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -916,150 +1146,6 @@ mjx-container[display="true"] + br {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/06/25/Algorithm-MergeSort/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Algorithm-MergeSort/" class="post-title-link" itemprop="url">Algorithm-MergeSort</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-25 18:03:08" itemprop="dateCreated datePublished" datetime="2025-06-25T18:03:08+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-25 18:09:52" itemprop="dateModified" datetime="2026-06-25T18:09:52+08:00">2026-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="P2933-第2题：日志严重性能逆序列"><a href="#P2933-第2题：日志严重性能逆序列" class="headerlink" title="P2933 第2题：日志严重性能逆序列"></a>P2933 第2题：日志严重性能逆序列</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。</p>
-<p>系统会记录一段时间内每次合成请求的实时率 <code>RTF</code>：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RTF = 合成耗时 / 目标文本的音频时长</span><br></pre></td></tr></table></figure>
-
-<p>实时率越高，代表性能越差。</p>
-<p>给定一个整数数组 <code>record</code>，表示一段时间内每次请求的实时率乘以 <code>100</code> 后取整的结果，并且按照请求发生的时间顺序排列。</p>
-<p>如果存在两个索引 <code>i</code> 和 <code>j</code>，满足：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0 &lt;= i &lt; j &lt; record.length</span><br><span class="line">record[i] &gt; record[j]</span><br></pre></td></tr></table></figure>
-
-<p>则称 <code>(record[i], record[j])</code> 构成一个“性能逆序对”。</p>
-<p>如果进一步满足：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">record[i] - record[j] &gt; threshold</span><br></pre></td></tr></table></figure>
-
-<p>则称该性能逆序对为“严重性能逆序对”。</p>
-<p>请编写程序，计算数组 <code>record</code> 中严重性能逆序对的总数。</p>
-<h2 id="输入描述"><a href="#输入描述" class="headerlink" title="输入描述"></a>输入描述</h2><p>每组数据包含三行：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">第一行：严重性能逆序对的阈值 threshold</span><br><span class="line">第二行：日志数量 n</span><br><span class="line">第三行：日志数据数组 record</span><br></pre></td></tr></table></figure>
-
-<p>数组中的数值可能重复。</p>
-<h2 id="输入范围"><a href="#输入范围" class="headerlink" title="输入范围"></a>输入范围</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0 &lt; record.length &lt;= 100000</span><br><span class="line">0 &lt; record[i] &lt;= 50000</span><br></pre></td></tr></table></figure>
-
-<h2 id="输出描述"><a href="#输出描述" class="headerlink" title="输出描述"></a>输出描述</h2><p>输出严重性能逆序对的总数。</p>
-<h2 id="样例-1"><a href="#样例-1" class="headerlink" title="样例 1"></a>样例 1</h2><h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">5</span><br><span class="line">9 7 5 4 6</span><br></pre></td></tr></table></figure>
-
-<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
-
-<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">record = [9, 7, 5, 4, 6]</span><br><span class="line">threshold = 2</span><br></pre></td></tr></table></figure>
-
-<p>严重性能逆序对为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(9, 5), (9, 4), (9, 6), (7, 4)</span><br></pre></td></tr></table></figure>
-
-<p>它们均满足前一个值大于后一个值，且差值大于 <code>2</code>。</p>
-<h2 id="样例-2"><a href="#样例-2" class="headerlink" title="样例 2"></a>样例 2</h2><h3 id="输入-1"><a href="#输入-1" class="headerlink" title="输入"></a>输入</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">2</span><br><span class="line">5 1</span><br></pre></td></tr></table></figure>
-
-<h3 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a>输出</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">record = [5, 1]</span><br><span class="line">threshold = 3</span><br></pre></td></tr></table></figure>
-
-<p>严重性能逆序对为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(5, 1)</span><br></pre></td></tr></table></figure>
-
-<p>因为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5 - 1 &gt; 3</span><br></pre></td></tr></table></figure>
-
-<h2 id="样例-3"><a href="#样例-3" class="headerlink" title="样例 3"></a>样例 3</h2><h3 id="输入-2"><a href="#输入-2" class="headerlink" title="输入"></a>输入</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">2</span><br><span class="line">1 5</span><br></pre></td></tr></table></figure>
-
-<h3 id="输出-2"><a href="#输出-2" class="headerlink" title="输出"></a>输出</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0</span><br></pre></td></tr></table></figure>
-
-<h3 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">record = [1, 5]</span><br><span class="line">threshold = 3</span><br></pre></td></tr></table></figure>
-
-<p>不存在满足条件的严重性能逆序对。</p>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>用归并排序的分治过程，把“无序数组中找满足条件的二元组”转化成“两个有序数组之间统计满足条件的数量”。普通暴力做法是枚举所有，时间复杂度是 O(n^2)，n 最大是 100000，会超时。所以要用归并排序优化。</p>
-<p>归并排序会不断把数组拆成左右两部分，对于一个区间 record[left…right]，严重性能逆序对只可能来自三类：</p>
-<ol>
-<li>完全在左半边</li>
-<li>完全在右半边</li>
-<li>一个在左半边，一个在右半边</li>
-</ol>
-<p>前两类可以交给递归解决，递归结束后，左半边和右半边都已经分别有序。这时再统计第三类：跨左右两边的严重性能逆序对。<br>因为左半边的元素原本都在右半边元素前面，所以只需要判断数值条件。统计完跨区间数量之后，还要把左右两边合并成一个完整的有序区间。</p>
-<p>时间复杂度：O(n log n)<br>空间复杂度：O(n)</p>
-<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">resfunc</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; record, vector&lt;<span class="type">int</span>&gt;&amp; temp, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> threshold)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(left &gt;= right) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> mid = left + (right - left)/<span class="number">2</span>;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> count = <span class="number">0</span>;</span><br><span class="line">    count += <span class="built_in">resfunc</span>(record, temp, left, mid, threshold);</span><br><span class="line">    count += <span class="built_in">resfunc</span>(record, temp, mid<span class="number">+1</span>, right, threshold);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> j = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = left; i &lt;= mid; i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(j &lt;= right &amp;&amp; (<span class="type">long</span> <span class="type">long</span>)record[i] &gt; (<span class="type">long</span> <span class="type">long</span>)record[j] + threshold)&#123;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        count += j-(mid<span class="number">+1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> i = left;</span><br><span class="line">    j = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> k = left;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(i &lt;= mid &amp;&amp; j &lt;=right)&#123;</span><br><span class="line">        <span class="keyword">if</span>(record[i] &lt;= record[j])&#123;</span><br><span class="line">            temp[k++] = record[i++];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            temp[k++] = record[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(i &lt;= mid) temp[k++] = record[i++];</span><br><span class="line">    <span class="keyword">while</span> (j &lt;= right) temp[k++] = record[j++];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> p = left; p &lt;= right; p++)&#123;</span><br><span class="line">        record[p] = temp[p];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> threshold, n;</span><br><span class="line">    cin&gt;&gt;threshold&gt;&gt;n;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">record</span><span class="params">(n)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">temp</span><span class="params">(n)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) cin&gt;&gt;record[i];</span><br><span class="line"></span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> count_res = <span class="built_in">resfunc</span>(record, temp, <span class="number">0</span>, n<span class="number">-1</span>, threshold);</span><br><span class="line">    cout &lt;&lt; count_res &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 左右数组</span></span><br><span class="line"><span class="comment">// int main()&#123;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//     int threshold, n;</span></span><br><span class="line"><span class="comment">//     cin &gt;&gt; threshold &gt;&gt; n;</span></span><br><span class="line"><span class="comment">//     vector&lt;int&gt; record(n);</span></span><br><span class="line"><span class="comment">//     for(int i =0; i&lt;n; i++) cin&gt;&gt; record[i];</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//     int record_res = 0;</span></span><br><span class="line"><span class="comment">//     for(int i = 0; i&lt;n; i++)&#123;</span></span><br><span class="line"><span class="comment">//         int now_record = record[i];</span></span><br><span class="line"><span class="comment">//         int left_size = i;</span></span><br><span class="line"><span class="comment">//         int right_size = n - i - 1;</span></span><br><span class="line"><span class="comment">//         vector&lt;int&gt; record_left(record.begin(), record.begin() + i);</span></span><br><span class="line"><span class="comment">//         vector&lt;int&gt; record_right(record.begin() + i + 1, record.end());</span></span><br><span class="line"><span class="comment">//         sort(record_left.begin(), record_left.end());</span></span><br><span class="line"><span class="comment">//         sort(record_right.begin(), record_right.end());</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//         for(int x = left_size - 1; x &gt;= 0; x--)&#123;</span></span><br><span class="line"><span class="comment">//             if(record_left[x] &gt; now_record + threshold) record_res++;</span></span><br><span class="line"><span class="comment">//             else break;</span></span><br><span class="line"><span class="comment">//         &#125;</span></span><br><span class="line"><span class="comment">//         for(int y = 0; y &lt; right_size; y++)&#123;</span></span><br><span class="line"><span class="comment">//             if(record_right[y] &lt; now_record - threshold) record_res++;</span></span><br><span class="line"><span class="comment">//             else break;</span></span><br><span class="line"><span class="comment">//         &#125;    </span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//     cout &lt;&lt; record_res/2 &lt;&lt;endl;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//     return 0;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/05/03/ECMP-hashing-conflicts/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1325,101 +1411,6 @@ mjx-container[display="true"] + br {
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2024/04/09/Algorithm-GradientDescent/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/04/09/Algorithm-GradientDescent/" class="post-title-link" itemprop="url">Algorithm-GradientDescent</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-04-09 21:54:35" itemprop="dateCreated datePublished" datetime="2024-04-09T21:54:35+08:00">2024-04-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-23 15:51:15" itemprop="dateModified" datetime="2026-06-23T15:51:15+08:00">2026-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95gradient-descent">梯度下降算法(Gradient Descent)</a></li>
-<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95%E5%87%A0%E7%A7%8D%E5%8F%98%E4%BD%93">梯度下降算法几种变体</a></li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/04/09/Algorithm-GradientDescent/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

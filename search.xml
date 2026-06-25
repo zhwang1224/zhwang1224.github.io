@@ -630,36 +630,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Agentic AI - Andrew Ng</title>
-    <url>/2026/05/22/Agentic-AI-Andrew-Ng/</url>
-    <content><![CDATA[<ul>
-<li><a href="#1-agentic-ai">1. Agentic AI</a><ul>
-<li><a href="#11-reflection">1.1 Reflection</a></li>
-<li><a href="#12-tools">1.2 Tools</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-
-<h2 id="1-Agentic-AI"><a href="#1-Agentic-AI" class="headerlink" title="1. Agentic AI"></a>1. Agentic AI</h2><p>普通的 LLM 应用通常是“ 用户提问 -&gt; 模型回答 -&gt; （循环）结束”的单轮生成模式，而 Agentic AI 更强调“用户提出目标 -&gt; 系统拆解子任务 -&gt; 调用工具&#x2F;搜索&#x2F;代码&#x2F;数据库 -&gt; 结果检查 -&gt; 反思修正 -&gt; 输出最终结果” 的多步骤（并可包含多 agent 并行执行）执行流程。</p>
-<p>Agentic AI 的价值已经充分体现，它已经被用于企业客户支持、深度研究、法律文档处理、医疗辅助判断等复杂任务中。而真正有效的 Agent 应用，需要通过工作流设计、任务分解、工具调用、评估与误差分析，让大模型从单纯的“文本生成器”升级为能够持续行动、迭代改进并完成复杂任务的“任务执行系统”。</p>
-<p>Agent 有不同的自主性程度，可以理解的是对于高自主度的 Agent 拥有更多的选择，甚至可以在执行过程中创建新的工具或流程；而对于低自主度的 Agent 而言，其执行步骤通常提前设置，其调用的工具也通常是硬编码，其自主性主要体现在 LLM 生成的文本内容。</p>
-<p>Agentic workflows 的最大价值可能就是模块化（灵活），通过模块化的执行步骤可以达到比使用单独的 LLM 应用所得到的性能要好；可以并行执行人力要花巨大时间完成的复杂或工作量很大的任务。</p>
-<p>课程总结了四个智能体工作流的设计模式：1. Reflection; 2. Tool use; 3. Planning; 4. Multi-agent collaboration。通过单个 LLM&#x2F;agent 的迭代通常可以提高输出质量；LLM 可以调用越来越多的工具，通过多模态的输入来完成特定任务；不同任务的规划；多 Agent 的协作。</p>
-<h3 id="1-1-Reflection"><a href="#1-1-Reflection" class="headerlink" title="1.1 Reflection"></a>1.1 Reflection</h3><p>相较于零样本提示（zero-shot prompting），当 Reflection 迭代过程中可输入额外信息时，输出的结果会大幅改善。</p>
-<h3 id="1-2-Tools"><a href="#1-2-Tools" class="headerlink" title="1.2 Tools"></a>1.2 Tools</h3><p>当我们询问大模型有关于当前时事热点的问题时，大模型的资料库中通常不会有最新的热点信息，但当我们允许大模型调用相应函数去获得这些信息时，这些信息会反馈给LLM，而此时大模型便可以给到我们想要的输出。即工具就是我们提供给大模型的函数，而函数可以请求调用。</p>
-<p>在 LLM 原生不支持使用工具的情况下，若要使用 tools，则流程为 首先实现相应功能函数，并把函数提供给 LLM；当需要使用该工具时，LLM会生成一个特定输出，告知需要为LLM调用函数；调用后获取函数输出，并反馈给LLM，LLM会用这个结果继续执行后续操作。</p>
-<p>例如获取当前时间的函数可为</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_current_time</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Returns current time for the given time zone&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>课程演示了如何使用 AI 开源库，让大模型去调用工具。另外，大模型本身不调用函数，而是请求你去调用工具，虽然有时候直接说让大模型调用工具，但是过程并不是这样。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> aisuite <span class="keyword">as</span> ai</span><br><span class="line">client = ai.Client()</span><br><span class="line"></span><br><span class="line">response = client.chat.comletions.create(</span><br><span class="line">    model=<span class="string">&#x27;openai:gpt-4o&#x27;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    tools=[get_current_time],</span><br><span class="line">    max_turns=<span class="number">5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>Moedel Context Protocol(MCP) 大模型上下文协议设置一套标准，让不同团队开发的应用可以统一访问工具和数据源。MCP的初衷就是让 LLM 可以访问更多的资源。例如 Cursor、Claude Desktop可作为 MCP 客户端；Slack、Google Driver、Github 可作为 MCP 服务端。</p>
-<p><img src="/images/AgenticAI/image.png" alt="alt text"></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Algorithm-GradientDescent</title>
     <url>/2024/04/09/Algorithm-GradientDescent/</url>
     <content><![CDATA[<ul>
@@ -704,6 +674,36 @@
         <tag>Algorithm</tag>
         <tag>梯度下降</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Agentic AI - Andrew Ng</title>
+    <url>/2026/05/22/Agentic-AI-Andrew-Ng/</url>
+    <content><![CDATA[<ul>
+<li><a href="#1-agentic-ai">1. Agentic AI</a><ul>
+<li><a href="#11-reflection">1.1 Reflection</a></li>
+<li><a href="#12-tools">1.2 Tools</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<h2 id="1-Agentic-AI"><a href="#1-Agentic-AI" class="headerlink" title="1. Agentic AI"></a>1. Agentic AI</h2><p>普通的 LLM 应用通常是“ 用户提问 -&gt; 模型回答 -&gt; （循环）结束”的单轮生成模式，而 Agentic AI 更强调“用户提出目标 -&gt; 系统拆解子任务 -&gt; 调用工具&#x2F;搜索&#x2F;代码&#x2F;数据库 -&gt; 结果检查 -&gt; 反思修正 -&gt; 输出最终结果” 的多步骤（并可包含多 agent 并行执行）执行流程。</p>
+<p>Agentic AI 的价值已经充分体现，它已经被用于企业客户支持、深度研究、法律文档处理、医疗辅助判断等复杂任务中。而真正有效的 Agent 应用，需要通过工作流设计、任务分解、工具调用、评估与误差分析，让大模型从单纯的“文本生成器”升级为能够持续行动、迭代改进并完成复杂任务的“任务执行系统”。</p>
+<p>Agent 有不同的自主性程度，可以理解的是对于高自主度的 Agent 拥有更多的选择，甚至可以在执行过程中创建新的工具或流程；而对于低自主度的 Agent 而言，其执行步骤通常提前设置，其调用的工具也通常是硬编码，其自主性主要体现在 LLM 生成的文本内容。</p>
+<p>Agentic workflows 的最大价值可能就是模块化（灵活），通过模块化的执行步骤可以达到比使用单独的 LLM 应用所得到的性能要好；可以并行执行人力要花巨大时间完成的复杂或工作量很大的任务。</p>
+<p>课程总结了四个智能体工作流的设计模式：1. Reflection; 2. Tool use; 3. Planning; 4. Multi-agent collaboration。通过单个 LLM&#x2F;agent 的迭代通常可以提高输出质量；LLM 可以调用越来越多的工具，通过多模态的输入来完成特定任务；不同任务的规划；多 Agent 的协作。</p>
+<h3 id="1-1-Reflection"><a href="#1-1-Reflection" class="headerlink" title="1.1 Reflection"></a>1.1 Reflection</h3><p>相较于零样本提示（zero-shot prompting），当 Reflection 迭代过程中可输入额外信息时，输出的结果会大幅改善。</p>
+<h3 id="1-2-Tools"><a href="#1-2-Tools" class="headerlink" title="1.2 Tools"></a>1.2 Tools</h3><p>当我们询问大模型有关于当前时事热点的问题时，大模型的资料库中通常不会有最新的热点信息，但当我们允许大模型调用相应函数去获得这些信息时，这些信息会反馈给LLM，而此时大模型便可以给到我们想要的输出。即工具就是我们提供给大模型的函数，而函数可以请求调用。</p>
+<p>在 LLM 原生不支持使用工具的情况下，若要使用 tools，则流程为 首先实现相应功能函数，并把函数提供给 LLM；当需要使用该工具时，LLM会生成一个特定输出，告知需要为LLM调用函数；调用后获取函数输出，并反馈给LLM，LLM会用这个结果继续执行后续操作。</p>
+<p>例如获取当前时间的函数可为</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_current_time</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Returns current time for the given time zone&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>课程演示了如何使用 AI 开源库，让大模型去调用工具。另外，大模型本身不调用函数，而是请求你去调用工具，虽然有时候直接说让大模型调用工具，但是过程并不是这样。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> aisuite <span class="keyword">as</span> ai</span><br><span class="line">client = ai.Client()</span><br><span class="line"></span><br><span class="line">response = client.chat.comletions.create(</span><br><span class="line">    model=<span class="string">&#x27;openai:gpt-4o&#x27;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    tools=[get_current_time],</span><br><span class="line">    max_turns=<span class="number">5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Moedel Context Protocol(MCP) 大模型上下文协议设置一套标准，让不同团队开发的应用可以统一访问工具和数据源。MCP的初衷就是让 LLM 可以访问更多的资源。例如 Cursor、Claude Desktop可作为 MCP 客户端；Slack、Google Driver、Github 可作为 MCP 服务端。</p>
+<p><img src="/images/AgenticAI/image.png" alt="alt text"></p>
+]]></content>
   </entry>
   <entry>
     <title>Algorithm-Hot100-哈希</title>
@@ -827,8 +827,39 @@
   </entry>
   <entry>
     <title>Algorithm-MergeSort</title>
-    <url>/2025/06/25/Algorithm-MergeSort/</url>
-    <content><![CDATA[<h1 id="P2933-第2题：日志严重性能逆序列"><a href="#P2933-第2题：日志严重性能逆序列" class="headerlink" title="P2933 第2题：日志严重性能逆序列"></a>P2933 第2题：日志严重性能逆序列</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。</p>
+    <url>/2026/05/25/Algorithm-MergeSort/</url>
+    <content><![CDATA[<ul>
+<li><a href="#p2933-%E7%AC%AC2%E9%A2%98%E6%97%A5%E5%BF%97%E4%B8%A5%E9%87%8D%E6%80%A7%E8%83%BD%E9%80%86%E5%BA%8F%E5%88%97">P2933 第2题：日志严重性能逆序列</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0">题目描述</a></li>
+<li><a href="#%E8%BE%93%E5%85%A5%E6%8F%8F%E8%BF%B0">输入描述</a></li>
+<li><a href="#%E8%BE%93%E5%85%A5%E8%8C%83%E5%9B%B4">输入范围</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA%E6%8F%8F%E8%BF%B0">输出描述</a></li>
+<li><a href="#%E6%A0%B7%E4%BE%8B-1">样例 1</a><ul>
+<li><a href="#%E8%BE%93%E5%85%A5">输入</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA">输出</a></li>
+<li><a href="#%E8%AF%B4%E6%98%8E">说明</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B7%E4%BE%8B-2">样例 2</a><ul>
+<li><a href="#%E8%BE%93%E5%85%A5-1">输入</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA-1">输出</a></li>
+<li><a href="#%E8%AF%B4%E6%98%8E-1">说明</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B7%E4%BE%8B-3">样例 3</a><ul>
+<li><a href="#%E8%BE%93%E5%85%A5-2">输入</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA-2">输出</a></li>
+<li><a href="#%E8%AF%B4%E6%98%8E-2">说明</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="P2933-第2题：日志严重性能逆序列"><a href="#P2933-第2题：日志严重性能逆序列" class="headerlink" title="P2933 第2题：日志严重性能逆序列"></a>P2933 第2题：日志严重性能逆序列</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>在一家快速发展的互联网公司里，系统工程师小李正在开发一款高效的日志分析工具，旨在帮助运维团队更好地理解和优化语音合成系统的运行状况。</p>
 <p>系统会记录一段时间内每次合成请求的实时率 <code>RTF</code>：</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">RTF = 合成耗时 / 目标文本的音频时长</span><br></pre></td></tr></table></figure>
 
@@ -897,34 +928,39 @@
       </tags>
   </entry>
   <entry>
-    <title>Booksim2.0安装编译</title>
-    <url>/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/</url>
+    <title>Algorithm-P4443</title>
+    <url>/2026/05/26/Algorithm-P4443/</url>
     <content><![CDATA[<ul>
-<li><a href="#booksim20%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">Booksim2.0安装编译</a><ul>
-<li><a href="#1-%E4%BB%8Egithub%E4%B8%8A%E5%85%8B%E9%9A%86%E6%BA%90%E4%BB%A3%E7%A0%81">1. 从github上克隆源代码</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85-flex-bison">2. 安装 flex bison</a></li>
-<li><a href="#3-%E7%BC%96%E8%AF%91boosim">3. 编译Boosim</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E4%B8%8D%E8%83%BD%E5%8F%AA%E5%A4%84%E7%90%86%E5%BD%93%E5%89%8D%E6%A5%BC%E5%B1%82%E8%87%AA%E5%B7%B1%E7%9A%84%E7%94%B3%E8%AF%B7%E8%BF%98%E8%A6%81%E6%8A%8A%E4%BB%8E%E4%B8%8A%E9%9D%A2%E6%A5%BC%E5%B1%82%E6%8C%A4%E4%B8%8B%E6%9D%A5%E7%9A%84%E4%BC%9A%E8%AE%AE%E4%B8%80%E8%B5%B7%E5%8F%82%E4%B8%8E%E6%AF%94%E8%BE%83">问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。</a><ul>
+<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
 </ul>
 </li>
 </ul>
 <span id="more"></span>
-<h1 id="Booksim2-0安装编译"><a href="#Booksim2-0安装编译" class="headerlink" title="Booksim2.0安装编译"></a>Booksim2.0安装编译</h1><h2 id="1-从github上克隆源代码"><a href="#1-从github上克隆源代码" class="headerlink" title="1. 从github上克隆源代码"></a>1. 从github上克隆源代码</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; git clone https://github.com/booksim/booksim2.git</span><br></pre></td></tr></table></figure>
 
-<h2 id="2-安装-flex-bison"><a href="#2-安装-flex-bison" class="headerlink" title="2. 安装 flex bison"></a>2. 安装 flex bison</h2><p><code>flex</code> 和 <code>bison</code> 都是用于开发编程语言和工具的工具，它们通常一起使用来创建复杂的文本处理程序，如编译器、解释器和其他类型的语言处理工具。</p>
+<h1 id="问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。"><a href="#问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。" class="headerlink" title="问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。"></a>问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。</h1><p>本题本质是：</p>
 <ul>
-<li>Flex<br><code>flex</code> 是一个词法分析器生成器，它允许开发者通过编写一个简短的、描述性的源文件来定义一组单词（或标记），然后 <code>flex</code> 会自动生成一个 C 语言程序，这个程序能够识别这些单词。这个生成的程序通常被称为词法分析器或扫描器。词法分析器是编译器或解释器的第一部分，负责将输入的文本（通常是源代码）分解成一系列的标记，这些标记可以被语法分析器进一步处理。</li>
-<li>Bison<br><code>bison</code> 是一个语法分析器生成器，它用来创建解析器，这些解析器可以理解和解释一种语言的语法规则。通过编写一个描述语法规则的源文件，<code>bison</code> 会生成一个 C 语言程序，这个程序可以构建抽象语法树（AST），这棵树表示了输入文本的语法结构。解析器是编译器或解释器的第二部分，它依赖于词法分析器提供的标记来正确地解析源代码的语法。<br>简单来说，<code>flex</code> 负责标记（词法）分析，<code>bison</code> 负责语法（语法）分析。这两个工具一起使用，可以快速地构建一个完整的语言处理工具链，从源代码到抽象语法树，再到最终的目标代码。这种工具链在构建编译器、解释器、格式化工具和其他需要处理复杂文本的应用程序时非常有用。</li>
+<li>每场会议基础耗时都是 人数 * 2，这是固定成本。</li>
+<li>额外成本是：人数 * 下移楼层数。</li>
+<li>人数越多，下移一层的损失越大。</li>
+<li>所以从高楼层往低楼层安排时，每一层都应该优先安排当前所有可安排会议里“人数最多”的会议。</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; sudo apt-get install flex</span><br><span class="line">&gt; sudo apt-get install bison</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-编译Boosim"><a href="#3-编译Boosim" class="headerlink" title="3. 编译Boosim"></a>3. 编译Boosim</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; cd booksim2/src</span><br><span class="line">&gt; make</span><br></pre></td></tr></table></figure>
-<p>如下图所示，编译成功，生成booksim执行文件。<br><img src="/images/Booksim2.0/3987d9f1d628f3b6386ae7a2e728eac5.png" alt="在这里插入图片描述"></p>
-]]></content>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>贪心算法 + 优先队列&#x2F;堆。更具体地说，是一种“从高楼层到低楼层扫描”的贪心。每个会议如果下移一层，额外代价是：人数 * 1。所以人数越多的会议，越不应该被往下挪。反过来，人数少的会议更适合被挪到低楼层。</p>
+<p>因此我们从最高层往最低层遍历：</p>
+<ul>
+<li>走到某一层时，把这一层申请的会议全部加入大根堆。</li>
+<li>堆里保存的是“目前可以安排在这一层或更低楼层的会议”。</li>
+<li>当前层有 M 个会议室，所以从堆里取出人数最多的 M 个会议，安排在当前层。</li>
+<li>剩下的会议继续留在堆里，等下一层安排，也就是被迫往下挪。</li>
+</ul>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> F,M,N;</span><br><span class="line">    cin&gt;&gt;F&gt;&gt;M&gt;&gt;N;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> R,P;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">R_lists</span><span class="params">(N<span class="number">+1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">P_lists</span><span class="params">(N<span class="number">+1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    vector&lt;vector&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt;&gt; <span class="built_in">leveltolist</span>(F<span class="number">+1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=N; i++)&#123;</span><br><span class="line">        cin &gt;&gt; R_lists[i] &gt;&gt; P_lists[i];</span><br><span class="line">        leveltolist[R_lists[i]].<span class="built_in">push_back</span>(&#123;P_lists[i], R_lists[i]&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    priority_queue&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt; pq;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> times = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = F; i&gt;<span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> c : leveltolist[i])&#123;</span><br><span class="line">            pq.<span class="built_in">push</span>(c);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; M; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!pq.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                <span class="keyword">auto</span> it = pq.<span class="built_in">top</span>();</span><br><span class="line">                times += (<span class="type">long</span> <span class="type">long</span>)it.first * (<span class="number">2</span> + (it.second - i));</span><br><span class="line">                pq.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(!pq.<span class="built_in">empty</span>()) cout&lt;&lt; <span class="number">-1</span> &lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span> cout &lt;&lt; times &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>模拟器</category>
+        <category>Algorithm</category>
       </categories>
       <tags>
-        <tag>模拟器</tag>
+        <tag>贪心算法</tag>
+        <tag>优先队列/堆</tag>
       </tags>
   </entry>
   <entry>
@@ -989,6 +1025,37 @@
         <tag>Chiplet</tag>
         <tag>异构集成</tag>
         <tag>仿真</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Booksim2.0安装编译</title>
+    <url>/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/</url>
+    <content><![CDATA[<ul>
+<li><a href="#booksim20%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">Booksim2.0安装编译</a><ul>
+<li><a href="#1-%E4%BB%8Egithub%E4%B8%8A%E5%85%8B%E9%9A%86%E6%BA%90%E4%BB%A3%E7%A0%81">1. 从github上克隆源代码</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85-flex-bison">2. 安装 flex bison</a></li>
+<li><a href="#3-%E7%BC%96%E8%AF%91boosim">3. 编译Boosim</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<h1 id="Booksim2-0安装编译"><a href="#Booksim2-0安装编译" class="headerlink" title="Booksim2.0安装编译"></a>Booksim2.0安装编译</h1><h2 id="1-从github上克隆源代码"><a href="#1-从github上克隆源代码" class="headerlink" title="1. 从github上克隆源代码"></a>1. 从github上克隆源代码</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; git clone https://github.com/booksim/booksim2.git</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-安装-flex-bison"><a href="#2-安装-flex-bison" class="headerlink" title="2. 安装 flex bison"></a>2. 安装 flex bison</h2><p><code>flex</code> 和 <code>bison</code> 都是用于开发编程语言和工具的工具，它们通常一起使用来创建复杂的文本处理程序，如编译器、解释器和其他类型的语言处理工具。</p>
+<ul>
+<li>Flex<br><code>flex</code> 是一个词法分析器生成器，它允许开发者通过编写一个简短的、描述性的源文件来定义一组单词（或标记），然后 <code>flex</code> 会自动生成一个 C 语言程序，这个程序能够识别这些单词。这个生成的程序通常被称为词法分析器或扫描器。词法分析器是编译器或解释器的第一部分，负责将输入的文本（通常是源代码）分解成一系列的标记，这些标记可以被语法分析器进一步处理。</li>
+<li>Bison<br><code>bison</code> 是一个语法分析器生成器，它用来创建解析器，这些解析器可以理解和解释一种语言的语法规则。通过编写一个描述语法规则的源文件，<code>bison</code> 会生成一个 C 语言程序，这个程序可以构建抽象语法树（AST），这棵树表示了输入文本的语法结构。解析器是编译器或解释器的第二部分，它依赖于词法分析器提供的标记来正确地解析源代码的语法。<br>简单来说，<code>flex</code> 负责标记（词法）分析，<code>bison</code> 负责语法（语法）分析。这两个工具一起使用，可以快速地构建一个完整的语言处理工具链，从源代码到抽象语法树，再到最终的目标代码。这种工具链在构建编译器、解释器、格式化工具和其他需要处理复杂文本的应用程序时非常有用。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; sudo apt-get install flex</span><br><span class="line">&gt; sudo apt-get install bison</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-编译Boosim"><a href="#3-编译Boosim" class="headerlink" title="3. 编译Boosim"></a>3. 编译Boosim</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&gt; cd booksim2/src</span><br><span class="line">&gt; make</span><br></pre></td></tr></table></figure>
+<p>如下图所示，编译成功，生成booksim执行文件。<br><img src="/images/Booksim2.0/3987d9f1d628f3b6386ae7a2e728eac5.png" alt="在这里插入图片描述"></p>
+]]></content>
+      <categories>
+        <category>模拟器</category>
+      </categories>
+      <tags>
+        <tag>模拟器</tag>
       </tags>
   </entry>
   <entry>
@@ -1131,48 +1198,6 @@
       </tags>
   </entry>
   <entry>
-    <title>CambriconLLM</title>
-    <url>/2025/11/10/CambriconLLM/</url>
-    <content><![CDATA[<ul>
-<li><a href="#cambricon-llm-a-chiplet-based-hybrid--architecture-for-on-device-inference-of-70b-llm">Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</a></li>
-</ul>
-<span id="more"></span>
-
-<h1 id="Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM"><a href="#Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM" class="headerlink" title="Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM"></a>Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</h1><p>在智能手机和机器人等边缘设备上部署先进的大语言模型已成为趋势，此举既能提升用户数据隐私性与网络连接鲁棒性，又可保留智能计算能力。然而此类任务呈现算术强度极低的单批次计算特征，对资源受限的边缘设备提出了内存占用庞大、带宽需求严峻等挑战。为此，文章提出Cambricon-LLM：一种集成NPU与专用NAND闪存芯片的小芯片混合架构，可实现70B参数大语言模型的高效终端推理。该架构通过创新的硬件分块策略，协同发挥NPU的高算力优势与闪存芯片的数据容量优势，显著降低两者间的数据迁移开销。具体而言，经闪存内计算技术与片上ECC技术强化的NAND芯片可精准执行轻量化片上处理；NPU则协同处理矩阵运算及超越闪存能力范畴的特殊函数计算。实验表明，Cambricon-LLM能以3.44 token&#x2F;s的速度运行70B模型，以36.34 token&#x2F;s的速度运行7B模型，较现有闪存卸载技术提速22至45倍，展现了在边缘设备部署强大语言模型的潜力。</p>
-<p>在机器人、智能手机等边缘设备上实现私有化LLM推理变得日益重要。通过确保人人拥有个性化LLM智能体，文章不仅能发挥LLM智能体的变革性力量，更能满足隐私保护、定制化与可及性的根本需求。然而，相较于云端传统LLM推理，边缘设备上以单批次计算为主的个人LLM部署面临独特挑战——此类推理模式无法利用批间并行性，加剧了内存带宽瓶颈，进一步限制了LLM在边缘设备的部署。具体而言，个人LLM部署面临以下核心挑战：</p>
-<p>边缘资源受限下的巨大内存占用：<br>以INT8量化的Llama-70B模型为例，其内存需求高达70GB，远超典型智能手机DRAM容量。更关键的是，大规模参数必然引发密集的数据迁移，而数据移动正是边缘设备单批次LLM推理的主要能耗来源。值得注意的是，移动单比特数据的能量消耗约为计算能耗的100-500倍。</p>
-<p>单批次推理极低计算强度引发的带宽危机：<br>计算强度（计算操作数与慢速&#x2F;快速存储器间数据传输量的比值）过低表明程序受内存限制。不幸的是，INT8量化下的单批次LLM推理计算强度仅为2。产生极端带宽需求。</p>
-<p><img src="/images/CambriconLLM/image.png" alt="alt text"></p>
-<p>为解决内存占用问题，FlexGen和DeepSpeed等研究提出将LLM卸载至闪存（SSD）。但该方案存在明显局限：</p>
-<ol>
-<li>闪存带宽瓶颈：以UFS 4.0闪存（带宽4GB&#x2F;s）卸载INT8量化的Llama2-70B模型，理论最大速度仅0.06 token&#x2F;s，远低于实时交互应用所需的3-10 token&#x2F;s。</li>
-<li>额外数据迁移的能耗代价：传统架构禁止NPU直访闪存数据，需先迁移至DRAM，使总数据传输量增加3倍以上。鉴于数据移动能耗主导总能耗，此类额外传输将造成显著能量开销。</li>
-</ol>
-<p>为满足带宽需求，存内计算（ISC）技术通过挖掘闪存并行性看似可行，但现有方案（如OptimStore、BeaconGNN）难以适配本场景：</p>
-<ol>
-<li>闪存通道利用率低下：LLM单批次推理的缩减率（算子输入&#x2F;输出数据量比值）过高。以Llama2-7B为例，95%以上计算涉及广义矩阵-向量乘法（GeMV），最小矩阵尺寸为4096×4096，计算后结果向量尺寸缩减至权重矩阵的1&#x2F;4096。如图1(b)所示，其缩减率比ISC研究的其他场景高100倍，导致闪存通道利用率不足10%；</li>
-<li>片上纠错机制缺失：OptimStore与BeaconGNN缺乏片上纠错能力。若LLM暴露于未保护的闪存错误中，精度将骤降70%以上。</li>
-</ol>
-<p>为此，文章提出Cambricon-LLM——一种基于芯粒的异构架构，集成NPU与片上处理闪存，实现边缘设备上70B级LLM的高效推理。如图4(a)所示，Cambricon-LLM通过芯粒芯片间互联（D2D）将专用闪存芯片直连NPU：</p>
-<ol>
-<li>优化的数据分块策略最小化NPU-闪存间数据传输，充分协同闪存存储容量与NPU算力；</li>
-<li>芯粒技术既突破UFS 4.0协议的带宽限制，又实现NPU-闪存间低能耗数据传输，并集成闪存控制器支持NPU直访闪存数据；</li>
-<li>闪存内嵌片上计算单元，充分挖掘内部带宽以减少闪存通道数据流量；</li>
-<li>创新设计超轻量片上纠错单元，精准保护模型权重离群值，确保LLM推理精度。</li>
-</ol>
-<p>据文章所知，Cambricon-LLM是首个通过NPU-专用闪存异构扩展实现边缘设备高效LLM单批次推理的架构。本文贡献如下：<br>• 提出Cambricon-LLM：一种融合NPU与定制化闪存的芯粒异构架构，闪存具备片上处理能力且专为边缘LLM推理优化；<br>• 设计硬件感知数据分块策略，在NPU与闪存间最优分配LLM推理负载，避免闪存通道利用率不足；<br>• 提出高效片上纠错算法及轻量级硬件实现，有效抑制闪存高误码率，保障LLM推理精度；<br>• 基于SSDsim模拟器在多通道&#x2F;芯片配置下评估：Cambricon-LLM实现70B LLM 3.44 token&#x2F;s的推理速度，较基线提升22倍以上。</p>
-<p><img src="/images/CambriconLLM/image-1.png" alt="alt text"></p>
-]]></content>
-      <categories>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>In-Flash Computing</tag>
-        <tag>Large Language Model Accelerator</tag>
-        <tag>Robotic Accelerator</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>DATE2021-DeFT</title>
     <url>/2026/06/22/DATE2021-DeFT/</url>
     <content><![CDATA[<ul>
@@ -1240,6 +1265,48 @@
       </tags>
   </entry>
   <entry>
+    <title>CambriconLLM</title>
+    <url>/2025/11/10/CambriconLLM/</url>
+    <content><![CDATA[<ul>
+<li><a href="#cambricon-llm-a-chiplet-based-hybrid--architecture-for-on-device-inference-of-70b-llm">Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM"><a href="#Cambricon-LLM-A-Chiplet-Based-Hybrid-Architecture-for-On-Device-Inference-of-70B-LLM" class="headerlink" title="Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM"></a>Cambricon-LLM: A Chiplet-Based Hybrid  Architecture for On-Device Inference of 70B LLM</h1><p>在智能手机和机器人等边缘设备上部署先进的大语言模型已成为趋势，此举既能提升用户数据隐私性与网络连接鲁棒性，又可保留智能计算能力。然而此类任务呈现算术强度极低的单批次计算特征，对资源受限的边缘设备提出了内存占用庞大、带宽需求严峻等挑战。为此，文章提出Cambricon-LLM：一种集成NPU与专用NAND闪存芯片的小芯片混合架构，可实现70B参数大语言模型的高效终端推理。该架构通过创新的硬件分块策略，协同发挥NPU的高算力优势与闪存芯片的数据容量优势，显著降低两者间的数据迁移开销。具体而言，经闪存内计算技术与片上ECC技术强化的NAND芯片可精准执行轻量化片上处理；NPU则协同处理矩阵运算及超越闪存能力范畴的特殊函数计算。实验表明，Cambricon-LLM能以3.44 token&#x2F;s的速度运行70B模型，以36.34 token&#x2F;s的速度运行7B模型，较现有闪存卸载技术提速22至45倍，展现了在边缘设备部署强大语言模型的潜力。</p>
+<p>在机器人、智能手机等边缘设备上实现私有化LLM推理变得日益重要。通过确保人人拥有个性化LLM智能体，文章不仅能发挥LLM智能体的变革性力量，更能满足隐私保护、定制化与可及性的根本需求。然而，相较于云端传统LLM推理，边缘设备上以单批次计算为主的个人LLM部署面临独特挑战——此类推理模式无法利用批间并行性，加剧了内存带宽瓶颈，进一步限制了LLM在边缘设备的部署。具体而言，个人LLM部署面临以下核心挑战：</p>
+<p>边缘资源受限下的巨大内存占用：<br>以INT8量化的Llama-70B模型为例，其内存需求高达70GB，远超典型智能手机DRAM容量。更关键的是，大规模参数必然引发密集的数据迁移，而数据移动正是边缘设备单批次LLM推理的主要能耗来源。值得注意的是，移动单比特数据的能量消耗约为计算能耗的100-500倍。</p>
+<p>单批次推理极低计算强度引发的带宽危机：<br>计算强度（计算操作数与慢速&#x2F;快速存储器间数据传输量的比值）过低表明程序受内存限制。不幸的是，INT8量化下的单批次LLM推理计算强度仅为2。产生极端带宽需求。</p>
+<p><img src="/images/CambriconLLM/image.png" alt="alt text"></p>
+<p>为解决内存占用问题，FlexGen和DeepSpeed等研究提出将LLM卸载至闪存（SSD）。但该方案存在明显局限：</p>
+<ol>
+<li>闪存带宽瓶颈：以UFS 4.0闪存（带宽4GB&#x2F;s）卸载INT8量化的Llama2-70B模型，理论最大速度仅0.06 token&#x2F;s，远低于实时交互应用所需的3-10 token&#x2F;s。</li>
+<li>额外数据迁移的能耗代价：传统架构禁止NPU直访闪存数据，需先迁移至DRAM，使总数据传输量增加3倍以上。鉴于数据移动能耗主导总能耗，此类额外传输将造成显著能量开销。</li>
+</ol>
+<p>为满足带宽需求，存内计算（ISC）技术通过挖掘闪存并行性看似可行，但现有方案（如OptimStore、BeaconGNN）难以适配本场景：</p>
+<ol>
+<li>闪存通道利用率低下：LLM单批次推理的缩减率（算子输入&#x2F;输出数据量比值）过高。以Llama2-7B为例，95%以上计算涉及广义矩阵-向量乘法（GeMV），最小矩阵尺寸为4096×4096，计算后结果向量尺寸缩减至权重矩阵的1&#x2F;4096。如图1(b)所示，其缩减率比ISC研究的其他场景高100倍，导致闪存通道利用率不足10%；</li>
+<li>片上纠错机制缺失：OptimStore与BeaconGNN缺乏片上纠错能力。若LLM暴露于未保护的闪存错误中，精度将骤降70%以上。</li>
+</ol>
+<p>为此，文章提出Cambricon-LLM——一种基于芯粒的异构架构，集成NPU与片上处理闪存，实现边缘设备上70B级LLM的高效推理。如图4(a)所示，Cambricon-LLM通过芯粒芯片间互联（D2D）将专用闪存芯片直连NPU：</p>
+<ol>
+<li>优化的数据分块策略最小化NPU-闪存间数据传输，充分协同闪存存储容量与NPU算力；</li>
+<li>芯粒技术既突破UFS 4.0协议的带宽限制，又实现NPU-闪存间低能耗数据传输，并集成闪存控制器支持NPU直访闪存数据；</li>
+<li>闪存内嵌片上计算单元，充分挖掘内部带宽以减少闪存通道数据流量；</li>
+<li>创新设计超轻量片上纠错单元，精准保护模型权重离群值，确保LLM推理精度。</li>
+</ol>
+<p>据文章所知，Cambricon-LLM是首个通过NPU-专用闪存异构扩展实现边缘设备高效LLM单批次推理的架构。本文贡献如下：<br>• 提出Cambricon-LLM：一种融合NPU与定制化闪存的芯粒异构架构，闪存具备片上处理能力且专为边缘LLM推理优化；<br>• 设计硬件感知数据分块策略，在NPU与闪存间最优分配LLM推理负载，避免闪存通道利用率不足；<br>• 提出高效片上纠错算法及轻量级硬件实现，有效抑制闪存高误码率，保障LLM推理精度；<br>• 基于SSDsim模拟器在多通道&#x2F;芯片配置下评估：Cambricon-LLM实现70B LLM 3.44 token&#x2F;s的推理速度，较基线提升22倍以上。</p>
+<p><img src="/images/CambriconLLM/image-1.png" alt="alt text"></p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>In-Flash Computing</tag>
+        <tag>Large Language Model Accelerator</tag>
+        <tag>Robotic Accelerator</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DATE2023-TheNextEra</title>
     <url>/2024/04/02/DATE2023-TheNextEra/</url>
     <content><![CDATA[<ul>
@@ -1275,7 +1342,7 @@
 </ul>
 <span id="more"></span>
 
-<h1 id="The-Next-Era-for-Chiplet-Innovation"><a href="#The-Next-Era-for-Chiplet-Innovation" class="headerlink" title="The Next Era for Chiplet Innovation"></a>The Next Era for Chiplet Innovation</h1><p>Author: Gabriel H. Loh, Raja Swaminathan<br>Organization: Advanced Micro Devices, Inc.(AMD)<br>email: <a href="mailto:&#103;&#x61;&#98;&#114;&#x69;&#x65;&#108;&#x2e;&#x6c;&#111;&#x68;&#x40;&#x61;&#109;&#x64;&#46;&#99;&#111;&#x6d;">gabriel.loh@amd.com</a></p>
+<h1 id="The-Next-Era-for-Chiplet-Innovation"><a href="#The-Next-Era-for-Chiplet-Innovation" class="headerlink" title="The Next Era for Chiplet Innovation"></a>The Next Era for Chiplet Innovation</h1><p>Author: Gabriel H. Loh, Raja Swaminathan<br>Organization: Advanced Micro Devices, Inc.(AMD)<br>email: <a href="mailto:&#103;&#97;&#x62;&#x72;&#x69;&#101;&#108;&#x2e;&#108;&#111;&#104;&#64;&#x61;&#109;&#100;&#46;&#99;&#111;&#109;">gabriel.loh@amd.com</a></p>
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ol>
 <li>Moore’s Law is slowing down and associated costs are simultaneously increasing. These pressures give rise to <strong>new approaches that utilizing advanced packaging and integration such as chiplets, interposers, and 3D stacking</strong>.</li>
 <li>they describe the key technology <strong>drivers and constraints</strong> that motivate chiplet-based architectures.</li>
@@ -1817,88 +1884,6 @@
       </tags>
   </entry>
   <entry>
-    <title>HPN</title>
-    <url>/2025/11/24/HPN/</url>
-    <content><![CDATA[<ul>
-<li><a href="#alibaba-hpn-a-data-center-network-for-large-language-model-training">Alibaba HPN: A Data Center Network for Large Language Model Training</a><ul>
-<li><a href="#1-motivation">1. Motivation</a></li>
-<li><a href="#2-hpn-%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0">2. HPN 架构概述</a></li>
-<li><a href="#3-non-stacked-dual-tor">3. Non-stacked Dual-ToR</a></li>
-<li><a href="#4-tier1">4. Tier1</a></li>
-<li><a href="#5-tier2">5. Tier2</a></li>
-<li><a href="#6-%E6%94%AF%E6%8C%81%E6%9B%B4%E5%A4%A7%E8%A7%84%E6%A8%A1">6. 支持更大规模</a></li>
-<li><a href="#7-%E5%89%8D%E7%AB%AF%E7%BD%91%E7%BB%9C">7. 前端网络</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training"><a href="#Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training" class="headerlink" title="Alibaba HPN: A Data Center Network for Large Language Model Training"></a>Alibaba HPN: A Data Center Network for Large Language Model Training</h1><p>HPN（High Performance Network），即阿里云专为大语言模型（LLM）训练设计的数据中心网络。由于 LLM 与通用云计算在流量模式和容错性等方面存在显著差异，传统数据中心网络难以有效支撑 LLM 训练需求。这促使我们专门针对 LLM 训练设计一种全新的数据中心网络架构。</p>
-<p>与通用云计算产生数百万个小流量（例如低于 10 Gbps）不同，LLM 训练在每台主机上仅产生少量周期性、突发性的大流量（例如 400 Gbps）。这种特性使得传统数据中心广泛采用的等价多路径（ECMP）负载均衡机制容易出现哈希极化（hash polarization），导致流量分布不均等问题。</p>
-<p>HPN 提出了一种两层双平面架构，可在单个 Pod 内互联多达 15,000 块 GPU——这一规模通常需要传统三层 Clos 架构才能支持。该新架构不仅通过减少 ECMP 的使用避免了哈希极化问题，还大幅缩小了路径选择的搜索空间，从而能够精确挑选适合承载“大象流”（elephant flows）的网络路径。</p>
-<p>LLM 训练面临的另一挑战在于：其要求所有 GPU 同步完成迭代，因此对单点故障（尤其是机架顶部交换机 ToR 故障）更加敏感。为此，HPN 提出了一种新型双 ToR 设计，替代传统数据中心中的单 ToR 方案，并解决了二层同步方面的技术难题。HPN 已在我们的生产环境中部署运行超过八个月。</p>
-<h2 id="1-Motivation"><a href="#1-Motivation" class="headerlink" title="1. Motivation"></a>1. Motivation</h2><p>LLM 训练具有独特性，它对数据中心网络的设计提出了全新挑战。</p>
-<ul>
-<li>问题一：流量模式不同。<br>LLM 训练的流量模式与通用云计算存在两点关键差异：(1) 低熵性；(2) 突发性流量。具体而言，通用云计算会产生数百万个持续且低利用率的流量（例如通常低于网卡容量的 20%），如图 1 所示。</li>
-<li>问题二：对故障（尤其是单点故障）更为敏感。<br>LLM 训练是一个同步过程，所有 GPU 协同完成一系列迭代；因此，任意一块 GPU 出现异常都可能导致整个训练过程延迟甚至崩溃。这意味着 LLM 训练比通用云计算对故障更加敏感。我们发现，对 LLM 训练影响最大的是与机架顶部交换机（Top-of-Rack, ToR）相关的单点故障，这类故障可能波及大量 GPU。此外，LLM 训练中的故障代价高昂。生产数据显示，LLM 训练中的一次故障造成的损失是通用云计算场景下的 20 倍。</li>
-</ul>
-<p><img src="/images/HPN/image.png" alt="alt text"></p>
-<p>主要目标：</p>
-<ul>
-<li>G1：可扩展性。 图 6 显示，当前生产中单个训练任务所需 GPU 数量通常少于 3,000 块。为应对未来需求演进，我们将主容量目标设定为支持 15,000 块 GPU——这也与主流 LLM 训练提供商（如 Google、AWS、Azure 和 NVIDIA）提供的 10K–30K GPU 集群规模一致。根据经验，未来几年模型参数量可能再增长一个数量级（从 1 万亿增至 10 万亿），因此我们的数据中心还需具备支持 10 万块 GPU 规模的扩展能力。</li>
-<li>G2：高性能。 性能至关重要。为提升性能，设计应尽可能减少网络跳数。减少跳数不仅能降低延迟，还能减少 ECMP 哈希次数，使路径选择更精准。此外，设计应尽可能支持 GPU 间直连通信，而非经由网络转发。</li>
-<li>G3：单 ToR 故障容错。 基于 §2.3 的观察，影响 LLM 训练可靠性的最关键风险是单 ToR 故障。因此，我们的新网络架构必须在拓扑层面从根本上消除单 ToR 故障风险。</li>
-</ul>
-<p><img src="/images/HPN/image-1.png" alt="alt text"></p>
-<h2 id="2-HPN-架构概述"><a href="#2-HPN-架构概述" class="headerlink" title="2. HPN 架构概述"></a>2. HPN 架构概述</h2><p>图 7 展示了 HPN 的整体架构。HPN 由前端网络（frontend network）和后端网络（backend network）组成。后端网络主要用于承载训练过程中的通信流量；前端网络则负责其他类型的流量（例如管理、推理和存储流量）。在 LLM 训练场景中，我们主要关注 HPN 的后端网络。</p>
-<ul>
-<li>在 HPN 的后端网络中，每台主机配备 8 块 GPU，这些 GPU 通过专用的高带宽主机内网络（如 NVLink ）相互连接。每块 GPU 可通过该主机内网络（intra-host network）以 400–900 GBps（双向）的带宽直接与其他 GPU 通信。</li>
-<li>为了提供最大网络容量，每台主机配备了 9 张网卡（NIC），每张 NIC 具备 2×200 Gbps 的端口。其中一张 NIC（即图 7 中的 NIC0）连接到前端网络，其余 8 张 NIC 连接到后端网络，用于承载 LLM 训练期间的通信流量。</li>
-<li>这 8 张 NIC 各自服务于一块专用 GPU（称为一个“rail”），因此每块 GPU 都拥有 专用的 400 Gbps RDMA 网络吞吐能力，整机总带宽达到 3.2 Tbps。这种设计旨在最大化利用 GPU 的 PCIe 能力（PCIe Gen5×16），从而将网络发送/接收能力推至极限。</li>
-<li>每张 NIC 的两个端口分别连接到不同的 ToR 交换机，形成 双 ToR（dual-ToR）。该设计旨在避免单 ToR 故障问题。</li>
-</ul>
-<p>在 Tier-1 层，考虑到主机内网络（如 NVLink）的带宽远高于主机间的以太网，我们采用了 rail 优化设计：不同 rail 的 NIC 连接到不同的 ToR 集合。结合上述双 ToR 设计，一台主机在后端网络中总共连接到 16 台 ToR 交换机。通过充分利用 51.2 Tbps 交换芯片的能力，HPN 能够在一个单层网络（称为一个 segment，见 §5）中互联 1024 块 GPU。图 6 量化了这一优势：约 96.3% 的线上 LLM 训练任务使用的 GPU 数量少于 1000 块；因此，在 HPN 中，这些任务可以被部署在同一个 segment 内，从而获得极致的网络性能。</p>
-<p><img src="/images/HPN/image-2.png" alt="alt text"></p>
-<p>Tier-2 用于互联多个 segments。我们在这一层引入了双 ToR 特性，设计了 双平面转发架构（dual-plane forwarding，如图 7 所示）。从源 NIC 的 port 0 发出的流量，只能通过网络最终被目的 NIC 的 port 0 接收，与从 port 1 发出的流量在物理上完全隔离。这种双平面设计避免了聚合层（Aggregation layer）的 哈希极化（hash polarization）问题，同时保持了 1:1 的网络对分带宽（bisection bandwidth）。此外，双平面设计还将单个 Pod 可支持的 GPU 数量提升了一倍，达到 15,000 块 GPU。</p>
-<p>对于未来可能出现的更大规模单任务，我们还设计了 Pod 之间的核心层（Core layer）。由于单个 Pod 已支持 15K GPU，需要跨 Pod 协同的任务非常罕见。在我们的设计中，聚合层到核心层之间采用了 15:1 的带宽超配比（oversubscription）。基于 LLM 训练的流量特征，我们将 流水线并行（PP）通信安排在跨 Pod 之间，确保跨 Pod 传输对端到端训练性能的影响最小化。</p>
-<p>前端网络主要用于承载管理、推理和存储流量。前端与后端网络在物理上解耦，确保前端流量不会干扰训练任务的核心流程。此外，前端网络采用 1:1 无超配设计，使其具备良好的可扩展性，能够支持更多场景，例如 LLM 训练与推理的混合部署。</p>
-<h2 id="3-Non-stacked-Dual-ToR"><a href="#3-Non-stacked-Dual-ToR" class="headerlink" title="3. Non-stacked Dual-ToR"></a>3. Non-stacked Dual-ToR</h2><p>在传统数据中心网络中，每张 NIC 的两个端口通常通过一根线缆连接到同一台 ToR 交换机，称为 单 ToR 设计。然而，单 ToR 设计对交换机或链路故障极为敏感，会严重影响 LLM 训练。相比之下，双 ToR 设计将每张 NIC 的两个端口以 active-active 方式连接到两台不同的 ToR。这两个端口配置相同的 IP 和 MAC 地址。当其中一台 ToR（或端口）发生故障时，另一台仍可正常工作。此外，由于同一张 NIC 的两个端口共享相同的 Queue Pair（QP）上下文，流量切换不会中断现有数据流，对上层应用完全透明。</p>
-<p><img src="/images/HPN/image-3.png" alt="alt text"></p>
-<p>图 8a 展示了一种典型的双 ToR 设计，称为 堆叠式双 ToR（stacked dual-ToR）。但ToR 之间的直连链路故障或某台 ToR 故障可能导致异常，使该双 ToR 下所有 NIC 离线。在双 ToR 升级过程中，可能出现一台运行新版本、另一台运行旧版本的情况。此时，控制平面通过 RPC 同步信息时，因版本字段不兼容，可能导致 ToR 崩溃。根据内部故障报告，过去三年中，超过 40% 的关键故障源于上述两类堆叠式双 ToR 引入的问题。</p>
-<p>为消除这一故障根源，我们设计了 非堆叠式双 ToR（图 8b），移除了两台 ToR 之间的直连链路。为实现非堆叠双 ToR，我们必须保证在 LACP 协商过程中，两台 ToR 使用相同的 MAC 地址和不同的 portID。</p>
-<h2 id="4-Tier1"><a href="#4-Tier1" class="headerlink" title="4. Tier1"></a>4. Tier1</h2><p>使用了最新的 51.2Tbps 以太网单芯片交换机（最早于 2023 年初发布）在 HPN 中。在 tier1 层，每台交换机拥有 128 个活跃 + 8 个备用 200Gbps 下行端口和 60 个上行 400Gbps 端口。这种设计确保了一个接近 1:1 的超配比（实际为 1.067:1）。每个 ToR 交换机预留了 8 个备用下行端口，用于连接备用主机，以便在主机侧故障时（包括 CPU、内存、GPU、PCIe、NVLINK 和 NIC 故障）快速替换。</p>
-<p>为了充分利用不同的转发能力，NVIDIA 首次提出了 rail 优化网络的概念，该概念已在训练集群中广泛应用。在 rail 优化网络中，相同 rail 的 NIC 通过同一组双 ToR 交换机连接。不同 rail 的 NIC 可以通过主机内+主机间转发组合进行通信。例如，在图 11 中，如果 host1 中的 GPU1 想要与 host3 中的 GPU2 通信，转发路径将是：host1 中的 GPU1 → host1 中的 GPU2 → ToR3 → host3 中的 GPU2。</p>
-<p><img src="/images/HPN/image-4.png" alt="alt text"></p>
-<p>图 11 展示了我们在实践中如何应用 rail 优化网络，这使得单个主机的 3.2Tbps（8×400Gbps） 可以分布在多达 16 个 ToR 交换机 上（在双 ToR 设计下）。与原始拓扑相比，一个 segment 可容纳的 GPU 数量增加了 8 倍，在原始拓扑中，单个主机的 3.2Tbps 是由 2 个 ToR 交换机提供的。每组双 ToR 交换机可以服务 128 块 GPU，16 个 ToR 共同连接了 segment 中的 1024 块 GPU，大幅减少了转发延迟并提供了最佳性能。更重要的是，它显著减少了穿越聚合层的流量，降低了网络负载不平衡的可能性。</p>
-<h2 id="5-Tier2"><a href="#5-Tier2" class="headerlink" title="5. Tier2"></a>5. Tier2</h2><p>在 tier1 网络中采用双 ToR（dual-ToR）设计后，如果 tier2 层简单地使用传统的 Clos 拓扑（如图 12a 所示），仍然会出现 哈希极化（hash polarization） 问题。在 ECMP（等价多路径）路由中，流量根据五元组（5-tuple）哈希分配到不同路径。但由于哈希算法的局限性，大量流可能被映射到少数几条路径上，导致某些链路过载、其他链路空闲——这就是“哈希极化”。</p>
-<p><img src="/images/HPN/image-5.png" alt="alt text"></p>
-<p>在下游方向（Aggregation → ToR），由于每个 dual-ToR 组只有 2 台 ToR，而上游有 60 台 Aggregation 交换机汇聚流量，极易造成流量集中。如图 13a 所示，在真实 GPT-3 175B 变体模型训练任务中，通往同一 NIC 的两个 ToR 下行端口流量相差 3 倍，严重拖累训练性能。</p>
-<p>如图 12b 所示，HPN 将每个 dual-ToR 组中的 ToR 划分为 两个独立平面（Plane 1 / Plane 2）：每个流一旦从某 ToR 的上行链路进入 Pod，其在整个 Pod 内的转发路径就被唯一确定。两个平面物理隔离，互不干扰。</p>
-<h2 id="6-支持更大规模"><a href="#6-支持更大规模" class="headerlink" title="6. 支持更大规模"></a>6. 支持更大规模</h2><p>为满足未来支持 十万个级别 GPU 的长期规划，HPN 设计了 tier3 网络，用于连接多个 Pod。</p>
-<p>⚖️ 权衡：Pod 规模 vs. tier3 带宽<br>当前 HPN 牺牲了 Agg-Core 层的带宽（超配比 15:1），以换取更大的单 Pod 规模；但分析 LLM 训练通信模式发现：跨数十万 GPU 的单个训练任务，对 tier3 带宽需求其实很低。</p>
-<p>为避免 tier3 引入新的不均衡风险，HPN 做了两项增强：1. Core 层延续 dual-plane 设计；2. 每台 Core 交换机采用“端口优先哈希”。</p>
-<h2 id="7-前端网络"><a href="#7-前端网络" class="headerlink" title="7. 前端网络"></a>7. 前端网络</h2><p>在 HPN 中，每台主机额外配备一块 2×200Gbps 的 NIC，用于接入独立的前端网络。前端网络主要承载管理流量和存储流量。为保障最优训练性能，存储集群被部署在前端网络中。</p>
-<p>HPN 的核心优势：</p>
-<ul>
-<li>消除 single-ToR 单点故障；</li>
-<li>通过 两层 dual-plane 架构，在单 Pod 内互联 15,000 块 GPU；</li>
-<li>彻底解决哈希极化问题；</li>
-<li>简化最优路径选择；</li>
-<li>端到端 LLM 训练性能提升 14.9%。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>Network Architecture</tag>
-        <tag>AI Infrastructure</tag>
-        <tag>Data Center Networks</tag>
-        <tag>Model Training</tag>
-        <tag>Large Language Model</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>HammingMesh</title>
     <url>/2025/11/06/HammingMesh/</url>
     <content><![CDATA[<ul>
@@ -2070,6 +2055,88 @@
         <tag>Networking</tag>
         <tag>Deep Learning</tag>
         <tag>Clusters</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HPN</title>
+    <url>/2025/11/24/HPN/</url>
+    <content><![CDATA[<ul>
+<li><a href="#alibaba-hpn-a-data-center-network-for-large-language-model-training">Alibaba HPN: A Data Center Network for Large Language Model Training</a><ul>
+<li><a href="#1-motivation">1. Motivation</a></li>
+<li><a href="#2-hpn-%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0">2. HPN 架构概述</a></li>
+<li><a href="#3-non-stacked-dual-tor">3. Non-stacked Dual-ToR</a></li>
+<li><a href="#4-tier1">4. Tier1</a></li>
+<li><a href="#5-tier2">5. Tier2</a></li>
+<li><a href="#6-%E6%94%AF%E6%8C%81%E6%9B%B4%E5%A4%A7%E8%A7%84%E6%A8%A1">6. 支持更大规模</a></li>
+<li><a href="#7-%E5%89%8D%E7%AB%AF%E7%BD%91%E7%BB%9C">7. 前端网络</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training"><a href="#Alibaba-HPN-A-Data-Center-Network-for-Large-Language-Model-Training" class="headerlink" title="Alibaba HPN: A Data Center Network for Large Language Model Training"></a>Alibaba HPN: A Data Center Network for Large Language Model Training</h1><p>HPN（High Performance Network），即阿里云专为大语言模型（LLM）训练设计的数据中心网络。由于 LLM 与通用云计算在流量模式和容错性等方面存在显著差异，传统数据中心网络难以有效支撑 LLM 训练需求。这促使我们专门针对 LLM 训练设计一种全新的数据中心网络架构。</p>
+<p>与通用云计算产生数百万个小流量（例如低于 10 Gbps）不同，LLM 训练在每台主机上仅产生少量周期性、突发性的大流量（例如 400 Gbps）。这种特性使得传统数据中心广泛采用的等价多路径（ECMP）负载均衡机制容易出现哈希极化（hash polarization），导致流量分布不均等问题。</p>
+<p>HPN 提出了一种两层双平面架构，可在单个 Pod 内互联多达 15,000 块 GPU——这一规模通常需要传统三层 Clos 架构才能支持。该新架构不仅通过减少 ECMP 的使用避免了哈希极化问题，还大幅缩小了路径选择的搜索空间，从而能够精确挑选适合承载“大象流”（elephant flows）的网络路径。</p>
+<p>LLM 训练面临的另一挑战在于：其要求所有 GPU 同步完成迭代，因此对单点故障（尤其是机架顶部交换机 ToR 故障）更加敏感。为此，HPN 提出了一种新型双 ToR 设计，替代传统数据中心中的单 ToR 方案，并解决了二层同步方面的技术难题。HPN 已在我们的生产环境中部署运行超过八个月。</p>
+<h2 id="1-Motivation"><a href="#1-Motivation" class="headerlink" title="1. Motivation"></a>1. Motivation</h2><p>LLM 训练具有独特性，它对数据中心网络的设计提出了全新挑战。</p>
+<ul>
+<li>问题一：流量模式不同。<br>LLM 训练的流量模式与通用云计算存在两点关键差异：(1) 低熵性；(2) 突发性流量。具体而言，通用云计算会产生数百万个持续且低利用率的流量（例如通常低于网卡容量的 20%），如图 1 所示。</li>
+<li>问题二：对故障（尤其是单点故障）更为敏感。<br>LLM 训练是一个同步过程，所有 GPU 协同完成一系列迭代；因此，任意一块 GPU 出现异常都可能导致整个训练过程延迟甚至崩溃。这意味着 LLM 训练比通用云计算对故障更加敏感。我们发现，对 LLM 训练影响最大的是与机架顶部交换机（Top-of-Rack, ToR）相关的单点故障，这类故障可能波及大量 GPU。此外，LLM 训练中的故障代价高昂。生产数据显示，LLM 训练中的一次故障造成的损失是通用云计算场景下的 20 倍。</li>
+</ul>
+<p><img src="/images/HPN/image.png" alt="alt text"></p>
+<p>主要目标：</p>
+<ul>
+<li>G1：可扩展性。 图 6 显示，当前生产中单个训练任务所需 GPU 数量通常少于 3,000 块。为应对未来需求演进，我们将主容量目标设定为支持 15,000 块 GPU——这也与主流 LLM 训练提供商（如 Google、AWS、Azure 和 NVIDIA）提供的 10K–30K GPU 集群规模一致。根据经验，未来几年模型参数量可能再增长一个数量级（从 1 万亿增至 10 万亿），因此我们的数据中心还需具备支持 10 万块 GPU 规模的扩展能力。</li>
+<li>G2：高性能。 性能至关重要。为提升性能，设计应尽可能减少网络跳数。减少跳数不仅能降低延迟，还能减少 ECMP 哈希次数，使路径选择更精准。此外，设计应尽可能支持 GPU 间直连通信，而非经由网络转发。</li>
+<li>G3：单 ToR 故障容错。 基于 §2.3 的观察，影响 LLM 训练可靠性的最关键风险是单 ToR 故障。因此，我们的新网络架构必须在拓扑层面从根本上消除单 ToR 故障风险。</li>
+</ul>
+<p><img src="/images/HPN/image-1.png" alt="alt text"></p>
+<h2 id="2-HPN-架构概述"><a href="#2-HPN-架构概述" class="headerlink" title="2. HPN 架构概述"></a>2. HPN 架构概述</h2><p>图 7 展示了 HPN 的整体架构。HPN 由前端网络（frontend network）和后端网络（backend network）组成。后端网络主要用于承载训练过程中的通信流量；前端网络则负责其他类型的流量（例如管理、推理和存储流量）。在 LLM 训练场景中，我们主要关注 HPN 的后端网络。</p>
+<ul>
+<li>在 HPN 的后端网络中，每台主机配备 8 块 GPU，这些 GPU 通过专用的高带宽主机内网络（如 NVLink ）相互连接。每块 GPU 可通过该主机内网络（intra-host network）以 400–900 GBps（双向）的带宽直接与其他 GPU 通信。</li>
+<li>为了提供最大网络容量，每台主机配备了 9 张网卡（NIC），每张 NIC 具备 2×200 Gbps 的端口。其中一张 NIC（即图 7 中的 NIC0）连接到前端网络，其余 8 张 NIC 连接到后端网络，用于承载 LLM 训练期间的通信流量。</li>
+<li>这 8 张 NIC 各自服务于一块专用 GPU（称为一个“rail”），因此每块 GPU 都拥有 专用的 400 Gbps RDMA 网络吞吐能力，整机总带宽达到 3.2 Tbps。这种设计旨在最大化利用 GPU 的 PCIe 能力（PCIe Gen5×16），从而将网络发送/接收能力推至极限。</li>
+<li>每张 NIC 的两个端口分别连接到不同的 ToR 交换机，形成 双 ToR（dual-ToR）。该设计旨在避免单 ToR 故障问题。</li>
+</ul>
+<p>在 Tier-1 层，考虑到主机内网络（如 NVLink）的带宽远高于主机间的以太网，我们采用了 rail 优化设计：不同 rail 的 NIC 连接到不同的 ToR 集合。结合上述双 ToR 设计，一台主机在后端网络中总共连接到 16 台 ToR 交换机。通过充分利用 51.2 Tbps 交换芯片的能力，HPN 能够在一个单层网络（称为一个 segment，见 §5）中互联 1024 块 GPU。图 6 量化了这一优势：约 96.3% 的线上 LLM 训练任务使用的 GPU 数量少于 1000 块；因此，在 HPN 中，这些任务可以被部署在同一个 segment 内，从而获得极致的网络性能。</p>
+<p><img src="/images/HPN/image-2.png" alt="alt text"></p>
+<p>Tier-2 用于互联多个 segments。我们在这一层引入了双 ToR 特性，设计了 双平面转发架构（dual-plane forwarding，如图 7 所示）。从源 NIC 的 port 0 发出的流量，只能通过网络最终被目的 NIC 的 port 0 接收，与从 port 1 发出的流量在物理上完全隔离。这种双平面设计避免了聚合层（Aggregation layer）的 哈希极化（hash polarization）问题，同时保持了 1:1 的网络对分带宽（bisection bandwidth）。此外，双平面设计还将单个 Pod 可支持的 GPU 数量提升了一倍，达到 15,000 块 GPU。</p>
+<p>对于未来可能出现的更大规模单任务，我们还设计了 Pod 之间的核心层（Core layer）。由于单个 Pod 已支持 15K GPU，需要跨 Pod 协同的任务非常罕见。在我们的设计中，聚合层到核心层之间采用了 15:1 的带宽超配比（oversubscription）。基于 LLM 训练的流量特征，我们将 流水线并行（PP）通信安排在跨 Pod 之间，确保跨 Pod 传输对端到端训练性能的影响最小化。</p>
+<p>前端网络主要用于承载管理、推理和存储流量。前端与后端网络在物理上解耦，确保前端流量不会干扰训练任务的核心流程。此外，前端网络采用 1:1 无超配设计，使其具备良好的可扩展性，能够支持更多场景，例如 LLM 训练与推理的混合部署。</p>
+<h2 id="3-Non-stacked-Dual-ToR"><a href="#3-Non-stacked-Dual-ToR" class="headerlink" title="3. Non-stacked Dual-ToR"></a>3. Non-stacked Dual-ToR</h2><p>在传统数据中心网络中，每张 NIC 的两个端口通常通过一根线缆连接到同一台 ToR 交换机，称为 单 ToR 设计。然而，单 ToR 设计对交换机或链路故障极为敏感，会严重影响 LLM 训练。相比之下，双 ToR 设计将每张 NIC 的两个端口以 active-active 方式连接到两台不同的 ToR。这两个端口配置相同的 IP 和 MAC 地址。当其中一台 ToR（或端口）发生故障时，另一台仍可正常工作。此外，由于同一张 NIC 的两个端口共享相同的 Queue Pair（QP）上下文，流量切换不会中断现有数据流，对上层应用完全透明。</p>
+<p><img src="/images/HPN/image-3.png" alt="alt text"></p>
+<p>图 8a 展示了一种典型的双 ToR 设计，称为 堆叠式双 ToR（stacked dual-ToR）。但ToR 之间的直连链路故障或某台 ToR 故障可能导致异常，使该双 ToR 下所有 NIC 离线。在双 ToR 升级过程中，可能出现一台运行新版本、另一台运行旧版本的情况。此时，控制平面通过 RPC 同步信息时，因版本字段不兼容，可能导致 ToR 崩溃。根据内部故障报告，过去三年中，超过 40% 的关键故障源于上述两类堆叠式双 ToR 引入的问题。</p>
+<p>为消除这一故障根源，我们设计了 非堆叠式双 ToR（图 8b），移除了两台 ToR 之间的直连链路。为实现非堆叠双 ToR，我们必须保证在 LACP 协商过程中，两台 ToR 使用相同的 MAC 地址和不同的 portID。</p>
+<h2 id="4-Tier1"><a href="#4-Tier1" class="headerlink" title="4. Tier1"></a>4. Tier1</h2><p>使用了最新的 51.2Tbps 以太网单芯片交换机（最早于 2023 年初发布）在 HPN 中。在 tier1 层，每台交换机拥有 128 个活跃 + 8 个备用 200Gbps 下行端口和 60 个上行 400Gbps 端口。这种设计确保了一个接近 1:1 的超配比（实际为 1.067:1）。每个 ToR 交换机预留了 8 个备用下行端口，用于连接备用主机，以便在主机侧故障时（包括 CPU、内存、GPU、PCIe、NVLINK 和 NIC 故障）快速替换。</p>
+<p>为了充分利用不同的转发能力，NVIDIA 首次提出了 rail 优化网络的概念，该概念已在训练集群中广泛应用。在 rail 优化网络中，相同 rail 的 NIC 通过同一组双 ToR 交换机连接。不同 rail 的 NIC 可以通过主机内+主机间转发组合进行通信。例如，在图 11 中，如果 host1 中的 GPU1 想要与 host3 中的 GPU2 通信，转发路径将是：host1 中的 GPU1 → host1 中的 GPU2 → ToR3 → host3 中的 GPU2。</p>
+<p><img src="/images/HPN/image-4.png" alt="alt text"></p>
+<p>图 11 展示了我们在实践中如何应用 rail 优化网络，这使得单个主机的 3.2Tbps（8×400Gbps） 可以分布在多达 16 个 ToR 交换机 上（在双 ToR 设计下）。与原始拓扑相比，一个 segment 可容纳的 GPU 数量增加了 8 倍，在原始拓扑中，单个主机的 3.2Tbps 是由 2 个 ToR 交换机提供的。每组双 ToR 交换机可以服务 128 块 GPU，16 个 ToR 共同连接了 segment 中的 1024 块 GPU，大幅减少了转发延迟并提供了最佳性能。更重要的是，它显著减少了穿越聚合层的流量，降低了网络负载不平衡的可能性。</p>
+<h2 id="5-Tier2"><a href="#5-Tier2" class="headerlink" title="5. Tier2"></a>5. Tier2</h2><p>在 tier1 网络中采用双 ToR（dual-ToR）设计后，如果 tier2 层简单地使用传统的 Clos 拓扑（如图 12a 所示），仍然会出现 哈希极化（hash polarization） 问题。在 ECMP（等价多路径）路由中，流量根据五元组（5-tuple）哈希分配到不同路径。但由于哈希算法的局限性，大量流可能被映射到少数几条路径上，导致某些链路过载、其他链路空闲——这就是“哈希极化”。</p>
+<p><img src="/images/HPN/image-5.png" alt="alt text"></p>
+<p>在下游方向（Aggregation → ToR），由于每个 dual-ToR 组只有 2 台 ToR，而上游有 60 台 Aggregation 交换机汇聚流量，极易造成流量集中。如图 13a 所示，在真实 GPT-3 175B 变体模型训练任务中，通往同一 NIC 的两个 ToR 下行端口流量相差 3 倍，严重拖累训练性能。</p>
+<p>如图 12b 所示，HPN 将每个 dual-ToR 组中的 ToR 划分为 两个独立平面（Plane 1 / Plane 2）：每个流一旦从某 ToR 的上行链路进入 Pod，其在整个 Pod 内的转发路径就被唯一确定。两个平面物理隔离，互不干扰。</p>
+<h2 id="6-支持更大规模"><a href="#6-支持更大规模" class="headerlink" title="6. 支持更大规模"></a>6. 支持更大规模</h2><p>为满足未来支持 十万个级别 GPU 的长期规划，HPN 设计了 tier3 网络，用于连接多个 Pod。</p>
+<p>⚖️ 权衡：Pod 规模 vs. tier3 带宽<br>当前 HPN 牺牲了 Agg-Core 层的带宽（超配比 15:1），以换取更大的单 Pod 规模；但分析 LLM 训练通信模式发现：跨数十万 GPU 的单个训练任务，对 tier3 带宽需求其实很低。</p>
+<p>为避免 tier3 引入新的不均衡风险，HPN 做了两项增强：1. Core 层延续 dual-plane 设计；2. 每台 Core 交换机采用“端口优先哈希”。</p>
+<h2 id="7-前端网络"><a href="#7-前端网络" class="headerlink" title="7. 前端网络"></a>7. 前端网络</h2><p>在 HPN 中，每台主机额外配备一块 2×200Gbps 的 NIC，用于接入独立的前端网络。前端网络主要承载管理流量和存储流量。为保障最优训练性能，存储集群被部署在前端网络中。</p>
+<p>HPN 的核心优势：</p>
+<ul>
+<li>消除 single-ToR 单点故障；</li>
+<li>通过 两层 dual-plane 架构，在单 Pod 内互联 15,000 块 GPU；</li>
+<li>彻底解决哈希极化问题；</li>
+<li>简化最优路径选择；</li>
+<li>端到端 LLM 训练性能提升 14.9%。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>Network Architecture</tag>
+        <tag>AI Infrastructure</tag>
+        <tag>Data Center Networks</tag>
+        <tag>Model Training</tag>
+        <tag>Large Language Model</tag>
       </tags>
   </entry>
   <entry>
@@ -2316,6 +2383,64 @@
       </tags>
   </entry>
   <entry>
+    <title>Megascale</title>
+    <url>/2026/06/01/Megascale/</url>
+    <content><![CDATA[<ul>
+<li><a href="#megascale%E5%B0%86%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%89%A9%E5%B1%95%E5%88%B0%E8%B6%85%E8%BF%87-10000-%E4%B8%AA-gpu">MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</a><ul>
+<li><a href="#1-%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96">1. 算法优化</a></li>
+<li><a href="#2-3d-%E5%B9%B6%E8%A1%8C%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0">2. 3D 并行通信重叠</a></li>
+<li><a href="#3-%E9%AB%98%E6%95%88%E7%AE%97%E5%AD%90">3. 高效算子</a></li>
+<li><a href="#4-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98">4. 网络性能调优</a></li>
+<li><a href="#5-%E5%AE%B9%E9%94%99">5. 容错</a></li>
+<li><a href="#6-%E5%AE%9E%E9%AA%8C%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%BB%8F%E9%AA%8C">6. 实验与部署经验</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<h1 id="MegaScale：将大语言模型训练扩展到超过-10-000-个-GPU"><a href="#MegaScale：将大语言模型训练扩展到超过-10-000-个-GPU" class="headerlink" title="MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU"></a>MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</h1><p>文章从系统视角阐明了 LLM 训练的巨大规模引入的两个具体挑战。第一个挑战是在规模化条件下实现高训练效率，即如何提高模型利用率 MFU。第二个挑战是在规模化条件下实现高训练稳定性。</p>
+<p>MegaScale 是一个为 LLM 训练定制的算法—系统协同设计的专用系统。应用两个系统原则：算法—系统协同设计(algorithm-system co-design)和深入可观测性(in-depth observability)。</p>
+<p>主要工作包括对模型架构进行了若干修改，并纳入了有效的优化技术，包括并行 transformer block、滑动窗口注意力 和 LAMB 优化器；利用混合并行策略；基于每种并行策略的模式设计了定制技术，以最大化通信和计算之间的重叠；应用预取和基于树的加载来优化数据流水线；利用非阻塞异步操作，并消除用于大规模集合通信组初始化的全局屏障；设计了一种定制网络拓扑，减少 ECMP 哈希冲突，定制拥塞控制，并调优重传超时参数以获得高网络性能。</p>
+<p>针对稳定性问题，应用深入可观测性的原则来构建一组诊断工具。所谓“深入可观测性”，是指一种综合性的监控和可视化策略，它穿透表层指标，收集系统栈中每个组件的详细、细粒度数据，目标是创建系统性能的多维视图。这组工具允许通过揭示导致稳定性问题的复杂交互和依赖关系来诊断系统并识别根因；开发了一个鲁棒训练框架，以自动化故障定位和恢复；设计了封装多种信息形式的心跳消息，以促进实时异常检测并提供早期预警；实现了一套诊断测试，用于识别造成中断的节点；优化了检查点和恢复流程，以减少中断等。</p>
+<h2 id="1-算法优化"><a href="#1-算法优化" class="headerlink" title="1. 算法优化"></a>1. 算法优化</h2><p>在算法层面对模型做了一些修改，并纳入了近期优化，以提高训练效率，同时不损害准确性。采用 transformer block 的并行版本，而不是标准的串行形式。通过这种方法，attention block 和 MLP block 的计算可以并行执行，从而减少计算时间。</p>
+<p>滑动窗口注意力（SWA）。 滑动窗口注意力是一种稀疏注意力机制，它在输入序列中的每个 token 周围使用一个固定大小的窗口。其计算复杂度为 O(s × w)，其中 s 是输入序列长度，w 是固定窗口大小。在 w ≪ s 的情况下，滑动窗口注意力比完整自注意力更高效，后者的计算复杂度为 O(s × s)。这使得训练更快，同时不损害准确性。</p>
+<p>大规模高效训练通常会受到 batch size 约束的阻碍。特别是，增加 batch size 可能会对模型收敛产生不利影响。LAMB 优化器已被证明能够将 BERT 训练的 batch size 扩展到 64K，同时不损害准确性。在 LLM 场景下，我们的实验发现 LAMB 可以在不损失准确性的情况下将 batch size 扩展到 4×。MegaScale 也通过 LAMB 优化器减少了 87.5% 的流水线气泡。</p>
+<h2 id="2-3D-并行通信重叠"><a href="#2-3D-并行通信重叠" class="headerlink" title="2. 3D 并行通信重叠"></a>2. 3D 并行通信重叠</h2><p><img src="/images/Megascale/image.png" alt="在这里插入图片描述"></p>
+<h2 id="3-高效算子"><a href="#3-高效算子" class="headerlink" title="3. 高效算子"></a>3. 高效算子</h2><p>把零碎的小 kernel(计算单元)融合成大的。比如 attention 用 FlashAttention-2,LayerNorm 和 GeLU 这些原来由很多小 kernel 拼成,融合后减少了启动开销、内存访问也更高效</p>
+<h2 id="4-网络性能调优"><a href="#4-网络性能调优" class="headerlink" title="4. 网络性能调优"></a>4. 网络性能调优</h2><p>数据中心网络由基于 Broadcom Tomahawk 4 芯片的高性能交换机构建。每个 Tomahawk 芯片的总带宽为 25.6Tbps，具有 64×400Gbps 端口。三层交换机以类似 CLOS 的拓扑连接，以连接超过 10,000 个 GPU。对于每一层的交换机，下行链路与上行链路之间的带宽比例为 1:1。也就是说，32 个端口用作下行链路，32 个端口用作上行链路。该网络以较小直径提供高带宽。每个节点都可以在有限跳数内与其他节点通信。</p>
+<p>首先，在 top-of-rack（ToR）交换机层面，一个 400G 下行端口通过特定 AOC 线缆拆分为两个 200G 下行端口。由于每条上行链路的带宽是下行链路带宽的两倍，冲突概率降低。其次，服务器上的八个 200G NIC 以 multi-rail 方式连接到八个不同交换机。由同一组 ToR 交换机连接的 GPU 服务器数量可以达到 64。并且我们策略性地调度训练任务中的数据密集型节点，使其在同一 Top of Rack（ToR）交换机下运行。这种方法显著减少了通信所需的交换机跳数，并进一步降低了 ECMP 哈希冲突概率。</p>
+<p>拥塞控制。 在分布式训练中，当在规模化条件下采用默认 DCQCN 协议时，all-to-all 通信可能导致拥塞和更高水平的 Priority Flow Control（PFC）。过度使用 PFC 可能导致 head-of-line（HoL）阻塞，从而降低网络吞吐量。为了缓解这些问题，我们开发了一种结合 Swift 和 DCQCN 原则的算法，该算法将 Round-Trip Time（RTT）的精确测量与 Explicit Congestion Notification（ECN）的快速拥塞响应能力相结合。这种方法显著提升了吞吐量，并最小化了与 PFC 相关的拥塞。</p>
+<p>重传超时设置。 NCCL 中的参数可以被设置以控制重传计时器和重试次数。我们调优这些参数，以在链路抖动下实现快速恢复。为了进一步减少恢复时间，我们在 NIC 上启用 adap_retrans 特性。该特性支持以更短间隔进行重传，并在链路抖动周期较短时帮助更快恢复传输。</p>
+<h2 id="5-容错"><a href="#5-容错" class="headerlink" title="5. 容错"></a>5. 容错</h2><ol>
+<li><p>自动化恢复流程<br>搭了一套”监工”体系:driver(总指挥)通过 Kubernetes 分配资源,每个节点配一个 executor(管家),管家上跑个 daemon 定期发心跳汇报状态。一旦 driver 发现某进程异常、或某节点心跳超时不回,就触发恢复:暂停所有训练→让各节点跑自检诊断→揪出坏节点→通知 Kubernetes 驱逐坏节点、补上等量的健康节点→从最新检查点恢复训练。也支持人工手动踢节点。</p>
+</li>
+<li><p>数据收集与监控<br>心跳里塞了多种信息用来提前发现问题:节点基本信息、训练进程状态、实时聚合分析的 stdout&#x2F;stderr 日志(命中 warning&#x2F;error 关键词就报警),还有 RDMA 流量指标。<br>RDMA 流量是个巧妙的招:有些异常不报错,表面看训练在正常跑,但因为训练有周期性,每步流量模式应该差不多——所以流量突然下降或异常波动就是出问题的信号,完全停了就自动触发恢复。<br>还做了一套毫秒级精度的监控系统:秒级监控看整体健康(查 ECN&#x2F;PFC&#x2F;QoS 配置、链路抖动、网卡问题等);毫秒级监控判断网络是否拥塞、并行传输是否到了物理极限。</p>
+</li>
+<li><p>诊断测试<br>设计原则是又轻又全:太慢会浪费训练时间,误报率高又会误踢好机器。包含两类:</p>
+</li>
+</ol>
+<p>主机内网络测试:Loopback 测试(测网卡到内存&#x2F;GPU 的回环带宽,全互联覆盖所有链路,定位掉速链路和 PCIe 异常);RNIC-to-RNIC 测试(测同主机不同网卡间的连通性和带宽)。<br>NCCL 测试:节点内 GPU 间跑 all-to-all 看带宽是否达标;通过后再和同一 ToR 交换机下的邻机跑 all-reduce,测节点间 GPU 通信。</p>
+<ol start="4">
+<li>快速检查点与恢复<br>用”两阶段存 + 广播读”把检查点和恢复的开销压到最低。</li>
+</ol>
+<h2 id="6-实验与部署经验"><a href="#6-实验与部署经验" class="headerlink" title="6. 实验与部署经验"></a>6. 实验与部署经验</h2><ol>
+<li><p>训练性能<br>对于弱扩展性：MegaScale 靠 3D 并行通信重叠做到了近似线性扩展。<br>强扩展性：MegaScale 全程比 Megatron-LM 快 1.23×~1.34×。</p>
+</li>
+<li><p>稳定性<br>真实生产运行(&gt;1 万卡、数千亿参数、数万亿 token、跑了数周):loss 持续收敛,期间因故障重启超过 100 次,其中90% 以上的软硬件故障由容错框架自动处理,其余靠第 5 章的诊断工具解决。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>系统方案</category>
+      </categories>
+      <tags>
+        <tag>模型优化</tag>
+        <tag>算子优化</tag>
+        <tag>网络调优</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【HPCA&#39;2024】Enhancing Collective Communication in MCM  Accelerators for Deep Learning Training</title>
     <url>/2025/10/11/MCM/</url>
     <content><![CDATA[<ul>
@@ -2488,103 +2613,6 @@
         <tag>MCM</tag>
         <tag>Deep Learning</tag>
         <tag>Collective Communication</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Megascale</title>
-    <url>/2026/06/01/Megascale/</url>
-    <content><![CDATA[<ul>
-<li><a href="#megascale%E5%B0%86%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%89%A9%E5%B1%95%E5%88%B0%E8%B6%85%E8%BF%87-10000-%E4%B8%AA-gpu">MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</a><ul>
-<li><a href="#1-%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96">1. 算法优化</a></li>
-<li><a href="#2-3d-%E5%B9%B6%E8%A1%8C%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0">2. 3D 并行通信重叠</a></li>
-<li><a href="#3-%E9%AB%98%E6%95%88%E7%AE%97%E5%AD%90">3. 高效算子</a></li>
-<li><a href="#4-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98">4. 网络性能调优</a></li>
-<li><a href="#5-%E5%AE%B9%E9%94%99">5. 容错</a></li>
-<li><a href="#6-%E5%AE%9E%E9%AA%8C%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%BB%8F%E9%AA%8C">6. 实验与部署经验</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-
-<h1 id="MegaScale：将大语言模型训练扩展到超过-10-000-个-GPU"><a href="#MegaScale：将大语言模型训练扩展到超过-10-000-个-GPU" class="headerlink" title="MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU"></a>MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</h1><p>文章从系统视角阐明了 LLM 训练的巨大规模引入的两个具体挑战。第一个挑战是在规模化条件下实现高训练效率，即如何提高模型利用率 MFU。第二个挑战是在规模化条件下实现高训练稳定性。</p>
-<p>MegaScale 是一个为 LLM 训练定制的算法—系统协同设计的专用系统。应用两个系统原则：算法—系统协同设计(algorithm-system co-design)和深入可观测性(in-depth observability)。</p>
-<p>主要工作包括对模型架构进行了若干修改，并纳入了有效的优化技术，包括并行 transformer block、滑动窗口注意力 和 LAMB 优化器；利用混合并行策略；基于每种并行策略的模式设计了定制技术，以最大化通信和计算之间的重叠；应用预取和基于树的加载来优化数据流水线；利用非阻塞异步操作，并消除用于大规模集合通信组初始化的全局屏障；设计了一种定制网络拓扑，减少 ECMP 哈希冲突，定制拥塞控制，并调优重传超时参数以获得高网络性能。</p>
-<p>针对稳定性问题，应用深入可观测性的原则来构建一组诊断工具。所谓“深入可观测性”，是指一种综合性的监控和可视化策略，它穿透表层指标，收集系统栈中每个组件的详细、细粒度数据，目标是创建系统性能的多维视图。这组工具允许通过揭示导致稳定性问题的复杂交互和依赖关系来诊断系统并识别根因；开发了一个鲁棒训练框架，以自动化故障定位和恢复；设计了封装多种信息形式的心跳消息，以促进实时异常检测并提供早期预警；实现了一套诊断测试，用于识别造成中断的节点；优化了检查点和恢复流程，以减少中断等。</p>
-<h2 id="1-算法优化"><a href="#1-算法优化" class="headerlink" title="1. 算法优化"></a>1. 算法优化</h2><p>在算法层面对模型做了一些修改，并纳入了近期优化，以提高训练效率，同时不损害准确性。采用 transformer block 的并行版本，而不是标准的串行形式。通过这种方法，attention block 和 MLP block 的计算可以并行执行，从而减少计算时间。</p>
-<p>滑动窗口注意力（SWA）。 滑动窗口注意力是一种稀疏注意力机制，它在输入序列中的每个 token 周围使用一个固定大小的窗口。其计算复杂度为 O(s × w)，其中 s 是输入序列长度，w 是固定窗口大小。在 w ≪ s 的情况下，滑动窗口注意力比完整自注意力更高效，后者的计算复杂度为 O(s × s)。这使得训练更快，同时不损害准确性。</p>
-<p>大规模高效训练通常会受到 batch size 约束的阻碍。特别是，增加 batch size 可能会对模型收敛产生不利影响。LAMB 优化器已被证明能够将 BERT 训练的 batch size 扩展到 64K，同时不损害准确性。在 LLM 场景下，我们的实验发现 LAMB 可以在不损失准确性的情况下将 batch size 扩展到 4×。MegaScale 也通过 LAMB 优化器减少了 87.5% 的流水线气泡。</p>
-<h2 id="2-3D-并行通信重叠"><a href="#2-3D-并行通信重叠" class="headerlink" title="2. 3D 并行通信重叠"></a>2. 3D 并行通信重叠</h2><p><img src="/images/Megascale/image.png" alt="在这里插入图片描述"></p>
-<h2 id="3-高效算子"><a href="#3-高效算子" class="headerlink" title="3. 高效算子"></a>3. 高效算子</h2><p>把零碎的小 kernel(计算单元)融合成大的。比如 attention 用 FlashAttention-2,LayerNorm 和 GeLU 这些原来由很多小 kernel 拼成,融合后减少了启动开销、内存访问也更高效</p>
-<h2 id="4-网络性能调优"><a href="#4-网络性能调优" class="headerlink" title="4. 网络性能调优"></a>4. 网络性能调优</h2><p>数据中心网络由基于 Broadcom Tomahawk 4 芯片的高性能交换机构建。每个 Tomahawk 芯片的总带宽为 25.6Tbps，具有 64×400Gbps 端口。三层交换机以类似 CLOS 的拓扑连接，以连接超过 10,000 个 GPU。对于每一层的交换机，下行链路与上行链路之间的带宽比例为 1:1。也就是说，32 个端口用作下行链路，32 个端口用作上行链路。该网络以较小直径提供高带宽。每个节点都可以在有限跳数内与其他节点通信。</p>
-<p>首先，在 top-of-rack（ToR）交换机层面，一个 400G 下行端口通过特定 AOC 线缆拆分为两个 200G 下行端口。由于每条上行链路的带宽是下行链路带宽的两倍，冲突概率降低。其次，服务器上的八个 200G NIC 以 multi-rail 方式连接到八个不同交换机。由同一组 ToR 交换机连接的 GPU 服务器数量可以达到 64。并且我们策略性地调度训练任务中的数据密集型节点，使其在同一 Top of Rack（ToR）交换机下运行。这种方法显著减少了通信所需的交换机跳数，并进一步降低了 ECMP 哈希冲突概率。</p>
-<p>拥塞控制。 在分布式训练中，当在规模化条件下采用默认 DCQCN 协议时，all-to-all 通信可能导致拥塞和更高水平的 Priority Flow Control（PFC）。过度使用 PFC 可能导致 head-of-line（HoL）阻塞，从而降低网络吞吐量。为了缓解这些问题，我们开发了一种结合 Swift 和 DCQCN 原则的算法，该算法将 Round-Trip Time（RTT）的精确测量与 Explicit Congestion Notification（ECN）的快速拥塞响应能力相结合。这种方法显著提升了吞吐量，并最小化了与 PFC 相关的拥塞。</p>
-<p>重传超时设置。 NCCL 中的参数可以被设置以控制重传计时器和重试次数。我们调优这些参数，以在链路抖动下实现快速恢复。为了进一步减少恢复时间，我们在 NIC 上启用 adap_retrans 特性。该特性支持以更短间隔进行重传，并在链路抖动周期较短时帮助更快恢复传输。</p>
-<h2 id="5-容错"><a href="#5-容错" class="headerlink" title="5. 容错"></a>5. 容错</h2><ol>
-<li><p>自动化恢复流程<br>搭了一套”监工”体系:driver(总指挥)通过 Kubernetes 分配资源,每个节点配一个 executor(管家),管家上跑个 daemon 定期发心跳汇报状态。一旦 driver 发现某进程异常、或某节点心跳超时不回,就触发恢复:暂停所有训练→让各节点跑自检诊断→揪出坏节点→通知 Kubernetes 驱逐坏节点、补上等量的健康节点→从最新检查点恢复训练。也支持人工手动踢节点。</p>
-</li>
-<li><p>数据收集与监控<br>心跳里塞了多种信息用来提前发现问题:节点基本信息、训练进程状态、实时聚合分析的 stdout&#x2F;stderr 日志(命中 warning&#x2F;error 关键词就报警),还有 RDMA 流量指标。<br>RDMA 流量是个巧妙的招:有些异常不报错,表面看训练在正常跑,但因为训练有周期性,每步流量模式应该差不多——所以流量突然下降或异常波动就是出问题的信号,完全停了就自动触发恢复。<br>还做了一套毫秒级精度的监控系统:秒级监控看整体健康(查 ECN&#x2F;PFC&#x2F;QoS 配置、链路抖动、网卡问题等);毫秒级监控判断网络是否拥塞、并行传输是否到了物理极限。</p>
-</li>
-<li><p>诊断测试<br>设计原则是又轻又全:太慢会浪费训练时间,误报率高又会误踢好机器。包含两类:</p>
-</li>
-</ol>
-<p>主机内网络测试:Loopback 测试(测网卡到内存&#x2F;GPU 的回环带宽,全互联覆盖所有链路,定位掉速链路和 PCIe 异常);RNIC-to-RNIC 测试(测同主机不同网卡间的连通性和带宽)。<br>NCCL 测试:节点内 GPU 间跑 all-to-all 看带宽是否达标;通过后再和同一 ToR 交换机下的邻机跑 all-reduce,测节点间 GPU 通信。</p>
-<ol start="4">
-<li>快速检查点与恢复<br>用”两阶段存 + 广播读”把检查点和恢复的开销压到最低。</li>
-</ol>
-<h2 id="6-实验与部署经验"><a href="#6-实验与部署经验" class="headerlink" title="6. 实验与部署经验"></a>6. 实验与部署经验</h2><ol>
-<li><p>训练性能<br>对于弱扩展性：MegaScale 靠 3D 并行通信重叠做到了近似线性扩展。<br>强扩展性：MegaScale 全程比 Megatron-LM 快 1.23×~1.34×。</p>
-</li>
-<li><p>稳定性<br>真实生产运行(&gt;1 万卡、数千亿参数、数万亿 token、跑了数周):loss 持续收敛,期间因故障重启超过 100 次,其中90% 以上的软硬件故障由容错框架自动处理,其余靠第 5 章的诊断工具解决。</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>系统方案</category>
-      </categories>
-      <tags>
-        <tag>模型优化</tag>
-        <tag>算子优化</tag>
-        <tag>网络调优</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Net within a Net</title>
-    <url>/2025/10/28/Net-within-a-Net/</url>
-    <content><![CDATA[<ul>
-<li><a href="#network-within-a-network-approach-to-create-a-scalable--high-radix-router-microarchitecture">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</a><ul>
-<li><a href="#1-high-radix-router-microarchitecture">1. High-Radix Router Microarchitecture</a><ul>
-<li><a href="#11-%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84">1.1 “网络中的网络”交换结构</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><a href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture" class="headerlink" title="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture"></a>Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</h1><p>高径数路由器的一个关键挑战在于如何构建可扩展的路由器微结构。这些大规模网络的成本主要由电缆决定，而性能通常受限于片外通道（off-chip channel）带宽。因此，路由器微结构必须合理扩展，以确保片外带宽得到充分利用，同时内部结构不会成为瓶颈。</p>
-<p>遗憾的是，传统的由单个交叉开关（crossbar switch）组成的标准路由器结构随径数 k 增大而扩展不佳，因为其分配复杂度与 k² 成正比，而交叉开关连线的扇出（fanout）随 k 线性增长。为克服这些限制，Kim 等人提出了分层交叉开关结构（hierarchical crossbar switch organization），并将其应用于 YARC 路由器。该方法将单个大型交叉开关划分为多个小交叉开关或子交换单元（subswitch），并在子交换单元的输入和输出端放置中间缓冲区。这样可以降低分配复杂度，同时减少每个输入端口驱动的输出端口数量，相较于传统交叉开关更为高效。</p>
-<p>然而，YARC 路由器设计由于需要过多的连线（如第 3.1 节所述），其可扩展性仍然受限。本文提出了一种替代性可扩展路由器微结构，利用局部网络（local network），并借鉴高径数拓扑（如 folded-Clos 和 HyperX ）的思想，将其应用于高径数路由器的交换设计中。我们在每个路由器内部创建一个片上网络（on-chip network），用于连接路由器的各个交换端口，然后通过这些路由器互连形成全局网络，从而实现一种“网络中的网络”的可扩展交换结构设计方法。</p>
-<p><img src="/images/Net-within-a-Net/image.png" alt="alt text"></p>
-<p>与分层交叉开关设计相比，这些基于网络的交换结构所需的全局连线、交叉开关和中间缓冲区更少，因此在面积和能耗效率上都有显著提升。此外，由于局部网络嵌套在全局网络之中，我们能够利用全局网络在各个路由器上表现出的流量特征来简化局部交换结构。此外，我们还提出了一种新的拓扑感知型（topology-aware）交换设计，称为双向蝶形（bilateral butterfly），用于折叠 Clos 全局网络中的局部网络。</p>
-<h2 id="1-High-Radix-Router-Microarchitecture"><a href="#1-High-Radix-Router-Microarchitecture" class="headerlink" title="1. High-Radix Router Microarchitecture"></a>1. High-Radix Router Microarchitecture</h2><p>先描述先前提出的用于高径数路由器的分层交换结构及其局限性，然后介绍一种基于网络的替代交换设计，从而形成一种“网络中的网络”的组织方式。在整个工作中，我们将单个路由器内部使用的网络称为局部网络（local network），而将连接这些路由器组成系统级网络的称为全局网络（global network）。</p>
-<p>分层路由器组织结构将一个单一的 k×k 交换机划分为 (k&#x2F;p)² 个 p×p 子交换机，其中 k 是路由器的径数，p 是子交换机的径数。该分层结构在每个子交换机的输入与输出端引入了 2k²&#x2F;p 个中间缓冲区（或称子交换缓冲区）。中间缓冲区将输入和输出仲裁过程解耦，从而避免了全局仲裁，使仲裁过程本地化。图 3 展示了一个分层交叉开关结构的布局示例，其中 k &#x3D; 16，p &#x3D; 4。</p>
-<p><img src="/images/Net-within-a-Net/image-1.png" alt="alt text"></p>
-<p>分层交叉开关由 k 条水平广播通道（row buses）和 k&#x2F;2 × (k&#x2F;p) 条垂直通道组成，因为每一列中的所有输出端口都与同列的所有列缓冲区完全连接。这些水平和垂直通道需要使用全局连线，其面积按比例增长为：k×pk2×k​&#x3D;2pk3​。我们设置 p &#x3D; √k。因此，当 k 很大时，水平和垂直连线的面积成为主导因素，按 k²·⁵ 的速率增长。子交换缓冲区的数量也按 k²&#x2F;p &#x3D; k¹·⁵ 的速率超线性增长。这些因素共同导致分层交换机在面积和功耗扩展方面效率低下。因此，我们探索一种基于不同多级网络的替代交换结构，以实现更具可扩展性的设计。</p>
-<h3 id="1-1-“网络中的网络”交换结构"><a href="#1-1-“网络中的网络”交换结构" class="headerlink" title="1.1 “网络中的网络”交换结构"></a>1.1 “网络中的网络”交换结构</h3><p>探索基于网络拓扑的交换机微结构设计，创建一种“网络中的网络”（network within a network）式的交换架构，也称为网络交换结构（network switch architecture）。在这种设计中，一个交换机由多个子交换机构成，这些子交换机通过内部点对点通道互联。每个子交换机都是输入缓冲型的，从而使仲裁仅限于子交换机内部，类似于分层交换结构的思想。</p>
-<p><strong>对于局部网络，我们重点研究三种不同的拓扑：折叠 Clos（folded-Clos）、二维环形（2D torus） 和二维 HyperX。当然，也可以使用其他拓扑，如二维网格（2D mesh）或树形（tree-based）拓扑，但它们分别会引入非均匀性（如网格）或带宽瓶颈（如树形结构），因此不适合作为局部网络。</strong></p>
-<p>由于片外带宽在大规模系统中是昂贵资源，必须被充分利用，因此局部网络不能成为性能瓶颈。</p>
-<p><img src="/images/Net-within-a-Net/image-2.png" alt="alt text"></p>
-<p><strong>将所有交换结构配置为在给定路由器径数 k 下具有相同的聚合片外带宽。</strong> 采用以下指标进行比较：交换机中的缓冲区与交叉点（crosspoints）数量；聚合扇出；总交换面积。每个交叉点和缓冲区均由晶体管实现，即使在无活动时也消耗静态功率，因此更多的交叉点和缓冲区意味着更高的静态功耗。聚合扇出影响动态能耗，因为更高的扇出需要更大的晶体管驱动，导致更高的动态能耗。</p>
-<p>对于折叠二维环形结构, 该网络具有 $4\sqrt{k}$ 条穿越中截面（bisection）的通道，因此每条内部通道的带宽需为：$\frac{k}{4\sqrt{k}} &#x3D; \frac{\sqrt{k}}{4}$ 倍于连接 I&#x2F;O 端口的外部通道带宽。假设每个子交换机保留一个端口用于 I&#x2F;O 端口，一个逻辑内部通道由 √k&#x2F;4 条物理通道组成，因此子交换机的径数为：$\frac{\sqrt{k}}{4} \times 4 + 1 &#x3D; \sqrt{k} + 1$。采用 Valiant 路由算法，其平均跳数为 √k。</p>
-]]></content>
-      <categories>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>High-Radix</tag>
-        <tag>Router</tag>
-        <tag>Microarchitecture</tag>
       </tags>
   </entry>
   <entry>
@@ -2810,6 +2838,45 @@
 <li><p>分层结构不仅降低了硬件成本，还便于将控制逻辑也按层次结构组织，简化设计和实现。</p>
 </li>
 </ul>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>High-Radix</tag>
+        <tag>Router</tag>
+        <tag>Microarchitecture</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Net within a Net</title>
+    <url>/2025/10/28/Net-within-a-Net/</url>
+    <content><![CDATA[<ul>
+<li><a href="#network-within-a-network-approach-to-create-a-scalable--high-radix-router-microarchitecture">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</a><ul>
+<li><a href="#1-high-radix-router-microarchitecture">1. High-Radix Router Microarchitecture</a><ul>
+<li><a href="#11-%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84">1.1 “网络中的网络”交换结构</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><a href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture" class="headerlink" title="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture"></a>Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</h1><p>高径数路由器的一个关键挑战在于如何构建可扩展的路由器微结构。这些大规模网络的成本主要由电缆决定，而性能通常受限于片外通道（off-chip channel）带宽。因此，路由器微结构必须合理扩展，以确保片外带宽得到充分利用，同时内部结构不会成为瓶颈。</p>
+<p>遗憾的是，传统的由单个交叉开关（crossbar switch）组成的标准路由器结构随径数 k 增大而扩展不佳，因为其分配复杂度与 k² 成正比，而交叉开关连线的扇出（fanout）随 k 线性增长。为克服这些限制，Kim 等人提出了分层交叉开关结构（hierarchical crossbar switch organization），并将其应用于 YARC 路由器。该方法将单个大型交叉开关划分为多个小交叉开关或子交换单元（subswitch），并在子交换单元的输入和输出端放置中间缓冲区。这样可以降低分配复杂度，同时减少每个输入端口驱动的输出端口数量，相较于传统交叉开关更为高效。</p>
+<p>然而，YARC 路由器设计由于需要过多的连线（如第 3.1 节所述），其可扩展性仍然受限。本文提出了一种替代性可扩展路由器微结构，利用局部网络（local network），并借鉴高径数拓扑（如 folded-Clos 和 HyperX ）的思想，将其应用于高径数路由器的交换设计中。我们在每个路由器内部创建一个片上网络（on-chip network），用于连接路由器的各个交换端口，然后通过这些路由器互连形成全局网络，从而实现一种“网络中的网络”的可扩展交换结构设计方法。</p>
+<p><img src="/images/Net-within-a-Net/image.png" alt="alt text"></p>
+<p>与分层交叉开关设计相比，这些基于网络的交换结构所需的全局连线、交叉开关和中间缓冲区更少，因此在面积和能耗效率上都有显著提升。此外，由于局部网络嵌套在全局网络之中，我们能够利用全局网络在各个路由器上表现出的流量特征来简化局部交换结构。此外，我们还提出了一种新的拓扑感知型（topology-aware）交换设计，称为双向蝶形（bilateral butterfly），用于折叠 Clos 全局网络中的局部网络。</p>
+<h2 id="1-High-Radix-Router-Microarchitecture"><a href="#1-High-Radix-Router-Microarchitecture" class="headerlink" title="1. High-Radix Router Microarchitecture"></a>1. High-Radix Router Microarchitecture</h2><p>先描述先前提出的用于高径数路由器的分层交换结构及其局限性，然后介绍一种基于网络的替代交换设计，从而形成一种“网络中的网络”的组织方式。在整个工作中，我们将单个路由器内部使用的网络称为局部网络（local network），而将连接这些路由器组成系统级网络的称为全局网络（global network）。</p>
+<p>分层路由器组织结构将一个单一的 k×k 交换机划分为 (k&#x2F;p)² 个 p×p 子交换机，其中 k 是路由器的径数，p 是子交换机的径数。该分层结构在每个子交换机的输入与输出端引入了 2k²&#x2F;p 个中间缓冲区（或称子交换缓冲区）。中间缓冲区将输入和输出仲裁过程解耦，从而避免了全局仲裁，使仲裁过程本地化。图 3 展示了一个分层交叉开关结构的布局示例，其中 k &#x3D; 16，p &#x3D; 4。</p>
+<p><img src="/images/Net-within-a-Net/image-1.png" alt="alt text"></p>
+<p>分层交叉开关由 k 条水平广播通道（row buses）和 k&#x2F;2 × (k&#x2F;p) 条垂直通道组成，因为每一列中的所有输出端口都与同列的所有列缓冲区完全连接。这些水平和垂直通道需要使用全局连线，其面积按比例增长为：k×pk2×k​&#x3D;2pk3​。我们设置 p &#x3D; √k。因此，当 k 很大时，水平和垂直连线的面积成为主导因素，按 k²·⁵ 的速率增长。子交换缓冲区的数量也按 k²&#x2F;p &#x3D; k¹·⁵ 的速率超线性增长。这些因素共同导致分层交换机在面积和功耗扩展方面效率低下。因此，我们探索一种基于不同多级网络的替代交换结构，以实现更具可扩展性的设计。</p>
+<h3 id="1-1-“网络中的网络”交换结构"><a href="#1-1-“网络中的网络”交换结构" class="headerlink" title="1.1 “网络中的网络”交换结构"></a>1.1 “网络中的网络”交换结构</h3><p>探索基于网络拓扑的交换机微结构设计，创建一种“网络中的网络”（network within a network）式的交换架构，也称为网络交换结构（network switch architecture）。在这种设计中，一个交换机由多个子交换机构成，这些子交换机通过内部点对点通道互联。每个子交换机都是输入缓冲型的，从而使仲裁仅限于子交换机内部，类似于分层交换结构的思想。</p>
+<p><strong>对于局部网络，我们重点研究三种不同的拓扑：折叠 Clos（folded-Clos）、二维环形（2D torus） 和二维 HyperX。当然，也可以使用其他拓扑，如二维网格（2D mesh）或树形（tree-based）拓扑，但它们分别会引入非均匀性（如网格）或带宽瓶颈（如树形结构），因此不适合作为局部网络。</strong></p>
+<p>由于片外带宽在大规模系统中是昂贵资源，必须被充分利用，因此局部网络不能成为性能瓶颈。</p>
+<p><img src="/images/Net-within-a-Net/image-2.png" alt="alt text"></p>
+<p><strong>将所有交换结构配置为在给定路由器径数 k 下具有相同的聚合片外带宽。</strong> 采用以下指标进行比较：交换机中的缓冲区与交叉点（crosspoints）数量；聚合扇出；总交换面积。每个交叉点和缓冲区均由晶体管实现，即使在无活动时也消耗静态功率，因此更多的交叉点和缓冲区意味着更高的静态功耗。聚合扇出影响动态能耗，因为更高的扇出需要更大的晶体管驱动，导致更高的动态能耗。</p>
+<p>对于折叠二维环形结构, 该网络具有 $4\sqrt{k}$ 条穿越中截面（bisection）的通道，因此每条内部通道的带宽需为：$\frac{k}{4\sqrt{k}} &#x3D; \frac{\sqrt{k}}{4}$ 倍于连接 I&#x2F;O 端口的外部通道带宽。假设每个子交换机保留一个端口用于 I&#x2F;O 端口，一个逻辑内部通道由 √k&#x2F;4 条物理通道组成，因此子交换机的径数为：$\frac{\sqrt{k}}{4} \times 4 + 1 &#x3D; \sqrt{k} + 1$。采用 Valiant 路由算法，其平均跳数为 √k。</p>
 ]]></content>
       <categories>
         <category>论文阅读</category>
