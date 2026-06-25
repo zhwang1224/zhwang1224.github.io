@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Agentic AI - Andrew Ng</title>
-    <url>/2026/05/22/Agentic-AI-Andrew-Ng/</url>
-    <content><![CDATA[<ul>
-<li><a href="#1-agentic-ai">1. Agentic AI</a><ul>
-<li><a href="#11-reflection">1.1 Reflection</a></li>
-<li><a href="#12-tools">1.2 Tools</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-
-<h2 id="1-Agentic-AI"><a href="#1-Agentic-AI" class="headerlink" title="1. Agentic AI"></a>1. Agentic AI</h2><p>普通的 LLM 应用通常是“ 用户提问 -&gt; 模型回答 -&gt; （循环）结束”的单轮生成模式，而 Agentic AI 更强调“用户提出目标 -&gt; 系统拆解子任务 -&gt; 调用工具&#x2F;搜索&#x2F;代码&#x2F;数据库 -&gt; 结果检查 -&gt; 反思修正 -&gt; 输出最终结果” 的多步骤（并可包含多 agent 并行执行）执行流程。</p>
-<p>Agentic AI 的价值已经充分体现，它已经被用于企业客户支持、深度研究、法律文档处理、医疗辅助判断等复杂任务中。而真正有效的 Agent 应用，需要通过工作流设计、任务分解、工具调用、评估与误差分析，让大模型从单纯的“文本生成器”升级为能够持续行动、迭代改进并完成复杂任务的“任务执行系统”。</p>
-<p>Agent 有不同的自主性程度，可以理解的是对于高自主度的 Agent 拥有更多的选择，甚至可以在执行过程中创建新的工具或流程；而对于低自主度的 Agent 而言，其执行步骤通常提前设置，其调用的工具也通常是硬编码，其自主性主要体现在 LLM 生成的文本内容。</p>
-<p>Agentic workflows 的最大价值可能就是模块化（灵活），通过模块化的执行步骤可以达到比使用单独的 LLM 应用所得到的性能要好；可以并行执行人力要花巨大时间完成的复杂或工作量很大的任务。</p>
-<p>课程总结了四个智能体工作流的设计模式：1. Reflection; 2. Tool use; 3. Planning; 4. Multi-agent collaboration。通过单个 LLM&#x2F;agent 的迭代通常可以提高输出质量；LLM 可以调用越来越多的工具，通过多模态的输入来完成特定任务；不同任务的规划；多 Agent 的协作。</p>
-<h3 id="1-1-Reflection"><a href="#1-1-Reflection" class="headerlink" title="1.1 Reflection"></a>1.1 Reflection</h3><p>相较于零样本提示（zero-shot prompting），当 Reflection 迭代过程中可输入额外信息时，输出的结果会大幅改善。</p>
-<h3 id="1-2-Tools"><a href="#1-2-Tools" class="headerlink" title="1.2 Tools"></a>1.2 Tools</h3><p>当我们询问大模型有关于当前时事热点的问题时，大模型的资料库中通常不会有最新的热点信息，但当我们允许大模型调用相应函数去获得这些信息时，这些信息会反馈给LLM，而此时大模型便可以给到我们想要的输出。即工具就是我们提供给大模型的函数，而函数可以请求调用。</p>
-<p>在 LLM 原生不支持使用工具的情况下，若要使用 tools，则流程为 首先实现相应功能函数，并把函数提供给 LLM；当需要使用该工具时，LLM会生成一个特定输出，告知需要为LLM调用函数；调用后获取函数输出，并反馈给LLM，LLM会用这个结果继续执行后续操作。</p>
-<p>例如获取当前时间的函数可为</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_current_time</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Returns current time for the given time zone&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>课程演示了如何使用 AI 开源库，让大模型去调用工具。另外，大模型本身不调用函数，而是请求你去调用工具，虽然有时候直接说让大模型调用工具，但是过程并不是这样。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> aisuite <span class="keyword">as</span> ai</span><br><span class="line">client = ai.Client()</span><br><span class="line"></span><br><span class="line">response = client.chat.comletions.create(</span><br><span class="line">    model=<span class="string">&#x27;openai:gpt-4o&#x27;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    tools=[get_current_time],</span><br><span class="line">    max_turns=<span class="number">5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>Moedel Context Protocol(MCP) 大模型上下文协议设置一套标准，让不同团队开发的应用可以统一访问工具和数据源。MCP的初衷就是让 LLM 可以访问更多的资源。例如 Cursor、Claude Desktop可作为 MCP 客户端；Slack、Google Driver、Github 可作为 MCP 服务端。</p>
-<p><img src="/images/AgenticAI/image.png" alt="alt text"></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Algorithm-Dijkstra</title>
     <url>/2024/04/08/Algorithm-Dijkstra/</url>
     <content><![CDATA[<ul>
@@ -660,6 +630,82 @@
       </tags>
   </entry>
   <entry>
+    <title>Agentic AI - Andrew Ng</title>
+    <url>/2026/05/22/Agentic-AI-Andrew-Ng/</url>
+    <content><![CDATA[<ul>
+<li><a href="#1-agentic-ai">1. Agentic AI</a><ul>
+<li><a href="#11-reflection">1.1 Reflection</a></li>
+<li><a href="#12-tools">1.2 Tools</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<h2 id="1-Agentic-AI"><a href="#1-Agentic-AI" class="headerlink" title="1. Agentic AI"></a>1. Agentic AI</h2><p>普通的 LLM 应用通常是“ 用户提问 -&gt; 模型回答 -&gt; （循环）结束”的单轮生成模式，而 Agentic AI 更强调“用户提出目标 -&gt; 系统拆解子任务 -&gt; 调用工具&#x2F;搜索&#x2F;代码&#x2F;数据库 -&gt; 结果检查 -&gt; 反思修正 -&gt; 输出最终结果” 的多步骤（并可包含多 agent 并行执行）执行流程。</p>
+<p>Agentic AI 的价值已经充分体现，它已经被用于企业客户支持、深度研究、法律文档处理、医疗辅助判断等复杂任务中。而真正有效的 Agent 应用，需要通过工作流设计、任务分解、工具调用、评估与误差分析，让大模型从单纯的“文本生成器”升级为能够持续行动、迭代改进并完成复杂任务的“任务执行系统”。</p>
+<p>Agent 有不同的自主性程度，可以理解的是对于高自主度的 Agent 拥有更多的选择，甚至可以在执行过程中创建新的工具或流程；而对于低自主度的 Agent 而言，其执行步骤通常提前设置，其调用的工具也通常是硬编码，其自主性主要体现在 LLM 生成的文本内容。</p>
+<p>Agentic workflows 的最大价值可能就是模块化（灵活），通过模块化的执行步骤可以达到比使用单独的 LLM 应用所得到的性能要好；可以并行执行人力要花巨大时间完成的复杂或工作量很大的任务。</p>
+<p>课程总结了四个智能体工作流的设计模式：1. Reflection; 2. Tool use; 3. Planning; 4. Multi-agent collaboration。通过单个 LLM&#x2F;agent 的迭代通常可以提高输出质量；LLM 可以调用越来越多的工具，通过多模态的输入来完成特定任务；不同任务的规划；多 Agent 的协作。</p>
+<h3 id="1-1-Reflection"><a href="#1-1-Reflection" class="headerlink" title="1.1 Reflection"></a>1.1 Reflection</h3><p>相较于零样本提示（zero-shot prompting），当 Reflection 迭代过程中可输入额外信息时，输出的结果会大幅改善。</p>
+<h3 id="1-2-Tools"><a href="#1-2-Tools" class="headerlink" title="1.2 Tools"></a>1.2 Tools</h3><p>当我们询问大模型有关于当前时事热点的问题时，大模型的资料库中通常不会有最新的热点信息，但当我们允许大模型调用相应函数去获得这些信息时，这些信息会反馈给LLM，而此时大模型便可以给到我们想要的输出。即工具就是我们提供给大模型的函数，而函数可以请求调用。</p>
+<p>在 LLM 原生不支持使用工具的情况下，若要使用 tools，则流程为 首先实现相应功能函数，并把函数提供给 LLM；当需要使用该工具时，LLM会生成一个特定输出，告知需要为LLM调用函数；调用后获取函数输出，并反馈给LLM，LLM会用这个结果继续执行后续操作。</p>
+<p>例如获取当前时间的函数可为</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_current_time</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Returns current time for the given time zone&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>课程演示了如何使用 AI 开源库，让大模型去调用工具。另外，大模型本身不调用函数，而是请求你去调用工具，虽然有时候直接说让大模型调用工具，但是过程并不是这样。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> aisuite <span class="keyword">as</span> ai</span><br><span class="line">client = ai.Client()</span><br><span class="line"></span><br><span class="line">response = client.chat.comletions.create(</span><br><span class="line">    model=<span class="string">&#x27;openai:gpt-4o&#x27;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    tools=[get_current_time],</span><br><span class="line">    max_turns=<span class="number">5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>Moedel Context Protocol(MCP) 大模型上下文协议设置一套标准，让不同团队开发的应用可以统一访问工具和数据源。MCP的初衷就是让 LLM 可以访问更多的资源。例如 Cursor、Claude Desktop可作为 MCP 客户端；Slack、Google Driver、Github 可作为 MCP 服务端。</p>
+<p><img src="/images/AgenticAI/image.png" alt="alt text"></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Algorithm-GradientDescent</title>
+    <url>/2024/04/09/Algorithm-GradientDescent/</url>
+    <content><![CDATA[<ul>
+<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95gradient-descent">梯度下降算法(Gradient Descent)</a></li>
+<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95%E5%87%A0%E7%A7%8D%E5%8F%98%E4%BD%93">梯度下降算法几种变体</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="梯度下降算法-Gradient-Descent"><a href="#梯度下降算法-Gradient-Descent" class="headerlink" title="梯度下降算法(Gradient Descent)"></a>梯度下降算法(Gradient Descent)</h1><p>梯度下降算法是一种用于求解函数最小值的一阶优化算法。在机器学习和深度学习中，梯度下降算法被广泛用于模型训练，通过迭代的方式调整模型参数，以最小化损失函数。</p>
+<p><img src="/images/Algorithm-GradientDescent/image.png" alt="alt text"></p>
+<p>梯度下降算法的基本思想是：在函数的梯度（或者说斜率）指向的方向上，函数值下降得最快。因此，如果我们想要找到函数的最小值，可以从函数的某个初始点出发，沿着梯度的反方向（因为我们要减小函数值）逐步迭代，最终达到函数的局部最小值点。</p>
+<p>梯度下降算法的迭代公式通常表示为：$x_{new} &#x3D; x_{old} - \alpha \nabla f(x_{old})$</p>
+<p>其中：</p>
+<ul>
+<li>$x_{old}$是当前迭代点的坐标。</li>
+<li>$\alpha$ 是学习率（步长），它决定了在梯度方向上每一步前进的距离。</li>
+<li>$\nabla f(x_{old})$ 是函数 $f(x)$ 在点 $x_{old}$的梯度，它是一个向量，指向函数增长最快的方向。</li>
+<li>$x_{new}$ 是下一个迭代点的坐标。</li>
+</ul>
+<h1 id="梯度下降算法几种变体"><a href="#梯度下降算法几种变体" class="headerlink" title="梯度下降算法几种变体"></a>梯度下降算法几种变体</h1><p>假设有一个损失函数 $J(\theta)$，其中 $\theta$ 是模型参数，我们的目标是通过调整 $\theta$ 来最小化损失函数。</p>
+<ol>
+<li><strong>批量梯度下降（Batch Gradient Descent）</strong>：</li>
+</ol>
+<p>批量梯度下降使用所有训练样本来计算梯度，然后更新参数。其更新规则可以表示为：</p>
+<p>$$<br>\theta &#x3D; \theta - \alpha \cdot \nabla J(\theta)<br>$$</p>
+<p>其中，$\alpha$ 是学习率，$\nabla J(\theta)$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 的梯度。批量梯度下降的更新规则考虑了所有样本的梯度信息，因此可以保证每次更新的方向是最优的，但计算量较大。</p>
+<ol start="2">
+<li><strong>随机梯度下降（Stochastic Gradient Descent）</strong>：</li>
+</ol>
+<p>随机梯度下降每次只使用一个随机样本来计算梯度，并根据该梯度更新参数。其更新规则可以表示为：</p>
+<p>$$<br>\theta &#x3D; \theta - \alpha \cdot \nabla J(\theta; x^{(i)}, y^{(i)})<br>$$</p>
+<p>其中，$(x^{(i)}, y^{(i)})$ 是随机选择的一个训练样本，$\nabla J(\theta; x^{(i)}, y^{(i)})$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 在样本 $(x^{(i)}, y^{(i)})$ 处的梯度。随机梯度下降每次更新只考虑一个样本，因此更新的方向可能不是最优的，但计算量较小。</p>
+<ol start="3">
+<li><strong>小批量梯度下降（Mini-batch Gradient Descent）</strong>：</li>
+</ol>
+<p>小批量梯度下降是批量梯度下降和随机梯度下降的折中，每次更新使用一小部分（批量）样本来计算梯度，并根据平均梯度更新参数。其更新规则可以表示为：<br>$$<br>\theta &#x3D; \theta - \alpha \cdot \frac{1}{|\mathcal{B}|} \sum_{(x^{(i)}, y^{(i)}) \in \mathcal{B}} \nabla J(\theta; x^{(i)}, y^{(i)})<br>$$<br>其中，$\mathcal{B}$ 是随机选择的小批量样本集合，$|\mathcal{B}|$ 是批量大小，$\nabla J(\theta; x^{(i)}, y^{(i)})$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 在批量样本 $(x^{(i)}, y^{(i)})$ 处的梯度。小批量梯度下降综合了批量梯度下降和随机梯度下降的优点，既可以保证一定的更新稳定性，又可以减少计算量。</p>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>Algorithm</tag>
+        <tag>梯度下降</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Algorithm-MergeSort</title>
     <url>/2026/05/25/Algorithm-MergeSort/</url>
     <content><![CDATA[<ul>
@@ -812,118 +858,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Algorithm-GradientDescent</title>
-    <url>/2024/04/09/Algorithm-GradientDescent/</url>
-    <content><![CDATA[<ul>
-<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95gradient-descent">梯度下降算法(Gradient Descent)</a></li>
-<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95%E5%87%A0%E7%A7%8D%E5%8F%98%E4%BD%93">梯度下降算法几种变体</a></li>
-</ul>
-<span id="more"></span>
-
-<h1 id="梯度下降算法-Gradient-Descent"><a href="#梯度下降算法-Gradient-Descent" class="headerlink" title="梯度下降算法(Gradient Descent)"></a>梯度下降算法(Gradient Descent)</h1><p>梯度下降算法是一种用于求解函数最小值的一阶优化算法。在机器学习和深度学习中，梯度下降算法被广泛用于模型训练，通过迭代的方式调整模型参数，以最小化损失函数。</p>
-<p><img src="/images/Algorithm-GradientDescent/image.png" alt="alt text"></p>
-<p>梯度下降算法的基本思想是：在函数的梯度（或者说斜率）指向的方向上，函数值下降得最快。因此，如果我们想要找到函数的最小值，可以从函数的某个初始点出发，沿着梯度的反方向（因为我们要减小函数值）逐步迭代，最终达到函数的局部最小值点。</p>
-<p>梯度下降算法的迭代公式通常表示为：$x_{new} &#x3D; x_{old} - \alpha \nabla f(x_{old})$</p>
-<p>其中：</p>
-<ul>
-<li>$x_{old}$是当前迭代点的坐标。</li>
-<li>$\alpha$ 是学习率（步长），它决定了在梯度方向上每一步前进的距离。</li>
-<li>$\nabla f(x_{old})$ 是函数 $f(x)$ 在点 $x_{old}$的梯度，它是一个向量，指向函数增长最快的方向。</li>
-<li>$x_{new}$ 是下一个迭代点的坐标。</li>
-</ul>
-<h1 id="梯度下降算法几种变体"><a href="#梯度下降算法几种变体" class="headerlink" title="梯度下降算法几种变体"></a>梯度下降算法几种变体</h1><p>假设有一个损失函数 $J(\theta)$，其中 $\theta$ 是模型参数，我们的目标是通过调整 $\theta$ 来最小化损失函数。</p>
-<ol>
-<li><strong>批量梯度下降（Batch Gradient Descent）</strong>：</li>
-</ol>
-<p>批量梯度下降使用所有训练样本来计算梯度，然后更新参数。其更新规则可以表示为：</p>
-<p>$$<br>\theta &#x3D; \theta - \alpha \cdot \nabla J(\theta)<br>$$</p>
-<p>其中，$\alpha$ 是学习率，$\nabla J(\theta)$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 的梯度。批量梯度下降的更新规则考虑了所有样本的梯度信息，因此可以保证每次更新的方向是最优的，但计算量较大。</p>
-<ol start="2">
-<li><strong>随机梯度下降（Stochastic Gradient Descent）</strong>：</li>
-</ol>
-<p>随机梯度下降每次只使用一个随机样本来计算梯度，并根据该梯度更新参数。其更新规则可以表示为：</p>
-<p>$$<br>\theta &#x3D; \theta - \alpha \cdot \nabla J(\theta; x^{(i)}, y^{(i)})<br>$$</p>
-<p>其中，$(x^{(i)}, y^{(i)})$ 是随机选择的一个训练样本，$\nabla J(\theta; x^{(i)}, y^{(i)})$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 在样本 $(x^{(i)}, y^{(i)})$ 处的梯度。随机梯度下降每次更新只考虑一个样本，因此更新的方向可能不是最优的，但计算量较小。</p>
-<ol start="3">
-<li><strong>小批量梯度下降（Mini-batch Gradient Descent）</strong>：</li>
-</ol>
-<p>小批量梯度下降是批量梯度下降和随机梯度下降的折中，每次更新使用一小部分（批量）样本来计算梯度，并根据平均梯度更新参数。其更新规则可以表示为：<br>$$<br>\theta &#x3D; \theta - \alpha \cdot \frac{1}{|\mathcal{B}|} \sum_{(x^{(i)}, y^{(i)}) \in \mathcal{B}} \nabla J(\theta; x^{(i)}, y^{(i)})<br>$$<br>其中，$\mathcal{B}$ 是随机选择的小批量样本集合，$|\mathcal{B}|$ 是批量大小，$\nabla J(\theta; x^{(i)}, y^{(i)})$ 是损失函数 $J(\theta)$ 关于参数 $\theta$ 在批量样本 $(x^{(i)}, y^{(i)})$ 处的梯度。小批量梯度下降综合了批量梯度下降和随机梯度下降的优点，既可以保证一定的更新稳定性，又可以减少计算量。</p>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-      </categories>
-      <tags>
-        <tag>Algorithm</tag>
-        <tag>梯度下降</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Algorithm-P3486</title>
-    <url>/2026/05/26/Algorithm-P3486/</url>
-    <content><![CDATA[<ul>
-<li><a href="#%E5%86%AC%E5%AD%A3%E6%9A%96%E7%B3%BB%E7%BB%9F%E6%B8%A9%E5%BA%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90">冬季暖系统温度稳定性分析</a><ul>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF">具体思路</a></li>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="冬季暖系统温度稳定性分析"><a href="#冬季暖系统温度稳定性分析" class="headerlink" title="冬季暖系统温度稳定性分析"></a>冬季暖系统温度稳定性分析</h1><p>通过计算采样的室内温度在小区承诺恒温范围内的持续时间，即持续时间内的采样室内温度值T均满足 18≤T≤24，且持续时间内的温差（最大温度max - 最低温度min&lt;&#x3D;4），持续时间越长，采暖温控效果越好。</p>
-<p>请输出最大的持续时间开始点和结束点的采样的室内温度索引号，如果存在多个最大持续时间，按持续时间的开始点采样的室内温度索引号升序，逐行输出。</p>
-<h2 id="具体思路"><a href="#具体思路" class="headerlink" title="具体思路"></a>具体思路</h2><p>这题核心是：滑动窗口 + 单调队列。要找最长连续区间 [l, r]，满足两个条件：</p>
-<ul>
-<li>区间内所有温度都在 [18, 24]</li>
-<li>区间内 最大值 - 最小值 &lt;&#x3D; 4<br>因为要的是连续区间，所以很适合用双指针滑动窗口。难点是：窗口移动时，怎么快速知道当前窗口的最大值和最小值？用两个单调队列：</li>
-<li>maxq：维护窗口最大值，下标对应的温度从大到小</li>
-<li>minq：维护窗口最小值，下标对应的温度从小到大<br>每次右端点 r 向右扩展一个温度。如果温度不在 [18,24]，说明任何跨过它的区间都非法，直接清空窗口，从 r + 1 重新开始。如果温度合法，就加入两个单调队列。如果：最大值 - 最小值 &gt; 4 就不断移动左端点 l，直到窗口重新合法。每次窗口合法时，计算长度，更新答案。</li>
-</ul>
-<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> N;</span><br><span class="line">    cin&gt;&gt;N;</span><br><span class="line"></span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">tem</span><span class="params">(N)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt;N ; i++) cin &gt;&gt; tem[i];</span><br><span class="line"></span><br><span class="line">    deque&lt;<span class="type">int</span>&gt; maxq, minq;</span><br><span class="line">    vector&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt; res;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> maxlength = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> right = <span class="number">0</span>; right &lt; N; right++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(tem[right] &lt; <span class="number">18</span> || tem[right] &gt; <span class="number">24</span>)&#123;</span><br><span class="line">            maxq.<span class="built_in">clear</span>();</span><br><span class="line">            minq.<span class="built_in">clear</span>();</span><br><span class="line">            left = right + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!maxq.<span class="built_in">empty</span>() &amp;&amp; tem[maxq.<span class="built_in">back</span>()] &lt;= tem[right]) &#123;</span><br><span class="line">            maxq.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        maxq.<span class="built_in">push_back</span>(right);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!minq.<span class="built_in">empty</span>() &amp;&amp; tem[minq.<span class="built_in">back</span>()] &gt;= tem[right]) &#123;</span><br><span class="line">            minq.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        minq.<span class="built_in">push_back</span>(right);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!maxq.<span class="built_in">empty</span>() &amp;&amp; !minq.<span class="built_in">empty</span>() &amp;&amp; tem[maxq.<span class="built_in">front</span>()] - tem[minq.<span class="built_in">front</span>()] &gt; <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (maxq.<span class="built_in">front</span>() == left) maxq.<span class="built_in">pop_front</span>();</span><br><span class="line">            <span class="keyword">if</span> (minq.<span class="built_in">front</span>() == left) minq.<span class="built_in">pop_front</span>();</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> len = right - left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (len &gt; maxlength) &#123;</span><br><span class="line">            maxlength = len;</span><br><span class="line">            res.<span class="built_in">clear</span>();</span><br><span class="line">            res.<span class="built_in">push_back</span>(&#123;left, right&#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == maxlength) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(&#123;left, right&#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> [start, end] : res) &#123;</span><br><span class="line">        cout &lt;&lt; start &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; end &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Algorithm</category>
-      </categories>
-      <tags>
-        <tag>滑动窗口</tag>
-        <tag>单调队列</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Algorithm-P4443</title>
-    <url>/2026/05/26/Algorithm-P4443/</url>
-    <content><![CDATA[<ul>
-<li><a href="#%E9%97%AE%E9%A2%98%E4%B8%8D%E8%83%BD%E5%8F%AA%E5%A4%84%E7%90%86%E5%BD%93%E5%89%8D%E6%A5%BC%E5%B1%82%E8%87%AA%E5%B7%B1%E7%9A%84%E7%94%B3%E8%AF%B7%E8%BF%98%E8%A6%81%E6%8A%8A%E4%BB%8E%E4%B8%8A%E9%9D%A2%E6%A5%BC%E5%B1%82%E6%8C%A4%E4%B8%8B%E6%9D%A5%E7%9A%84%E4%BC%9A%E8%AE%AE%E4%B8%80%E8%B5%B7%E5%8F%82%E4%B8%8E%E6%AF%94%E8%BE%83">问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。</a><ul>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。"><a href="#问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。" class="headerlink" title="问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。"></a>问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。</h1><p>本题本质是：</p>
-<ul>
-<li>每场会议基础耗时都是 人数 * 2，这是固定成本。</li>
-<li>额外成本是：人数 * 下移楼层数。</li>
-<li>人数越多，下移一层的损失越大。</li>
-<li>所以从高楼层往低楼层安排时，每一层都应该优先安排当前所有可安排会议里“人数最多”的会议。</li>
-</ul>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>贪心算法 + 优先队列&#x2F;堆。更具体地说，是一种“从高楼层到低楼层扫描”的贪心。每个会议如果下移一层，额外代价是：人数 * 1。所以人数越多的会议，越不应该被往下挪。反过来，人数少的会议更适合被挪到低楼层。</p>
-<p>因此我们从最高层往最低层遍历：</p>
-<ul>
-<li>走到某一层时，把这一层申请的会议全部加入大根堆。</li>
-<li>堆里保存的是“目前可以安排在这一层或更低楼层的会议”。</li>
-<li>当前层有 M 个会议室，所以从堆里取出人数最多的 M 个会议，安排在当前层。</li>
-<li>剩下的会议继续留在堆里，等下一层安排，也就是被迫往下挪。</li>
-</ul>
-<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> F,M,N;</span><br><span class="line">    cin&gt;&gt;F&gt;&gt;M&gt;&gt;N;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> R,P;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">R_lists</span><span class="params">(N<span class="number">+1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">P_lists</span><span class="params">(N<span class="number">+1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    vector&lt;vector&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt;&gt; <span class="built_in">leveltolist</span>(F<span class="number">+1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=N; i++)&#123;</span><br><span class="line">        cin &gt;&gt; R_lists[i] &gt;&gt; P_lists[i];</span><br><span class="line">        leveltolist[R_lists[i]].<span class="built_in">push_back</span>(&#123;P_lists[i], R_lists[i]&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    priority_queue&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt; pq;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> times = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = F; i&gt;<span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> c : leveltolist[i])&#123;</span><br><span class="line">            pq.<span class="built_in">push</span>(c);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; M; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!pq.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                <span class="keyword">auto</span> it = pq.<span class="built_in">top</span>();</span><br><span class="line">                times += (<span class="type">long</span> <span class="type">long</span>)it.first * (<span class="number">2</span> + (it.second - i));</span><br><span class="line">                pq.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(!pq.<span class="built_in">empty</span>()) cout&lt;&lt; <span class="number">-1</span> &lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span> cout &lt;&lt; times &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Algorithm</category>
-      </categories>
-      <tags>
-        <tag>贪心算法</tag>
-        <tag>优先队列/堆</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Algorithm-Hot100-哈希</title>
     <url>/2026/06/02/Algorithm-Hot100/</url>
     <content><![CDATA[<ul>
@@ -991,6 +925,72 @@
       </categories>
       <tags>
         <tag>哈希</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Algorithm-P3486</title>
+    <url>/2026/05/26/Algorithm-P3486/</url>
+    <content><![CDATA[<ul>
+<li><a href="#%E5%86%AC%E5%AD%A3%E6%9A%96%E7%B3%BB%E7%BB%9F%E6%B8%A9%E5%BA%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90">冬季暖系统温度稳定性分析</a><ul>
+<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF">具体思路</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="冬季暖系统温度稳定性分析"><a href="#冬季暖系统温度稳定性分析" class="headerlink" title="冬季暖系统温度稳定性分析"></a>冬季暖系统温度稳定性分析</h1><p>通过计算采样的室内温度在小区承诺恒温范围内的持续时间，即持续时间内的采样室内温度值T均满足 18≤T≤24，且持续时间内的温差（最大温度max - 最低温度min&lt;&#x3D;4），持续时间越长，采暖温控效果越好。</p>
+<p>请输出最大的持续时间开始点和结束点的采样的室内温度索引号，如果存在多个最大持续时间，按持续时间的开始点采样的室内温度索引号升序，逐行输出。</p>
+<h2 id="具体思路"><a href="#具体思路" class="headerlink" title="具体思路"></a>具体思路</h2><p>这题核心是：滑动窗口 + 单调队列。要找最长连续区间 [l, r]，满足两个条件：</p>
+<ul>
+<li>区间内所有温度都在 [18, 24]</li>
+<li>区间内 最大值 - 最小值 &lt;&#x3D; 4<br>因为要的是连续区间，所以很适合用双指针滑动窗口。难点是：窗口移动时，怎么快速知道当前窗口的最大值和最小值？用两个单调队列：</li>
+<li>maxq：维护窗口最大值，下标对应的温度从大到小</li>
+<li>minq：维护窗口最小值，下标对应的温度从小到大<br>每次右端点 r 向右扩展一个温度。如果温度不在 [18,24]，说明任何跨过它的区间都非法，直接清空窗口，从 r + 1 重新开始。如果温度合法，就加入两个单调队列。如果：最大值 - 最小值 &gt; 4 就不断移动左端点 l，直到窗口重新合法。每次窗口合法时，计算长度，更新答案。</li>
+</ul>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> N;</span><br><span class="line">    cin&gt;&gt;N;</span><br><span class="line"></span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">tem</span><span class="params">(N)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt;N ; i++) cin &gt;&gt; tem[i];</span><br><span class="line"></span><br><span class="line">    deque&lt;<span class="type">int</span>&gt; maxq, minq;</span><br><span class="line">    vector&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt; res;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> maxlength = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> right = <span class="number">0</span>; right &lt; N; right++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(tem[right] &lt; <span class="number">18</span> || tem[right] &gt; <span class="number">24</span>)&#123;</span><br><span class="line">            maxq.<span class="built_in">clear</span>();</span><br><span class="line">            minq.<span class="built_in">clear</span>();</span><br><span class="line">            left = right + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!maxq.<span class="built_in">empty</span>() &amp;&amp; tem[maxq.<span class="built_in">back</span>()] &lt;= tem[right]) &#123;</span><br><span class="line">            maxq.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        maxq.<span class="built_in">push_back</span>(right);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!minq.<span class="built_in">empty</span>() &amp;&amp; tem[minq.<span class="built_in">back</span>()] &gt;= tem[right]) &#123;</span><br><span class="line">            minq.<span class="built_in">pop_back</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        minq.<span class="built_in">push_back</span>(right);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!maxq.<span class="built_in">empty</span>() &amp;&amp; !minq.<span class="built_in">empty</span>() &amp;&amp; tem[maxq.<span class="built_in">front</span>()] - tem[minq.<span class="built_in">front</span>()] &gt; <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (maxq.<span class="built_in">front</span>() == left) maxq.<span class="built_in">pop_front</span>();</span><br><span class="line">            <span class="keyword">if</span> (minq.<span class="built_in">front</span>() == left) minq.<span class="built_in">pop_front</span>();</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> len = right - left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (len &gt; maxlength) &#123;</span><br><span class="line">            maxlength = len;</span><br><span class="line">            res.<span class="built_in">clear</span>();</span><br><span class="line">            res.<span class="built_in">push_back</span>(&#123;left, right&#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == maxlength) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(&#123;left, right&#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> [start, end] : res) &#123;</span><br><span class="line">        cout &lt;&lt; start &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; end &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>滑动窗口</tag>
+        <tag>单调队列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Algorithm-P4443</title>
+    <url>/2026/05/26/Algorithm-P4443/</url>
+    <content><![CDATA[<ul>
+<li><a href="#%E9%97%AE%E9%A2%98%E4%B8%8D%E8%83%BD%E5%8F%AA%E5%A4%84%E7%90%86%E5%BD%93%E5%89%8D%E6%A5%BC%E5%B1%82%E8%87%AA%E5%B7%B1%E7%9A%84%E7%94%B3%E8%AF%B7%E8%BF%98%E8%A6%81%E6%8A%8A%E4%BB%8E%E4%B8%8A%E9%9D%A2%E6%A5%BC%E5%B1%82%E6%8C%A4%E4%B8%8B%E6%9D%A5%E7%9A%84%E4%BC%9A%E8%AE%AE%E4%B8%80%E8%B5%B7%E5%8F%82%E4%B8%8E%E6%AF%94%E8%BE%83">问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。</a><ul>
+<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。"><a href="#问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。" class="headerlink" title="问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。"></a>问题：不能只处理“当前楼层自己的申请”，还要把从上面楼层挤下来的会议一起参与比较。</h1><p>本题本质是：</p>
+<ul>
+<li>每场会议基础耗时都是 人数 * 2，这是固定成本。</li>
+<li>额外成本是：人数 * 下移楼层数。</li>
+<li>人数越多，下移一层的损失越大。</li>
+<li>所以从高楼层往低楼层安排时，每一层都应该优先安排当前所有可安排会议里“人数最多”的会议。</li>
+</ul>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>贪心算法 + 优先队列&#x2F;堆。更具体地说，是一种“从高楼层到低楼层扫描”的贪心。每个会议如果下移一层，额外代价是：人数 * 1。所以人数越多的会议，越不应该被往下挪。反过来，人数少的会议更适合被挪到低楼层。</p>
+<p>因此我们从最高层往最低层遍历：</p>
+<ul>
+<li>走到某一层时，把这一层申请的会议全部加入大根堆。</li>
+<li>堆里保存的是“目前可以安排在这一层或更低楼层的会议”。</li>
+<li>当前层有 M 个会议室，所以从堆里取出人数最多的 M 个会议，安排在当前层。</li>
+<li>剩下的会议继续留在堆里，等下一层安排，也就是被迫往下挪。</li>
+</ul>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> F,M,N;</span><br><span class="line">    cin&gt;&gt;F&gt;&gt;M&gt;&gt;N;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> R,P;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">R_lists</span><span class="params">(N<span class="number">+1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">P_lists</span><span class="params">(N<span class="number">+1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    vector&lt;vector&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt;&gt; <span class="built_in">leveltolist</span>(F<span class="number">+1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i&lt;=N; i++)&#123;</span><br><span class="line">        cin &gt;&gt; R_lists[i] &gt;&gt; P_lists[i];</span><br><span class="line">        leveltolist[R_lists[i]].<span class="built_in">push_back</span>(&#123;P_lists[i], R_lists[i]&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    priority_queue&lt;pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt; pq;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> times = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = F; i&gt;<span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> c : leveltolist[i])&#123;</span><br><span class="line">            pq.<span class="built_in">push</span>(c);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; M; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!pq.<span class="built_in">empty</span>())&#123;</span><br><span class="line">                <span class="keyword">auto</span> it = pq.<span class="built_in">top</span>();</span><br><span class="line">                times += (<span class="type">long</span> <span class="type">long</span>)it.first * (<span class="number">2</span> + (it.second - i));</span><br><span class="line">                pq.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(!pq.<span class="built_in">empty</span>()) cout&lt;&lt; <span class="number">-1</span> &lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span> cout &lt;&lt; times &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>贪心算法</tag>
+        <tag>优先队列/堆</tag>
       </tags>
   </entry>
   <entry>
@@ -1372,7 +1372,7 @@
 </ul>
 <span id="more"></span>
 
-<h1 id="The-Next-Era-for-Chiplet-Innovation"><a href="#The-Next-Era-for-Chiplet-Innovation" class="headerlink" title="The Next Era for Chiplet Innovation"></a>The Next Era for Chiplet Innovation</h1><p>Author: Gabriel H. Loh, Raja Swaminathan<br>Organization: Advanced Micro Devices, Inc.(AMD)<br>email: <a href="mailto:&#103;&#x61;&#x62;&#114;&#105;&#101;&#x6c;&#x2e;&#x6c;&#111;&#104;&#x40;&#x61;&#x6d;&#100;&#46;&#99;&#x6f;&#109;">gabriel.loh@amd.com</a></p>
+<h1 id="The-Next-Era-for-Chiplet-Innovation"><a href="#The-Next-Era-for-Chiplet-Innovation" class="headerlink" title="The Next Era for Chiplet Innovation"></a>The Next Era for Chiplet Innovation</h1><p>Author: Gabriel H. Loh, Raja Swaminathan<br>Organization: Advanced Micro Devices, Inc.(AMD)<br>email: <a href="mailto:&#103;&#97;&#x62;&#x72;&#105;&#x65;&#x6c;&#46;&#108;&#111;&#104;&#x40;&#97;&#x6d;&#x64;&#46;&#99;&#x6f;&#109;">gabriel.loh@amd.com</a></p>
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ol>
 <li>Moore’s Law is slowing down and associated costs are simultaneously increasing. These pressures give rise to <strong>new approaches that utilizing advanced packaging and integration such as chiplets, interposers, and 3D stacking</strong>.</li>
 <li>they describe the key technology <strong>drivers and constraints</strong> that motivate chiplet-based architectures.</li>
@@ -1996,6 +1996,96 @@
       </tags>
   </entry>
   <entry>
+    <title>ISCA2025-CrammingaDataCenter</title>
+    <url>/2026/06/18/ISCA2025-CrammingaDataCenter/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>ISCAS-MA-WSN</title>
+    <url>/2026/06/22/ISCAS-MA-WSN/</url>
+    <content><![CDATA[<p>本文探讨了晶圆级系统的制造缺陷及其对 NoW 的影响。</p>
+<ul>
+<li><a href="#%E5%85%B7%E6%9C%89%E5%A4%9A%E9%87%8D%E7%B3%BB%E7%BB%9F%E6%95%85%E9%9A%9C%E7%9A%84%E6%99%B6%E5%9C%86%E7%BA%A7%E4%BA%A4%E6%8D%A2%E7%BD%91%E7%BB%9C%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%88%86%E6%9E%90">具有多重系统故障的晶圆级交换网络建模与分析</a><ul>
+<li><a href="#%E4%B8%BB%E8%A6%81%E6%80%9D%E8%B7%AF">主要思路</a><ul>
+<li><a href="#1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84">1. 网络架构</a></li>
+<li><a href="#2-%E8%B7%AF%E7%94%B1%E7%AD%96%E7%95%A5">2. 路由策略</a></li>
+<li><a href="#3-%E5%85%B7%E6%9C%89%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E7%9A%84%E5%90%9E%E5%90%90%E9%87%8F%E6%A8%A1%E5%9E%8B">3. 具有网络故障的吞吐量模型</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0">实验评估</a></li>
+<li><a href="#%E7%BB%93%E8%AE%BA">结论</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="具有多重系统故障的晶圆级交换网络建模与分析"><a href="#具有多重系统故障的晶圆级交换网络建模与分析" class="headerlink" title="具有多重系统故障的晶圆级交换网络建模与分析"></a>具有多重系统故障的晶圆级交换网络建模与分析</h1><p>文章以 CoWoS 作为晶圆级系统可行的封装技术。图 1 展示了 2.5D CoWoS 集成技术的示意图。带有硅通孔（through silicon vias, TSVs）的中介层用于连接裸片和基板&#x2F;PCB。中介层和裸片均为硅，具有相同的热膨胀系数。硅中介层可以提供精细的微凸点间距和高密度互连。</p>
+<p><img src="/images/ISCAS-MA-WSN/image.png" alt="alt text"><br><img src="/images/ISCAS-MA-WSN/image-1.png" alt="alt text"></p>
+<p>典型中介层的最大尺寸为 858 mm²（1 倍光罩尺寸）。相比之下，晶圆级中介层的最大尺寸可以达到 70650 mm²（12 英寸晶圆），实现约 80 倍的面积扩展。文章总结了两个晶圆级中介层面临的挑战，第一个挑战是晶圆级中介层的翘曲。晶圆级中介层的显著翘曲会导致晶圆与基板&#x2F;PCB 之间的系统组装问题。第二个挑战是生产可靠性。单片硅中介层会带来良率方面的担忧，尤其是在将整片晶圆视为单个中介层时。除了上述挑战之外，晶圆级中介层还会在供电和散热方面带来高密度挑战。这些制造缺陷会将普遍使用的 2D Mesh 拓扑转化为不规则拓扑。</p>
+<p>文章聚焦于以 2D Mesh 拓扑为主要基准的晶圆上互连网络（interconnection network on wafer, NoW），分析并建模了晶圆级交换系统中由制造缺陷引起的多重系统故障。该系统由多个交换裸片和一个无源晶圆级中介层组成。</p>
+<h2 id="主要思路"><a href="#主要思路" class="headerlink" title="主要思路"></a>主要思路</h2><h3 id="1-网络架构"><a href="#1-网络架构" class="headerlink" title="1. 网络架构"></a>1. 网络架构</h3><p>以两种自研交换芯片（芯片 A， 13.95 mm × 7.44 mm；芯片 B，13.95 mm × 13.95 mm 。芯片 A 只用两侧可用于IO）构建了一个由多个交换裸片组成、采用 2D Mesh 拓扑的晶圆级交换系统。A 和 B 裸片的容量分别为 320 Gbps 和 640 Gbps。图 2(a) 展示了 A 和 B Die 在 12 英寸晶圆上的布局。考虑到良率问题和晶圆翘曲，在边缘以及每个裸片之间分别预留了 9 mm 和 1 mm 的间距。晶圆级交换系统中布置了 52 个 A 裸片和 168 个 B 裸片，输出容量为 8.32 Tbps（阻塞拓扑结构是否性能损耗？）。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-2.png" alt="alt text"></p>
+<p>考虑晶圆级系统中的四类制造缺陷，并研究故障对 NoW 的影响：1. 晶圆级中介层制造缺陷；2. 裸片与中介层之间的键合缺陷；3. 中介层与基板&#x2F;PCB 之间的系统组装缺陷；4. 系统过热缺陷。</p>
+<p>如图 3(a) 所示，晶圆制造缺陷随机分布在晶圆上，这会在 NoW 中引起随机故障。具有多层金属层的碗形晶圆如图 3(b) 所示。晶圆翘曲会导致裸片与中介层之间的键合缺陷，这可能在 NoW 中引起环状故障。裸片键合后，晶圆呈现不规则翘曲，如图 3(c) 所示。晶圆翘曲会导致中介层与基板&#x2F;PCB 之间的组装缺陷，这将在 NoW 中引起随机故障。图 3(d) 展示了采用双螺旋液体通道散热器的系统温度分布。温度分布会随液体通道类型不同而变化。系统过热缺陷会在 NoW 中引起集中故障。</p>
+<h3 id="2-路由策略"><a href="#2-路由策略" class="headerlink" title="2. 路由策略"></a>2. 路由策略</h3><p>针对不规则网络拓扑提出了一种确定性变体 BFS（variant BFS, v-BFS）路由算法。在普通 BFS（normal-BFS, n-BFS）算法中，父节点在生成 BFS 树期间按照特定顺序访问邻居节点，例如节点 ID 递增顺序，这可能导致特定链路拥塞。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-3.png" alt="alt text"></p>
+<p>图 4(a) 展示了一个不规则 3 × 3 Mesh 拓扑，其中节点 2 和节点 5 之间存在一条故障链路。BFS算法中只生成一种 BFS Tree-1，链路 0-1 更可能发生拥塞。而v-BFS 算法中，父节点以随机顺序访问邻居节点，以平衡网络链路的使用。提出的 v-BFS 算法实现了最短路由，并在不同链路之间均衡流量。但其实由于故障的存在部分链路仍可能会存在拥塞。</p>
+<h3 id="3-具有网络故障的吞吐量模型"><a href="#3-具有网络故障的吞吐量模型" class="headerlink" title="3. 具有网络故障的吞吐量模型"></a>3. 具有网络故障的吞吐量模型</h3><p>影响输出吞吐量的故障模式主要有三个因素：1. 数量；2. 位置；3. 集中度。本文选择故障节点与最近 A 裸片节点之间的最小距离 d 来表示位置的影响。m、mx 和 my 分别用于表示集中故障数量、x 维度中的集中故障数量以及 y 维度中的集中故障数量。如图 2(b) 所示，对于 fault-1，最小距离 d 为 2。对于 fault-2，m、mx 和 my 分别为 8、5 和 3。</p>
+<p>文章认为 NoW 中的故障对吞吐量的影响主要由三类因素决定：</p>
+<p>故障数量：坏掉的节点&#x2F;链路越多，吞吐量通常越低。<br>故障位置：故障离 A die 越近，影响越大。A die 是系统的输出节点，所以作者用故障节点到最近 A die 的最小距离 d 来刻画故障位置。<br>故障集中度：故障如果集中在一片区域，对网络破坏更严重；如果分散在中心区域，影响相对较小。</p>
+<p>实际吞吐量可以抽象表示为：</p>
+<p>$$<br>Tpt &#x3D; Tpt_{\text{initial}} - f(\text{故障位置影响}) - g(\text{故障集中度影响})<br>$$</p>
+<p>输出吞吐量 Tpt 可以表示为：</p>
+<p>$$<br>Tpt &#x3D; Tpt_{\text{initial}}</p>
+<ul>
+<li>f\left(\sum_i (d_i + 1)^\alpha\right)</li>
+<li>g\left(<br>\sum_j \left(<br>(m_{xj}-1)^\beta + (m_{yj}-1)^\beta + \gamma \cdot (m_j-1)<br>\right)<br>\right)<br>\tag{1}<br>$$</li>
+</ul>
+<p>拟合优度表示为：</p>
+<p>$$<br>R^2 &#x3D;<br>\frac{<br>\sum_i (\hat{y}_i - \bar{y})^2<br>}{<br>\sum_i (y_i - \bar{y})^2<br>}<br>\tag{2}<br>$$</p>
+<h2 id="实验评估"><a href="#实验评估" class="headerlink" title="实验评估"></a>实验评估</h2><p>实验系统基于 OMNeT++，以展示所提出的基于 v-BFS 的流量均衡路由算法和吞吐量模型的性能。为了简化流控制实现，超过缓冲区的包会被丢弃。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-4.png" alt="alt text"></p>
+<ol>
+<li>具有多重故障的系统性能</li>
+</ol>
+<p>在无网络故障情况下 n-BFS 和 v-BFS 算法的性能。网络吞吐量和延迟随流量注入率的变化如图 5(a) 和图 5(b) 所示。当流量注入率达到 160 Gbps（即最大注入率）时，n-BFS 实现了 4.4 Tbps 吞吐量，而 BFT-like 拓扑实现了 6.46 Tbps 吞吐量，传输延迟降低了 57%。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-5.png" alt="alt text"></p>
+<p>采用不同路由算法时的系统热力图如图 5(c) 和图 5(d) 所示，其中不同颜色表示每个节点的交换包数量。n-BFS 算法使流量集中在边缘 B 节点之间。v-BFS 算法能够很好地在近中心节点之间均衡流量，从而避免边缘 B 节点上的热点。</p>
+<p><img src="/images/ISCAS-MA-WSN/image-6.png" alt="alt text"></p>
+<p>其次研究了不同网络故障的影响。具有不同故障的不规则网络拓扑如图 6(e) 所示。在 Topo 0-1 到 Topo 0-3 中，研究了边缘 B 节点故障的影响。如图 6(a) 所示，对于两种路由算法，吞吐量都会随着边缘故障数量的增加而线性下降。</p>
+<p>在 Topo 1-1 和 Topo 1-2 中，研究了节点故障位置的影响。如图 8(b) 所示，Topo 1-2 和无故障 Topo 实现了几乎相同的网络性能。本文得出结论：故障越靠近边缘，对网络性能的影响越大。</p>
+<p>在 Topo 2-1 到 Topo 2-3 中，研究了节点故障数量的影响。如图 8(c) 所示，本文发现故障数量会轻微影响网络性能，而故障位置发挥更重要的作用。</p>
+<p>在 Topo 3-1 和 Topo 3-2 中，研究了集中故障的影响。如图 8(d) 所示，故障越集中，对网络性能的影响越大。总之，近边缘故障和集中故障会严重降低 NoW 性能。分布式近中心故障对 NoW 性能的影响较小。</p>
+<ol start="2">
+<li>吞吐量模型评估</li>
+</ol>
+<p><img src="/images/ISCAS-MA-WSN/image-7.png" alt="alt text"></p>
+<p>由于网络输出吞吐量与最小距离 d 成反比，α 设置为 -1。在分析 Topo 3-1 和 Topo 3-2 的吞吐量之后，本文将 β 设置为 2。论文选择指数函数表示 $f(\cdot)$ 和 $g(\cdot)$，因此可以写为：</p>
+<p>$$<br>Tpt &#x3D; a \cdot b^x + c \cdot d^y + e<br>\tag{4}<br>$$</p>
+<p>其中：</p>
+<p>$$<br>x &#x3D; \sum_i \frac{1}{d_i+1}<br>$$</p>
+<p>$$<br>y &#x3D; \sum_j \left(<br>(m_{xj}-1)^2 + (m_{yj}-1)^2 + \gamma \cdot (m_j-1)<br>\right)<br>$$</p>
+<p>其中，x、y 表示故障位置和集中度的预处理数据。a、b、c、d、e 为常数，将使用非线性最小二乘法（NLLS）确定。拟合优度指标随常数 γ 的变化如图 7(a) 所示。最优 γ 为 -0.8，拟合优度为 0.98。经过 NLLS 后，常数 a、b、c、d、e 分别为 1.435、0.858、1.253、0.959、3.304。因此，采用 v-BFS 算法的晶圆级交换系统输出吞吐量模型表示为：</p>
+<p>$$<br>Tpt &#x3D;<br>1.43467 \times 0.858349^x</p>
+<ul>
+<li>1.25346 \times 0.958981^y</li>
+<li>3.30372<br>\tag{5}<br>$$</li>
+</ul>
+<p>模型估计吞吐量曲线与真实吞吐量如图 7(b) 所示。当 γ &#x3D; -0.8 时，x 和 y 表示故障位置和故障集中度。红色圆点是用于构建模型的训练数据，蓝色方块分别是 Test Topo 1 和 Test Topo 2 的测试数据。这两个拓扑的吞吐量预测误差分别为 0.001 Tbps 和 0.1 Tbps，这证明了模型的准确性。注意，式 (5) 的输出吞吐量模型仅在故障位置和集中度参数不太大时有效。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>晶圆系统的故障分类很有借鉴意义。</p>
+]]></content>
+      <categories>
+        <category>晶圆级系统</category>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>chiplet</tag>
+        <tag>routing algorithm</tag>
+        <tag>waferscale system</tag>
+        <tag>on-wafer interconnect networks</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>HammingMesh</title>
     <url>/2025/11/06/HammingMesh/</url>
     <content><![CDATA[<ul>
@@ -2167,96 +2257,6 @@
         <tag>Networking</tag>
         <tag>Deep Learning</tag>
         <tag>Clusters</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ISCA2025-CrammingaDataCenter</title>
-    <url>/2026/06/18/ISCA2025-CrammingaDataCenter/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>ISCAS-MA-WSN</title>
-    <url>/2026/06/22/ISCAS-MA-WSN/</url>
-    <content><![CDATA[<p>本文探讨了晶圆级系统的制造缺陷及其对 NoW 的影响。</p>
-<ul>
-<li><a href="#%E5%85%B7%E6%9C%89%E5%A4%9A%E9%87%8D%E7%B3%BB%E7%BB%9F%E6%95%85%E9%9A%9C%E7%9A%84%E6%99%B6%E5%9C%86%E7%BA%A7%E4%BA%A4%E6%8D%A2%E7%BD%91%E7%BB%9C%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%88%86%E6%9E%90">具有多重系统故障的晶圆级交换网络建模与分析</a><ul>
-<li><a href="#%E4%B8%BB%E8%A6%81%E6%80%9D%E8%B7%AF">主要思路</a><ul>
-<li><a href="#1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84">1. 网络架构</a></li>
-<li><a href="#2-%E8%B7%AF%E7%94%B1%E7%AD%96%E7%95%A5">2. 路由策略</a></li>
-<li><a href="#3-%E5%85%B7%E6%9C%89%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E7%9A%84%E5%90%9E%E5%90%90%E9%87%8F%E6%A8%A1%E5%9E%8B">3. 具有网络故障的吞吐量模型</a></li>
-</ul>
-</li>
-<li><a href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0">实验评估</a></li>
-<li><a href="#%E7%BB%93%E8%AE%BA">结论</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="具有多重系统故障的晶圆级交换网络建模与分析"><a href="#具有多重系统故障的晶圆级交换网络建模与分析" class="headerlink" title="具有多重系统故障的晶圆级交换网络建模与分析"></a>具有多重系统故障的晶圆级交换网络建模与分析</h1><p>文章以 CoWoS 作为晶圆级系统可行的封装技术。图 1 展示了 2.5D CoWoS 集成技术的示意图。带有硅通孔（through silicon vias, TSVs）的中介层用于连接裸片和基板&#x2F;PCB。中介层和裸片均为硅，具有相同的热膨胀系数。硅中介层可以提供精细的微凸点间距和高密度互连。</p>
-<p><img src="/images/ISCAS-MA-WSN/image.png" alt="alt text"><br><img src="/images/ISCAS-MA-WSN/image-1.png" alt="alt text"></p>
-<p>典型中介层的最大尺寸为 858 mm²（1 倍光罩尺寸）。相比之下，晶圆级中介层的最大尺寸可以达到 70650 mm²（12 英寸晶圆），实现约 80 倍的面积扩展。文章总结了两个晶圆级中介层面临的挑战，第一个挑战是晶圆级中介层的翘曲。晶圆级中介层的显著翘曲会导致晶圆与基板&#x2F;PCB 之间的系统组装问题。第二个挑战是生产可靠性。单片硅中介层会带来良率方面的担忧，尤其是在将整片晶圆视为单个中介层时。除了上述挑战之外，晶圆级中介层还会在供电和散热方面带来高密度挑战。这些制造缺陷会将普遍使用的 2D Mesh 拓扑转化为不规则拓扑。</p>
-<p>文章聚焦于以 2D Mesh 拓扑为主要基准的晶圆上互连网络（interconnection network on wafer, NoW），分析并建模了晶圆级交换系统中由制造缺陷引起的多重系统故障。该系统由多个交换裸片和一个无源晶圆级中介层组成。</p>
-<h2 id="主要思路"><a href="#主要思路" class="headerlink" title="主要思路"></a>主要思路</h2><h3 id="1-网络架构"><a href="#1-网络架构" class="headerlink" title="1. 网络架构"></a>1. 网络架构</h3><p>以两种自研交换芯片（芯片 A， 13.95 mm × 7.44 mm；芯片 B，13.95 mm × 13.95 mm 。芯片 A 只用两侧可用于IO）构建了一个由多个交换裸片组成、采用 2D Mesh 拓扑的晶圆级交换系统。A 和 B 裸片的容量分别为 320 Gbps 和 640 Gbps。图 2(a) 展示了 A 和 B Die 在 12 英寸晶圆上的布局。考虑到良率问题和晶圆翘曲，在边缘以及每个裸片之间分别预留了 9 mm 和 1 mm 的间距。晶圆级交换系统中布置了 52 个 A 裸片和 168 个 B 裸片，输出容量为 8.32 Tbps（阻塞拓扑结构是否性能损耗？）。</p>
-<p><img src="/images/ISCAS-MA-WSN/image-2.png" alt="alt text"></p>
-<p>考虑晶圆级系统中的四类制造缺陷，并研究故障对 NoW 的影响：1. 晶圆级中介层制造缺陷；2. 裸片与中介层之间的键合缺陷；3. 中介层与基板&#x2F;PCB 之间的系统组装缺陷；4. 系统过热缺陷。</p>
-<p>如图 3(a) 所示，晶圆制造缺陷随机分布在晶圆上，这会在 NoW 中引起随机故障。具有多层金属层的碗形晶圆如图 3(b) 所示。晶圆翘曲会导致裸片与中介层之间的键合缺陷，这可能在 NoW 中引起环状故障。裸片键合后，晶圆呈现不规则翘曲，如图 3(c) 所示。晶圆翘曲会导致中介层与基板&#x2F;PCB 之间的组装缺陷，这将在 NoW 中引起随机故障。图 3(d) 展示了采用双螺旋液体通道散热器的系统温度分布。温度分布会随液体通道类型不同而变化。系统过热缺陷会在 NoW 中引起集中故障。</p>
-<h3 id="2-路由策略"><a href="#2-路由策略" class="headerlink" title="2. 路由策略"></a>2. 路由策略</h3><p>针对不规则网络拓扑提出了一种确定性变体 BFS（variant BFS, v-BFS）路由算法。在普通 BFS（normal-BFS, n-BFS）算法中，父节点在生成 BFS 树期间按照特定顺序访问邻居节点，例如节点 ID 递增顺序，这可能导致特定链路拥塞。</p>
-<p><img src="/images/ISCAS-MA-WSN/image-3.png" alt="alt text"></p>
-<p>图 4(a) 展示了一个不规则 3 × 3 Mesh 拓扑，其中节点 2 和节点 5 之间存在一条故障链路。BFS算法中只生成一种 BFS Tree-1，链路 0-1 更可能发生拥塞。而v-BFS 算法中，父节点以随机顺序访问邻居节点，以平衡网络链路的使用。提出的 v-BFS 算法实现了最短路由，并在不同链路之间均衡流量。但其实由于故障的存在部分链路仍可能会存在拥塞。</p>
-<h3 id="3-具有网络故障的吞吐量模型"><a href="#3-具有网络故障的吞吐量模型" class="headerlink" title="3. 具有网络故障的吞吐量模型"></a>3. 具有网络故障的吞吐量模型</h3><p>影响输出吞吐量的故障模式主要有三个因素：1. 数量；2. 位置；3. 集中度。本文选择故障节点与最近 A 裸片节点之间的最小距离 d 来表示位置的影响。m、mx 和 my 分别用于表示集中故障数量、x 维度中的集中故障数量以及 y 维度中的集中故障数量。如图 2(b) 所示，对于 fault-1，最小距离 d 为 2。对于 fault-2，m、mx 和 my 分别为 8、5 和 3。</p>
-<p>文章认为 NoW 中的故障对吞吐量的影响主要由三类因素决定：</p>
-<p>故障数量：坏掉的节点&#x2F;链路越多，吞吐量通常越低。<br>故障位置：故障离 A die 越近，影响越大。A die 是系统的输出节点，所以作者用故障节点到最近 A die 的最小距离 d 来刻画故障位置。<br>故障集中度：故障如果集中在一片区域，对网络破坏更严重；如果分散在中心区域，影响相对较小。</p>
-<p>实际吞吐量可以抽象表示为：</p>
-<p>$$<br>Tpt &#x3D; Tpt_{\text{initial}} - f(\text{故障位置影响}) - g(\text{故障集中度影响})<br>$$</p>
-<p>输出吞吐量 Tpt 可以表示为：</p>
-<p>$$<br>Tpt &#x3D; Tpt_{\text{initial}}</p>
-<ul>
-<li>f\left(\sum_i (d_i + 1)^\alpha\right)</li>
-<li>g\left(<br>\sum_j \left(<br>(m_{xj}-1)^\beta + (m_{yj}-1)^\beta + \gamma \cdot (m_j-1)<br>\right)<br>\right)<br>\tag{1}<br>$$</li>
-</ul>
-<p>拟合优度表示为：</p>
-<p>$$<br>R^2 &#x3D;<br>\frac{<br>\sum_i (\hat{y}_i - \bar{y})^2<br>}{<br>\sum_i (y_i - \bar{y})^2<br>}<br>\tag{2}<br>$$</p>
-<h2 id="实验评估"><a href="#实验评估" class="headerlink" title="实验评估"></a>实验评估</h2><p>实验系统基于 OMNeT++，以展示所提出的基于 v-BFS 的流量均衡路由算法和吞吐量模型的性能。为了简化流控制实现，超过缓冲区的包会被丢弃。</p>
-<p><img src="/images/ISCAS-MA-WSN/image-4.png" alt="alt text"></p>
-<ol>
-<li>具有多重故障的系统性能</li>
-</ol>
-<p>在无网络故障情况下 n-BFS 和 v-BFS 算法的性能。网络吞吐量和延迟随流量注入率的变化如图 5(a) 和图 5(b) 所示。当流量注入率达到 160 Gbps（即最大注入率）时，n-BFS 实现了 4.4 Tbps 吞吐量，而 BFT-like 拓扑实现了 6.46 Tbps 吞吐量，传输延迟降低了 57%。</p>
-<p><img src="/images/ISCAS-MA-WSN/image-5.png" alt="alt text"></p>
-<p>采用不同路由算法时的系统热力图如图 5(c) 和图 5(d) 所示，其中不同颜色表示每个节点的交换包数量。n-BFS 算法使流量集中在边缘 B 节点之间。v-BFS 算法能够很好地在近中心节点之间均衡流量，从而避免边缘 B 节点上的热点。</p>
-<p><img src="/images/ISCAS-MA-WSN/image-6.png" alt="alt text"></p>
-<p>其次研究了不同网络故障的影响。具有不同故障的不规则网络拓扑如图 6(e) 所示。在 Topo 0-1 到 Topo 0-3 中，研究了边缘 B 节点故障的影响。如图 6(a) 所示，对于两种路由算法，吞吐量都会随着边缘故障数量的增加而线性下降。</p>
-<p>在 Topo 1-1 和 Topo 1-2 中，研究了节点故障位置的影响。如图 8(b) 所示，Topo 1-2 和无故障 Topo 实现了几乎相同的网络性能。本文得出结论：故障越靠近边缘，对网络性能的影响越大。</p>
-<p>在 Topo 2-1 到 Topo 2-3 中，研究了节点故障数量的影响。如图 8(c) 所示，本文发现故障数量会轻微影响网络性能，而故障位置发挥更重要的作用。</p>
-<p>在 Topo 3-1 和 Topo 3-2 中，研究了集中故障的影响。如图 8(d) 所示，故障越集中，对网络性能的影响越大。总之，近边缘故障和集中故障会严重降低 NoW 性能。分布式近中心故障对 NoW 性能的影响较小。</p>
-<ol start="2">
-<li>吞吐量模型评估</li>
-</ol>
-<p><img src="/images/ISCAS-MA-WSN/image-7.png" alt="alt text"></p>
-<p>由于网络输出吞吐量与最小距离 d 成反比，α 设置为 -1。在分析 Topo 3-1 和 Topo 3-2 的吞吐量之后，本文将 β 设置为 2。论文选择指数函数表示 $f(\cdot)$ 和 $g(\cdot)$，因此可以写为：</p>
-<p>$$<br>Tpt &#x3D; a \cdot b^x + c \cdot d^y + e<br>\tag{4}<br>$$</p>
-<p>其中：</p>
-<p>$$<br>x &#x3D; \sum_i \frac{1}{d_i+1}<br>$$</p>
-<p>$$<br>y &#x3D; \sum_j \left(<br>(m_{xj}-1)^2 + (m_{yj}-1)^2 + \gamma \cdot (m_j-1)<br>\right)<br>$$</p>
-<p>其中，x、y 表示故障位置和集中度的预处理数据。a、b、c、d、e 为常数，将使用非线性最小二乘法（NLLS）确定。拟合优度指标随常数 γ 的变化如图 7(a) 所示。最优 γ 为 -0.8，拟合优度为 0.98。经过 NLLS 后，常数 a、b、c、d、e 分别为 1.435、0.858、1.253、0.959、3.304。因此，采用 v-BFS 算法的晶圆级交换系统输出吞吐量模型表示为：</p>
-<p>$$<br>Tpt &#x3D;<br>1.43467 \times 0.858349^x</p>
-<ul>
-<li>1.25346 \times 0.958981^y</li>
-<li>3.30372<br>\tag{5}<br>$$</li>
-</ul>
-<p>模型估计吞吐量曲线与真实吞吐量如图 7(b) 所示。当 γ &#x3D; -0.8 时，x 和 y 表示故障位置和故障集中度。红色圆点是用于构建模型的训练数据，蓝色方块分别是 Test Topo 1 和 Test Topo 2 的测试数据。这两个拓扑的吞吐量预测误差分别为 0.001 Tbps 和 0.1 Tbps，这证明了模型的准确性。注意，式 (5) 的输出吞吐量模型仅在故障位置和集中度参数不太大时有效。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>晶圆系统的故障分类很有借鉴意义。</p>
-]]></content>
-      <categories>
-        <category>晶圆级系统</category>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>chiplet</tag>
-        <tag>routing algorithm</tag>
-        <tag>waferscale system</tag>
-        <tag>on-wafer interconnect networks</tag>
       </tags>
   </entry>
   <entry>
@@ -2646,6 +2646,45 @@
       </tags>
   </entry>
   <entry>
+    <title>Net within a Net</title>
+    <url>/2025/10/28/Net-within-a-Net/</url>
+    <content><![CDATA[<ul>
+<li><a href="#network-within-a-network-approach-to-create-a-scalable--high-radix-router-microarchitecture">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</a><ul>
+<li><a href="#1-high-radix-router-microarchitecture">1. High-Radix Router Microarchitecture</a><ul>
+<li><a href="#11-%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84">1.1 “网络中的网络”交换结构</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><a href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture" class="headerlink" title="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture"></a>Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</h1><p>高径数路由器的一个关键挑战在于如何构建可扩展的路由器微结构。这些大规模网络的成本主要由电缆决定，而性能通常受限于片外通道（off-chip channel）带宽。因此，路由器微结构必须合理扩展，以确保片外带宽得到充分利用，同时内部结构不会成为瓶颈。</p>
+<p>遗憾的是，传统的由单个交叉开关（crossbar switch）组成的标准路由器结构随径数 k 增大而扩展不佳，因为其分配复杂度与 k² 成正比，而交叉开关连线的扇出（fanout）随 k 线性增长。为克服这些限制，Kim 等人提出了分层交叉开关结构（hierarchical crossbar switch organization），并将其应用于 YARC 路由器。该方法将单个大型交叉开关划分为多个小交叉开关或子交换单元（subswitch），并在子交换单元的输入和输出端放置中间缓冲区。这样可以降低分配复杂度，同时减少每个输入端口驱动的输出端口数量，相较于传统交叉开关更为高效。</p>
+<p>然而，YARC 路由器设计由于需要过多的连线（如第 3.1 节所述），其可扩展性仍然受限。本文提出了一种替代性可扩展路由器微结构，利用局部网络（local network），并借鉴高径数拓扑（如 folded-Clos 和 HyperX ）的思想，将其应用于高径数路由器的交换设计中。我们在每个路由器内部创建一个片上网络（on-chip network），用于连接路由器的各个交换端口，然后通过这些路由器互连形成全局网络，从而实现一种“网络中的网络”的可扩展交换结构设计方法。</p>
+<p><img src="/images/Net-within-a-Net/image.png" alt="alt text"></p>
+<p>与分层交叉开关设计相比，这些基于网络的交换结构所需的全局连线、交叉开关和中间缓冲区更少，因此在面积和能耗效率上都有显著提升。此外，由于局部网络嵌套在全局网络之中，我们能够利用全局网络在各个路由器上表现出的流量特征来简化局部交换结构。此外，我们还提出了一种新的拓扑感知型（topology-aware）交换设计，称为双向蝶形（bilateral butterfly），用于折叠 Clos 全局网络中的局部网络。</p>
+<h2 id="1-High-Radix-Router-Microarchitecture"><a href="#1-High-Radix-Router-Microarchitecture" class="headerlink" title="1. High-Radix Router Microarchitecture"></a>1. High-Radix Router Microarchitecture</h2><p>先描述先前提出的用于高径数路由器的分层交换结构及其局限性，然后介绍一种基于网络的替代交换设计，从而形成一种“网络中的网络”的组织方式。在整个工作中，我们将单个路由器内部使用的网络称为局部网络（local network），而将连接这些路由器组成系统级网络的称为全局网络（global network）。</p>
+<p>分层路由器组织结构将一个单一的 k×k 交换机划分为 (k&#x2F;p)² 个 p×p 子交换机，其中 k 是路由器的径数，p 是子交换机的径数。该分层结构在每个子交换机的输入与输出端引入了 2k²&#x2F;p 个中间缓冲区（或称子交换缓冲区）。中间缓冲区将输入和输出仲裁过程解耦，从而避免了全局仲裁，使仲裁过程本地化。图 3 展示了一个分层交叉开关结构的布局示例，其中 k &#x3D; 16，p &#x3D; 4。</p>
+<p><img src="/images/Net-within-a-Net/image-1.png" alt="alt text"></p>
+<p>分层交叉开关由 k 条水平广播通道（row buses）和 k&#x2F;2 × (k&#x2F;p) 条垂直通道组成，因为每一列中的所有输出端口都与同列的所有列缓冲区完全连接。这些水平和垂直通道需要使用全局连线，其面积按比例增长为：k×pk2×k​&#x3D;2pk3​。我们设置 p &#x3D; √k。因此，当 k 很大时，水平和垂直连线的面积成为主导因素，按 k²·⁵ 的速率增长。子交换缓冲区的数量也按 k²&#x2F;p &#x3D; k¹·⁵ 的速率超线性增长。这些因素共同导致分层交换机在面积和功耗扩展方面效率低下。因此，我们探索一种基于不同多级网络的替代交换结构，以实现更具可扩展性的设计。</p>
+<h3 id="1-1-“网络中的网络”交换结构"><a href="#1-1-“网络中的网络”交换结构" class="headerlink" title="1.1 “网络中的网络”交换结构"></a>1.1 “网络中的网络”交换结构</h3><p>探索基于网络拓扑的交换机微结构设计，创建一种“网络中的网络”（network within a network）式的交换架构，也称为网络交换结构（network switch architecture）。在这种设计中，一个交换机由多个子交换机构成，这些子交换机通过内部点对点通道互联。每个子交换机都是输入缓冲型的，从而使仲裁仅限于子交换机内部，类似于分层交换结构的思想。</p>
+<p><strong>对于局部网络，我们重点研究三种不同的拓扑：折叠 Clos（folded-Clos）、二维环形（2D torus） 和二维 HyperX。当然，也可以使用其他拓扑，如二维网格（2D mesh）或树形（tree-based）拓扑，但它们分别会引入非均匀性（如网格）或带宽瓶颈（如树形结构），因此不适合作为局部网络。</strong></p>
+<p>由于片外带宽在大规模系统中是昂贵资源，必须被充分利用，因此局部网络不能成为性能瓶颈。</p>
+<p><img src="/images/Net-within-a-Net/image-2.png" alt="alt text"></p>
+<p><strong>将所有交换结构配置为在给定路由器径数 k 下具有相同的聚合片外带宽。</strong> 采用以下指标进行比较：交换机中的缓冲区与交叉点（crosspoints）数量；聚合扇出；总交换面积。每个交叉点和缓冲区均由晶体管实现，即使在无活动时也消耗静态功率，因此更多的交叉点和缓冲区意味着更高的静态功耗。聚合扇出影响动态能耗，因为更高的扇出需要更大的晶体管驱动，导致更高的动态能耗。</p>
+<p>对于折叠二维环形结构, 该网络具有 $4\sqrt{k}$ 条穿越中截面（bisection）的通道，因此每条内部通道的带宽需为：$\frac{k}{4\sqrt{k}} &#x3D; \frac{\sqrt{k}}{4}$ 倍于连接 I&#x2F;O 端口的外部通道带宽。假设每个子交换机保留一个端口用于 I&#x2F;O 端口，一个逻辑内部通道由 √k&#x2F;4 条物理通道组成，因此子交换机的径数为：$\frac{\sqrt{k}}{4} \times 4 + 1 &#x3D; \sqrt{k} + 1$。采用 Valiant 路由算法，其平均跳数为 √k。</p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>High-Radix</tag>
+        <tag>Router</tag>
+        <tag>Microarchitecture</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Micro high radix router</title>
     <url>/2025/10/28/Micro-high-radix-router/</url>
     <content><![CDATA[<ul>
@@ -2980,167 +3019,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Net within a Net</title>
-    <url>/2025/10/28/Net-within-a-Net/</url>
-    <content><![CDATA[<ul>
-<li><a href="#network-within-a-network-approach-to-create-a-scalable--high-radix-router-microarchitecture">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</a><ul>
-<li><a href="#1-high-radix-router-microarchitecture">1. High-Radix Router Microarchitecture</a><ul>
-<li><a href="#11-%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84">1.1 “网络中的网络”交换结构</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture"><a href="#Network-within-a-Network-Approach-to-Create-a-Scalable-High-Radix-Router-Microarchitecture" class="headerlink" title="Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture"></a>Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</h1><p>高径数路由器的一个关键挑战在于如何构建可扩展的路由器微结构。这些大规模网络的成本主要由电缆决定，而性能通常受限于片外通道（off-chip channel）带宽。因此，路由器微结构必须合理扩展，以确保片外带宽得到充分利用，同时内部结构不会成为瓶颈。</p>
-<p>遗憾的是，传统的由单个交叉开关（crossbar switch）组成的标准路由器结构随径数 k 增大而扩展不佳，因为其分配复杂度与 k² 成正比，而交叉开关连线的扇出（fanout）随 k 线性增长。为克服这些限制，Kim 等人提出了分层交叉开关结构（hierarchical crossbar switch organization），并将其应用于 YARC 路由器。该方法将单个大型交叉开关划分为多个小交叉开关或子交换单元（subswitch），并在子交换单元的输入和输出端放置中间缓冲区。这样可以降低分配复杂度，同时减少每个输入端口驱动的输出端口数量，相较于传统交叉开关更为高效。</p>
-<p>然而，YARC 路由器设计由于需要过多的连线（如第 3.1 节所述），其可扩展性仍然受限。本文提出了一种替代性可扩展路由器微结构，利用局部网络（local network），并借鉴高径数拓扑（如 folded-Clos 和 HyperX ）的思想，将其应用于高径数路由器的交换设计中。我们在每个路由器内部创建一个片上网络（on-chip network），用于连接路由器的各个交换端口，然后通过这些路由器互连形成全局网络，从而实现一种“网络中的网络”的可扩展交换结构设计方法。</p>
-<p><img src="/images/Net-within-a-Net/image.png" alt="alt text"></p>
-<p>与分层交叉开关设计相比，这些基于网络的交换结构所需的全局连线、交叉开关和中间缓冲区更少，因此在面积和能耗效率上都有显著提升。此外，由于局部网络嵌套在全局网络之中，我们能够利用全局网络在各个路由器上表现出的流量特征来简化局部交换结构。此外，我们还提出了一种新的拓扑感知型（topology-aware）交换设计，称为双向蝶形（bilateral butterfly），用于折叠 Clos 全局网络中的局部网络。</p>
-<h2 id="1-High-Radix-Router-Microarchitecture"><a href="#1-High-Radix-Router-Microarchitecture" class="headerlink" title="1. High-Radix Router Microarchitecture"></a>1. High-Radix Router Microarchitecture</h2><p>先描述先前提出的用于高径数路由器的分层交换结构及其局限性，然后介绍一种基于网络的替代交换设计，从而形成一种“网络中的网络”的组织方式。在整个工作中，我们将单个路由器内部使用的网络称为局部网络（local network），而将连接这些路由器组成系统级网络的称为全局网络（global network）。</p>
-<p>分层路由器组织结构将一个单一的 k×k 交换机划分为 (k&#x2F;p)² 个 p×p 子交换机，其中 k 是路由器的径数，p 是子交换机的径数。该分层结构在每个子交换机的输入与输出端引入了 2k²&#x2F;p 个中间缓冲区（或称子交换缓冲区）。中间缓冲区将输入和输出仲裁过程解耦，从而避免了全局仲裁，使仲裁过程本地化。图 3 展示了一个分层交叉开关结构的布局示例，其中 k &#x3D; 16，p &#x3D; 4。</p>
-<p><img src="/images/Net-within-a-Net/image-1.png" alt="alt text"></p>
-<p>分层交叉开关由 k 条水平广播通道（row buses）和 k&#x2F;2 × (k&#x2F;p) 条垂直通道组成，因为每一列中的所有输出端口都与同列的所有列缓冲区完全连接。这些水平和垂直通道需要使用全局连线，其面积按比例增长为：k×pk2×k​&#x3D;2pk3​。我们设置 p &#x3D; √k。因此，当 k 很大时，水平和垂直连线的面积成为主导因素，按 k²·⁵ 的速率增长。子交换缓冲区的数量也按 k²&#x2F;p &#x3D; k¹·⁵ 的速率超线性增长。这些因素共同导致分层交换机在面积和功耗扩展方面效率低下。因此，我们探索一种基于不同多级网络的替代交换结构，以实现更具可扩展性的设计。</p>
-<h3 id="1-1-“网络中的网络”交换结构"><a href="#1-1-“网络中的网络”交换结构" class="headerlink" title="1.1 “网络中的网络”交换结构"></a>1.1 “网络中的网络”交换结构</h3><p>探索基于网络拓扑的交换机微结构设计，创建一种“网络中的网络”（network within a network）式的交换架构，也称为网络交换结构（network switch architecture）。在这种设计中，一个交换机由多个子交换机构成，这些子交换机通过内部点对点通道互联。每个子交换机都是输入缓冲型的，从而使仲裁仅限于子交换机内部，类似于分层交换结构的思想。</p>
-<p><strong>对于局部网络，我们重点研究三种不同的拓扑：折叠 Clos（folded-Clos）、二维环形（2D torus） 和二维 HyperX。当然，也可以使用其他拓扑，如二维网格（2D mesh）或树形（tree-based）拓扑，但它们分别会引入非均匀性（如网格）或带宽瓶颈（如树形结构），因此不适合作为局部网络。</strong></p>
-<p>由于片外带宽在大规模系统中是昂贵资源，必须被充分利用，因此局部网络不能成为性能瓶颈。</p>
-<p><img src="/images/Net-within-a-Net/image-2.png" alt="alt text"></p>
-<p><strong>将所有交换结构配置为在给定路由器径数 k 下具有相同的聚合片外带宽。</strong> 采用以下指标进行比较：交换机中的缓冲区与交叉点（crosspoints）数量；聚合扇出；总交换面积。每个交叉点和缓冲区均由晶体管实现，即使在无活动时也消耗静态功率，因此更多的交叉点和缓冲区意味着更高的静态功耗。聚合扇出影响动态能耗，因为更高的扇出需要更大的晶体管驱动，导致更高的动态能耗。</p>
-<p>对于折叠二维环形结构, 该网络具有 $4\sqrt{k}$ 条穿越中截面（bisection）的通道，因此每条内部通道的带宽需为：$\frac{k}{4\sqrt{k}} &#x3D; \frac{\sqrt{k}}{4}$ 倍于连接 I&#x2F;O 端口的外部通道带宽。假设每个子交换机保留一个端口用于 I&#x2F;O 端口，一个逻辑内部通道由 √k&#x2F;4 条物理通道组成，因此子交换机的径数为：$\frac{\sqrt{k}}{4} \times 4 + 1 &#x3D; \sqrt{k} + 1$。采用 Valiant 路由算法，其平均跳数为 √k。</p>
-]]></content>
-      <categories>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>High-Radix</tag>
-        <tag>Router</tag>
-        <tag>Microarchitecture</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RNG</title>
-    <url>/2026/06/05/RNG/</url>
-    <content><![CDATA[<ul>
-<li><a href="#rng%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%89%81%E5%B9%B3%E5%8C%96%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C">RNG：大规模扁平化数据中心网络</a><ul>
-<li><a href="#1-%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C">1. 主要工作</a></li>
-<li><a href="#2-%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA">2. 背景与动机</a></li>
-<li><a href="#3-%E6%89%81%E5%B9%B3%E5%8C%96%E6%89%A9%E5%B1%95%E5%9B%BE%E7%9A%84%E6%BD%9C%E5%8A%9B">3. 扁平化扩展图的潜力</a></li>
-<li><a href="#4-%E9%9C%80%E6%B1%82%E4%B8%8E%E6%8C%91%E6%88%98">4. 需求与挑战</a></li>
-<li><a href="#5rng">5.RNG</a><ul>
-<li><a href="#51-spraypoint-%E8%B7%AF%E7%94%B1">5.1 Spraypoint 路由</a></li>
-</ul>
-</li>
-<li><a href="#6-rng-%E7%9A%84%E5%B8%83%E7%BA%BF">6. RNG 的布线</a></li>
-<li><a href="#7%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90">7.理论分析</a></li>
-<li><a href="#8-%E7%94%9F%E4%BA%A7%E7%BD%91%E7%BB%9C">8. 生产网络</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="RNG：大规模扁平化数据中心网络"><a href="#RNG：大规模扁平化数据中心网络" class="headerlink" title="RNG：大规模扁平化数据中心网络"></a>RNG：大规模扁平化数据中心网络</h1><p>Giacomo Bernardi</p>
-<p>Amazon Web Services</p>
-<h2 id="1-主要工作"><a href="#1-主要工作" class="headerlink" title="1. 主要工作"></a>1. 主要工作</h2><p>在生产环境中部署了首个扁平化数据中心网络。我们的设计称为 RNG，基于准随机图（quasi-random graphs）。尽管此类拓扑在成本和容错方面的优势早已为人所知，但由于缺乏可扩展的路由和布线方法，其实际落地一直受到阻碍。RNG 拥有一种新型分布式路由协议，它利用随机图的特性，在端点对之间找到大量边不相交（edge disjoint）路径。它使用一种新颖的无源光学器件，在内部对线缆进行洗牌（shuffle），使其布线复杂度与胖树（fat tree）相当。我们的实验表明，RNG 在一系列流量模式下的性能可以匹敌甚至超越胖树，而成本却最多可降低 45%。RNG 现已成为 Amazon 大多数工作负载的默认数据中心网络。</p>
-<h2 id="2-背景与动机"><a href="#2-背景与动机" class="headerlink" title="2. 背景与动机"></a>2. 背景与动机</h2><p>胖树拓扑一般由于成本过高，倾向于构建超额订阅网络。文章认为根本原因在于胖树拓扑缺乏容量可替代性（capacity fungibility）。即流量被限制在一小部分链路上，这些链路可能拥塞，而其他链路却处于闲置状态。容量可替代性的缺失需要增加一致、无拥塞体验的成本。即便在任意给定时刻只有一小部分端点对需要高容量，运营商也必须在各处都配备充足容量。</p>
-<p>研究人员针对此问题提出了可重构拓扑。这些设计使用光交换机、可转向无线天线和自由空间光学器件等硬件，来动态改变端点之间的容量。此类硬件（尚）未在大规模环境中得到验证。</p>
-<p>一种能提供容量可替代性的有前景的替代方案，是使用作为扩展图（expander graph）相连的商用路由器构成的扁平拓扑。除了成本更低之外，此类拓扑还具有容错性，因为任何故障的影响半径（blast radius）都很小，这与胖树中上层故障的影响不同。扩展网络拓扑的这些优势已为人所知超过十年，但由于三个未解决的挑战，这些拓扑一直未能成为现实。</p>
-<ol>
-<li>路由。 常用于胖树的最短路径路由并不适合扩展图，因为它无法利用其中存在的路径多样性。某些节点对之间只有一条最短路径，因此最短路径路由可能导致拥塞。先前的工作推荐使用 k-最短路径路由，即在源和目的地之间将流量分散到 k 条最短路径上。但是 k-最短路径路由无法在大型网络中使用商用交换机来实现。它所需的（高速、昂贵的）内存比当今可用的要多一个数量级。</li>
-<li>布线。 扩展图连接的是物理空间中可能相距甚远的设备对。这样的布线复杂且昂贵。更糟的是，当更多机架进场时，增量式部署需要打断现有连接。如果每个路由器有 d 条连接到其他路由器的链路，那么每当一个路由器进场时，我们就需要打断 d&#x2F;2 条现有链路，而这些链路的端点在物理上分散于整个数据中心。这类工作有连带损坏的风险，并会拖慢机架安装的速度——而这正是数据中心运营商关注的一个关键问题。</li>
-<li>性能可预测性。 先前关于扩展图基准测试的工作聚焦于参数固定的具体拓扑。目前尚不清楚一个网络在其他参数下会有怎样的表现，这使得运营商难以设计出满足特定性能目标的拓扑。他们将需要使用仿真在组合参数空间中进行搜索，而这对于大型网络是不可行的。相比之下，胖树设计可以根据性能目标自动生成。</li>
-</ol>
-<p>Amazon 解决了这些挑战，并部署了（据我们所知）首批基于扩展图的生产级数据中心网络。我们的设计称为 RNG，它使用随机化与确定性布线段的混合方式来连接路由器。这种构造产生了准随机图，模拟了真正随机图的统计特性。路由算法称为 Spraypoint，专为随机图设计，并允许在商用硬件上实现完全分布式部署。它在端点对之间找到大量——接近节点度数（node degree）——的边不相交路径，并且这些路径在不同端点对之间的重叠极小。这些特性带来了容量可替代性和高吞吐量。</p>
-<p>开发了一种基于新型无源光学器件的布线方法，该器件称为 ShuffleBox，它在内部混合路由器之间的连接。将 ShuffleBox 放置在数据中心少数几个规划好的位置。这使得物理连接的位置对数量（布线复杂度的一个关键驱动因素）能够与胖树相当。</p>
-<p>随机图的集中性（concentration）特性以及 Spraypoint 路由的去相关性（decorrelation），使得能够精确地将 RNG 网络性能建模为拓扑参数（如图大小、节点度数等）的函数。我们建立了路径长度、边不相交路径数量和超额订阅的模型。这些模型使各种参数和设计权衡（如路径长度与超额订阅之间的权衡）的影响变得清晰透明。运营商可以利用它们来设计满足其性能目标的拓扑。</p>
-<p>部署了两个基于 RNG 的生产网络。传输层和应用层基准测试证实，RNG 的性能与胖树相当，并且不受扩展图特有问题（如端点对之间路径长度可变）的影响。这种端到端验证在扩展图拓扑领域尚属首次。分析表明，在超额订阅比相同的情况下，RNG 拓扑比胖树便宜 9–45%。成本降低的幅度取决于超额订阅比，且与网络规模和交换机端口数无关。我们还发现，在超额订阅比相同的情况下，RNG 在一系列流量模式下提供的吞吐量高于胖树。</p>
-<h2 id="3-扁平化扩展图的潜力"><a href="#3-扁平化扩展图的潜力" class="headerlink" title="3. 扁平化扩展图的潜力"></a>3. 扁平化扩展图的潜力</h2><p>文章粗略地估计了一下一个超额订阅比为3:1的胖树，在alltoall模式下闲置了约 60%的ToR上行容量。图 1a 中把 T1–T3 连同它们的聚合层父节点看成一个子集 S,这个 S 通向网络其余部分的全部出口,就是聚合层到骨干层的那 2 条链路，所以割天然很窄。</p>
-<p>扩展图的不同:任何子集的割都很大。图 1b 里 T1–T12 之间是一张随机图(没有聚合层、没有骨干层,ToR 之间直接互连成准随机拓扑)。扩展图的定义性质就是边扩展性:对任意一个不太大的节点子集 S,从 S 引出的边数都很多,跟 S 内部的节点数成正比,而不是被压缩成区区两三条上行链路。</p>
-<p>随机图里,T1–T3 各自有多条边直接散向 T4–T12 的不同节点,它们对外的割很宽,因此基本只受自身本地容量。扩展图里没有”骨干瓶颈”这一层,流量可以沿着大量边不相交的路径散布到全网每一条链路上。于是不再有一小撮链路成为所有远端流量的必经之路,<strong>拓扑里的每条链路都能被用起来</strong>。</p>
-<p>容量可替代性之所以降低成本，是因为部署的容量得到了更高效的利用，从而允许更小规模的部署。对于扁平化扩展图成本更低的一个简单看法是：所有上层路由器都被移除了。但是，一个性能与胖树相当的扩展图可能需要更多的 ToR 上行链路（面向网络的端口），因为部分上行容量被用于为其他 ToR 中继的流量所消耗。因此，在每个 ToR 端口数固定的情况下，它可能需要更多的 ToR 来支持相同数量的服务器。尽管存在这一影响，扩展图仍可将成本降低多达 45%。</p>
-<p>扩展图拓扑还具有更强的容错性。边扩展性使网络难以被分割，而扁平结构降低了故障的影响。即不存在类似于骨干路由器这样的上层路由器。</p>
-<p>Amazon 聚焦于具有异构工作负载的多租户数据中心。未来，我们将研究将扩展图用于大规模 AI 训练等专用工作负载。</p>
-<p><img src="/images/RNG/image.png" alt="alt text"></p>
-<h2 id="4-需求与挑战"><a href="#4-需求与挑战" class="headerlink" title="4. 需求与挑战"></a>4. 需求与挑战</h2><p>扩展图拓扑要在实际大规模环境中部署，需要以下需求：</p>
-<ol>
-<li>可使用商用交换机实现。网络应能使用内存有限的商用交换机和转发 ASIC 来实现。之前的k-最短路径路由需要上十万条转发表项，而当前交换机仅支持4-16k此类表项。</li>
-<li>部署与运维简便性。对于控制平面，倾向于（如当今一样）需求无关（demand-oblivious）的完全分布式路由。对于部署和扩展，希望布线步骤数量少且快速，以最小化风险并加快扩展速度。随机图拓扑天生布线杂乱。</li>
-<li>可预测的性能。Amazon 运营商部署网络时是为了满足特定的容量（服务器数量）和性能（如超额订阅）目标。先前的工作对具有特定参数的拓扑进行基准测试，但并未展示如何为特定性能目标创建拓扑。</li>
-</ol>
-<p>RNG 通过以下方式满足这三项需求：(1) 一种名为 Spraypoint 的新路由算法，能找到大量边不相交路径。如同 OSPF 和 BGP，它是需求无关的，并允许在商用硬件上完全分布式运行。(2) 一种基于无源光学器件 ShuffleBox 的布线方法。它限制了数据中心扩展时被物理布线&#x2F;重新布线的端点数量。(3) 针对吞吐量和路径长度等关键性能指标的高保真模型。</p>
-<h2 id="5-RNG"><a href="#5-RNG" class="headerlink" title="5.RNG"></a>5.RNG</h2><p>RNG 的控制平面和负载均衡遵循当今通用的范式。路由协议 Spraypoint 在每个路由器上为所有目的地计算下一跳；路由器使用 ECMP（等价多路径）将流量分散到该目的地的所有下一跳上。</p>
-<h3 id="5-1-Spraypoint-路由"><a href="#5-1-Spraypoint-路由" class="headerlink" title="5.1 Spraypoint 路由"></a>5.1 Spraypoint 路由</h3><p>Spraypoint 适用于任何扩展图。它基于这样一个观察：在源端的高扇出（high fan-out）和目的端的高扇入（high fan-in）足以在扩展图中创建许多边不相交路径。Spraypoint 通过在源端喷洒（spraying）数据包来实现高扇出——所有邻居都是合格的下一跳，并基于 ECMP 哈希选择其一。它通过将流量经由分布在目的地周围各处的路径点进行引导来实现高扇入。</p>
-<ol>
-<li>节点分层<br>Spraypoint 有两个参数 p 和 h，分别控制每个目的地的路径点数量和喷洒步骤后合格的下一跳数量。还有一个辅助参数 ℓ，它取决于这些参数和图大小（n）。</li>
-</ol>
-<p>WP₀(t)： 基础路径点层级，包含 t 的所有邻居。<br>WPₗ ∈ l,ℓ： 高层级路径点。WPₗ(t) 包含 WPₗ₋₁(t) 中每个节点的 p 个随机选择的邻居。位于较早路径点层级中的邻居以及 t 本身不可被选择。<br>IR(t)： 内环（inner ring），包含 WPₗ(t) 的所有不在前述层级中的邻居。<br>OR(t)： 外环（outer ring），包含不在上述任何层级中的所有节点。</p>
-<p>图 3 展示了 ℓ&#x3D;1 且 p&#x3D;2 时的一个示例图。</p>
-<p><img src="/images/RNG/image1.png" alt="alt text"></p>
-<ol start="2">
-<li>数据包喷洒</li>
-</ol>
-<p>第一步是喷洒，即 s 转发给一个随机选择的邻居（即 ECMP）。喷洒与 t 无关，即使 s 和 t 相邻也会发生，与VLB类似。喷洒之后，每个中间节点 u 遵循”指向”（pointing）规则：</p>
-<p>若 u ∈ WP₀(t)，转发给 t。<br>若 u ∈ WPₗ ∈ l,ℓ，转发（ECMP）给从 WPₗ₋₁(t) 中随机选择的 h 个邻居之一。<br>若 u ∈ IR(t)，转发给从 WPₗ(t) 中随机选择的 h 个邻居之一。<br>若 u ∈ OR(t)，转发给从那些到 IR(t) 节点有最短路径者中随机选择的 h 个邻居之一。</p>
-<p>喷洒好处在于充分利用边不相交的短路径，从 s 的所有邻居出发沿最短路径到达 t。而路径点waypoints保证了极端情况（即源节点为目标节点邻居时）下路径不会拥塞。同时参数 p 把流量铺到 t 的众多邻居上。设置 ℓ。ℓ&#x3D;max(1, ⌈log_p(n&#x2F;2d²)⌉)。在此 ℓ 取值下，集合 WPₗ(t)∪IR(t) 的大小将至少为 n&#x2F;2，以缩短路径长度。</p>
-<p>文章简单提及了路径长度可变性。这不会影响单路径传输协议，多路径的延迟差相比主机端延迟极低，在生产网络上的基准测试证实，多路径协议不存在性能问题。</p>
-<ol start="3">
-<li>spraypoint 分布式实现</li>
-</ol>
-<p>Spraypoint 允许作为链路状态协议进行完全分布式实现，其中每个节点都拥有拓扑的完整视图。节点可以为每个目的地计算层级，然后通过应用指向规则计算本地下一跳。所有节点通过对共享密钥进行确定性哈希来做出相同的路径点选择，从而确保所有指向图（pointing graph）无环。</p>
-<p>使用 VRF（虚拟路由与转发）来实现喷洒，VRF 能为不同接口启用不同的路由逻辑。（应与VC同义）。路由器所有面向服务器的接口使用一个 VRF，将进入的流量喷洒到所有面向网络的接口。所有面向网络的接口使用第二个 VRF，遵循指向规则。这种设置允许数据包重访其源端（至多一次）而不会无限循环。</p>
-<ol start="4">
-<li>资源需求</li>
-</ol>
-<p>Spraypoint 使用两类路由器内存。第一类是最长前缀匹配（LPM）内存，它将进入数据包的目的地址映射到一个 ECMP 组 ID。LPM 内存的使用量取决于网络前缀的数量，与胖树类似。第二类内存用于将 ECMP 组 ID 映射到下一跳集合。其所需大小取决于 ECMP 组的设置方式。定义所有可能的 d^h 个组，并为每个目的地使用相应的那个组，消耗 O(hd^h) 内存。根据 n 和 d，选择能在内存容量内支持更大 h 的方法。</p>
-<h2 id="6-RNG-的布线"><a href="#6-RNG-的布线" class="headerlink" title="6. RNG 的布线"></a>6. RNG 的布线</h2><p>数据中心布线。 数据中心空间通常被划分为 O(10) 个房间（不一定有隔墙）。每个房间容纳一定数量的机架。在服务器机架进场之前，房间会经过准备，即安装电力、冷却和基础布线设施，包括配线架（patch panel）和房间间干线缆。当服务器机架进场时，会安装额外的线缆来连接它们。</p>
-<p>三个因素：(1) 连接器和端点对的数量，其中配线架是一个端点，ToR 也是；(2) 线缆的长度以及房间内（intra-room）相对于房间间（inter-room）线缆的比例——房间间布线更昂贵，因为它需要额外的基础设施；(3) 可在房间准备阶段完成的布线量相对于机架进场时才能完成的布线量——后期布线风险更大、速度更慢。</p>
-<p>RNG 中的物理连接。使用 ShuffleBox（图 4）来构建准随机图。为了通过 ShuffleBox 连接路由器，我们在每个房间部署一组 ShuffleBox，称为洗牌面板（shuffle panel）（图 5）。路由器上行链路连接到面板中随机选择的 r-port。不同房间面板的 c-port 也随机相连。如果有 R 个面板，每个面板有 C 个 ShuffleBox，我们将每个面板大约 (R−1)Cd_c&#x2F;R 个 c-port 连接到其他面板，从本质上构建了面板之间的随机图。ShuffleBack 处理这些悬空端口的”特殊连接器”，在内部就近”折返&#x2F;短接”回去。</p>
-<p><img src="/images/RNG/image-0.png" alt="alt text"></p>
-<p>图 6 展示了两个路由器逻辑上相连的三种方式：(a) 同一房间内的路由器连接到同一个 ShuffleBox，其 FP 被洗牌到一个配有 ShuffleBack 的 c-port；⁶ (b) 不同房间内的路由器，其 FP 被洗牌到相连的 c-port；(c) 路由器的 FP 最终落在另一个房间中同一个配有 ShuffleBack 的 r-port 上。在最后这种模式中，两个 ToR 可能位于同一房间。甚至可以产生更长的端到端路径。</p>
-<p><img src="/images/RNG/image-1.png" alt="alt text"></p>
-<p>RNG 的物理连接可以增量完成。ShuffleBox 配置。使用 f_r&#x3D;4，即一个 400 Gbps 物理端口的拆分通道数。RNG 的布线复杂度与胖树相当。重新平衡面板间连接是 RNG 特有的活动，但它只在准备新房间时需要进行少数几次。</p>
-<p>成本。 ShuffleBox 和 ShuffleBack 是 RNG 用来简化布线的新型无源光学组件。由于是无源的，其成本相对于交换机和收发器很低，并且与常用于简化胖树布线的传统配线架  和环回器（loopback）相似。</p>
-<h2 id="7-理论分析"><a href="#7-理论分析" class="headerlink" title="7.理论分析"></a>7.理论分析</h2><p>为随机图 + Spraypoint 路由建立一套可计算的性能模型,把三个关键指标(边不相交路径数、路径长度、超额订阅比)都写成关于设计参数 (n, d, p, h, ℓ) 的近似公式。</p>
-<p>前提:界定一个”可预测的运行区间”，参数范围(d 要足够大 ≥ 2(ln n+5)、p 和 h 各有约束)。</p>
-<p>边不相交路径的建模决定 h 的大小，一个不大的 h(&gt;1)就够。</p>
-<p>路径长度的建模得出结论:在实用区间 ℓ&#x3D;1 时,最长才 5 跳,且 5 跳的比例小到可忽略(例子里约 0.0003);RNG 的平均路径长度短于三层胖树(后者绝大多数 ToR-ToR 要 4 跳)</p>
-<p>以及吞吐量（超额订阅比）。</p>
-<p>进一步把模型反用为一套”按性能与成本目标反推 n、d、p、h”的网络设计流程——让 RNG 在建造之前就能被精确地规划和预测。不过依旧非常繁琐。</p>
-<h2 id="8-生产网络"><a href="#8-生产网络" class="headerlink" title="8. 生产网络"></a>8. 生产网络</h2><p>部署了两张独立的 RNG 网络</p>
-<ul>
-<li><p>服务器网格(server mesh):把 ToR 连成一张扩展图,是承载服务器流量的主网。其超额订阅比与 Amazon 最新的胖树网络相同(性能对标)。</p>
-</li>
-<li><p>边缘网格(edge mesh):连接服务器网格和远程数据中心,在两者之间做中转;它是非阻塞的(超额订阅目标更高)。<br>之所以拆成两张网,是因为二者超额订阅目标不同;两张网之间的互连端口分散在各路由器上。</p>
-</li>
-</ul>
-<ol>
-<li>性能</li>
-</ol>
-<p><img src="/images/RNG/image-2.png" alt="alt text"></p>
-<p>图 9 展示了基于一个实验的吞吐量分布，该实验在随机服务器对之间有 127 条无限需求的并发流。RNG 和胖树的结果相同。两个网络的路径延迟的任何差异对应用性能而言都无关紧要。</p>
-<p>图 10（左）比较了服务器对之间小尺寸（64 字节）数据包的每秒数据包数（PPS）。RNG 略高，因为它的背景流量较少。图 10（右）展示了从客户端到多个服务器的存储读取的每秒 I&#x2F;O 操作数（IOPS）。RNG 在此工作负载下的性能也与胖树相当。</p>
-<p>RNG 的性能与胖树相当（且成本更低、容错性更高）。</p>
-<p>评估流量的三种类型是：</p>
-<p>团（Clique）： 一组节点彼此之间交换流量（例如，all-reduce 等集合通信、存储服务器之间的复制流量）。<br>枢纽（Hubs）： 某些节点（如 Web 或存储服务器）向所有其他节点发送并从其接收。<br>匹配（Matchings）： 节点将所有流量发送给恰好另一个节点，如之前研究的。</p>
-<p><img src="/images/RNG/image-3.png" alt="alt text"></p>
-<p>图 13 展示了 RNG 和胖树的结果。曲线表示均值，阴影区域表示最小值和最大值。两个拓扑都设计为支持跨 960 个 ToR 的 61.4K 台服务器，最坏情况超额订阅为 3:1。在此配置下，RNG 使用的交换机减少 45%。</p>
-<p>看到，在团和枢纽模式下的广泛区间内，RNG 的性能最多可高出 30%。例外是 f&lt;0.1 的情况，此时胖树要好 5-10%。在这些情况下，胖树上的最短路径路由能找到等于 ToR 度数的边不相交路径。在 h&#x3D;2 时，RNG 的相应数量要低 10%（见 §9.2）。当网络中发送方很少时，边不相交路径的数量最为关键。对于匹配模式，当 f&lt;0.4 时胖树更好，否则 RNG 更好。</p>
-<ol start="2">
-<li>成本</li>
-</ol>
-<p><img src="/images/RNG/image-4.png" alt="alt text"></p>
-<p>使用两种拓扑所用交换机数量之比作为相对成本的度量。这个度量自动涵盖了收发器，因为其数量与交换机数量成正比。它忽略了线缆、连接器和配线架等无源光学组件；这些组件的成本占少数。</p>
-]]></content>
-      <categories>
-        <category>互连网络</category>
-      </categories>
-      <tags>
-        <tag>拓扑</tag>
-        <tag>互连网络</tag>
-        <tag>路由</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>RailX</title>
     <url>/2025/11/10/RailX/</url>
     <content><![CDATA[<ul>
@@ -3273,6 +3151,128 @@
         <tag>Topology</tag>
         <tag>LLM Training</tag>
         <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RNG</title>
+    <url>/2026/06/05/RNG/</url>
+    <content><![CDATA[<ul>
+<li><a href="#rng%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%89%81%E5%B9%B3%E5%8C%96%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C">RNG：大规模扁平化数据中心网络</a><ul>
+<li><a href="#1-%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C">1. 主要工作</a></li>
+<li><a href="#2-%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA">2. 背景与动机</a></li>
+<li><a href="#3-%E6%89%81%E5%B9%B3%E5%8C%96%E6%89%A9%E5%B1%95%E5%9B%BE%E7%9A%84%E6%BD%9C%E5%8A%9B">3. 扁平化扩展图的潜力</a></li>
+<li><a href="#4-%E9%9C%80%E6%B1%82%E4%B8%8E%E6%8C%91%E6%88%98">4. 需求与挑战</a></li>
+<li><a href="#5rng">5.RNG</a><ul>
+<li><a href="#51-spraypoint-%E8%B7%AF%E7%94%B1">5.1 Spraypoint 路由</a></li>
+</ul>
+</li>
+<li><a href="#6-rng-%E7%9A%84%E5%B8%83%E7%BA%BF">6. RNG 的布线</a></li>
+<li><a href="#7%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90">7.理论分析</a></li>
+<li><a href="#8-%E7%94%9F%E4%BA%A7%E7%BD%91%E7%BB%9C">8. 生产网络</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="RNG：大规模扁平化数据中心网络"><a href="#RNG：大规模扁平化数据中心网络" class="headerlink" title="RNG：大规模扁平化数据中心网络"></a>RNG：大规模扁平化数据中心网络</h1><p>Giacomo Bernardi</p>
+<p>Amazon Web Services</p>
+<h2 id="1-主要工作"><a href="#1-主要工作" class="headerlink" title="1. 主要工作"></a>1. 主要工作</h2><p>在生产环境中部署了首个扁平化数据中心网络。我们的设计称为 RNG，基于准随机图（quasi-random graphs）。尽管此类拓扑在成本和容错方面的优势早已为人所知，但由于缺乏可扩展的路由和布线方法，其实际落地一直受到阻碍。RNG 拥有一种新型分布式路由协议，它利用随机图的特性，在端点对之间找到大量边不相交（edge disjoint）路径。它使用一种新颖的无源光学器件，在内部对线缆进行洗牌（shuffle），使其布线复杂度与胖树（fat tree）相当。我们的实验表明，RNG 在一系列流量模式下的性能可以匹敌甚至超越胖树，而成本却最多可降低 45%。RNG 现已成为 Amazon 大多数工作负载的默认数据中心网络。</p>
+<h2 id="2-背景与动机"><a href="#2-背景与动机" class="headerlink" title="2. 背景与动机"></a>2. 背景与动机</h2><p>胖树拓扑一般由于成本过高，倾向于构建超额订阅网络。文章认为根本原因在于胖树拓扑缺乏容量可替代性（capacity fungibility）。即流量被限制在一小部分链路上，这些链路可能拥塞，而其他链路却处于闲置状态。容量可替代性的缺失需要增加一致、无拥塞体验的成本。即便在任意给定时刻只有一小部分端点对需要高容量，运营商也必须在各处都配备充足容量。</p>
+<p>研究人员针对此问题提出了可重构拓扑。这些设计使用光交换机、可转向无线天线和自由空间光学器件等硬件，来动态改变端点之间的容量。此类硬件（尚）未在大规模环境中得到验证。</p>
+<p>一种能提供容量可替代性的有前景的替代方案，是使用作为扩展图（expander graph）相连的商用路由器构成的扁平拓扑。除了成本更低之外，此类拓扑还具有容错性，因为任何故障的影响半径（blast radius）都很小，这与胖树中上层故障的影响不同。扩展网络拓扑的这些优势已为人所知超过十年，但由于三个未解决的挑战，这些拓扑一直未能成为现实。</p>
+<ol>
+<li>路由。 常用于胖树的最短路径路由并不适合扩展图，因为它无法利用其中存在的路径多样性。某些节点对之间只有一条最短路径，因此最短路径路由可能导致拥塞。先前的工作推荐使用 k-最短路径路由，即在源和目的地之间将流量分散到 k 条最短路径上。但是 k-最短路径路由无法在大型网络中使用商用交换机来实现。它所需的（高速、昂贵的）内存比当今可用的要多一个数量级。</li>
+<li>布线。 扩展图连接的是物理空间中可能相距甚远的设备对。这样的布线复杂且昂贵。更糟的是，当更多机架进场时，增量式部署需要打断现有连接。如果每个路由器有 d 条连接到其他路由器的链路，那么每当一个路由器进场时，我们就需要打断 d&#x2F;2 条现有链路，而这些链路的端点在物理上分散于整个数据中心。这类工作有连带损坏的风险，并会拖慢机架安装的速度——而这正是数据中心运营商关注的一个关键问题。</li>
+<li>性能可预测性。 先前关于扩展图基准测试的工作聚焦于参数固定的具体拓扑。目前尚不清楚一个网络在其他参数下会有怎样的表现，这使得运营商难以设计出满足特定性能目标的拓扑。他们将需要使用仿真在组合参数空间中进行搜索，而这对于大型网络是不可行的。相比之下，胖树设计可以根据性能目标自动生成。</li>
+</ol>
+<p>Amazon 解决了这些挑战，并部署了（据我们所知）首批基于扩展图的生产级数据中心网络。我们的设计称为 RNG，它使用随机化与确定性布线段的混合方式来连接路由器。这种构造产生了准随机图，模拟了真正随机图的统计特性。路由算法称为 Spraypoint，专为随机图设计，并允许在商用硬件上实现完全分布式部署。它在端点对之间找到大量——接近节点度数（node degree）——的边不相交路径，并且这些路径在不同端点对之间的重叠极小。这些特性带来了容量可替代性和高吞吐量。</p>
+<p>开发了一种基于新型无源光学器件的布线方法，该器件称为 ShuffleBox，它在内部混合路由器之间的连接。将 ShuffleBox 放置在数据中心少数几个规划好的位置。这使得物理连接的位置对数量（布线复杂度的一个关键驱动因素）能够与胖树相当。</p>
+<p>随机图的集中性（concentration）特性以及 Spraypoint 路由的去相关性（decorrelation），使得能够精确地将 RNG 网络性能建模为拓扑参数（如图大小、节点度数等）的函数。我们建立了路径长度、边不相交路径数量和超额订阅的模型。这些模型使各种参数和设计权衡（如路径长度与超额订阅之间的权衡）的影响变得清晰透明。运营商可以利用它们来设计满足其性能目标的拓扑。</p>
+<p>部署了两个基于 RNG 的生产网络。传输层和应用层基准测试证实，RNG 的性能与胖树相当，并且不受扩展图特有问题（如端点对之间路径长度可变）的影响。这种端到端验证在扩展图拓扑领域尚属首次。分析表明，在超额订阅比相同的情况下，RNG 拓扑比胖树便宜 9–45%。成本降低的幅度取决于超额订阅比，且与网络规模和交换机端口数无关。我们还发现，在超额订阅比相同的情况下，RNG 在一系列流量模式下提供的吞吐量高于胖树。</p>
+<h2 id="3-扁平化扩展图的潜力"><a href="#3-扁平化扩展图的潜力" class="headerlink" title="3. 扁平化扩展图的潜力"></a>3. 扁平化扩展图的潜力</h2><p>文章粗略地估计了一下一个超额订阅比为3:1的胖树，在alltoall模式下闲置了约 60%的ToR上行容量。图 1a 中把 T1–T3 连同它们的聚合层父节点看成一个子集 S,这个 S 通向网络其余部分的全部出口,就是聚合层到骨干层的那 2 条链路，所以割天然很窄。</p>
+<p>扩展图的不同:任何子集的割都很大。图 1b 里 T1–T12 之间是一张随机图(没有聚合层、没有骨干层,ToR 之间直接互连成准随机拓扑)。扩展图的定义性质就是边扩展性:对任意一个不太大的节点子集 S,从 S 引出的边数都很多,跟 S 内部的节点数成正比,而不是被压缩成区区两三条上行链路。</p>
+<p>随机图里,T1–T3 各自有多条边直接散向 T4–T12 的不同节点,它们对外的割很宽,因此基本只受自身本地容量。扩展图里没有”骨干瓶颈”这一层,流量可以沿着大量边不相交的路径散布到全网每一条链路上。于是不再有一小撮链路成为所有远端流量的必经之路,<strong>拓扑里的每条链路都能被用起来</strong>。</p>
+<p>容量可替代性之所以降低成本，是因为部署的容量得到了更高效的利用，从而允许更小规模的部署。对于扁平化扩展图成本更低的一个简单看法是：所有上层路由器都被移除了。但是，一个性能与胖树相当的扩展图可能需要更多的 ToR 上行链路（面向网络的端口），因为部分上行容量被用于为其他 ToR 中继的流量所消耗。因此，在每个 ToR 端口数固定的情况下，它可能需要更多的 ToR 来支持相同数量的服务器。尽管存在这一影响，扩展图仍可将成本降低多达 45%。</p>
+<p>扩展图拓扑还具有更强的容错性。边扩展性使网络难以被分割，而扁平结构降低了故障的影响。即不存在类似于骨干路由器这样的上层路由器。</p>
+<p>Amazon 聚焦于具有异构工作负载的多租户数据中心。未来，我们将研究将扩展图用于大规模 AI 训练等专用工作负载。</p>
+<p><img src="/images/RNG/image.png" alt="alt text"></p>
+<h2 id="4-需求与挑战"><a href="#4-需求与挑战" class="headerlink" title="4. 需求与挑战"></a>4. 需求与挑战</h2><p>扩展图拓扑要在实际大规模环境中部署，需要以下需求：</p>
+<ol>
+<li>可使用商用交换机实现。网络应能使用内存有限的商用交换机和转发 ASIC 来实现。之前的k-最短路径路由需要上十万条转发表项，而当前交换机仅支持4-16k此类表项。</li>
+<li>部署与运维简便性。对于控制平面，倾向于（如当今一样）需求无关（demand-oblivious）的完全分布式路由。对于部署和扩展，希望布线步骤数量少且快速，以最小化风险并加快扩展速度。随机图拓扑天生布线杂乱。</li>
+<li>可预测的性能。Amazon 运营商部署网络时是为了满足特定的容量（服务器数量）和性能（如超额订阅）目标。先前的工作对具有特定参数的拓扑进行基准测试，但并未展示如何为特定性能目标创建拓扑。</li>
+</ol>
+<p>RNG 通过以下方式满足这三项需求：(1) 一种名为 Spraypoint 的新路由算法，能找到大量边不相交路径。如同 OSPF 和 BGP，它是需求无关的，并允许在商用硬件上完全分布式运行。(2) 一种基于无源光学器件 ShuffleBox 的布线方法。它限制了数据中心扩展时被物理布线&#x2F;重新布线的端点数量。(3) 针对吞吐量和路径长度等关键性能指标的高保真模型。</p>
+<h2 id="5-RNG"><a href="#5-RNG" class="headerlink" title="5.RNG"></a>5.RNG</h2><p>RNG 的控制平面和负载均衡遵循当今通用的范式。路由协议 Spraypoint 在每个路由器上为所有目的地计算下一跳；路由器使用 ECMP（等价多路径）将流量分散到该目的地的所有下一跳上。</p>
+<h3 id="5-1-Spraypoint-路由"><a href="#5-1-Spraypoint-路由" class="headerlink" title="5.1 Spraypoint 路由"></a>5.1 Spraypoint 路由</h3><p>Spraypoint 适用于任何扩展图。它基于这样一个观察：在源端的高扇出（high fan-out）和目的端的高扇入（high fan-in）足以在扩展图中创建许多边不相交路径。Spraypoint 通过在源端喷洒（spraying）数据包来实现高扇出——所有邻居都是合格的下一跳，并基于 ECMP 哈希选择其一。它通过将流量经由分布在目的地周围各处的路径点进行引导来实现高扇入。</p>
+<ol>
+<li>节点分层<br>Spraypoint 有两个参数 p 和 h，分别控制每个目的地的路径点数量和喷洒步骤后合格的下一跳数量。还有一个辅助参数 ℓ，它取决于这些参数和图大小（n）。</li>
+</ol>
+<p>WP₀(t)： 基础路径点层级，包含 t 的所有邻居。<br>WPₗ ∈ l,ℓ： 高层级路径点。WPₗ(t) 包含 WPₗ₋₁(t) 中每个节点的 p 个随机选择的邻居。位于较早路径点层级中的邻居以及 t 本身不可被选择。<br>IR(t)： 内环（inner ring），包含 WPₗ(t) 的所有不在前述层级中的邻居。<br>OR(t)： 外环（outer ring），包含不在上述任何层级中的所有节点。</p>
+<p>图 3 展示了 ℓ&#x3D;1 且 p&#x3D;2 时的一个示例图。</p>
+<p><img src="/images/RNG/image1.png" alt="alt text"></p>
+<ol start="2">
+<li>数据包喷洒</li>
+</ol>
+<p>第一步是喷洒，即 s 转发给一个随机选择的邻居（即 ECMP）。喷洒与 t 无关，即使 s 和 t 相邻也会发生，与VLB类似。喷洒之后，每个中间节点 u 遵循”指向”（pointing）规则：</p>
+<p>若 u ∈ WP₀(t)，转发给 t。<br>若 u ∈ WPₗ ∈ l,ℓ，转发（ECMP）给从 WPₗ₋₁(t) 中随机选择的 h 个邻居之一。<br>若 u ∈ IR(t)，转发给从 WPₗ(t) 中随机选择的 h 个邻居之一。<br>若 u ∈ OR(t)，转发给从那些到 IR(t) 节点有最短路径者中随机选择的 h 个邻居之一。</p>
+<p>喷洒好处在于充分利用边不相交的短路径，从 s 的所有邻居出发沿最短路径到达 t。而路径点waypoints保证了极端情况（即源节点为目标节点邻居时）下路径不会拥塞。同时参数 p 把流量铺到 t 的众多邻居上。设置 ℓ。ℓ&#x3D;max(1, ⌈log_p(n&#x2F;2d²)⌉)。在此 ℓ 取值下，集合 WPₗ(t)∪IR(t) 的大小将至少为 n&#x2F;2，以缩短路径长度。</p>
+<p>文章简单提及了路径长度可变性。这不会影响单路径传输协议，多路径的延迟差相比主机端延迟极低，在生产网络上的基准测试证实，多路径协议不存在性能问题。</p>
+<ol start="3">
+<li>spraypoint 分布式实现</li>
+</ol>
+<p>Spraypoint 允许作为链路状态协议进行完全分布式实现，其中每个节点都拥有拓扑的完整视图。节点可以为每个目的地计算层级，然后通过应用指向规则计算本地下一跳。所有节点通过对共享密钥进行确定性哈希来做出相同的路径点选择，从而确保所有指向图（pointing graph）无环。</p>
+<p>使用 VRF（虚拟路由与转发）来实现喷洒，VRF 能为不同接口启用不同的路由逻辑。（应与VC同义）。路由器所有面向服务器的接口使用一个 VRF，将进入的流量喷洒到所有面向网络的接口。所有面向网络的接口使用第二个 VRF，遵循指向规则。这种设置允许数据包重访其源端（至多一次）而不会无限循环。</p>
+<ol start="4">
+<li>资源需求</li>
+</ol>
+<p>Spraypoint 使用两类路由器内存。第一类是最长前缀匹配（LPM）内存，它将进入数据包的目的地址映射到一个 ECMP 组 ID。LPM 内存的使用量取决于网络前缀的数量，与胖树类似。第二类内存用于将 ECMP 组 ID 映射到下一跳集合。其所需大小取决于 ECMP 组的设置方式。定义所有可能的 d^h 个组，并为每个目的地使用相应的那个组，消耗 O(hd^h) 内存。根据 n 和 d，选择能在内存容量内支持更大 h 的方法。</p>
+<h2 id="6-RNG-的布线"><a href="#6-RNG-的布线" class="headerlink" title="6. RNG 的布线"></a>6. RNG 的布线</h2><p>数据中心布线。 数据中心空间通常被划分为 O(10) 个房间（不一定有隔墙）。每个房间容纳一定数量的机架。在服务器机架进场之前，房间会经过准备，即安装电力、冷却和基础布线设施，包括配线架（patch panel）和房间间干线缆。当服务器机架进场时，会安装额外的线缆来连接它们。</p>
+<p>三个因素：(1) 连接器和端点对的数量，其中配线架是一个端点，ToR 也是；(2) 线缆的长度以及房间内（intra-room）相对于房间间（inter-room）线缆的比例——房间间布线更昂贵，因为它需要额外的基础设施；(3) 可在房间准备阶段完成的布线量相对于机架进场时才能完成的布线量——后期布线风险更大、速度更慢。</p>
+<p>RNG 中的物理连接。使用 ShuffleBox（图 4）来构建准随机图。为了通过 ShuffleBox 连接路由器，我们在每个房间部署一组 ShuffleBox，称为洗牌面板（shuffle panel）（图 5）。路由器上行链路连接到面板中随机选择的 r-port。不同房间面板的 c-port 也随机相连。如果有 R 个面板，每个面板有 C 个 ShuffleBox，我们将每个面板大约 (R−1)Cd_c&#x2F;R 个 c-port 连接到其他面板，从本质上构建了面板之间的随机图。ShuffleBack 处理这些悬空端口的”特殊连接器”，在内部就近”折返&#x2F;短接”回去。</p>
+<p><img src="/images/RNG/image-0.png" alt="alt text"></p>
+<p>图 6 展示了两个路由器逻辑上相连的三种方式：(a) 同一房间内的路由器连接到同一个 ShuffleBox，其 FP 被洗牌到一个配有 ShuffleBack 的 c-port；⁶ (b) 不同房间内的路由器，其 FP 被洗牌到相连的 c-port；(c) 路由器的 FP 最终落在另一个房间中同一个配有 ShuffleBack 的 r-port 上。在最后这种模式中，两个 ToR 可能位于同一房间。甚至可以产生更长的端到端路径。</p>
+<p><img src="/images/RNG/image-1.png" alt="alt text"></p>
+<p>RNG 的物理连接可以增量完成。ShuffleBox 配置。使用 f_r&#x3D;4，即一个 400 Gbps 物理端口的拆分通道数。RNG 的布线复杂度与胖树相当。重新平衡面板间连接是 RNG 特有的活动，但它只在准备新房间时需要进行少数几次。</p>
+<p>成本。 ShuffleBox 和 ShuffleBack 是 RNG 用来简化布线的新型无源光学组件。由于是无源的，其成本相对于交换机和收发器很低，并且与常用于简化胖树布线的传统配线架  和环回器（loopback）相似。</p>
+<h2 id="7-理论分析"><a href="#7-理论分析" class="headerlink" title="7.理论分析"></a>7.理论分析</h2><p>为随机图 + Spraypoint 路由建立一套可计算的性能模型,把三个关键指标(边不相交路径数、路径长度、超额订阅比)都写成关于设计参数 (n, d, p, h, ℓ) 的近似公式。</p>
+<p>前提:界定一个”可预测的运行区间”，参数范围(d 要足够大 ≥ 2(ln n+5)、p 和 h 各有约束)。</p>
+<p>边不相交路径的建模决定 h 的大小，一个不大的 h(&gt;1)就够。</p>
+<p>路径长度的建模得出结论:在实用区间 ℓ&#x3D;1 时,最长才 5 跳,且 5 跳的比例小到可忽略(例子里约 0.0003);RNG 的平均路径长度短于三层胖树(后者绝大多数 ToR-ToR 要 4 跳)</p>
+<p>以及吞吐量（超额订阅比）。</p>
+<p>进一步把模型反用为一套”按性能与成本目标反推 n、d、p、h”的网络设计流程——让 RNG 在建造之前就能被精确地规划和预测。不过依旧非常繁琐。</p>
+<h2 id="8-生产网络"><a href="#8-生产网络" class="headerlink" title="8. 生产网络"></a>8. 生产网络</h2><p>部署了两张独立的 RNG 网络</p>
+<ul>
+<li><p>服务器网格(server mesh):把 ToR 连成一张扩展图,是承载服务器流量的主网。其超额订阅比与 Amazon 最新的胖树网络相同(性能对标)。</p>
+</li>
+<li><p>边缘网格(edge mesh):连接服务器网格和远程数据中心,在两者之间做中转;它是非阻塞的(超额订阅目标更高)。<br>之所以拆成两张网,是因为二者超额订阅目标不同;两张网之间的互连端口分散在各路由器上。</p>
+</li>
+</ul>
+<ol>
+<li>性能</li>
+</ol>
+<p><img src="/images/RNG/image-2.png" alt="alt text"></p>
+<p>图 9 展示了基于一个实验的吞吐量分布，该实验在随机服务器对之间有 127 条无限需求的并发流。RNG 和胖树的结果相同。两个网络的路径延迟的任何差异对应用性能而言都无关紧要。</p>
+<p>图 10（左）比较了服务器对之间小尺寸（64 字节）数据包的每秒数据包数（PPS）。RNG 略高，因为它的背景流量较少。图 10（右）展示了从客户端到多个服务器的存储读取的每秒 I&#x2F;O 操作数（IOPS）。RNG 在此工作负载下的性能也与胖树相当。</p>
+<p>RNG 的性能与胖树相当（且成本更低、容错性更高）。</p>
+<p>评估流量的三种类型是：</p>
+<p>团（Clique）： 一组节点彼此之间交换流量（例如，all-reduce 等集合通信、存储服务器之间的复制流量）。<br>枢纽（Hubs）： 某些节点（如 Web 或存储服务器）向所有其他节点发送并从其接收。<br>匹配（Matchings）： 节点将所有流量发送给恰好另一个节点，如之前研究的。</p>
+<p><img src="/images/RNG/image-3.png" alt="alt text"></p>
+<p>图 13 展示了 RNG 和胖树的结果。曲线表示均值，阴影区域表示最小值和最大值。两个拓扑都设计为支持跨 960 个 ToR 的 61.4K 台服务器，最坏情况超额订阅为 3:1。在此配置下，RNG 使用的交换机减少 45%。</p>
+<p>看到，在团和枢纽模式下的广泛区间内，RNG 的性能最多可高出 30%。例外是 f&lt;0.1 的情况，此时胖树要好 5-10%。在这些情况下，胖树上的最短路径路由能找到等于 ToR 度数的边不相交路径。在 h&#x3D;2 时，RNG 的相应数量要低 10%（见 §9.2）。当网络中发送方很少时，边不相交路径的数量最为关键。对于匹配模式，当 f&lt;0.4 时胖树更好，否则 RNG 更好。</p>
+<ol start="2">
+<li>成本</li>
+</ol>
+<p><img src="/images/RNG/image-4.png" alt="alt text"></p>
+<p>使用两种拓扑所用交换机数量之比作为相对成本的度量。这个度量自动涵盖了收发器，因为其数量与交换机数量成正比。它忽略了线缆、连接器和配线架等无源光学组件；这些组件的成本占少数。</p>
+]]></content>
+      <categories>
+        <category>互连网络</category>
+      </categories>
+      <tags>
+        <tag>拓扑</tag>
+        <tag>互连网络</tag>
+        <tag>路由</tag>
       </tags>
   </entry>
   <entry>
@@ -3461,6 +3461,89 @@
         <tag>MCM</tag>
         <tag>NOC</tag>
         <tag>Routing</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SimAI</title>
+    <url>/2026/06/18/SimAI/</url>
+    <content><![CDATA[<p>SimAI 通过集成主流训练框架与集合通信库的关键流程,实现了与真实结果平均 98.1% 的吻合度;通过无锁多线程优化保障了可扩展性与性能;并已在阿里云生产环境广泛应用、产出了实用的运营指导。</p>
+<ul>
+<li><a href="#simai">SimAI</a><ul>
+<li><a href="#1-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98%E5%8A%A8%E6%9C%BA">1. 研究背景与问题动机</a></li>
+<li><a href="#2-%E5%9B%9B%E4%B8%AA%E6%8C%91%E6%88%98">2. 四个挑战</a></li>
+<li><a href="#3-%E6%A8%A1%E6%8B%9F%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87">3. 模拟的应用场景与设计目标</a></li>
+<li><a href="#4-simai">4. SimAI</a><ul>
+<li><a href="#41-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E7%94%9F%E6%88%90%E5%99%A8">4.1 工作负载生成器</a></li>
+<li><a href="#42-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F">4.2 计算模拟</a></li>
+<li><a href="#43-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F">4.3 通信模拟</a></li>
+<li><a href="#44-%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A8%A1%E6%8B%9F%E5%8A%A0%E9%80%9F">4.4 大规模模拟加速</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%AF%84%E4%BC%B0">5. 评估</a><ul>
+<li><a href="#51-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.1 通信模拟的精度</a></li>
+<li><a href="#52-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.2 计算模拟的精度</a></li>
+<li><a href="#53-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.3 端到端模拟的精度</a></li>
+</ul>
+</li>
+<li><a href="#6-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E6%94%B6%E7%9B%8A">6. 生产环境中的收益</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="SimAI"><a href="#SimAI" class="headerlink" title="SimAI"></a>SimAI</h1><h2 id="1-研究背景与问题动机"><a href="#1-研究背景与问题动机" class="headerlink" title="1. 研究背景与问题动机"></a>1. 研究背景与问题动机</h2><p>大语言模型训练对计算资源的需求已达到极高量级,单次 GPT-4 训练据报道需约 2.5 万张高端 GPU。在如此规模下,任何架构与配置决策——GPU 选型、单卡网络带宽、单机 GPU 数量、并行策略划分——都难以通过真实集群进行直接验证,因为大规模实验在成本与时间上均不可承受。模拟器因此成为关键工具:在投资决策阶段用于估算达成性能目标所需的规模与架构,在运营阶段用于提升资源利用率、保障投资回报。</p>
+<p>当前实践普遍采用分粒度建模的策略,即针对不同目标使用不同模拟器:容量规划在流级或作业级进行,忽略报文级行为;性能调优则依赖报文级模拟,以分析流量模式、时延与丢包等指标。然而,作者基于工程实践指出,这种多粒度、多工具的方式存在三方面固有缺陷:其一,粗细粒度各自只覆盖部分信息,导致成本-性能分析失准,难以预测负载均衡行为并评估系统故障;其二,细粒度模拟器执行效率低、粗粒度模拟器精度不足,二者共同制约了大规模部署下的优化能力;其三,多套工具并存使开发与测试流程割裂,加剧了模拟结果与真实结果之间的偏差风险。由此,提出在单一框架内统一容量规划与性能调优的研究目标。</p>
+<p>对既有方案的局限,作者亦作了针对性评述:基于追踪的方法(如 Chakra)精度高,但仅适用于参数与规模一致的模型;传统网络模拟器(如 NS-3、OMNeT++)提供报文级能力,却不涵盖分布式训练所依赖的集合通信;指令级 GPU 模拟器(如 GPGPU-Sim)对大规模场景过于耗时,而 ASTRA-sim 等方案则在 GPU 支持与精度上存在不足。作为量化佐证,现有方法组合(PyTorch 追踪生成器配合 ASTRA-sim)模拟 128 GPU 下 GPT-3 的单次迭代需耗时约一天,而真实硬件仅需两秒。</p>
+<h2 id="2-四个挑战"><a href="#2-四个挑战" class="headerlink" title="2. 四个挑战"></a>2. 四个挑战</h2><p>统一建模并非简单地集成既有工具,而需在整个 AI 训练技术栈上实现高保真建模。作者将其归纳为四项相互关联的挑战,并分别对应后续技术章节:一是以高精度生成能够反映真实训练行为的工作负载;二是在多样化 GPU 架构上实现准确的计算模拟;三是对通信进行精确建模,以刻画网络流量模式与时延;四是保证模拟器具备可扩展性,能够高效支持大规模配置。SimAI 在各类测试场景下相对真实结果的平均偏差为 1.9%,并已应用于阿里云生产环境,作为对上述目标达成程度的总体度量。</p>
+<h2 id="3-模拟的应用场景与设计目标"><a href="#3-模拟的应用场景与设计目标" class="headerlink" title="3. 模拟的应用场景与设计目标"></a>3. 模拟的应用场景与设计目标</h2><p>在硬件基础设施评估方面,涉及三类典型场景:GPU 选型,即在采购前评估新型号在大规模 AI 工作负载下的性能;网络架构设计,即在 GPU 与主机内互联确定后,通过高精度模拟回答单卡理想网络带宽等成本敏感的问题;主机架构设计,即在不构建物理原型的前提下确定单机最优 GPU 数量与主机内互联方案。在优化方案验证方面,模拟可用于低成本的参数调优,以及对新框架、新集合通信方法、新拥塞控制算法等机制的有效性评估。</p>
+<p>为系统各部分分别构建专用模拟器易导致洞见不一致或不完整——例如仅建模 GPU 而忽略网络瓶颈将得出错误结论,因而统一平台是必要的。在此基础上,作者明确了四项设计目标:工作负载生成器需具备对不同模型、参数与规模的灵活性与精确性(目标一);集合通信模拟器需纳入关键优化与增强以保证精度(目标二);计算模拟器需同时兼顾精度与可扩展性(目标三);整体系统需具备高效执行大规模模拟的能力(目标四)。</p>
+<h2 id="4-SimAI"><a href="#4-SimAI" class="headerlink" title="4. SimAI"></a>4. SimAI</h2><p>SimAI 的整体流程可概括为输入描述、工作负载生成与执行引擎三个阶段。每个模拟请求包含模型及其参数、训练框架配置、集合通信库参数,以及主机内与主机间网络拓扑。工作负载生成器(SimAI-WG)据此产出工作负载描述文件,其中列出算法模块、集合通信操作及其依赖关系。该文件随后由执行引擎以离散事件方式模拟计算与通信操作的执行,其中计算模拟器(SimAI-CP)将子模块转化为细粒度内核并基于自建操作库进行模拟,通信模拟器(SimAI-CM)则集成 NCCL 的部分流程,将集合通信分解为点对点操作。在此之上,系统通过多线程加速与无锁全局上下文共享进一步提升执行效率。</p>
+<h3 id="4-1-工作负载生成器"><a href="#4-1-工作负载生成器" class="headerlink" title="4.1 工作负载生成器"></a>4.1 工作负载生成器</h3><p><strong>生成策略</strong>。工作负载文件的精确性直接决定模拟保真度,二者间的微小差异即可引入显著误差。基于追踪的方法虽然准确,但依赖物理集群运行。SimAI-WG 采用”劫持”既有训练框架的方式,在单台主机上生成与真实任务一致的工作负载,目前已对生产环境中的主流框架 Megatron 与 DeepSpeed 实现该机制。其关键在于对框架与 NCCL 作两处修改:一是使框架认为自身运行于具有目标 GPU 数量的集群之中,并将主机间拓扑设置为通用集群配置;二是跳过 NCCL 中的全部真实通信,且对涉及流水线并行的工作负载须配置相应的 rank 编号。经此处理,框架可生成包含算法子模块与集合&#x2F;点对点通信的完整操作序列。</p>
+<p><strong>依赖关系建模</strong>。框架输出的操作序列本身缺乏依赖描述,而计算与通信在执行中存在重叠,故需在工作负载文件中显式嵌入依赖信息。依赖关系依据所采用的并行化框架确定,并在 1024-GPU 集群上经 NVIDIA Nsight Systems 验证。其中存在两类关系:一类为严格的”先于发生”(happened-before)依赖,例如 MLP 反向子模块须在注意力反向子模块与 AllReduce 操作均完成后方可启动;另一类为可重叠依赖,即通信在相应计算开始后即可启动,这正是 Megatron 反向阶段实现通信-计算重叠优化的基础。如图2所示。</p>
+<p><img src="/images/SimAI/image.png" alt="alt text"></p>
+<p><strong>与框架解耦的取舍</strong>。SimAI 未将模拟代码侵入式嵌入框架(如 Owl),而是用 SimAI-WG 抽取工作负载、在独立执行引擎中模拟,以理解各框架算子生成机制为代价,换取灵活性与独立演进能力。此外,作者观察到通信特征呈两类:TP&#x2F;PP&#x2F;EP 的模式与通信量固定、不随集群规模变化,消息为数十至数百 MB;DP 的通信范围随集群扩张,常为横跨数百至数千节点的 GB 级集合通信。</p>
+<p><img src="/images/SimAI/image-1.png" alt="alt text"></p>
+<p><strong>基准测试套件</strong>。 基于过去六个月任务分布(表 2),作者选取覆盖小&#x2F;中&#x2F;大三类规模、以 GPT-3 与 LLaMA 变体为主的开源模型,围绕影响工作负载模式的模型参数与框架参数,构建了一组最小化但具代表性的基准套件(表 3),作为全文评估的统一基础。</p>
+<p><img src="/images/SimAI/image-2.png" alt="alt text"></p>
+<h3 id="4-2-计算模拟"><a href="#4-2-计算模拟" class="headerlink" title="4.2 计算模拟"></a>4.2 计算模拟</h3><p>面向现有 GPU。 由于每块 GPU 在实际训练中专服务单一任务,SimAI-CP 可依工作负载文件为各子模块填入在对应 GPU 上实测的执行时间,从而精确还原整个计算过程,精度区间为 96.9%–99.5%。这些实测数据沉淀为一个操作数据库(表 4),套件之外的工作负载则需补充针对性测试。当新策略重组或细化内核时,系统进一步借助模块-内核转换器将子模块分解为更小的内核分别测试,以支撑对高级优化的精确模拟。</p>
+<p>面向未发布 GPU。出于采购决策需求,SimAI 需模拟尚无法物理获取、仅有规格表的 GPU。直接按规格缩放已知数值的朴素做法误差可达 25.1%。作者据此提出按瓶颈类型分治:依据 Roofline 模型,将内核区分为计算密集型(如 flash attention)与内存带宽密集型(如更新 KV cache 的 Gemm),分别以 FLOPS 比值或带宽比值,从基准 GPU 的实测时间外推至新 GPU。该方法(称为 SimAI-CP-Model)建议在架构相似的 GPU 之间使用,而非跨厂商泛化。</p>
+<h3 id="4-3-通信模拟"><a href="#4-3-通信模拟" class="headerlink" title="4.3 通信模拟"></a>4.3 通信模拟</h3><p><strong>问题与思路</strong>。NCCL 将集合通信(AllReduce、AllGather、ReduceScatter)翻译为网络级操作,并依节点数、消息大小与参数选择最优算法;实际执行与模拟间的微小不匹配即可造成显著偏差。为忠实复现算法选择,SimAI 直接集成 NCCL 关键流程,使用修改版 NCCL(称为 SimCCL)拦截关键操作并生成点对点通信列表。</p>
+<p><strong>单机仿真的五个环节</strong>。在单台主机上,SimCCL 以”劫持”方式完成:(1) 初始化时拦截 NcclCommInitAll,为每块 GPU 创建虚拟通信器,使系统表现如真实多 GPU 集群;(2) 拓扑发现时读取用户指定拓扑文件而非搜索真实 PCIe 设备,各虚拟通信器独立处理、无需同步;(3) 创建主机内通信通道并存入隔离信息表;(4) 因已掌握全部主机信息,绕过 AllGather 直接创建主机间通道;(5) 拦截集合通信调用并重构为底层通信,跳过实际数据传输,仅捕获数据大小、收发 rank 与路由等事件以仿真 RDMA 层行为。如图3所示，SimCCL 将集合通信被拆解成一张点对点通信操作列表。</p>
+<p>整张图描述的是一条转换流水线:输入一个集合通信操作和集群配置 → SimCCL 通过劫持 NCCL、读取模拟拓扑、复现 NCCL 的初始化与算法选择 → 把集合通信展开成一张精确到链路和字节的点对点操作表 → 交由 SimAI-CM 模拟,算出通信时间。</p>
+<p><strong>参数覆盖与工程代价</strong>。SimCCL 覆盖绝大多数 NCCL 参数,并增强支持 PXN 等特性(可将经中间 rank 转发的传输拆分为多条流,反映在 FlowModel 中)。由于跳过真实数据,EP 场景下门控模块的 token 分发以均衡分布近似,对结果影响极小。整体构建逾 10,000 行代码,但除需随 CCL 版本重新适配的 SimCCL 外大多可复用;且对原始 NCCL 代码库无侵入式修改,仅 572 行为必需。</p>
+<p><img src="/images/SimAI/image-3.png" alt="alt text"></p>
+<h3 id="4-4-大规模模拟加速"><a href="#4-4-大规模模拟加速" class="headerlink" title="4.4 大规模模拟加速"></a>4.4 大规模模拟加速</h3><p>动机与方案选择。开发初期,128 GPU 下 GPT-3 单次迭代的模拟需逾 24 小时,而真机仅两秒。为支持千卡以上规模,SimAI-CM 引入<strong>多线程加速</strong>,并在 PDES 与 UNISON 等方案中选择了 UNISON——因其开源、构建于 NS-3、可自动分区拓扑并调度任务,且具备更优可扩展性。</p>
+<p><strong>无锁全局变量共享</strong>。集成 UNISON 的主要障碍在于:规模增大后大量全局配置与上下文需跨线程共享,而以全局锁(即便原子操作)更新这些追踪主机间通信元数据(如节点间数据量、交换机队列长度)的变量,会拖慢并发执行。作者观察到大多数全局变量仅被特定线程访问,遂将其隔离至以节点 ID 为索引的表中,使每个节点的单线程模拟得以无锁访问相关数据。该优化相比单线程版本带来 23 倍加速,相比多线程版本再提升 15%。</p>
+<h2 id="5-评估"><a href="#5-评估" class="headerlink" title="5. 评估"></a>5. 评估</h2><p>基于模拟的精度和可扩展性对 SimAI 进行评估,并以开源模拟器 ASTRA-sim 作为对比，以真实集群的结果作为基准真值。</p>
+<p>测试平台。实验在两个测试平台上进行,二者共享类似的多轨道(multi-rail)、胖树(fat-tree)、主机间 RoCEv2 网络,架构上与阿里巴巴 HPN 相仿。集群 A100 与集群 H100 均由 128 台主机组成,每台 8 块 GPU,差异主要在 GPU 型号、网卡配置(A100 为 4 块 CX-6&#x2F;2×100Gbps 且两卡共享一块 NIC,H100 为 8 块 CX-7&#x2F;2×200Gbps)以及 NVLink 带宽(600 vs. 900 GBps)。关键前提是:模拟环境与物理集群共享完全一致的主机内与主机间拓扑,以保证对比的公平性。</p>
+<p>对照与基准。 为使 ASTRA-sim 可比,作者为其增配了工作负载适配器以解析 SimAI-WG 生成的工作负载文件。物理集群侧则运行模型、框架与 NCCL 参数均与工作负载文件相匹配的真实 LLM 任务。评估覆盖 128、512、1024 三种集群规模;虽运行了全部工作负载,但正文以 GPT-3 13B、LLaMA 65B、GPT-3 175B 三个代表性模型呈现结果。</p>
+<h3 id="5-1-通信模拟的精度"><a href="#5-1-通信模拟的精度" class="headerlink" title="5.1 通信模拟的精度"></a>5.1 通信模拟的精度</h3><p>整体优势。在主机内集合通信(图 6,涵盖 8MB 至 8GB 消息)上,SimAI 显著优于 ASTRA-sim 并与真值高度吻合:平均偏差在 A100 上为 3.9% 对 74.8%,在 H100 上为 2.3% 对 51.7%。</p>
+<p><img src="/images/SimAI/image-4.png" alt="alt text"></p>
+<p>小消息是 ASTRA-sim 的主要短板。 即便在其表现最好的 A100、8GB 大消息场景,ASTRA-sim 的 AllGather&#x2F;ReduceScatter 仍偏离真值逾 21.8%,不利条件下误差高达 210.5%;在 8MB 小消息时偏差更达 204.3%。作者将此归因于 ASTRA-sim 对实际传输流程的大幅简化——未建模运行时软件(如 libibverbs)与 NIC 流水线,而小消息性能恰恰对这些因素更敏感。这一点也反向印证了 SimAI 集成 NCCL 关键流程、模拟至 RDMA 层行为的设计价值。</p>
+<p>误差随规模放大。 主机间通信(图 7)进一步显示,ASTRA-sim 的偏差不仅在小消息上明显,且随集群规模扩大而急剧恶化:以 8MB 消息的 AllGather 为例,128 块 A100 上误差为 45.9%,增至 512 块时跃升至 530.2%;AllReduce 与 ReduceScatter 呈相同趋势。相比之下,SimAI 始终贴近真值。</p>
+<h3 id="5-2-计算模拟的精度"><a href="#5-2-计算模拟的精度" class="headerlink" title="5.2 计算模拟的精度"></a>5.2 计算模拟的精度</h3><p><strong>两档精度</strong>。SimAI 的计算模拟存在两种模式,精度差异明显，如图8所示:基于实测的 SimAI-CP 对所有内核估算高度准确,总执行时间偏差仅 0.5%–3.1%;而面向未发布 GPU 的外推方法 SimAI-CP-Model 偏差较大(13%–15%),在 Attention−QKV 与 MLP−linear 内核上尤为突出。据此,作者给出明确使用建议:SimAI-CP-Model 仅在无可用 GPU 时使用,这与 §3.3 中将其定位为”未发布 GPU 评估手段”的设计意图一致。</p>
+<p><img src="/images/SimAI/image-5.png" alt="alt text"></p>
+<p>对照方法的局限。 ASTRA-sim 所依赖的 SCALE-sim 仅能运行矩阵乘法内核,其数据须通过”GPU 有效 FLOPS 与 TPU 有效 FLOPS 之比”换算得到,误差很大——H100 为 49.8%、A100 为 117.9%、H20 高达 224%。作者将根因归结为 GPU 计算流水线的内部封闭特性,使这类方法难以精确估算计算时间。另一替代方案 Accel-Sim 则因仅支持六年前的 PyTorch 0.4 而无法运行最新 LLM 任务。</p>
+<h3 id="5-3-端到端模拟的精度"><a href="#5-3-端到端模拟的精度" class="headerlink" title="5.3 端到端模拟的精度"></a>5.3 端到端模拟的精度</h3><p>端到端结果是前两节的综合体现。图 9 显示,SimAI 在各类工作负载上的迭代时间均贴近真实集群,即便在 1024 块 GPU 规模下差距仍小于 4%;SimAI 与真值的偏差小于 3.9%,较 ASTRA-sim 提升 36.1 倍,而后者对 A100 与 H100 的迭代时间估计均不准确。</p>
+<p><img src="/images/SimAI/image-6.png" alt="alt text"></p>
+<p>一个值得点出的规律是:SimAI 的精度随模型规模增大而提升(从 GPT-3 13B 到 175B)。作者将其归因于大模型的集合通信消息更大,而 §4.2 已表明 SimAI 对大消息的模拟更为精确——这恰好与”大规模工业场景”的实际需求方向一致,凸显了该模拟器在真实部署中的适用性。</p>
+<h2 id="6-生产环境中的收益"><a href="#6-生产环境中的收益" class="headerlink" title="6. 生产环境中的收益"></a>6. 生产环境中的收益</h2><p>一是用模拟替代昂贵的硬件原型来指导主机设计,二是用模拟替代暴力穷举来优化训练参数。</p>
+<p><strong>为新 GPU 指导主机设计</strong>。 核心问题是:当单卡算力跃升后,应为每块 GPU 配置多少网络带宽,才能在充分发挥其性能与控制总体资本支出之间取得平衡?作者以三代 GPU 为例展示了模拟驱动的决策过程:</p>
+<ul>
+<li>H100:在 1024 卡集群上模拟 100&#x2F;200&#x2F;400Gbps 三档配置,发现从 200Gbps 升至 400Gbps 仍带来 19% 的性能提升,相对资本支出而言依然显著;同时指出无需模拟更高带宽,因为 H100 的 PCIe 带宽(512Gbps,Gen5×16)决定了单卡实际上限约为 400Gbps。这一结论直接支撑了最终的主机设计(8 卡 + 8 块 2×200Gbps CX-7)。</li>
+<li>H20:由于算力低于 H100,所需带宽随之降低——100→200Gbps 提升 11%,而 200→400Gbps 仅提升 6%,据此权衡后选择为每卡配置 200Gbps。</li>
+</ul>
+<p><img src="/images/SimAI/image-7.png" alt="alt text"></p>
+<p>一个值得强调的工程价值是:即便对于尚未发布或缺货、无法用 SimAI-CP 实测的 GPU,精度略低的 SimAI-CP-Model(精度低 5% 以上但趋势一致)仍能给出有意义的设计结论,从而使采购决策得以前置。</p>
+<p><strong>量化扩展收益</strong>。生产实践通常默认将 TP 组大小设为单机内 NVSwitch 互联的 GPU 数量,但缺乏定量依据。作者在 8&#x2F;16&#x2F;32&#x2F;64 卡配置下对三个模型系统实验(图 11),得到三点观察:8 卡主机下三个模型的最优 TP 分别为 4、8、8;同一 TP 下主机内 GPU 越多性能越好;但 GPU 数量更多时,若 TP 设置不当性能反而下降。由此提炼出两条可操作的指导:其一,<strong>TP 应恰好容纳完整一层模型,但不宜继续增大(增大 TP 会降低端到端吞吐,更优策略是扩展 DP 组)</strong>;其二,<strong>主机设计应顺应 LLM 的演进,以已知的单层最大规模来反推单机 GPU 数量,优先保障横向扩展性能</strong>。</p>
+]]></content>
+      <categories>
+        <category>模拟器</category>
+      </categories>
+      <tags>
+        <tag>模拟器</tag>
+        <tag>LLM</tag>
+        <tag>Simulator</tag>
       </tags>
   </entry>
   <entry>
@@ -3849,89 +3932,6 @@
       <tags>
         <tag>拓扑</tag>
         <tag>互连网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SimAI</title>
-    <url>/2026/06/18/SimAI/</url>
-    <content><![CDATA[<p>SimAI 通过集成主流训练框架与集合通信库的关键流程,实现了与真实结果平均 98.1% 的吻合度;通过无锁多线程优化保障了可扩展性与性能;并已在阿里云生产环境广泛应用、产出了实用的运营指导。</p>
-<ul>
-<li><a href="#simai">SimAI</a><ul>
-<li><a href="#1-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98%E5%8A%A8%E6%9C%BA">1. 研究背景与问题动机</a></li>
-<li><a href="#2-%E5%9B%9B%E4%B8%AA%E6%8C%91%E6%88%98">2. 四个挑战</a></li>
-<li><a href="#3-%E6%A8%A1%E6%8B%9F%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87">3. 模拟的应用场景与设计目标</a></li>
-<li><a href="#4-simai">4. SimAI</a><ul>
-<li><a href="#41-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E7%94%9F%E6%88%90%E5%99%A8">4.1 工作负载生成器</a></li>
-<li><a href="#42-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F">4.2 计算模拟</a></li>
-<li><a href="#43-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F">4.3 通信模拟</a></li>
-<li><a href="#44-%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A8%A1%E6%8B%9F%E5%8A%A0%E9%80%9F">4.4 大规模模拟加速</a></li>
-</ul>
-</li>
-<li><a href="#5-%E8%AF%84%E4%BC%B0">5. 评估</a><ul>
-<li><a href="#51-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.1 通信模拟的精度</a></li>
-<li><a href="#52-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.2 计算模拟的精度</a></li>
-<li><a href="#53-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.3 端到端模拟的精度</a></li>
-</ul>
-</li>
-<li><a href="#6-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E6%94%B6%E7%9B%8A">6. 生产环境中的收益</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="SimAI"><a href="#SimAI" class="headerlink" title="SimAI"></a>SimAI</h1><h2 id="1-研究背景与问题动机"><a href="#1-研究背景与问题动机" class="headerlink" title="1. 研究背景与问题动机"></a>1. 研究背景与问题动机</h2><p>大语言模型训练对计算资源的需求已达到极高量级,单次 GPT-4 训练据报道需约 2.5 万张高端 GPU。在如此规模下,任何架构与配置决策——GPU 选型、单卡网络带宽、单机 GPU 数量、并行策略划分——都难以通过真实集群进行直接验证,因为大规模实验在成本与时间上均不可承受。模拟器因此成为关键工具:在投资决策阶段用于估算达成性能目标所需的规模与架构,在运营阶段用于提升资源利用率、保障投资回报。</p>
-<p>当前实践普遍采用分粒度建模的策略,即针对不同目标使用不同模拟器:容量规划在流级或作业级进行,忽略报文级行为;性能调优则依赖报文级模拟,以分析流量模式、时延与丢包等指标。然而,作者基于工程实践指出,这种多粒度、多工具的方式存在三方面固有缺陷:其一,粗细粒度各自只覆盖部分信息,导致成本-性能分析失准,难以预测负载均衡行为并评估系统故障;其二,细粒度模拟器执行效率低、粗粒度模拟器精度不足,二者共同制约了大规模部署下的优化能力;其三,多套工具并存使开发与测试流程割裂,加剧了模拟结果与真实结果之间的偏差风险。由此,提出在单一框架内统一容量规划与性能调优的研究目标。</p>
-<p>对既有方案的局限,作者亦作了针对性评述:基于追踪的方法(如 Chakra)精度高,但仅适用于参数与规模一致的模型;传统网络模拟器(如 NS-3、OMNeT++)提供报文级能力,却不涵盖分布式训练所依赖的集合通信;指令级 GPU 模拟器(如 GPGPU-Sim)对大规模场景过于耗时,而 ASTRA-sim 等方案则在 GPU 支持与精度上存在不足。作为量化佐证,现有方法组合(PyTorch 追踪生成器配合 ASTRA-sim)模拟 128 GPU 下 GPT-3 的单次迭代需耗时约一天,而真实硬件仅需两秒。</p>
-<h2 id="2-四个挑战"><a href="#2-四个挑战" class="headerlink" title="2. 四个挑战"></a>2. 四个挑战</h2><p>统一建模并非简单地集成既有工具,而需在整个 AI 训练技术栈上实现高保真建模。作者将其归纳为四项相互关联的挑战,并分别对应后续技术章节:一是以高精度生成能够反映真实训练行为的工作负载;二是在多样化 GPU 架构上实现准确的计算模拟;三是对通信进行精确建模,以刻画网络流量模式与时延;四是保证模拟器具备可扩展性,能够高效支持大规模配置。SimAI 在各类测试场景下相对真实结果的平均偏差为 1.9%,并已应用于阿里云生产环境,作为对上述目标达成程度的总体度量。</p>
-<h2 id="3-模拟的应用场景与设计目标"><a href="#3-模拟的应用场景与设计目标" class="headerlink" title="3. 模拟的应用场景与设计目标"></a>3. 模拟的应用场景与设计目标</h2><p>在硬件基础设施评估方面,涉及三类典型场景:GPU 选型,即在采购前评估新型号在大规模 AI 工作负载下的性能;网络架构设计,即在 GPU 与主机内互联确定后,通过高精度模拟回答单卡理想网络带宽等成本敏感的问题;主机架构设计,即在不构建物理原型的前提下确定单机最优 GPU 数量与主机内互联方案。在优化方案验证方面,模拟可用于低成本的参数调优,以及对新框架、新集合通信方法、新拥塞控制算法等机制的有效性评估。</p>
-<p>为系统各部分分别构建专用模拟器易导致洞见不一致或不完整——例如仅建模 GPU 而忽略网络瓶颈将得出错误结论,因而统一平台是必要的。在此基础上,作者明确了四项设计目标:工作负载生成器需具备对不同模型、参数与规模的灵活性与精确性(目标一);集合通信模拟器需纳入关键优化与增强以保证精度(目标二);计算模拟器需同时兼顾精度与可扩展性(目标三);整体系统需具备高效执行大规模模拟的能力(目标四)。</p>
-<h2 id="4-SimAI"><a href="#4-SimAI" class="headerlink" title="4. SimAI"></a>4. SimAI</h2><p>SimAI 的整体流程可概括为输入描述、工作负载生成与执行引擎三个阶段。每个模拟请求包含模型及其参数、训练框架配置、集合通信库参数,以及主机内与主机间网络拓扑。工作负载生成器(SimAI-WG)据此产出工作负载描述文件,其中列出算法模块、集合通信操作及其依赖关系。该文件随后由执行引擎以离散事件方式模拟计算与通信操作的执行,其中计算模拟器(SimAI-CP)将子模块转化为细粒度内核并基于自建操作库进行模拟,通信模拟器(SimAI-CM)则集成 NCCL 的部分流程,将集合通信分解为点对点操作。在此之上,系统通过多线程加速与无锁全局上下文共享进一步提升执行效率。</p>
-<h3 id="4-1-工作负载生成器"><a href="#4-1-工作负载生成器" class="headerlink" title="4.1 工作负载生成器"></a>4.1 工作负载生成器</h3><p><strong>生成策略</strong>。工作负载文件的精确性直接决定模拟保真度,二者间的微小差异即可引入显著误差。基于追踪的方法虽然准确,但依赖物理集群运行。SimAI-WG 采用”劫持”既有训练框架的方式,在单台主机上生成与真实任务一致的工作负载,目前已对生产环境中的主流框架 Megatron 与 DeepSpeed 实现该机制。其关键在于对框架与 NCCL 作两处修改:一是使框架认为自身运行于具有目标 GPU 数量的集群之中,并将主机间拓扑设置为通用集群配置;二是跳过 NCCL 中的全部真实通信,且对涉及流水线并行的工作负载须配置相应的 rank 编号。经此处理,框架可生成包含算法子模块与集合&#x2F;点对点通信的完整操作序列。</p>
-<p><strong>依赖关系建模</strong>。框架输出的操作序列本身缺乏依赖描述,而计算与通信在执行中存在重叠,故需在工作负载文件中显式嵌入依赖信息。依赖关系依据所采用的并行化框架确定,并在 1024-GPU 集群上经 NVIDIA Nsight Systems 验证。其中存在两类关系:一类为严格的”先于发生”(happened-before)依赖,例如 MLP 反向子模块须在注意力反向子模块与 AllReduce 操作均完成后方可启动;另一类为可重叠依赖,即通信在相应计算开始后即可启动,这正是 Megatron 反向阶段实现通信-计算重叠优化的基础。如图2所示。</p>
-<p><img src="/images/SimAI/image.png" alt="alt text"></p>
-<p><strong>与框架解耦的取舍</strong>。SimAI 未将模拟代码侵入式嵌入框架(如 Owl),而是用 SimAI-WG 抽取工作负载、在独立执行引擎中模拟,以理解各框架算子生成机制为代价,换取灵活性与独立演进能力。此外,作者观察到通信特征呈两类:TP&#x2F;PP&#x2F;EP 的模式与通信量固定、不随集群规模变化,消息为数十至数百 MB;DP 的通信范围随集群扩张,常为横跨数百至数千节点的 GB 级集合通信。</p>
-<p><img src="/images/SimAI/image-1.png" alt="alt text"></p>
-<p><strong>基准测试套件</strong>。 基于过去六个月任务分布(表 2),作者选取覆盖小&#x2F;中&#x2F;大三类规模、以 GPT-3 与 LLaMA 变体为主的开源模型,围绕影响工作负载模式的模型参数与框架参数,构建了一组最小化但具代表性的基准套件(表 3),作为全文评估的统一基础。</p>
-<p><img src="/images/SimAI/image-2.png" alt="alt text"></p>
-<h3 id="4-2-计算模拟"><a href="#4-2-计算模拟" class="headerlink" title="4.2 计算模拟"></a>4.2 计算模拟</h3><p>面向现有 GPU。 由于每块 GPU 在实际训练中专服务单一任务,SimAI-CP 可依工作负载文件为各子模块填入在对应 GPU 上实测的执行时间,从而精确还原整个计算过程,精度区间为 96.9%–99.5%。这些实测数据沉淀为一个操作数据库(表 4),套件之外的工作负载则需补充针对性测试。当新策略重组或细化内核时,系统进一步借助模块-内核转换器将子模块分解为更小的内核分别测试,以支撑对高级优化的精确模拟。</p>
-<p>面向未发布 GPU。出于采购决策需求,SimAI 需模拟尚无法物理获取、仅有规格表的 GPU。直接按规格缩放已知数值的朴素做法误差可达 25.1%。作者据此提出按瓶颈类型分治:依据 Roofline 模型,将内核区分为计算密集型(如 flash attention)与内存带宽密集型(如更新 KV cache 的 Gemm),分别以 FLOPS 比值或带宽比值,从基准 GPU 的实测时间外推至新 GPU。该方法(称为 SimAI-CP-Model)建议在架构相似的 GPU 之间使用,而非跨厂商泛化。</p>
-<h3 id="4-3-通信模拟"><a href="#4-3-通信模拟" class="headerlink" title="4.3 通信模拟"></a>4.3 通信模拟</h3><p><strong>问题与思路</strong>。NCCL 将集合通信(AllReduce、AllGather、ReduceScatter)翻译为网络级操作,并依节点数、消息大小与参数选择最优算法;实际执行与模拟间的微小不匹配即可造成显著偏差。为忠实复现算法选择,SimAI 直接集成 NCCL 关键流程,使用修改版 NCCL(称为 SimCCL)拦截关键操作并生成点对点通信列表。</p>
-<p><strong>单机仿真的五个环节</strong>。在单台主机上,SimCCL 以”劫持”方式完成:(1) 初始化时拦截 NcclCommInitAll,为每块 GPU 创建虚拟通信器,使系统表现如真实多 GPU 集群;(2) 拓扑发现时读取用户指定拓扑文件而非搜索真实 PCIe 设备,各虚拟通信器独立处理、无需同步;(3) 创建主机内通信通道并存入隔离信息表;(4) 因已掌握全部主机信息,绕过 AllGather 直接创建主机间通道;(5) 拦截集合通信调用并重构为底层通信,跳过实际数据传输,仅捕获数据大小、收发 rank 与路由等事件以仿真 RDMA 层行为。如图3所示，SimCCL 将集合通信被拆解成一张点对点通信操作列表。</p>
-<p>整张图描述的是一条转换流水线:输入一个集合通信操作和集群配置 → SimCCL 通过劫持 NCCL、读取模拟拓扑、复现 NCCL 的初始化与算法选择 → 把集合通信展开成一张精确到链路和字节的点对点操作表 → 交由 SimAI-CM 模拟,算出通信时间。</p>
-<p><strong>参数覆盖与工程代价</strong>。SimCCL 覆盖绝大多数 NCCL 参数,并增强支持 PXN 等特性(可将经中间 rank 转发的传输拆分为多条流,反映在 FlowModel 中)。由于跳过真实数据,EP 场景下门控模块的 token 分发以均衡分布近似,对结果影响极小。整体构建逾 10,000 行代码,但除需随 CCL 版本重新适配的 SimCCL 外大多可复用;且对原始 NCCL 代码库无侵入式修改,仅 572 行为必需。</p>
-<p><img src="/images/SimAI/image-3.png" alt="alt text"></p>
-<h3 id="4-4-大规模模拟加速"><a href="#4-4-大规模模拟加速" class="headerlink" title="4.4 大规模模拟加速"></a>4.4 大规模模拟加速</h3><p>动机与方案选择。开发初期,128 GPU 下 GPT-3 单次迭代的模拟需逾 24 小时,而真机仅两秒。为支持千卡以上规模,SimAI-CM 引入<strong>多线程加速</strong>,并在 PDES 与 UNISON 等方案中选择了 UNISON——因其开源、构建于 NS-3、可自动分区拓扑并调度任务,且具备更优可扩展性。</p>
-<p><strong>无锁全局变量共享</strong>。集成 UNISON 的主要障碍在于:规模增大后大量全局配置与上下文需跨线程共享,而以全局锁(即便原子操作)更新这些追踪主机间通信元数据(如节点间数据量、交换机队列长度)的变量,会拖慢并发执行。作者观察到大多数全局变量仅被特定线程访问,遂将其隔离至以节点 ID 为索引的表中,使每个节点的单线程模拟得以无锁访问相关数据。该优化相比单线程版本带来 23 倍加速,相比多线程版本再提升 15%。</p>
-<h2 id="5-评估"><a href="#5-评估" class="headerlink" title="5. 评估"></a>5. 评估</h2><p>基于模拟的精度和可扩展性对 SimAI 进行评估,并以开源模拟器 ASTRA-sim 作为对比，以真实集群的结果作为基准真值。</p>
-<p>测试平台。实验在两个测试平台上进行,二者共享类似的多轨道(multi-rail)、胖树(fat-tree)、主机间 RoCEv2 网络,架构上与阿里巴巴 HPN 相仿。集群 A100 与集群 H100 均由 128 台主机组成,每台 8 块 GPU,差异主要在 GPU 型号、网卡配置(A100 为 4 块 CX-6&#x2F;2×100Gbps 且两卡共享一块 NIC,H100 为 8 块 CX-7&#x2F;2×200Gbps)以及 NVLink 带宽(600 vs. 900 GBps)。关键前提是:模拟环境与物理集群共享完全一致的主机内与主机间拓扑,以保证对比的公平性。</p>
-<p>对照与基准。 为使 ASTRA-sim 可比,作者为其增配了工作负载适配器以解析 SimAI-WG 生成的工作负载文件。物理集群侧则运行模型、框架与 NCCL 参数均与工作负载文件相匹配的真实 LLM 任务。评估覆盖 128、512、1024 三种集群规模;虽运行了全部工作负载,但正文以 GPT-3 13B、LLaMA 65B、GPT-3 175B 三个代表性模型呈现结果。</p>
-<h3 id="5-1-通信模拟的精度"><a href="#5-1-通信模拟的精度" class="headerlink" title="5.1 通信模拟的精度"></a>5.1 通信模拟的精度</h3><p>整体优势。在主机内集合通信(图 6,涵盖 8MB 至 8GB 消息)上,SimAI 显著优于 ASTRA-sim 并与真值高度吻合:平均偏差在 A100 上为 3.9% 对 74.8%,在 H100 上为 2.3% 对 51.7%。</p>
-<p><img src="/images/SimAI/image-4.png" alt="alt text"></p>
-<p>小消息是 ASTRA-sim 的主要短板。 即便在其表现最好的 A100、8GB 大消息场景,ASTRA-sim 的 AllGather&#x2F;ReduceScatter 仍偏离真值逾 21.8%,不利条件下误差高达 210.5%;在 8MB 小消息时偏差更达 204.3%。作者将此归因于 ASTRA-sim 对实际传输流程的大幅简化——未建模运行时软件(如 libibverbs)与 NIC 流水线,而小消息性能恰恰对这些因素更敏感。这一点也反向印证了 SimAI 集成 NCCL 关键流程、模拟至 RDMA 层行为的设计价值。</p>
-<p>误差随规模放大。 主机间通信(图 7)进一步显示,ASTRA-sim 的偏差不仅在小消息上明显,且随集群规模扩大而急剧恶化:以 8MB 消息的 AllGather 为例,128 块 A100 上误差为 45.9%,增至 512 块时跃升至 530.2%;AllReduce 与 ReduceScatter 呈相同趋势。相比之下,SimAI 始终贴近真值。</p>
-<h3 id="5-2-计算模拟的精度"><a href="#5-2-计算模拟的精度" class="headerlink" title="5.2 计算模拟的精度"></a>5.2 计算模拟的精度</h3><p><strong>两档精度</strong>。SimAI 的计算模拟存在两种模式,精度差异明显，如图8所示:基于实测的 SimAI-CP 对所有内核估算高度准确,总执行时间偏差仅 0.5%–3.1%;而面向未发布 GPU 的外推方法 SimAI-CP-Model 偏差较大(13%–15%),在 Attention−QKV 与 MLP−linear 内核上尤为突出。据此,作者给出明确使用建议:SimAI-CP-Model 仅在无可用 GPU 时使用,这与 §3.3 中将其定位为”未发布 GPU 评估手段”的设计意图一致。</p>
-<p><img src="/images/SimAI/image-5.png" alt="alt text"></p>
-<p>对照方法的局限。 ASTRA-sim 所依赖的 SCALE-sim 仅能运行矩阵乘法内核,其数据须通过”GPU 有效 FLOPS 与 TPU 有效 FLOPS 之比”换算得到,误差很大——H100 为 49.8%、A100 为 117.9%、H20 高达 224%。作者将根因归结为 GPU 计算流水线的内部封闭特性,使这类方法难以精确估算计算时间。另一替代方案 Accel-Sim 则因仅支持六年前的 PyTorch 0.4 而无法运行最新 LLM 任务。</p>
-<h3 id="5-3-端到端模拟的精度"><a href="#5-3-端到端模拟的精度" class="headerlink" title="5.3 端到端模拟的精度"></a>5.3 端到端模拟的精度</h3><p>端到端结果是前两节的综合体现。图 9 显示,SimAI 在各类工作负载上的迭代时间均贴近真实集群,即便在 1024 块 GPU 规模下差距仍小于 4%;SimAI 与真值的偏差小于 3.9%,较 ASTRA-sim 提升 36.1 倍,而后者对 A100 与 H100 的迭代时间估计均不准确。</p>
-<p><img src="/images/SimAI/image-6.png" alt="alt text"></p>
-<p>一个值得点出的规律是:SimAI 的精度随模型规模增大而提升(从 GPT-3 13B 到 175B)。作者将其归因于大模型的集合通信消息更大,而 §4.2 已表明 SimAI 对大消息的模拟更为精确——这恰好与”大规模工业场景”的实际需求方向一致,凸显了该模拟器在真实部署中的适用性。</p>
-<h2 id="6-生产环境中的收益"><a href="#6-生产环境中的收益" class="headerlink" title="6. 生产环境中的收益"></a>6. 生产环境中的收益</h2><p>一是用模拟替代昂贵的硬件原型来指导主机设计,二是用模拟替代暴力穷举来优化训练参数。</p>
-<p><strong>为新 GPU 指导主机设计</strong>。 核心问题是:当单卡算力跃升后,应为每块 GPU 配置多少网络带宽,才能在充分发挥其性能与控制总体资本支出之间取得平衡?作者以三代 GPU 为例展示了模拟驱动的决策过程:</p>
-<ul>
-<li>H100:在 1024 卡集群上模拟 100&#x2F;200&#x2F;400Gbps 三档配置,发现从 200Gbps 升至 400Gbps 仍带来 19% 的性能提升,相对资本支出而言依然显著;同时指出无需模拟更高带宽,因为 H100 的 PCIe 带宽(512Gbps,Gen5×16)决定了单卡实际上限约为 400Gbps。这一结论直接支撑了最终的主机设计(8 卡 + 8 块 2×200Gbps CX-7)。</li>
-<li>H20:由于算力低于 H100,所需带宽随之降低——100→200Gbps 提升 11%,而 200→400Gbps 仅提升 6%,据此权衡后选择为每卡配置 200Gbps。</li>
-</ul>
-<p><img src="/images/SimAI/image-7.png" alt="alt text"></p>
-<p>一个值得强调的工程价值是:即便对于尚未发布或缺货、无法用 SimAI-CP 实测的 GPU,精度略低的 SimAI-CP-Model(精度低 5% 以上但趋势一致)仍能给出有意义的设计结论,从而使采购决策得以前置。</p>
-<p><strong>量化扩展收益</strong>。生产实践通常默认将 TP 组大小设为单机内 NVSwitch 互联的 GPU 数量,但缺乏定量依据。作者在 8&#x2F;16&#x2F;32&#x2F;64 卡配置下对三个模型系统实验(图 11),得到三点观察:8 卡主机下三个模型的最优 TP 分别为 4、8、8;同一 TP 下主机内 GPU 越多性能越好;但 GPU 数量更多时,若 TP 设置不当性能反而下降。由此提炼出两条可操作的指导:其一,<strong>TP 应恰好容纳完整一层模型,但不宜继续增大(增大 TP 会降低端到端吞吐,更优策略是扩展 DP 组)</strong>;其二,<strong>主机设计应顺应 LLM 的演进,以已知的单层最大规模来反推单机 GPU 数量,优先保障横向扩展性能</strong>。</p>
-]]></content>
-      <categories>
-        <category>模拟器</category>
-      </categories>
-      <tags>
-        <tag>模拟器</tag>
-        <tag>LLM</tag>
-        <tag>Simulator</tag>
       </tags>
   </entry>
   <entry>
@@ -4636,6 +4636,77 @@
       </tags>
   </entry>
   <entry>
+    <title>Chiplet Actuary</title>
+    <url>/2025/10/22/chiplet-actuary/</url>
+    <content><![CDATA[<ul>
+<li><a href="#chiplet-actuary">Chiplet Actuary</a><ul>
+<li><a href="#1-%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81%E4%B8%8E%E8%AE%A8%E8%AE%BA">1. 模型验证与讨论</a><ul>
+<li><a href="#11-re-%E6%88%90%E6%9C%AC%E7%9A%84%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%AF%94%E8%BE%83">1.1 RE 成本的验证与比较</a></li>
+<li><a href="#12-%E5%8D%95%E4%B8%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%BB%E6%88%90%E6%9C%AC%E6%AF%94%E8%BE%83">1.2 单一系统的总成本比较</a></li>
+</ul>
+</li>
+<li><a href="#2-%E8%8A%AF%E7%B2%92%E5%A4%8D%E7%94%A8%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2">2. 芯粒复用方案探索</a><ul>
+<li><a href="#21-%E5%8D%95%E8%8A%AF%E7%B2%92%E5%A4%9A%E7%B3%BB%E7%BB%9F">2.1 单芯粒多系统</a></li>
+<li><a href="#22-%E5%8D%95%E4%B8%AD%E5%BF%83%E5%A4%9A%E6%89%A9%E5%B1%95">2.2 单中心多扩展</a></li>
+<li><a href="#23-%E5%A4%9A%E6%8F%92%E6%A7%BD%E5%A4%9A%E5%8D%8F%E5%90%8C">2.3 多插槽多协同</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E8%AE%BA">主要结论</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Chiplet-Actuary"><a href="#Chiplet-Actuary" class="headerlink" title="Chiplet Actuary"></a>Chiplet Actuary</h1><p>多芯片集成被广泛认为是摩尔定律的延伸。节约成本是人们经常提到的一个优势，但以往的研究很少在定量层面上展示多芯片集成相较于单片 SoC 的成本优势。这篇文章建立了一个定量成本模型（Chiplet Actuary），并基于三种典型的多芯片集成技术提出一种多芯片系统的分析方法，用于评估来自良率提升、芯粒与封装复用以及异构性带来的成本收益。从多个角度重新审视多芯片系统的实际成本，并展示如何通过合适的多芯片架构降低整个 VLSI 系统的总成本。</p>
+<p>以往的研究主要关注芯片和硅中介层（interposer）的制造成本，却忽略了其他重要部分，如基板成本、D2D 接口开销以及非经常性工程成本 NRE。</p>
+<p>为更好地指导 VLSI 系统设计并解释体系结构挑战如划分问题，提出了一个基于三种典型多芯片集成技术的定量模型——Chiplet Actuary，用于成本评估。基于该模型，从多种角度探讨不同集成方案的总体成本。模型结合了外部数据以及内部数据，以提供较为准确的总成本估计。</p>
+<h2 id="1-模型验证与讨论"><a href="#1-模型验证与讨论" class="headerlink" title="1. 模型验证与讨论"></a>1. 模型验证与讨论</h2><h3 id="1-1-RE-成本的验证与比较"><a href="#1-1-RE-成本的验证与比较" class="headerlink" title="1.1 RE 成本的验证与比较"></a>1.1 RE 成本的验证与比较</h3><p><img src="/images/chiplet-actuary/image.png" alt="alt text"> </p>
+<p>如图 5 所示，文中的模型实验结果与AMD的数据进行了对比，大致吻合。AMD 声称其基于芯粒的产品相比单片 SoC 具有显著的成本优势。然而，AMD 的宣传中未包含**重新集成（reintegration）**的额外成本。当将封装开销纳入考虑后，多芯片的成本优势被削弱。</p>
+<p><img src="/images/chiplet-actuary/image-1.png" alt="alt text"></p>
+<p>图5得出两个重要的结论：</p>
+<ul>
+<li>对任何工艺节点而言，随着总芯片面积增大，成本优势逐渐提升；且先进制程的拐点出现得更早。但随着芯粒数量增加（例如从 3 个增加到 5 个），良率提升带来的收益呈现边际递减。</li>
+<li>此外，InFO 与 2.5D 集成由于使用了大型单片中介层（interposer），自身也受到复杂封装工艺带来的低良率影响；再加上键合缺陷会浪费 KGD，因此在 7nm、900 mm²、2.5D 条件下，封装成本已与芯片成本相当（约 50%）。<br>因此，先进封装技术只有在先进工艺下才具备经济性。</li>
+</ul>
+<h3 id="1-2-单一系统的总成本比较"><a href="#1-2-单一系统的总成本比较" class="headerlink" title="1.2 单一系统的总成本比较"></a>1.2 单一系统的总成本比较</h3><p><img src="/images/chiplet-actuary/image-2.png" alt="alt text"></p>
+<p>尽管 RE 成本是主要考虑因素，但在缺乏大规模产量保障的系统中，NRE 成本往往是决定性因素。以一个模块总面积为 800 mm² 的系统为例，分别以单片 SoC 与由两个芯粒组成的 MCM 方案实现。假设 D2D 接口开销为 10%，并根据模块与芯片数量摊销 NRE 成本。所有成本均归一化到 SoC 的 RE 成本。</p>
+<p>对于 5nm 工艺，当产量达到 200 万 时，多芯片架构开始真正实现成本回收。对于更小的系统，盈亏平衡点（turning point）更高。即除非系统面积或生产数量足够大，单片 SoC 仍是单一系统的更佳选择。</p>
+<h2 id="2-芯粒复用方案探索"><a href="#2-芯粒复用方案探索" class="headerlink" title="2. 芯粒复用方案探索"></a>2. 芯粒复用方案探索</h2><p><img src="/images/chiplet-actuary/image-3.png" alt="alt text"></p>
+<h3 id="2-1-单芯粒多系统"><a href="#2-1-单芯粒多系统" class="headerlink" title="2.1 单芯粒多系统"></a>2.1 单芯粒多系统</h3><p>如图 8 所示，由于芯粒复用，芯片 NRE 成本大幅降低——4X 系统的 NRE 成本节约接近 75%，相比单片 SoC 优势显著。</p>
+<p><img src="/images/chiplet-actuary/image-4.png" alt="alt text"></p>
+<p>SCMS 的优势在于：</p>
+<ul>
+<li>只需一种芯粒即可构建多个系统，因此可立即见效，无需重新设计多个芯片。</li>
+<li>这种架构适合同一生产线中不同性能档次的产品系列。</li>
+</ul>
+<p>但其缺点是：</p>
+<ul>
+<li>D2D 互连导致显著开销；</li>
+<li>仅有一种芯粒，无法实现异构集成。</li>
+</ul>
+<p>是否复用封装取决于 RE 成本与摊销后 NRE 成本孰为主导。对于高成本封装（如 2.5D），若在 1X 系统中复用 4X 的中介层，封装成本将超过 50%，因此封装复用在高端封装中并不经济；但 2.5D 架构仍能从芯粒复用中获益。</p>
+<h3 id="2-2-单中心多扩展"><a href="#2-2-单中心多扩展" class="headerlink" title="2.2 单中心多扩展"></a>2.2 单中心多扩展</h3><p><img src="/images/chiplet-actuary/image-5.png" alt="alt text"></p>
+<p>如图 9 所示，SoC、普通 MCM、封装复用 MCM 及异构封装复用 MCM的摊销总成本被比较。</p>
+<p>OCME 的复用收益不如 SCMS 明显（NRE 节省 &lt; 50%），因为系统中包含三个不同芯粒，平均复用次数较少，因此需要更多系统才能发挥效果。但支持异构集成。<br>如图 9 所示，在引入异构封装后，总成本进一步降低 10% 以上；尤其在单 C 系统中，成本节约几乎达到 50%。对于那些包含大量不需要先进工艺节点的模块的系统，采用 OCME 架构更具成本效益。</p>
+<h3 id="2-3-多插槽多协同"><a href="#2-3-多插槽多协同" class="headerlink" title="2.3 多插槽多协同"></a>2.3 多插槽多协同</h3><p><img src="/images/chiplet-actuary/image-6.png" alt="alt text"></p>
+<p>只需 6 个芯粒 + 1 个四插槽封装，理论上即可构建多达 119 种不同系统。<br>我们假设所有复用可能性都被充分利用，每种系统产量为 50 万，并比较不同复用程度下的平均归一化成本。</p>
+<p>如图 10 所示，芯粒复用次数越多，NRE 成本摊销带来的收益越大。<br>当复用性被充分发挥时，摊销后的 NRE 成本几乎可以忽略，此时多芯片架构的巨大节省潜力显现。<br>其成本优势不仅来自 RE 成本降低，也来自 NRE 成本摊销。</p>
+<h2 id="主要结论"><a href="#主要结论" class="headerlink" title="主要结论"></a>主要结论</h2><ul>
+<li>当芯片缺陷带来的成本超过封装开销时，多芯片架构开始显现成本优势。<br>越接近摩尔极限（Moore Limit）（即最大芯片面积与最先进制程），成本收益越大。</li>
+<li>对于单一系统，除非产量足够大以摊平多芯粒的 NRE 开销，否则单片 SoC通常更划算。</li>
+<li>是否复用封装取决于 RE 成本或摊销后 NRE 成本的主导性。</li>
+<li>基本原则是：用更少的芯粒构建更多系统。当需求划分更细时，芯粒复用带来的成本效益更为明显。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+      </categories>
+      <tags>
+        <tag>Chiplet</tag>
+        <tag>MCM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ZCube</title>
     <url>/2026/05/26/ZCube/</url>
     <content><![CDATA[<ul>
@@ -4806,76 +4877,5 @@
 <p>第三，它提出了一个工程上可行的两阶段评估机制。通过先用代表性 workload fragment 筛选 Pareto-optimal topologies，再进行完整训练仿真，ATOP 在可接受时间内完成了 16k GPU 规模拓扑搜索。</p>
 <p>第四，它发现并形式化了 ZCube。ZCube 的意义在于，它说明大规模 GPU 网络拓扑不一定必须沿着传统对称结构设计。非对称拓扑如果能降低直径、减少交换机和光模块成本，并保持 collective communication 性能，就可能在真实大模型训练集群中更具性价比。</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Chiplet Actuary</title>
-    <url>/2025/10/22/chiplet-actuary/</url>
-    <content><![CDATA[<ul>
-<li><a href="#chiplet-actuary">Chiplet Actuary</a><ul>
-<li><a href="#1-%E6%A8%A1%E5%9E%8B%E9%AA%8C%E8%AF%81%E4%B8%8E%E8%AE%A8%E8%AE%BA">1. 模型验证与讨论</a><ul>
-<li><a href="#11-re-%E6%88%90%E6%9C%AC%E7%9A%84%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%AF%94%E8%BE%83">1.1 RE 成本的验证与比较</a></li>
-<li><a href="#12-%E5%8D%95%E4%B8%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%BB%E6%88%90%E6%9C%AC%E6%AF%94%E8%BE%83">1.2 单一系统的总成本比较</a></li>
-</ul>
-</li>
-<li><a href="#2-%E8%8A%AF%E7%B2%92%E5%A4%8D%E7%94%A8%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2">2. 芯粒复用方案探索</a><ul>
-<li><a href="#21-%E5%8D%95%E8%8A%AF%E7%B2%92%E5%A4%9A%E7%B3%BB%E7%BB%9F">2.1 单芯粒多系统</a></li>
-<li><a href="#22-%E5%8D%95%E4%B8%AD%E5%BF%83%E5%A4%9A%E6%89%A9%E5%B1%95">2.2 单中心多扩展</a></li>
-<li><a href="#23-%E5%A4%9A%E6%8F%92%E6%A7%BD%E5%A4%9A%E5%8D%8F%E5%90%8C">2.3 多插槽多协同</a></li>
-</ul>
-</li>
-<li><a href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E8%AE%BA">主要结论</a></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h1 id="Chiplet-Actuary"><a href="#Chiplet-Actuary" class="headerlink" title="Chiplet Actuary"></a>Chiplet Actuary</h1><p>多芯片集成被广泛认为是摩尔定律的延伸。节约成本是人们经常提到的一个优势，但以往的研究很少在定量层面上展示多芯片集成相较于单片 SoC 的成本优势。这篇文章建立了一个定量成本模型（Chiplet Actuary），并基于三种典型的多芯片集成技术提出一种多芯片系统的分析方法，用于评估来自良率提升、芯粒与封装复用以及异构性带来的成本收益。从多个角度重新审视多芯片系统的实际成本，并展示如何通过合适的多芯片架构降低整个 VLSI 系统的总成本。</p>
-<p>以往的研究主要关注芯片和硅中介层（interposer）的制造成本，却忽略了其他重要部分，如基板成本、D2D 接口开销以及非经常性工程成本 NRE。</p>
-<p>为更好地指导 VLSI 系统设计并解释体系结构挑战如划分问题，提出了一个基于三种典型多芯片集成技术的定量模型——Chiplet Actuary，用于成本评估。基于该模型，从多种角度探讨不同集成方案的总体成本。模型结合了外部数据以及内部数据，以提供较为准确的总成本估计。</p>
-<h2 id="1-模型验证与讨论"><a href="#1-模型验证与讨论" class="headerlink" title="1. 模型验证与讨论"></a>1. 模型验证与讨论</h2><h3 id="1-1-RE-成本的验证与比较"><a href="#1-1-RE-成本的验证与比较" class="headerlink" title="1.1 RE 成本的验证与比较"></a>1.1 RE 成本的验证与比较</h3><p><img src="/images/chiplet-actuary/image.png" alt="alt text"> </p>
-<p>如图 5 所示，文中的模型实验结果与AMD的数据进行了对比，大致吻合。AMD 声称其基于芯粒的产品相比单片 SoC 具有显著的成本优势。然而，AMD 的宣传中未包含**重新集成（reintegration）**的额外成本。当将封装开销纳入考虑后，多芯片的成本优势被削弱。</p>
-<p><img src="/images/chiplet-actuary/image-1.png" alt="alt text"></p>
-<p>图5得出两个重要的结论：</p>
-<ul>
-<li>对任何工艺节点而言，随着总芯片面积增大，成本优势逐渐提升；且先进制程的拐点出现得更早。但随着芯粒数量增加（例如从 3 个增加到 5 个），良率提升带来的收益呈现边际递减。</li>
-<li>此外，InFO 与 2.5D 集成由于使用了大型单片中介层（interposer），自身也受到复杂封装工艺带来的低良率影响；再加上键合缺陷会浪费 KGD，因此在 7nm、900 mm²、2.5D 条件下，封装成本已与芯片成本相当（约 50%）。<br>因此，先进封装技术只有在先进工艺下才具备经济性。</li>
-</ul>
-<h3 id="1-2-单一系统的总成本比较"><a href="#1-2-单一系统的总成本比较" class="headerlink" title="1.2 单一系统的总成本比较"></a>1.2 单一系统的总成本比较</h3><p><img src="/images/chiplet-actuary/image-2.png" alt="alt text"></p>
-<p>尽管 RE 成本是主要考虑因素，但在缺乏大规模产量保障的系统中，NRE 成本往往是决定性因素。以一个模块总面积为 800 mm² 的系统为例，分别以单片 SoC 与由两个芯粒组成的 MCM 方案实现。假设 D2D 接口开销为 10%，并根据模块与芯片数量摊销 NRE 成本。所有成本均归一化到 SoC 的 RE 成本。</p>
-<p>对于 5nm 工艺，当产量达到 200 万 时，多芯片架构开始真正实现成本回收。对于更小的系统，盈亏平衡点（turning point）更高。即除非系统面积或生产数量足够大，单片 SoC 仍是单一系统的更佳选择。</p>
-<h2 id="2-芯粒复用方案探索"><a href="#2-芯粒复用方案探索" class="headerlink" title="2. 芯粒复用方案探索"></a>2. 芯粒复用方案探索</h2><p><img src="/images/chiplet-actuary/image-3.png" alt="alt text"></p>
-<h3 id="2-1-单芯粒多系统"><a href="#2-1-单芯粒多系统" class="headerlink" title="2.1 单芯粒多系统"></a>2.1 单芯粒多系统</h3><p>如图 8 所示，由于芯粒复用，芯片 NRE 成本大幅降低——4X 系统的 NRE 成本节约接近 75%，相比单片 SoC 优势显著。</p>
-<p><img src="/images/chiplet-actuary/image-4.png" alt="alt text"></p>
-<p>SCMS 的优势在于：</p>
-<ul>
-<li>只需一种芯粒即可构建多个系统，因此可立即见效，无需重新设计多个芯片。</li>
-<li>这种架构适合同一生产线中不同性能档次的产品系列。</li>
-</ul>
-<p>但其缺点是：</p>
-<ul>
-<li>D2D 互连导致显著开销；</li>
-<li>仅有一种芯粒，无法实现异构集成。</li>
-</ul>
-<p>是否复用封装取决于 RE 成本与摊销后 NRE 成本孰为主导。对于高成本封装（如 2.5D），若在 1X 系统中复用 4X 的中介层，封装成本将超过 50%，因此封装复用在高端封装中并不经济；但 2.5D 架构仍能从芯粒复用中获益。</p>
-<h3 id="2-2-单中心多扩展"><a href="#2-2-单中心多扩展" class="headerlink" title="2.2 单中心多扩展"></a>2.2 单中心多扩展</h3><p><img src="/images/chiplet-actuary/image-5.png" alt="alt text"></p>
-<p>如图 9 所示，SoC、普通 MCM、封装复用 MCM 及异构封装复用 MCM的摊销总成本被比较。</p>
-<p>OCME 的复用收益不如 SCMS 明显（NRE 节省 &lt; 50%），因为系统中包含三个不同芯粒，平均复用次数较少，因此需要更多系统才能发挥效果。但支持异构集成。<br>如图 9 所示，在引入异构封装后，总成本进一步降低 10% 以上；尤其在单 C 系统中，成本节约几乎达到 50%。对于那些包含大量不需要先进工艺节点的模块的系统，采用 OCME 架构更具成本效益。</p>
-<h3 id="2-3-多插槽多协同"><a href="#2-3-多插槽多协同" class="headerlink" title="2.3 多插槽多协同"></a>2.3 多插槽多协同</h3><p><img src="/images/chiplet-actuary/image-6.png" alt="alt text"></p>
-<p>只需 6 个芯粒 + 1 个四插槽封装，理论上即可构建多达 119 种不同系统。<br>我们假设所有复用可能性都被充分利用，每种系统产量为 50 万，并比较不同复用程度下的平均归一化成本。</p>
-<p>如图 10 所示，芯粒复用次数越多，NRE 成本摊销带来的收益越大。<br>当复用性被充分发挥时，摊销后的 NRE 成本几乎可以忽略，此时多芯片架构的巨大节省潜力显现。<br>其成本优势不仅来自 RE 成本降低，也来自 NRE 成本摊销。</p>
-<h2 id="主要结论"><a href="#主要结论" class="headerlink" title="主要结论"></a>主要结论</h2><ul>
-<li>当芯片缺陷带来的成本超过封装开销时，多芯片架构开始显现成本优势。<br>越接近摩尔极限（Moore Limit）（即最大芯片面积与最先进制程），成本收益越大。</li>
-<li>对于单一系统，除非产量足够大以摊平多芯粒的 NRE 开销，否则单片 SoC通常更划算。</li>
-<li>是否复用封装取决于 RE 成本或摊销后 NRE 成本的主导性。</li>
-<li>基本原则是：用更少的芯粒构建更多系统。当需求划分更细时，芯粒复用带来的成本效益更为明显。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>论文阅读</category>
-      </categories>
-      <tags>
-        <tag>Chiplet</tag>
-        <tag>MCM</tag>
-      </tags>
   </entry>
 </search>
