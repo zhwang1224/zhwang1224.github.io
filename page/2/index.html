@@ -285,7 +285,7 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -313,6 +313,102 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/05/26/ZCube/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/05/26/ZCube/" class="post-title-link" itemprop="url">ZCube</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-05-26 17:11:08 / 修改时间：17:20:35" itemprop="dateCreated datePublished" datetime="2026-05-26T17:11:08+08:00">2026-05-26</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#%E4%BB%8E-atop-%E5%88%B0-zcube%E9%9D%A2%E5%90%91%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96">从 ATOP 到 ZCube：面向大模型训练的数据中心网络拓扑自动优化</a><ul>
+<li><a href="#1-%E8%83%8C%E6%99%AF">1. 背景</a></li>
+<li><a href="#2-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%BC%8F">2. 大模型训练通信模式</a></li>
+<li><a href="#3-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%8B%93%E6%89%91%E8%AE%BE%E8%AE%A1">3. 自动化拓扑设计</a></li>
+<li><a href="#4-%E6%8B%93%E6%89%91%E5%BB%BA%E6%A8%A1%E4%BB%8E%E4%BA%BA%E5%B7%A5%E7%9B%B4%E8%A7%89%E5%88%B0-11-%E7%B1%BB%E5%8F%AF%E6%90%9C%E7%B4%A2%E8%B6%85%E5%8F%82%E6%95%B0">4. 拓扑建模：从人工直觉到 11 类可搜索超参数</a></li>
+<li><a href="#5-%E6%8B%93%E6%89%91%E4%BC%98%E5%8C%96%E5%99%A8nsga-ii-%E5%A4%9A%E7%9B%AE%E6%A0%87%E6%90%9C%E7%B4%A2">5. 拓扑优化器：NSGA-II 多目标搜索</a></li>
+<li><a href="#6-%E6%8B%93%E6%89%91%E8%AF%84%E4%BC%B0%E5%99%A8%E6%B5%81%E7%BA%A7%E4%BB%BF%E7%9C%9F--%E4%B8%A4%E9%98%B6%E6%AE%B5%E8%AF%84%E4%BC%B0">6. 拓扑评估器：流级仿真 + 两阶段评估</a></li>
+<li><a href="#7-atop-%E7%9A%84%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">7. ATOP 的三个主要使用场景</a></li>
+<li><a href="#8-zcubeatop-%E5%8F%91%E7%8E%B0%E7%9A%84%E6%96%B0%E5%9E%8B%E9%AB%98%E6%80%A7%E4%BB%B7%E6%AF%94%E6%8B%93%E6%89%91">8. ZCube：ATOP 发现的新型高性价比拓扑</a><ul>
+<li><a href="#81-zcube-%E7%9A%84%E9%80%92%E5%BD%92%E6%9E%84%E9%80%A0">8.1 ZCube 的递归构造</a></li>
+<li><a href="#82-zcube-%E7%9A%84%E7%9B%B4%E5%BE%84%E4%BC%98%E5%8A%BF">8.2 ZCube 的直径优势</a></li>
+<li><a href="#83-zcube-%E7%9A%84%E6%88%90%E6%9C%AC%E4%BC%98%E5%8A%BF">8.3 ZCube 的成本优势</a></li>
+<li><a href="#84-zcube-%E7%9A%84%E6%95%85%E9%9A%9C%E5%AE%B9%E5%BF%8D%E8%83%BD%E5%8A%9B">8.4 ZCube 的故障容忍能力</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/05/26/ZCube/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1204,106 +1300,6 @@ mjx-container[display="true"] + br {
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2025/11/04/DOJO-supercompute/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2025/10/28/Net-within-a-Net/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/10/28/Net-within-a-Net/" class="post-title-link" itemprop="url">Net within a Net</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-10-28 21:15:41" itemprop="dateCreated datePublished" datetime="2025-10-28T21:15:41+08:00">2025-10-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-29 10:56:17" itemprop="dateModified" datetime="2025-10-29T10:56:17+08:00">2025-10-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#network-within-a-network-approach-to-create-a-scalable--high-radix-router-microarchitecture">Network within a Network Approach to Create a Scalable  High-Radix Router Microarchitecture</a><ul>
-<li><a href="#1-high-radix-router-microarchitecture">1. High-Radix Router Microarchitecture</a><ul>
-<li><a href="#11-%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BA%A4%E6%8D%A2%E7%BB%93%E6%9E%84">1.1 “网络中的网络”交换结构</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/10/28/Net-within-a-Net/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
