@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="并查集 1. 通信录合并 描述 具体思路 示例代码   2. 通信录合并 具体思路 示例代码   3. 网络连接拒绝执行数 题目内容 核心思路 示例代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithm-并查集">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/05/26/Algorithm-%E5%B9%B6%E6%9F%A5%E9%9B%86/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="并查集 1. 通信录合并 描述 具体思路 示例代码   2. 通信录合并 具体思路 示例代码   3. 网络连接拒绝执行数 题目内容 核心思路 示例代码">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-26T13:10:03.000Z">
+<meta property="article:modified_time" content="2026-06-26T17:20:21.337Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="并查集">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/05/26/Algorithm-%E5%B9%B6%E6%9F%A5%E9%9B%86/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/05/26/Algorithm-%E5%B9%B6%E6%9F%A5%E9%9B%86/","path":"2026/05/26/Algorithm-并查集/","title":"Algorithm-并查集"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithm-并查集 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script src="/js/visitor-map.js"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">并查集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%80%9A%E4%BF%A1%E5%BD%95%E5%90%88%E5%B9%B6"><span class="nav-number">1.1.</span> <span class="nav-text">1. 通信录合并</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.1.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.2.</span> <span class="nav-text">具体思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.3.</span> <span class="nav-text">示例代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%80%9A%E4%BF%A1%E5%BD%95%E5%90%88%E5%B9%B6"><span class="nav-number">1.2.</span> <span class="nav-text">2. 通信录合并</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">具体思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">示例代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E6%8B%92%E7%BB%9D%E6%89%A7%E8%A1%8C%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">3. 网络连接拒绝执行数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9"><span class="nav-number">1.3.1.</span> <span class="nav-text">题目内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF"><span class="nav-number">1.3.2.</span> <span class="nav-text">核心思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-2"><span class="nav-number">1.3.3.</span> <span class="nav-text">示例代码</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/05/26/Algorithm-%E5%B9%B6%E6%9F%A5%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithm-并查集 | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithm-并查集
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-26 21:10:03" itemprop="dateCreated datePublished" datetime="2026-05-26T21:10:03+08:00">2026-05-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-06-27 01:20:21" itemprop="dateModified" datetime="2026-06-27T01:20:21+08:00">2026-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#%E5%B9%B6%E6%9F%A5%E9%9B%86">并查集</a><ul>
+<li><a href="#1-%E9%80%9A%E4%BF%A1%E5%BD%95%E5%90%88%E5%B9%B6">1. 通信录合并</a><ul>
+<li><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li>
+<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF">具体思路</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
+</ul>
+</li>
+<li><a href="#2-%E9%80%9A%E4%BF%A1%E5%BD%95%E5%90%88%E5%B9%B6">2. 通信录合并</a><ul>
+<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF-1">具体思路</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-1">示例代码</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E6%8B%92%E7%BB%9D%E6%89%A7%E8%A1%8C%E6%95%B0">3. 网络连接拒绝执行数</a><ul>
+<li><a href="#%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9">题目内容</a></li>
+<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-2">示例代码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<h1 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h1><h2 id="1-通信录合并"><a href="#1-通信录合并" class="headerlink" title="1. 通信录合并"></a>1. 通信录合并</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>输入：<br>第一行表示通讯录的记录数量 num，值的范围[1,1000]。<br>从第二行开始，每一行代表一条联系人记录，每条录包括姓名和若干电话号码，电话号码的个数不超过10（姓名由英文字母大小写组成，长度在1到10之间，电话号码由数字组成）。<br>之后的若干条记录代表人的记录（手机号个数1到10位数字不重复）。同一条记录里的电话号码用空格隔开，电话号码的长度在[1,10]</p>
+<p>输出：<br>整理后的通讯录列表，其中如果两个联系人被识别为同一个人，则他们的电话号码合并。<br>输出联系人姓名和手机号码列表按ASCII码升序排序。</p>
+<h3 id="具体思路"><a href="#具体思路" class="headerlink" title="具体思路"></a>具体思路</h3><p>这题的核心思路是用 <strong>并查集</strong> 合并联系人。先把每条联系人记录看成一个独立集合，用一个哈希表记录“手机号第一次出现在哪条记录”。遍历每条记录的手机号时，如果手机号之前出现过，就说明当前记录和之前那条记录属于同一个人，用并查集合并它们；如果没出现过，就记录该手机号对应的当前记录编号。所有记录处理完后，再遍历一遍联系人，根据 find(i) 找到每条记录所属的根节点，把同一根节点下的姓名和手机号合并起来。姓名取字典序最小的，手机号用 set 去重并按 ASCII 升序保存。最后把每个合并后的联系人放入结果数组，整体排序后输出。</p>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="comment">// 按照电话号码区分是否为同一个人，所以在遍历过程中要标注每个电话号码首次出现的记录编号</span></span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; table;<span class="comment">//table[i] 存的是“父节点”，不是一定存“最终归属”。</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;<span class="comment">// 是“这个手机号当前所属集合的根节点”</span></span><br><span class="line">    <span class="keyword">return</span> table[i] == i ? table[i] : table[i] = <span class="built_in">find</span>(table[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    string line;</span><br><span class="line">    <span class="built_in">getline</span>(cin, line);</span><br><span class="line">    <span class="function">stringstream <span class="title">ss</span><span class="params">(line)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> num;</span><br><span class="line">    ss &gt;&gt; num;</span><br><span class="line"></span><br><span class="line">    table.<span class="built_in">resize</span>(num);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; num; i++) table[i] = i;</span><br><span class="line"></span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; <span class="built_in">phnumbers_list</span>(num);</span><br><span class="line">    <span class="function">vector&lt;string&gt; <span class="title">names_list</span><span class="params">(num)</span></span>;</span><br><span class="line">    unordered_map&lt;string, <span class="type">int</span>&gt; phnumbers_map;<span class="comment">// 存的是“手机号首次出现的记录编号”</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; num; i++)&#123;</span><br><span class="line">        <span class="built_in">getline</span>(cin, line);</span><br><span class="line">        <span class="function">stringstream <span class="title">ss</span><span class="params">(line)</span></span>;</span><br><span class="line"></span><br><span class="line">        string phnumber;</span><br><span class="line">        ss &gt;&gt; names_list[i];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(ss &gt;&gt; phnumber)&#123;</span><br><span class="line">            phnumbers_list[i].<span class="built_in">push_back</span>(phnumber);</span><br><span class="line">            <span class="keyword">if</span>(phnumbers_map.<span class="built_in">count</span>(phnumber))&#123;</span><br><span class="line">                <span class="comment">// 这条记录的根节点需合并到 该电话号码首次记录编号的根节点上</span></span><br><span class="line">                table[<span class="built_in">find</span>(i)] = <span class="built_in">find</span>(phnumbers_map[phnumber]);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                phnumbers_map[phnumber] = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    map&lt;<span class="type">int</span>, string&gt; names_list_last;</span><br><span class="line">    map&lt;<span class="type">int</span>, set&lt;string&gt;&gt; ph_list_last;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; num; i++)&#123;</span><br><span class="line">        <span class="type">int</span> r_index = <span class="built_in">find</span>(i);<span class="comment">//</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!names_list_last.<span class="built_in">count</span>(r_index) || names_list[i] &lt; names_list_last[r_index]) &#123;</span><br><span class="line">            names_list_last[r_index] = names_list[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;it : phnumbers_list[i])&#123;</span><br><span class="line">            ph_list_last[r_index].<span class="built_in">insert</span>(it);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    vector&lt;pair&lt;string, set&lt;string&gt;&gt;&gt; res;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;it : ph_list_last)&#123;</span><br><span class="line">        res.<span class="built_in">push_back</span>(&#123;names_list_last[it.first], it.second&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">sort</span>(res.<span class="built_in">begin</span>(), res.<span class="built_in">end</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; res.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">        cout &lt;&lt; res[i].first &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(string c : res[i].second)&#123;</span><br><span class="line">            cout &lt;&lt; c &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="2-通信录合并"><a href="#2-通信录合并" class="headerlink" title="2. 通信录合并"></a>2. 通信录合并</h2><p>本题给定一个 N×N 的相似度矩阵 M，M[i][j] 表示第 i 张和第 j 张图片的相似度，矩阵对称且取值范围为 0 到 100。当两张图片的相似度大于 0 时认为它们相似，并且相似关系具有传递性：若 A 与 B 相似、B 与 C 相似，即便 A 与 C 的相似度为 0，三者也会被归入同一个相似类（但 A、C 之间不额外计入相似度）；若某张图片与其余所有图片都不相似，则它自己单独成一类，相似度之和记为 0。最终需要计算每个相似类内部所有图片对的相似度之和，并按从大到小的顺序输出。剥开图片分类的外壳，这道题的本质其实是一道图的连通分量求和问题：把图片看作节点、相似度大于 0 的关系看作带权边，每个相似类就是一个连通分量，所求即各连通分量的边权总和。</p>
+<h3 id="具体思路-1"><a href="#具体思路-1" class="headerlink" title="具体思路"></a>具体思路</h3><p>由于相似关系具有传递性，天然适合用并查集（DSU）来维护连通分量：遍历矩阵上三角，对每一对满足 M[i][j] &gt; 0 的图片执行合并操作，处理完后属于同一类的图片就落在同一个根节点下。接着再次遍历所有图片对，对每条相似度大于 0 的边，把权值累加到其所在连通分量的根节点对应的累加器上（用哈希表以根节点为键存储），即可得到每个相似类的相似度之和。这里有一个容易被忽略的细节：与所有图片都不相似的孤立点也构成一个独立的相似类，其和为 0，必须保留在结果中，因此在收集答案时不能把值为 0 的类过滤掉。</p>
+<h3 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DSU</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; fa;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">DSU</span>(<span class="type">int</span> n) &#123;</span><br><span class="line">        fa.<span class="built_in">resize</span>(n);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            fa[i] = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (fa[x] != x) &#123;</span><br><span class="line">            fa[x] = <span class="built_in">find</span>(fa[x]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">unite</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> ra = <span class="built_in">find</span>(a);</span><br><span class="line">        <span class="type">int</span> rb = <span class="built_in">find</span>(b);</span><br><span class="line">        <span class="keyword">if</span> (ra != rb) &#123;</span><br><span class="line">            fa[rb] = ra;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> N;</span><br><span class="line">    cin &gt;&gt; N;</span><br><span class="line"></span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">M</span>(N, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(N));</span><br><span class="line">    <span class="function">DSU <span class="title">dsu</span><span class="params">(N)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">            cin &gt;&gt; M[i][j];</span><br><span class="line">            <span class="keyword">if</span> (i != j &amp;&amp; M[i][j] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                dsu.<span class="built_in">unite</span>(i, j);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; sum;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">        <span class="type">int</span> root = dsu.<span class="built_in">find</span>(i);</span><br><span class="line">        sum[root] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; N; j++) &#123;</span><br><span class="line">            <span class="type">int</span> w = M[i][j];</span><br><span class="line">            <span class="keyword">if</span> (w &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="type">int</span> root = dsu.<span class="built_in">find</span>(i);</span><br><span class="line">                sum[root] += w;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; ans;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;p : sum) &#123;</span><br><span class="line">        ans.<span class="built_in">push_back</span>(p.second);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">sort</span>(ans.<span class="built_in">begin</span>(), ans.<span class="built_in">end</span>(), <span class="built_in">greater</span>&lt;<span class="type">int</span>&gt;());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; (<span class="type">int</span>)ans.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span>) cout &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        cout &lt;&lt; ans[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-网络连接拒绝执行数"><a href="#3-网络连接拒绝执行数" class="headerlink" title="3. 网络连接拒绝执行数"></a>3. 网络连接拒绝执行数</h2><h3 id="题目内容"><a href="#题目内容" class="headerlink" title="题目内容"></a>题目内容</h3><p>有一些网络设备，其中某些设备具备互斥特性，这些设备中任意两台设备都无法直接或间接的连接在一起。 网络工程师按照给定的一系列指令将设备两两连接，可一旦网络工程师判</p>
+<p>断连接指令触发了互斥规则，他将拒绝执行这条指令、将其记录并继续执行后续指令。</p>
+<p>求所有指令执行完毕后，网络工程师拒绝执行指令的总数。</p>
+<h3 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h3><p>建立并查集类，在类里面维护一个用于查询当前根节点是否拥有互斥设备的向量表。首先将输入的互斥设备序号用于向量表的初始化，然后每当执行指令时首先查询指令是否导致互斥，若互斥则不执行连接；其次若不导致互斥，则进行连接，然后统计不执行指令个数即可。</p>
+<h3 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DSU</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; fa;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; hasUnable; <span class="comment">// 当前根节点所在集合是否包含互斥设备</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">DSU</span>(<span class="type">int</span> n)&#123;<span class="comment">// 并查集</span></span><br><span class="line">        fa.<span class="built_in">resize</span>(n);</span><br><span class="line">        hasUnable.<span class="built_in">resize</span>(n, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">            fa[i] = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">markUnable</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">        hasUnable[<span class="built_in">find</span>(i)] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> i)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(fa[i] != i)&#123;</span><br><span class="line">            fa[i] = <span class="built_in">find</span>(fa[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fa[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">united</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span></span>&#123;</span><br><span class="line">        <span class="type">int</span> a = <span class="built_in">find</span>(i);</span><br><span class="line">        <span class="type">int</span> b = <span class="built_in">find</span>(j);</span><br><span class="line">        <span class="keyword">if</span> (a != b) &#123;</span><br><span class="line">            fa[b] = a;</span><br><span class="line">            hasUnable[a] = hasUnable[a] || hasUnable[b];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">ifunable</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span></span>&#123;</span><br><span class="line">        <span class="type">int</span> a = <span class="built_in">find</span>(i);</span><br><span class="line">        <span class="type">int</span> b = <span class="built_in">find</span>(j);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (a == b) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> hasUnable[a] &amp;&amp; hasUnable[b];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> N,M,X;</span><br><span class="line">    cin&gt;&gt; N &gt;&gt; M &gt;&gt; X;</span><br><span class="line"></span><br><span class="line">    <span class="function">DSU <span class="title">dsu</span><span class="params">(N)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">unable_index</span><span class="params">(M)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; M; i++)&#123;</span><br><span class="line">        cin &gt;&gt; unable_index[i];</span><br><span class="line">        dsu.<span class="built_in">markUnable</span>(unable_index[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; X; i++)&#123;</span><br><span class="line">        <span class="type">int</span> x,y;</span><br><span class="line">        cin &gt;&gt; x &gt;&gt; y;</span><br><span class="line">        <span class="keyword">if</span>(!dsu.ifunable(x,y))&#123;</span><br><span class="line">            dsu.<span class="built_in">united</span>(x,y);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            res++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; res &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" rel="tag"># 并查集</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/26/Algorithm-P2319/" rel="prev" title="Algorithm-P2319">
+                  <i class="fa fa-angle-left"></i> Algorithm-P2319
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/01/Megascale/" rel="next" title="Megascale">
+                  Megascale <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
