@@ -173,7 +173,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -184,7 +184,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">73</span>
+        <span class="site-state-item-count">77</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -201,6 +201,161 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/13/ASPLOS2026-Ouroboros/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/13/ASPLOS2026-Ouroboros/" class="post-title-link" itemprop="url">ASPLOS2026-Ouroboros</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-13 13:37:42 / 修改时间：18:23:52" itemprop="dateCreated datePublished" datetime="2026-07-13T13:37:42+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#ouroboros%E9%87%87%E7%94%A8%E8%AF%8D%E5%85%83%E7%B2%92%E5%BA%A6%E6%B5%81%E6%B0%B4%E7%BA%BF%E7%9A%84%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E6%99%B6%E5%9C%86%E7%BA%A7-sram-%E5%AD%98%E5%86%85%E8%AE%A1%E7%AE%97%E6%9E%B6%E6%9E%84">Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构</a><ul>
+<li><a href="#1-%E6%96%87%E7%AB%A0%E5%8A%A8%E6%9C%BA%E4%BB%A5%E5%8F%8A%E5%BD%93%E5%89%8D%E6%8C%91%E6%88%98">1. 文章动机以及当前挑战</a></li>
+<li><a href="#2-ouroboros-%E7%9A%84%E6%80%BB%E4%BD%93%E8%AE%BE%E8%AE%A1">2. Ouroboros 的总体设计</a></li>
+<li><a href="#3-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6">3. 端到端推理框架</a><ul>
+<li><a href="#31-%E9%9D%A2%E5%90%91%E9%AB%98-cim-%E5%88%A9%E7%94%A8%E7%8E%87%E7%9A%84%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C">3.1 面向高 CIM 利用率的流水线并行</a></li>
+<li><a href="#32-%E9%80%9A%E4%BF%A1%E6%84%9F%E7%9F%A5%E7%9A%84%E6%9D%83%E9%87%8D%E6%98%A0%E5%B0%84">3.2 通信感知的权重映射</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%AE%9E%E9%AA%8C%E9%83%A8%E5%88%86">4. 实验部分</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级-SRAM-存内计算架构"><a href="#Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级-SRAM-存内计算架构" class="headerlink" title="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构"></a>Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构</h1><p>Ouroboros 的核心思想是：<strong>把大模型的权重、激活值和 KV Cache 全部放入晶圆级 SRAM，并直接在 SRAM 中完成计算，再通过 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射，让数千个存内计算核心真正高效地运转起来。</strong></p>
+<h2 id="1-文章动机以及当前挑战"><a href="#1-文章动机以及当前挑战" class="headerlink" title="1. 文章动机以及当前挑战"></a>1. 文章动机以及当前挑战</h2><p>LLM 规模的快速增长带来了一个根本性的部署挑战：LLM 推理越来越受到存储容量、存储带宽和数据移动开销的限制。随着 LLM 规模不断扩大，大量推理能量被浪费在模型参数、激活值和键值（Key-Value，KV）数据在不同存储层级之间的搬运上。</p>
+<p>而传统的 LLM 推理体系结构依赖深层存储层次结构，例如一级片上 SRAM 和二级片外 DRAM&#x2F;高带宽存储器。如图 1 所示，这条技术路线会产生“硬件扩展税”：深层存储层次之间的数据移动以及存储器之间的互连传输占据了主要能耗，其开销远远超过计算本身的成本。由于 LLM 推理属于存储密集型任务，这种过度的数据移动从根本上限制了能量效率和吞吐量。</p>
+<p><img src="/images/ASPLOS2026-Ouroboros/image.png" alt="alt text"></p>
+<p>为了解决这一挑战，文章提出 Ouroboros——一种面向 LLM 推理的、基于 SRAM 的晶圆级存内计算体系结构。该体系结构在一级 SRAM 阵列内执行所有 LLM 操作，从而消除跨越深层存储层次的数据迁移。由于完全采用低密度 SRAM，Ouroboros 面临固有的容量约束，因此必须实现较高的 SRAM 利用率。在 CIM 体系结构中，SRAM 天然同时承担存储和计算两种功能，因此需要同时优化存储利用率和计算利用率。这带来了以下多个关键挑战。</p>
+<ul>
+<li>挑战 1：流水线气泡导致的低利用率。流水线并行通过立即消费中间激活值，提高了激活值存储效率。然而，由于 LLM 推理的计算强度会随着输入序列长度和批处理策略而显著变化，这种方法会导致 CIM 利用率不理想。传统的序列粒度流水线让不同阶段处理长度各异的序列，从而在阶段之间引入负载不均衡。</li>
+</ul>
+<p>解决方案：提出了一种词元粒度流水线（Token-Grained Pipelining，TGP）体系结构。该体系结构将序列划分为词元级单元，并在不同流水线阶段之间调度这些单元，从而缓解由不同输入长度和不同推理阶段造成的计算强度动态变化。该方法减少了中间激活值的存储占用，并避免 CIM 核利用率不足，从而最大化吞吐量和存储效率。</p>
+<ul>
+<li>挑战 2：KV 存储导致的低利用率。KV 缓存存储也是 LLM 推理中的一个主要瓶颈，需要较大的存储空间以及动态管理机制。如何利用有限的片上 SRAM 空间容纳 KV 缓存是一项重大挑战。传统的集中式动态管理方法不适用于大规模分布式 CIM 核阵列，并且无法解决 CIM 核之间的负载均衡问题。</li>
+</ul>
+<p>解决方案：提出了一种分布式动态 KV 缓存管理策略，重新利用已分配给 Transformer 块的 CIM 核中未充分利用的存储空间。此外，我们还提出了相应的 KV 映射方法，以确保负载均衡。这些方法共同显著提高了 CIM 资源的利用效率。</p>
+<ul>
+<li>挑战 3：通信开销导致的低利用率。在 CIM 体系结构中，计算操作天然受限于权重和 KV 数据的物理存储位置，因此数据通信成为限制计算利用率的瓶颈。</li>
+</ul>
+<p>解决方案：提出了经过优化的 CIM 核映射策略。</p>
+<h2 id="2-Ouroboros-的总体设计"><a href="#2-Ouroboros-的总体设计" class="headerlink" title="2. Ouroboros 的总体设计"></a>2. Ouroboros 的总体设计</h2><p>Ouroboros 构建了一套晶圆级 SRAM 存内计算系统。整片晶圆面积约为 (215,\mathrm{mm}\times215,\mathrm{mm})，由 (9\times7) 个同构 die 组成；每个 die 内又包含 (13\times17) 个 CIM 核。系统总共集成约 <strong>54 GB 片上 SRAM</strong>，用于保存模型权重、激活值和 KV Cache。</p>
+<p><img src="/images/ASPLOS2026-Ouroboros/image-2.png" alt="alt text"></p>
+<p>裸片面积被设计得接近光罩尺寸上限，以最大化裸片内 SRAM 容量，同时最小化裸片间通信开销。每条核间链路在四个方向上均提供 256 位双向带宽，与核的缓冲区宽度相匹配，从而支持高吞吐量的裸片内数据传输；这对于层内归约和层间通信都至关重要。</p>
+<p>单个 CIM 核的结构（CIM 核微体系结构）如图 2(c) 所示。面积为 2.97 mm2 的核包含以下组件：1）输入缓冲区和输出缓冲区；2）包含 32 个交叉阵列的阵列、3）特殊功能单元（Special Function Unit，SFU），用于执行 softmax 等操作、4）控制单元，用于协调多个 CIM 核之间的同步，以支持模型并行和流水线并行，同时组织核内交叉阵列与 SFU 之间的流水线。</p>
+<h2 id="3-端到端推理框架"><a href="#3-端到端推理框架" class="headerlink" title="3. 端到端推理框架"></a>3. 端到端推理框架</h2><p><img src="/images/ASPLOS2026-Ouroboros/image-3.png" alt="alt text"></p>
+<p>该框架首先对模型进行流水线划分，随后进行细粒度流水线优化，以提高 CIM 资源利用率。接下来，文章设计了一种权重映射策略，其中包括硬件资源分配，以及用于最小化通信的分层映射方法。最后，为了提高片上 KV 缓存的利用率，我们设计了一种分布式动态 KV 缓存管理方案及相应的硬件支持。</p>
+<h3 id="3-1-面向高-CIM-利用率的流水线并行"><a href="#3-1-面向高-CIM-利用率的流水线并行" class="headerlink" title="3.1 面向高 CIM 利用率的流水线并行"></a>3.1 面向高 CIM 利用率的流水线并行</h3><p>如图 4 所示，每个 Transformer 块被划分为六个阶段，因此，对于包含 N 个 Transformer 块的模型，将形成统一的 6N 级流水线。<br><img src="/images/ASPLOS2026-Ouroboros/image-4.png" alt="alt text"></p>
+<p>现有的流水线策略——无论是 mini-batch 粒度还是 head&#x2F;attention 粒度——都以”整条序列”作为调度的最小单位：不同序列被分配到不同的流水线阶段处理。但推理服务收到的请求长度是动态变化的，这种长度差异会在静态分配的流水线中引发负载不均衡，产生严重的流水线气泡（pipeline bubble）——部分 CIM 核心闲置等待，部分核心却超负荷运转，整体资源利用率被大幅拉低。由于 Ouroboros 受限于片上存储容量，无法像某些系统那样把 prefill 和 decode 两个阶段彻底拆分处理，当调度策略把不同长度、不同阶段的请求混合批处理时，这一问题会被进一步放大。</p>
+<p>Token-Grained Pipelining（TGP）：以词元为最小调度单位。</p>
+<p>针对这一问题，Ouroboros 提出了词元粒度流水线（TGP）。核心思路是：不再以”序列”而是以单个 token 作为流水线中最小的处理单位，让不同流水线阶段处理不同的 token，而非不同的 sequence。这样每个阶段每次只处理一个 token，计算负载在所有流水线阶段之间天然保持均衡，从根本上避免了因输入长度参差不齐而产生的资源闲置。<br>TGP 还带来一个额外收益：由于流水线粒度细化到单个 token，中间激活值缓冲区只需保存单个 token 的数据而非整条序列，这使激活值的存储需求降低了数个数量级——对于当今主流 LLM 动辄数千甚至数万的上下文窗口而言，这一优化直接决定了容量受限的晶圆级 SRAM 能否装得下这些中间数据。</p>
+<p>细粒度调度也带来了直接的挑战：Attention 机制本质上需要序列中所有 token 的 QKV 同时就位才能计算，而 TGP 是逐 token 顺序生成 QKV 的，这似乎会让流水线在整条序列生成完毕前一直阻塞。Ouroboros 利用了 decoder-only 架构因果掩码（causal mask）的特性来化解这一矛盾——每个 token 只需要与自身及之前的 token 做注意力计算，S 矩阵的有效值只分布在下三角区域。因此在 prefill 阶段，只要某个 token 的 QKV 生成完毕，就可以立即与之前所有 token 做注意力计算，无需等待整条序列的 KV 对全部就绪，计算结果与传统方式完全等价；而在 decode 阶段，自回归生成本身就是逐 token 进行的，这个问题自然不存在。</p>
+<p>对于包含编码器的双向注意力或 seq2seq 架构，情况有所不同：这类模型的掩码不再是完美的下三角矩阵，每个 token 的注意力计算需要等待其后的 token 一并生成完毕，因而必然引入停顿。Ouroboros 的应对策略是让 attention 相关阶段退化为序列粒度调度，其余阶段仍维持 token 级流水线。由于气泡只发生在序列级调度的边界上——只有当新调度进入的序列长度超过此前最长序列时才会产生相应长度的气泡——这种局部退化带来的吞吐损失十分有限。</p>
+<p><img src="/images/ASPLOS2026-Ouroboros/image-5.png" alt="alt text"></p>
+<h3 id="3-2-通信感知的权重映射"><a href="#3-2-通信感知的权重映射" class="headerlink" title="3.2 通信感知的权重映射"></a>3.2 通信感知的权重映射</h3><p>在晶圆级 CIM 架构上，把神经网络各层拆分（tiling）到分布式的计算核心上执行，天然就会引入两类核心间通信：层间通信（传递中间激活值）和层内通信（做归约运算时的数据交换）。这两类通信的需求是相互冲突的——如果把处理同一层的核心紧密地聚在一起，层内的归约通信确实很省，但层与层之间的数据就得跨越很长的物理距离传输；反过来，如果把不同层的核心交错分布在晶圆上以缩短层间传输路径，层内归约又要付出巨大的通信代价。因此，如何在这两者之间找到平衡，是晶圆级 CIM 上高效执行 LLM 的关键问题之一。Ouroboros 为此设计了一套完整的映射方法学，分为核间映射（Inter-Core Mapping）和核内映射（Intra-Core Mapping）两个层次来分别解决。</p>
+<ul>
+<li>核间映射：用 MIQP 求解权重分布问题</li>
+</ul>
+<p>核间映射算法负责为每一层分配具体的 CIM 核心集合。考虑到 LLM 结构的两个特点，Ouroboros 对搜索空间做了两点约束以降低求解复杂度：其一，LLM 由多个完全相同的 Transformer 块堆叠而成，因此只需要对单个 Transformer 块求出一次到一组 CIM 核心的映射方案，之后重复应用即可，无需对每一层重新求解；其二，权重切分始终优先沿输出通道维度进行，这样可以减少高位宽的部分和（partial sum）跨核心传输。在此基础上，整个映射搜索被建模为一个**混合整数二次规划（MIQP）**问题。</p>
+<ul>
+<li><p>核内映射：用动态规划决定归约与拼接的位置<br>为此，Ouroboros 设计了一个动态规划（DP）算法，优化目标是最小化”节点深度 × 节点类型权重”的乘积之和——其中拼接节点的权重记为 1、归约节点记为 0，深度越深的节点其操作类型对总通信开销的影响越小，这个目标函数正好精确刻画了上述”归约靠近叶子、拼接靠近树根”的设计直觉。</p>
+</li>
+<li><p>晶圆级容错：让映射策略天生具备故障自愈能力</p>
+</li>
+</ul>
+<p>晶圆级集成规模巨大，良率和可靠性问题不可回避。与多芯粒（chiplet）架构可以提前挑选”已知良品裸片（Known Good Die）”不同，单片式晶圆芯片必须依靠运行时的自适应容错机制，在系统运行过程中动态绕过失效部件。Ouroboros 依托其完全同构的计算织构——任意核心都可以在功能上替代其邻近核心，天然形成一条冗余替换链。系统采用主动冗余策略：除去制造阶段就被检测为缺陷的核心，其余所有功能核心默认全部处于激活状态参与计算。</p>
+<p>当运行中发生故障时，系统会区分两种场景处理：如果失效的核心原本只是承担 KV 缓存存储，那么只需要重新计算存储在该核心中的那部分序列即可，不会波及整个系统；但如果失效核心存有 LLM 权重，系统就会触发重映射——从故障核心出发，沿途经过的所有核心直到最近的一个 KV 缓存核心会被组织成一条替换链，链上原有的 KV 缓存数据被清空，而各核心的权重则被确定性地依次向邻居核心传递，最终把腾出的空间让给专门的 KV 缓存核心。这个恢复过程完全在本地完成，不需要重新调用代价高昂的 MIQP 求解，能够在亚毫秒级的延迟内完成，并保证总能退回到一个合法的兜底方案。</p>
+<p>故障本身还被进一步细分为计算单元故障和互联故障两类分别处理：前者由系统动态地把负载重新路由到故障核心的邻居上；后者则通过实时重新配置晶圆片上网络（network-on-wafer）的路由表来绕开失效链路。两类处理机制都严格遵守死锁避免规则。相比传统的”备用核心（spare-core）”策略，Ouroboros 这种动态重映射的方式能够维持满载吞吐量，代价是不同晶圆之间会出现轻微的性能差异，而这一差异又可以通过负载感知的布局策略进一步缓解。</p>
+<h2 id="4-实验部分"><a href="#4-实验部分" class="headerlink" title="4. 实验部分"></a>4. 实验部分</h2><p>一、实验方法论（Section 5）论文没有用真实芯片做实验，而是搭建了一套端到端（E2E）仿真框架，各部分参数来源如下：</p>
+<p>SRAM CIM 阵列：用 CACTI 工具标定，单阵列面积 0.063mm²，动态功耗 6.6mW、静态功耗 0.11mW（0.7V下）；外围数字逻辑（与门、加法树、移位加法器）用 Synopsys DC 基于 7nm ASAP7 工艺库综合，跑在 300MHz。这些参数最终喂给开源仿真器 MNSIM 2.0。<br>SFU 和控制单元：用 Verilog 实现，同样通过 DC + ASAP7 综合，工作频率 1GHz。<br>NoC（片上网络）：用 BookSim2 仿真，从 32nm 的 ITRS2007 模型按标准方法学缩放到 7nm；核间带宽固定为 256-bit 双向，片间用 8×100Gbps 光以太网口。<br>良率建模：用 Murphy 模型，缺陷密度取 0.09&#x2F;cm²（对应核心面积 2.97mm²），缺陷位置随机生成，用来评估晶圆级容错机制的实际效果。</p>
+<p>二、实验设置（6.1）</p>
+<p>测试模型：Decoder-only 的 LLaMA-13B&#x2F;32B&#x2F;65B、Baichuan-13B、Qwen-32B（适合 TGP）；此外还测了带编码器的 T5-11B 和 BERT-large，用来验证 TGP 在非纯 decoder 架构上的适应性。<br>数据集：WikiText-2。<br>四类对比基线，覆盖了当前主流的硬件路线：</p>
+<p>GPU 基线：单节点 DGX A100（8×40GB A100 + NVLink），推理引擎用 vLLM v0.7.3（含 FlashAttention、chunked-prefill）<br>NPU 基线：8×TPU v4 集群（每卡32GB HBM），用修改版 ONNXim + NPUsim 仿真<br>CIM 基线：DGX+AttAcc 配置（共320GB HBM）<br>晶圆级芯片基线：Cerebras WSE-2（40GB片上SRAM），用 WaferLLM + 自研周期精确仿真器，并在 LLaMA-13B 上做过验证（延迟误差6-9%，能耗误差约10%）</p>
+<ul>
+<li>吞吐量（图13）：处理1000个请求，覆盖不同 LPL_P<br>LP​（prefill长度）&#x2F;LDL_D<br>LD​（decode长度）组合：</li>
+</ul>
+<p>13B 规模模型：平均 5.4× 吞吐提升，且解码长度越长优势越明显——因为解码阶段本质是访存密集型的 GEMV 运算，恰好和 CIM、TGP 的设计高度契合<br>32B 规模模型：平均 2.8× 吞吐提升，提升相对温和，原因是单晶圆的 KV 缓存容量有限，导致存储的句子数量低于流水线深度，出现流水线欠载（这个问题可以通过多晶圆扩展缓解，见6.8）</p>
+<ul>
+<li>能效（图14）：相比 DGX A100、TPUv4、AttAcc、WSE2 分别降低能耗 84%、82%、78%、66%。主要归功于两点：全模型驻留片上省掉了DRAM访问；全CIM计算省掉了”权重从SRAM搬到计算单元”这一步的能耗。<br><img src="/images/ASPLOS2026-Ouroboros/image-6.png" alt="alt text"><br><img src="/images/ASPLOS2026-Ouroboros/image-7.png" alt="alt text"></li>
+</ul>
+<p>以 64 颗裸片经 NVLink 互联、张量并行8+流水线并行8、静态KV管理 为基线，逐步叠加各项设计（图15）。</p>
+<p><img src="/images/ASPLOS2026-Ouroboros/image-8.png" alt="alt text"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>文章指出现有硬件体系结构产生显著“硬件扩展税”的主要原因是深层存储访问。</p>
+<p>基于此，提出了 Ouroboros，这是一种完全由 SRAM CIM 单元组成的晶圆级体系结构，通过消除数据移动来降低能耗。</p>
+<p>提出 TGP，以缓解动态输入造成的 CIM 核利用率低下问题；同时提出分布式动态 KV 缓存管理系统及相应的 CIM 硬件支持，以提高 KV 存储利用率。</p>
+<p>此外设计了一种使用 MIQP 和 DP 的分层映射算法，以减少长距离通信。</p>
+<p>实验结果表明，与最先进的体系结构相比，Ouroboros 实现了显著更高的吞吐量和能量效率，分别提高了 4.1× 和 4.2×。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1062,108 +1217,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2026/06/02/Algorithm-Hot100/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/01/Megascale/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/01/Megascale/" class="post-title-link" itemprop="url">Megascale</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-06-01 21:19:41" itemprop="dateCreated datePublished" datetime="2026-06-01T21:19:41+08:00">2026-06-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-03 22:08:28" itemprop="dateModified" datetime="2026-06-03T22:08:28+08:00">2026-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">系统方案</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#megascale%E5%B0%86%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%89%A9%E5%B1%95%E5%88%B0%E8%B6%85%E8%BF%87-10000-%E4%B8%AA-gpu">MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</a><ul>
-<li><a href="#1-%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96">1. 算法优化</a></li>
-<li><a href="#2-3d-%E5%B9%B6%E8%A1%8C%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0">2. 3D 并行通信重叠</a></li>
-<li><a href="#3-%E9%AB%98%E6%95%88%E7%AE%97%E5%AD%90">3. 高效算子</a></li>
-<li><a href="#4-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98">4. 网络性能调优</a></li>
-<li><a href="#5-%E5%AE%B9%E9%94%99">5. 容错</a></li>
-<li><a href="#6-%E5%AE%9E%E9%AA%8C%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%BB%8F%E9%AA%8C">6. 实验与部署经验</a></li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/06/01/Megascale/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
