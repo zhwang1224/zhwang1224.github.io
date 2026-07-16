@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型 IB 与以太网是什么 1. InfiniBand 是一套完整的交换式互连架构 2. Ethernet 首先是一套通用链路与帧交换标准 3. RoCEv2 是 RDMA 与 Ethernet 的结合   二、RDMA：InfiniBand 与 RoCE 的共同点和分界线 InfiniBand 的 RDMA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InfiniBand与以太网">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型 IB 与以太网是什么 1. InfiniBand 是一套完整的交换式互连架构 2. Ethernet 首先是一套通用链路与帧交换标准 3. RoCEv2 是 RDMA 与 Ethernet 的结合   二、RDMA：InfiniBand 与 RoCE 的共同点和分界线 InfiniBand 的 RDMA">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/01-stack-comparison.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/02-congestion-control.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/03-hybrid-fabric.png">
+<meta property="article:published_time" content="2026-07-16T08:09:28.000Z">
+<meta property="article:modified_time" content="2026-07-16T08:45:55.862Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="AI Infra">
+<meta property="article:tag" content="Ethernet">
+<meta property="article:tag" content="HPC">
+<meta property="article:tag" content="InfiniBand">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="RoCEv2">
+<meta property="article:tag" content="Ultra Ethernet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/01-stack-comparison.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/","path":"2026/07/16/InfiniBand与以太网/","title":"InfiniBand与以太网"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>InfiniBand与以太网 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script src="/js/visitor-map.js"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#InfiniBand-%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91%EF%BC%9A%E4%BB%8E-RDMA%E3%80%81%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C%E5%88%B0-AI-HPC-%E9%9B%86%E7%BE%A4%E9%80%89%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IB-%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">IB 与以太网是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-InfiniBand-%E6%98%AF%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E7%9A%84%E4%BA%A4%E6%8D%A2%E5%BC%8F%E4%BA%92%E8%BF%9E%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. InfiniBand 是一套完整的交换式互连架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Ethernet-%E9%A6%96%E5%85%88%E6%98%AF%E4%B8%80%E5%A5%97%E9%80%9A%E7%94%A8%E9%93%BE%E8%B7%AF%E4%B8%8E%E5%B8%A7%E4%BA%A4%E6%8D%A2%E6%A0%87%E5%87%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. Ethernet 首先是一套通用链路与帧交换标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-RoCEv2-%E6%98%AF-RDMA-%E4%B8%8E-Ethernet-%E7%9A%84%E7%BB%93%E5%90%88"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. RoCEv2 是 RDMA 与 Ethernet 的结合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81RDMA%EF%BC%9AInfiniBand-%E4%B8%8E-RoCE-%E7%9A%84%E5%85%B1%E5%90%8C%E7%82%B9%E5%92%8C%E5%88%86%E7%95%8C%E7%BA%BF"><span class="nav-number">1.2.</span> <span class="nav-text">二、RDMA：InfiniBand 与 RoCE 的共同点和分界线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InfiniBand-%E7%9A%84-RDMA"><span class="nav-number">1.2.1.</span> <span class="nav-text">InfiniBand 的 RDMA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RoCEv2-%E7%9A%84-RDMA"><span class="nav-number">1.2.2.</span> <span class="nav-text">RoCEv2 的 RDMA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.</span> <span class="nav-text">三、无损网络特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-InfiniBand%EF%BC%9A%E5%9F%BA%E4%BA%8E%E4%BF%A1%E7%94%A8%E7%9A%84%E9%80%90%E8%B7%B3%E6%B5%81%E6%8E%A7"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. InfiniBand：基于信用的逐跳流控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BC%A0%E7%BB%9F-Ethernet%EF%BC%9A%E5%85%81%E8%AE%B8%E4%B8%A2%E5%8C%85%EF%BC%8C%E7%94%B1%E4%B8%8A%E5%B1%82%E6%81%A2%E5%A4%8D"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 传统 Ethernet：允许丢包，由上层恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-RoCEv2%EF%BC%9AECN-%E8%B4%9F%E8%B4%A3%E5%87%8F%E9%80%9F%EF%BC%8CPFC-%E8%B4%9F%E8%B4%A3%E5%85%9C%E5%BA%95"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. RoCEv2：ECN 负责减速，PFC 负责兜底</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E4%B8%8E%E8%B7%AF%E7%94%B1%E6%96%B9%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">四、控制平面与路由方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InfiniBand%EF%BC%9ASubnet-Manager-%E9%9B%86%E4%B8%AD%E9%85%8D%E7%BD%AE%E5%AD%90%E7%BD%91"><span class="nav-number">1.4.1.</span> <span class="nav-text">InfiniBand：Subnet Manager 集中配置子网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ethernet%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E4%B8%8E-SDN-%E5%B9%B6%E5%AD%98"><span class="nav-number">1.4.2.</span> <span class="nav-text">Ethernet：分布式协议与 SDN 并存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">1.5.</span> <span class="nav-text">五、性能指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81InfiniBand-%E7%9A%84%E7%BD%91%E5%86%85%E8%AE%A1%E7%AE%97%E4%B8%8E-Ethernet-%E7%9A%84%E5%BF%AB%E9%80%9F%E6%BC%94%E8%BF%9B"><span class="nav-number">1.6.</span> <span class="nav-text">六、InfiniBand 的网内计算与 Ethernet 的快速演进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%BF%90%E7%BB%B4%E4%B8%8E%E7%94%9F%E6%80%81%EF%BC%9A%E9%9B%86%E6%88%90%E5%BA%A6%E5%92%8C%E5%BC%80%E6%94%BE%E6%80%A7%E7%9A%84%E5%8F%96%E8%88%8D"><span class="nav-number">1.7.</span> <span class="nav-text">七、运维与生态：集成度和开放性的取舍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E6%88%90%E6%9C%AC"><span class="nav-number">1.8.</span> <span class="nav-text">八、成本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E5%BA%94%E8%AF%A5%E6%80%8E%E6%A0%B7%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="nav-number">1.9.</span> <span class="nav-text">九、应该怎样选择？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%80%BE%E5%90%91-InfiniBand-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.9.1.</span> <span class="nav-text">更倾向 InfiniBand 的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%80%BE%E5%90%91-Ethernet-RoCE-%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.9.2.</span> <span class="nav-text">更倾向 Ethernet&#x2F;RoCE 的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%B7%B7%E5%90%88%E7%BD%91%E7%BB%9C%E5%BE%80%E5%BE%80%E6%98%AF%E6%9B%B4%E7%8E%B0%E5%AE%9E%E7%9A%84%E7%AD%94%E6%A1%88"><span class="nav-number">1.10.</span> <span class="nav-text">十、混合网络往往是更现实的答案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.11.</span> <span class="nav-text">十一、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.12.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">85</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="InfiniBand与以太网 | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          InfiniBand与以太网
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-16 16:09:28 / 修改时间：16:45:55" itemprop="dateCreated datePublished" datetime="2026-07-16T16:09:28+08:00">2026-07-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能互连网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#infiniband-%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91%E4%BB%8E-rdma%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C%E5%88%B0-aihpc-%E9%9B%86%E7%BE%A4%E9%80%89%E5%9E%8B">InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型</a><ul>
+<li><a href="#ib-%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91%E6%98%AF%E4%BB%80%E4%B9%88">IB 与以太网是什么</a><ul>
+<li><a href="#1-infiniband-%E6%98%AF%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E7%9A%84%E4%BA%A4%E6%8D%A2%E5%BC%8F%E4%BA%92%E8%BF%9E%E6%9E%B6%E6%9E%84">1. InfiniBand 是一套完整的交换式互连架构</a></li>
+<li><a href="#2-ethernet-%E9%A6%96%E5%85%88%E6%98%AF%E4%B8%80%E5%A5%97%E9%80%9A%E7%94%A8%E9%93%BE%E8%B7%AF%E4%B8%8E%E5%B8%A7%E4%BA%A4%E6%8D%A2%E6%A0%87%E5%87%86">2. Ethernet 首先是一套通用链路与帧交换标准</a></li>
+<li><a href="#3-rocev2-%E6%98%AF-rdma-%E4%B8%8E-ethernet-%E7%9A%84%E7%BB%93%E5%90%88">3. RoCEv2 是 RDMA 与 Ethernet 的结合</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8Crdmainfiniband-%E4%B8%8E-roce-%E7%9A%84%E5%85%B1%E5%90%8C%E7%82%B9%E5%92%8C%E5%88%86%E7%95%8C%E7%BA%BF">二、RDMA：InfiniBand 与 RoCE 的共同点和分界线</a><ul>
+<li><a href="#infiniband-%E7%9A%84-rdma">InfiniBand 的 RDMA</a></li>
+<li><a href="#rocev2-%E7%9A%84-rdma">RoCEv2 的 RDMA</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C%E7%89%B9%E6%80%A7">三、无损网络特性</a><ul>
+<li><a href="#1-infiniband%E5%9F%BA%E4%BA%8E%E4%BF%A1%E7%94%A8%E7%9A%84%E9%80%90%E8%B7%B3%E6%B5%81%E6%8E%A7">1. InfiniBand：基于信用的逐跳流控</a></li>
+<li><a href="#2-%E4%BC%A0%E7%BB%9F-ethernet%E5%85%81%E8%AE%B8%E4%B8%A2%E5%8C%85%E7%94%B1%E4%B8%8A%E5%B1%82%E6%81%A2%E5%A4%8D">2. 传统 Ethernet：允许丢包，由上层恢复</a></li>
+<li><a href="#3-rocev2ecn-%E8%B4%9F%E8%B4%A3%E5%87%8F%E9%80%9Fpfc-%E8%B4%9F%E8%B4%A3%E5%85%9C%E5%BA%95">3. RoCEv2：ECN 负责减速，PFC 负责兜底</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B%E6%8E%A7%E5%88%B6%E5%B9%B3%E9%9D%A2%E4%B8%8E%E8%B7%AF%E7%94%B1%E6%96%B9%E5%BC%8F">四、控制平面与路由方式</a><ul>
+<li><a href="#infinibandsubnet-manager-%E9%9B%86%E4%B8%AD%E9%85%8D%E7%BD%AE%E5%AD%90%E7%BD%91">InfiniBand：Subnet Manager 集中配置子网</a></li>
+<li><a href="#ethernet%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E4%B8%8E-sdn-%E5%B9%B6%E5%AD%98">Ethernet：分布式协议与 SDN 并存</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87">五、性能指标</a></li>
+<li><a href="#%E5%85%ADinfiniband-%E7%9A%84%E7%BD%91%E5%86%85%E8%AE%A1%E7%AE%97%E4%B8%8E-ethernet-%E7%9A%84%E5%BF%AB%E9%80%9F%E6%BC%94%E8%BF%9B">六、InfiniBand 的网内计算与 Ethernet 的快速演进</a></li>
+<li><a href="#%E4%B8%83%E8%BF%90%E7%BB%B4%E4%B8%8E%E7%94%9F%E6%80%81%E9%9B%86%E6%88%90%E5%BA%A6%E5%92%8C%E5%BC%80%E6%94%BE%E6%80%A7%E7%9A%84%E5%8F%96%E8%88%8D">七、运维与生态：集成度和开放性的取舍</a></li>
+<li><a href="#%E5%85%AB%E6%88%90%E6%9C%AC">八、成本</a></li>
+<li><a href="#%E4%B9%9D%E5%BA%94%E8%AF%A5%E6%80%8E%E6%A0%B7%E9%80%89%E6%8B%A9">九、应该怎样选择？</a><ul>
+<li><a href="#%E6%9B%B4%E5%80%BE%E5%90%91-infiniband-%E7%9A%84%E5%9C%BA%E6%99%AF">更倾向 InfiniBand 的场景</a></li>
+<li><a href="#%E6%9B%B4%E5%80%BE%E5%90%91-ethernetroce-%E7%9A%84%E5%9C%BA%E6%99%AF">更倾向 Ethernet&#x2F;RoCE 的场景</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8D%81%E6%B7%B7%E5%90%88%E7%BD%91%E7%BB%9C%E5%BE%80%E5%BE%80%E6%98%AF%E6%9B%B4%E7%8E%B0%E5%AE%9E%E7%9A%84%E7%AD%94%E6%A1%88">十、混合网络往往是更现实的答案</a></li>
+<li><a href="#%E5%8D%81%E4%B8%80%E6%80%BB%E7%BB%93">十一、总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="InfiniBand-与以太网：从-RDMA、无损网络到-AI-HPC-集群选型"><a href="#InfiniBand-与以太网：从-RDMA、无损网络到-AI-HPC-集群选型" class="headerlink" title="InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型"></a>InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型</h1><p>在大规模 AI 训练和高性能计算系统中，“应该选择 InfiniBand 还是 Ethernet”几乎是网络方案设计阶段必然遇到的问题。</p>
+<p>一种常见观点是：InfiniBand 延迟低、原生无损，适合大规模训练；Ethernet 成本低、生态开放，适合通用数据中心。这一结论方向上没有错，但过于简化，因为今天所说的“以太网”可能指三种差异很大的系统：</p>
+<ol>
+<li>运行 TCP&#x2F;IP 的传统 Ethernet；</li>
+<li>运行 RoCEv2 的无损或低丢包 Ethernet；</li>
+<li>面向 AI&#x2F;HPC 重新设计传输和拥塞控制的 Ultra Ethernet 或厂商 AI Ethernet Fabric。</li>
+</ol>
+<p>本文以 FiberMall 的<a target="_blank" rel="noopener" href="https://www.fibermall.com/blog/infiniband-vs-ethernet.htm">《InfiniBand vs Ethernet》</a>为切入点，结合 IBTA、IEEE、NVIDIA 和 Ultra Ethernet Consortium 的公开资料，建立一个更完整的技术比较框架。</p>
+<h2 id="IB-与以太网是什么"><a href="#IB-与以太网是什么" class="headerlink" title="IB 与以太网是什么"></a>IB 与以太网是什么</h2><h3 id="1-InfiniBand-是一套完整的交换式互连架构"><a href="#1-InfiniBand-是一套完整的交换式互连架构" class="headerlink" title="1. InfiniBand 是一套完整的交换式互连架构"></a>1. InfiniBand 是一套完整的交换式互连架构</h3><p>InfiniBand 不只定义网卡或链路，而是从物理层、链路层、网络层到传输层和管理平面的一套完整体系。HCA、InfiniBand Switch、Subnet Manager 和物理链路共同组成 Fabric。</p>
+<p>它使用分组交换，但<strong>采用面向通道</strong>的通信抽象：应用通过 Queue Pair（QP）提交 Send&#x2F;Receive、RDMA Read&#x2F;Write 或原子操作，HCA 负责 DMA、分段、可靠性与完成通知。</p>
+<p>InfiniBand 的核心特征包括：</p>
+<ul>
+<li>原生 RDMA 与内核旁路；</li>
+<li>基于信用的逐跳流控；</li>
+<li>Subnet Manager 集中发现拓扑、分配 LID 并下发转发表；</li>
+<li>RC、UC、UD 等传输服务；</li>
+<li>虚拟通道、服务等级、分区与 QoS；</li>
+<li>面向 HPC&#x2F;AI 的自适应路由、拥塞控制和网内计算扩展。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.infinibandta.org/about-infiniband/">IBTA 对 InfiniBand 的定义</a>强调，它是一种用于服务器、存储和通信设备的点到点交换式 I&#x2F;O 架构，而不是传统局域网协议的简单变体。</p>
+<h3 id="2-Ethernet-首先是一套通用链路与帧交换标准"><a href="#2-Ethernet-首先是一套通用链路与帧交换标准" class="headerlink" title="2. Ethernet 首先是一套通用链路与帧交换标准"></a>2. Ethernet 首先是一套通用链路与帧交换标准</h3><p>Ethernet 由 IEEE 802.3 等标准持续演进，规定 MAC、帧格式和多种物理介质。它的优势是开放、通用和高度互操作，能够承载 IP、TCP、UDP、存储和大量上层协议。</p>
+<p>传统 Ethernet&#x2F;IP 网络通常采用<strong>尽力而为模型</strong>：当交换机队列溢出时，报文可以被丢弃，再由 TCP 等上层协议重传。这种设计非常适合 Web、云服务和通用数据中心，但在同步密集型 AI&#x2F;HPC 工作负载中，丢包重传和尾延迟放大会让大量计算节点一起等待。</p>
+<p>不过，Ethernet 并不等于 TCP。通过 RoCEv2，Ethernet 同样可以提供 RDMA；通过 ECN、PFC、DCQCN、可编程拥塞控制、自适应路由和包喷洒等技术，它也能构建高性能 AI Fabric。</p>
+<p>IEEE 已于 2024 年批准 <a target="_blank" rel="noopener" href="https://www.ieee802.org/3/df/">IEEE 802.3df-2024</a>，覆盖 400 Gb&#x2F;s 和 800 Gb&#x2F;s Ethernet。因此，峰值端口速率已经不是判断 InfiniBand 与 Ethernet 优劣的充分条件。</p>
+<h3 id="3-RoCEv2-是-RDMA-与-Ethernet-的结合"><a href="#3-RoCEv2-是-RDMA-与-Ethernet-的结合" class="headerlink" title="3. RoCEv2 是 RDMA 与 Ethernet 的结合"></a>3. RoCEv2 是 RDMA 与 Ethernet 的结合</h3><p>RoCE 的全称是 RDMA over Converged Ethernet，由 IBTA 制定：</p>
+<ul>
+<li>RoCEv1 直接运行在 Ethernet 二层，不能跨越普通 IP 路由边界；</li>
+<li>RoCEv2 使用 UDP&#x2F;IP 封装，可以在三层网络中路由。</li>
+</ul>
+<p>RoCE 复用了 RDMA 的 QP、Memory Region、Completion Queue 和 Verbs 编程模型，但底层换成 Ethernet&#x2F;IP 网络。因此，InfiniBand 和 RoCE 可以向应用提供相近的通信语义，网络控制、转发与拥塞处理方式却并不相同。<a target="_blank" rel="noopener" href="https://www.infinibandta.org/ibta-specification/">IBTA 的 RoCE 说明</a>明确指出，RoCE 能让 RDMA 运行在普通二层或三层 Ethernet 网络之上。</p>
+<p><img src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/01-stack-comparison.png" alt="InfiniBand、RoCEv2 与传统 Ethernet 的协议栈比较"></p>
+<p><em>图 1：三者可以承载相同的 AI&#x2F;HPC 应用，但数据路径、传输语义和底层网络不同。</em></p>
+<h2 id="二、RDMA：InfiniBand-与-RoCE-的共同点和分界线"><a href="#二、RDMA：InfiniBand-与-RoCE-的共同点和分界线" class="headerlink" title="二、RDMA：InfiniBand 与 RoCE 的共同点和分界线"></a>二、RDMA：InfiniBand 与 RoCE 的共同点和分界线</h2><p>RDMA 允许网络适配器直接在本地与远端已注册内存之间搬运数据。连接建立、内存注册和权限交换完成后，稳定态数据传输不需要远端 CPU 逐包接收和复制，也不经过传统内核 TCP&#x2F;IP 数据路径。</p>
+<h3 id="InfiniBand-的-RDMA"><a href="#InfiniBand-的-RDMA" class="headerlink" title="InfiniBand 的 RDMA"></a>InfiniBand 的 RDMA</h3><p>在 InfiniBand 中，RDMA 从传输层到链路层都是架构的原生组成部分。HCA 生成 InfiniBand 报文，交换机依据 LID 转发，链路信用机制抑制因下游缓冲区不足造成的丢包，RC 传输负责端到端确认、排序和重传。</p>
+<h3 id="RoCEv2-的-RDMA"><a href="#RoCEv2-的-RDMA" class="headerlink" title="RoCEv2 的 RDMA"></a>RoCEv2 的 RDMA</h3><p>在 RoCEv2 中，应用仍通过 RDMA Verbs 提交工作请求，但 HCA&#x2F;RNIC 将 RDMA 报文封装在 UDP&#x2F;IP 和 Ethernet 中。交换机按照标准 Ethernet&#x2F;IP 方式转发，网络通过 ECN、PFC 和端点拥塞控制维持高吞吐和低尾延迟。</p>
+<p>因此，InfiniBand 原生定义了 RDMA Fabric；RoCEv2 将 RDMA 传输承载在 Ethernet&#x2F;IP Fabric 上。</p>
+<p>GPUDirect RDMA 也不专属于 InfiniBand。只要 GPU、RNIC、PCIe 拓扑、驱动和通信库满足要求，RoCE 同样可以在 GPU 显存之间进行直接数据传输。两者的差别更多体现在网络侧的端到端集成、拥塞控制和运维复杂度，而不是 RoCE 缺少 GPU Direct Memory Access 能力。</p>
+<h2 id="三、无损网络特性"><a href="#三、无损网络特性" class="headerlink" title="三、无损网络特性"></a>三、无损网络特性</h2><h3 id="1-InfiniBand：基于信用的逐跳流控"><a href="#1-InfiniBand：基于信用的逐跳流控" class="headerlink" title="1. InfiniBand：基于信用的逐跳流控"></a>1. InfiniBand：基于信用的逐跳流控</h3><p>InfiniBand 接收端根据可用缓冲空间向上游通告 credit。发送端只有在拥有足够信用时才能继续发送相应虚拟通道上的数据，因此在正常工作和正确配置下，可以避免因下一跳缓冲区溢出而丢包。</p>
+<p>这是一种<strong>逐链路、接收端驱动的预防机制</strong>：先确认下游能接收，再发送。</p>
+<p>但“无损”并不表示网络永远不会出现错误。链路误码、设备故障、软件缺陷和错误配置仍可能造成异常；CRC、确认、超时和重传机制仍然必要。</p>
+<h3 id="2-传统-Ethernet：允许丢包，由上层恢复"><a href="#2-传统-Ethernet：允许丢包，由上层恢复" class="headerlink" title="2. 传统 Ethernet：允许丢包，由上层恢复"></a>2. 传统 Ethernet：允许丢包，由上层恢复</h3><p>普通 Ethernet 交换机可以在队列满时丢弃帧。TCP 通过确认、超时和重传恢复可靠性，并使用拥塞窗口调整发送速率。对于能够容忍抖动的长连接和通用业务，这是非常成熟的机制。</p>
+<p>但 RDMA 的高速硬件传输希望避免频繁丢包和重传。一次拥塞引起的尾延迟可能阻塞集合通信中的整个同步阶段，因此 RoCE 网络通常需要更主动的拥塞控制。</p>
+<h3 id="3-RoCEv2：ECN-负责减速，PFC-负责兜底"><a href="#3-RoCEv2：ECN-负责减速，PFC-负责兜底" class="headerlink" title="3. RoCEv2：ECN 负责减速，PFC 负责兜底"></a>3. RoCEv2：ECN 负责减速，PFC 负责兜底</h3><p>一个常见的 RoCEv2 拥塞控制闭环如下：</p>
+<ol>
+<li>交换机检测到队列增长，在 IP 头中设置 ECN 标记；</li>
+<li>接收端 RNIC 收到被标记报文后，向发送端返回 CNP（Congestion Notification Packet）；</li>
+<li>发送端 RNIC 根据 DCQCN 或其他算法降低发送速率；</li>
+<li>当局部队列接近溢出时，PFC 可以暂停特定优先级的上游发送；</li>
+<li>拥塞缓解后，发送端再逐步恢复速率。</li>
+</ol>
+<p>NVIDIA 的<a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/winof2v310/ethernet%2Bnetwork">RoCEv2 Congestion Management 文档</a>将这一过程划分为 Congestion Point、Notification Point 和 Reaction Point。</p>
+<p>PFC（Priority-based Flow Control，基于优先级的流量控制）以优先级而不是单条流为粒度暂停链路。它能阻止队列溢出，却可能带来 Head-of-Line Blocking、暂停传播和潜在死锁。因此，现代 RoCE 设计通常把端到端速率控制作为主要手段，把 PFC 视为接近溢出时的保护机制，而不是让网络长期依赖 PAUSE 维持稳定。<a target="_blank" rel="noopener" href="https://1.ieee802.org/dcb/802-1qbb/">IEEE 802.1Qbb</a>定义了按流量类别运行的 Priority-based Flow Control。</p>
+<p><img src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/02-congestion-control.png" alt="InfiniBand Credit Flow Control 与 RoCEv2 ECN&#x2F;PFC 拥塞控制"></p>
+<p><em>图 2：InfiniBand 用 credit 约束逐跳发送；RoCEv2 主要通过 ECN&#x2F;CNP 形成端到端减速闭环，并可使用 PFC 作为链路级保护。</em></p>
+<h2 id="四、控制平面与路由方式"><a href="#四、控制平面与路由方式" class="headerlink" title="四、控制平面与路由方式"></a>四、控制平面与路由方式</h2><h3 id="InfiniBand：Subnet-Manager-集中配置子网"><a href="#InfiniBand：Subnet-Manager-集中配置子网" class="headerlink" title="InfiniBand：Subnet Manager 集中配置子网"></a>InfiniBand：Subnet Manager 集中配置子网</h3><p>InfiniBand 子网中只有一个处于 Master 状态的 Subnet Manager，通常还会部署 Standby SM。SM 扫描 Fabric，分配 LID，计算路径并将线性转发表写入交换机，还负责分区、QoS 和部分管理策略。</p>
+<p>数据平面建立后，普通数据包由 HCA 和交换机硬件直接转发，不会逐包经过 SM。SM 的集中式设计使专用计算 Fabric 的拓扑和路由保持一致，但运维人员仍然需要配置路由算法、QoS、拥塞控制、固件和高可用，并非“安装 SM 后网络就自动运行”。</p>
+<h3 id="Ethernet：分布式协议与-SDN-并存"><a href="#Ethernet：分布式协议与-SDN-并存" class="headerlink" title="Ethernet：分布式协议与 SDN 并存"></a>Ethernet：分布式协议与 SDN 并存</h3><p>Ethernet Fabric 可以使用 MAC 学习、VLAN、LAG，也可以在三层 Leaf-Spine 中使用 BGP、ECMP、EVPN&#x2F;VXLAN 或集中式 SDN 控制器。其优势是灵活、标准化程度高，并且容易与现有数据中心网络集成。</p>
+<p>这种自由度也意味着 RoCE 的 QoS、MTU、PFC、ECN 阈值、队列映射、哈希、缓冲区和 NIC 参数必须在端到端路径上保持一致。配置不一致不一定让链路直接中断，却可能表现为难以定位的吞吐下降和尾延迟尖峰。</p>
+<p>两者的核心区别可以概括为：</p>
+<ul>
+<li>InfiniBand 倾向于用统一的 Fabric 管理体系配置专用互连；</li>
+<li>Ethernet 倾向于在开放的二层&#x2F;三层生态中组合协议和设备；</li>
+<li>前者减少选择空间并增强端到端一致性，后者扩大选择空间并提升与现有基础设施的兼容性。</li>
+</ul>
+<h2 id="五、性能指标"><a href="#五、性能指标" class="headerlink" title="五、性能指标"></a>五、性能指标</h2><p>截至 2026 年，InfiniBand 与 Ethernet 都已有 800 Gb&#x2F;s 产品或标准。NVIDIA 同时提供 Quantum-X800 InfiniBand 与 Spectrum-X800 Ethernet 平台；IEEE 802.3df-2024 也已经覆盖 800 Gb&#x2F;s Ethernet。<a target="_blank" rel="noopener" href="https://nvidianews.nvidia.com/news/networking-switches-gpu-computing-ai">NVIDIA 的 X800 发布资料</a>同时列出了两种 800G 平台。</p>
+<p>因此，比较性能时至少要分开以下指标：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>含义</th>
+<th>容易出现的误区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>端口线速</td>
+<td>单端口理论物理带宽</td>
+<td>800G 不等于应用一定获得 800G</td>
+</tr>
+<tr>
+<td>有效带宽</td>
+<td>扣除协议开销、负载不均和拥塞后的吞吐</td>
+<td>只测试单流无法代表 All-to-All</td>
+</tr>
+<tr>
+<td>空载延迟</td>
+<td>网络基本转发路径延迟</td>
+<td>不能代表拥塞时表现</td>
+</tr>
+<tr>
+<td>尾延迟</td>
+<td>p99&#x2F;p99.9 完成时间</td>
+<td>平均延迟低不代表同步阶段稳定</td>
+</tr>
+<tr>
+<td>消息速率</td>
+<td>每秒可处理的小消息数量</td>
+<td>大带宽不代表小消息性能高</td>
+</tr>
+<tr>
+<td>集合通信时间</td>
+<td>AllReduce 等操作完成时间</td>
+<td>同时受拓扑、算法和网内计算影响</td>
+</tr>
+<tr>
+<td>作业完成时间</td>
+<td>训练或仿真的整体完成时间</td>
+<td>才是最终业务指标，但难以脱离应用比较</td>
+</tr>
+</tbody></table>
+<p>InfiniBand 的优势通常不是“物理速率一定更高”，而是软硬件栈更一体化，信用流控、RDMA、路由和集合通信优化围绕同类工作负载协同设计，因此更容易获得稳定的有效带宽和尾延迟。</p>
+<p>经过正确设计的 RoCEv2 Fabric 同样可以获得很高的吞吐和较低延迟，但其表现更依赖端到端配置、交换芯片能力、NIC 拥塞算法和运维经验。</p>
+<h2 id="六、InfiniBand-的网内计算与-Ethernet-的快速演进"><a href="#六、InfiniBand-的网内计算与-Ethernet-的快速演进" class="headerlink" title="六、InfiniBand 的网内计算与 Ethernet 的快速演进"></a>六、InfiniBand 的网内计算与 Ethernet 的快速演进</h2><p>当前 NVIDIA InfiniBand 平台提供 SHARP 网内归约、自适应路由、遥测拥塞控制和 SHIELD 等增强功能。SHARP 可以把部分 Reduce&#x2F;AllReduce 运算下沉到交换网络，从而减少端点和链路上的重复数据传输。</p>
+<p>需要注意，这些是具体平台能力，不应把所有厂商增强功能都等同于 InfiniBand 基础规范。比较时应确认采购设备和软件栈是否真正支持并启用了相应能力。</p>
+<p>Ethernet 也正在从“通用网络加 RoCE”向面向 AI 的完整 Fabric 演进：</p>
+<ul>
+<li>高级 ECMP、自适应路由和包喷洒提高多路径利用率；</li>
+<li>NIC 支持硬件 RDMA、乱序处理和可编程拥塞控制；</li>
+<li>交换机提供更强的遥测、队列管理与拥塞隔离；</li>
+<li>Ultra Ethernet 定义新的传输、拥塞控制和多路径机制。</li>
+</ul>
+<p>Ultra Ethernet Consortium 已于 2025 年 6 月发布 <a target="_blank" rel="noopener" href="https://ultraethernet.org/ultra-ethernet-consortium-uec-launches-specification-1-0-transforming-ethernet-for-ai-and-hpc-at-scale/">UEC Specification 1.0</a>，其目标是在保留 Ethernet 开放生态的同时，构建面向 AI&#x2F;HPC 的完整高性能通信栈。它表明未来的竞争不再是“InfiniBand 与普通 TCP Ethernet”，而是两套面向计算语义优化的高性能 Fabric 之间的竞争。</p>
+<h2 id="七、运维与生态：集成度和开放性的取舍"><a href="#七、运维与生态：集成度和开放性的取舍" class="headerlink" title="七、运维与生态：集成度和开放性的取舍"></a>七、运维与生态：集成度和开放性的取舍</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>InfiniBand</th>
+<th>RoCEv2 &#x2F; AI Ethernet</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准与生态</td>
+<td>IBTA 标准，当前产品生态较集中</td>
+<td>IEEE&#x2F;IETF&#x2F;IBTA&#x2F;UEC 等标准，多厂商生态广泛</td>
+</tr>
+<tr>
+<td>网络管理</td>
+<td>SM 统一发现和配置子网</td>
+<td>BGP&#x2F;EVPN、SDN、交换机 NOS 与自动化工具组合</td>
+</tr>
+<tr>
+<td>RDMA</td>
+<td>原生 InfiniBand 传输</td>
+<td>RoCEv2 或新型 Ethernet 传输</td>
+</tr>
+<tr>
+<td>流控</td>
+<td>链路级 credit</td>
+<td>ECN&#x2F;CNP&#x2F;端点限速，常配合 PFC</td>
+</tr>
+<tr>
+<td>调优重点</td>
+<td>路由、VL&#x2F;QoS、拥塞控制、拓扑</td>
+<td>ECN&#x2F;PFC 阈值、队列、buffer、ECMP、NIC CC</td>
+</tr>
+<tr>
+<td>多租户与云融合</td>
+<td>更适合独立计算 Fabric</td>
+<td>更容易与现有 IP 数据中心融合</td>
+</tr>
+<tr>
+<td>厂商选择</td>
+<td>相对有限</td>
+<td>NIC、交换机、NOS 和光模块选择更多</td>
+</tr>
+</tbody></table>
+<p>InfiniBand 的集成度可以降低首次构建专用 HPC&#x2F;AI Fabric 的不确定性，但运维团队仍然需要理解 SM、LID、P_Key、VL、路由算法和诊断工具。</p>
+<p>Ethernet 的开放性可以复用现有 BGP、EVPN、遥测和自动化能力，但“会运维普通 Ethernet”不等于“会运维 RoCE”。RoCE 工程师还需要掌握无损队列、ECN 标记、PFC headroom、CNP、NIC 限速和 GPU 集合通信行为。</p>
+<h2 id="八、成本"><a href="#八、成本" class="headerlink" title="八、成本"></a>八、成本</h2><p>FiberMall 原文声称 InfiniBand 每端口通常比同速 Ethernet 贵 20%–30%。实际成本会受到以下因素影响：</p>
+<ul>
+<li>交换机端口密度与网络层级；</li>
+<li>无阻塞或超额订阅比例；</li>
+<li>NIC&#x2F;HCA 数量与单机多 rail 配置；</li>
+<li>DAC、ACC、AOC、光模块和光纤距离；</li>
+<li>软件许可、网络管理和遥测系统；</li>
+<li>备件、供应周期和厂商折扣；</li>
+<li>部署调试与长期运维人力；</li>
+<li>网络性能对 GPU 利用率和作业完成时间的影响。</li>
+</ul>
+<p>更合理的比较方法是计算总体拥有成本 TCO：</p>
+<p>$$<br>TCO &#x3D; C_{switch} + C_{NIC} + C_{optics} + C_{cabling} + C_{software} + C_{operation} + C_{downtime}<br>$$</p>
+<p>进一步还应计算每个训练作业或每次仿真的有效成本：如果较便宜的网络导致 GPU 等待时间明显增加，节省的网络资本支出可能被更长的作业时间抵消；反之，如果应用通信强度不高，为极低延迟支付额外成本也没有必要。</p>
+<h2 id="九、应该怎样选择？"><a href="#九、应该怎样选择？" class="headerlink" title="九、应该怎样选择？"></a>九、应该怎样选择？</h2><h3 id="更倾向-InfiniBand-的场景"><a href="#更倾向-InfiniBand-的场景" class="headerlink" title="更倾向 InfiniBand 的场景"></a>更倾向 InfiniBand 的场景</h3><ul>
+<li>构建独立的 HPC 或大规模训练 Fabric；</li>
+<li>工作负载高度同步、通信密集，尾延迟直接影响整体进度；</li>
+<li>希望使用成熟的一体化 RDMA、GPUDirect 和网内集合通信方案；</li>
+<li>更看重可预测性能，而不是与通用 IP 网络融合；</li>
+<li>能够接受相对集中的供应商生态。</li>
+</ul>
+<h3 id="更倾向-Ethernet-RoCE-的场景"><a href="#更倾向-Ethernet-RoCE-的场景" class="headerlink" title="更倾向 Ethernet&#x2F;RoCE 的场景"></a>更倾向 Ethernet&#x2F;RoCE 的场景</h3><ul>
+<li>已经拥有成熟的 Leaf-Spine、BGP&#x2F;EVPN 和自动化运维体系；</li>
+<li>需要多厂商选择或与云数据中心网络融合；</li>
+<li>同一网络需要承载训练、推理、存储和通用业务；</li>
+<li>团队具有 RoCE、PFC、ECN 和 NIC 拥塞控制经验；</li>
+<li>工作负载可以接受一定性能波动，或已通过实测证明 Ethernet 满足要求。</li>
+</ul>
+<h2 id="十、混合网络往往是更现实的答案"><a href="#十、混合网络往往是更现实的答案" class="headerlink" title="十、混合网络往往是更现实的答案"></a>十、混合网络往往是更现实的答案</h2><p>InfiniBand 和 Ethernet 并不一定互相替代。一套 AI&#x2F;HPC 集群通常同时存在多张网络：</p>
+<ul>
+<li>InfiniBand 或 AI Ethernet：GPU&#x2F;CPU 节点间的高性能计算 Fabric；</li>
+<li>Ethernet Storage Fabric：访问训练数据、检查点和并行存储；</li>
+<li>Ethernet Management Network：登录、调度、监控、镜像和业务管理；</li>
+<li>BMC&#x2F;OOB Network：带外管理、开关机和故障恢复。</li>
+</ul>
+<p><img src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/03-hybrid-fabric.png" alt="AI&#x2F;HPC 集群中的 InfiniBand 与 Ethernet 混合部署"></p>
+<p><em>图 3：高性能计算网络、存储网络、管理网络和带外网络可以分别选用最合适的技术。</em></p>
+<p>这种分离能够避免普通管理流量干扰集合通信，也允许计算和存储网络采用不同的带宽、拓扑与可靠性策略。是否让存储共享计算 Fabric，需要根据数据路径、故障域、端口预算和作业行为单独评估。</p>
+<h2 id="十一、总结"><a href="#十一、总结" class="headerlink" title="十一、总结"></a>十一、总结</h2><p>InfiniBand 与 Ethernet 的核心差异，不是“一个快、一个慢”，而是两种不同的系统设计哲学：</p>
+<ul>
+<li><strong>InfiniBand</strong> 从一开始就围绕低延迟、无损运行、硬件 RDMA 和集中式 Fabric 管理构建，适合性能目标明确的专用 HPC&#x2F;AI 互连；</li>
+<li><strong>Ethernet</strong> 依靠开放标准、广泛生态和灵活的二三层网络成为通用基础设施，并通过 RoCEv2、AI Ethernet 和 Ultra Ethernet 不断吸收高性能计算所需的能力。</li>
+</ul>
+<p>InfiniBand 通常提供更一体化、更容易获得可预测性能的路径；Ethernet 通常提供更开放、更易与现有数据中心融合的路径。经过良好设计的 RoCEv2 或新一代 AI Ethernet 可以达到很高的性能，但它并不是“打开 RDMA 开关”就能完成的普通 Ethernet。</p>
+<p>最合理的选型原则是：<strong>不要让网络技术决定工作负载，而要让真实的通信模式、性能目标、故障模型和运维能力决定网络。</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.fibermall.com/blog/infiniband-vs-ethernet.htm">FiberMall：InfiniBand vs Ethernet: Which Network Should Your AI Cluster Use?</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.infinibandta.org/about-infiniband/">InfiniBand Trade Association：About InfiniBand</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.infinibandta.org/ibta-specification/">IBTA：InfiniBand Specification FAQ and RoCE</a></li>
+<li><a target="_blank" rel="noopener" href="https://1.ieee802.org/dcb/802-1qbb/">IEEE：802.1Qbb Priority-based Flow Control</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ieee802.org/3/df/">IEEE：802.3df 400 Gb&#x2F;s and 800 Gb&#x2F;s Ethernet</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/winof2v310/ethernet%2Bnetwork">NVIDIA：RoCEv2 Congestion Management</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/networking/products/infiniband/quantum-x800/">NVIDIA：Quantum-X800 InfiniBand</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/networking/spectrumx/">NVIDIA：Spectrum-X Ethernet</a></li>
+<li><a target="_blank" rel="noopener" href="https://ultraethernet.org/ultra-ethernet-consortium-uec-launches-specification-1-0-transforming-ethernet-for-ai-and-hpc-at-scale/">Ultra Ethernet Consortium：UEC Specification 1.0</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/InfiniBand/" rel="tag"># InfiniBand</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/HPC/" rel="tag"># HPC</a>
+              <a href="/tags/AI-Infra/" rel="tag"># AI Infra</a>
+              <a href="/tags/Ethernet/" rel="tag"># Ethernet</a>
+              <a href="/tags/RoCEv2/" rel="tag"># RoCEv2</a>
+              <a href="/tags/Ultra-Ethernet/" rel="tag"># Ultra Ethernet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/15/InfiniBand%E6%98%AF%E4%BB%80%E4%B9%88/" rel="prev" title="InfiniBand是什么?">
+                  <i class="fa fa-angle-left"></i> InfiniBand是什么?
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
