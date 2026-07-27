@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="RNN 与 CNN：序列建模的两条经典路线 一、普通 MLP 不适合直接处理变长序列 二、循环神经网络 RNN 1. RNN 如何工作 2. 一个直观例子 3. RNN 的输入与输出形式 4. RNN 如何训练 5. RNN 的主要问题     \frac{\partial h_T}{\partial h_t} 6. LSTM 和 GRU 三、卷积神经网络 CNN 1. 从图像卷积到序列卷积 2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RNN 与 CNN：序列建模的两条经典路线">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/07/27/RNN-CNN/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="RNN 与 CNN：序列建模的两条经典路线 一、普通 MLP 不适合直接处理变长序列 二、循环神经网络 RNN 1. RNN 如何工作 2. 一个直观例子 3. RNN 的输入与输出形式 4. RNN 如何训练 5. RNN 的主要问题     \frac{\partial h_T}{\partial h_t} 6. LSTM 和 GRU 三、卷积神经网络 CNN 1. 从图像卷积到序列卷积 2">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-27T12:48:39.000Z">
+<meta property="article:modified_time" content="2026-07-27T13:07:34.692Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="CNN">
+<meta property="article:tag" content="RNN">
+<meta property="article:tag" content="序列建模">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="神经网络">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/07/27/RNN-CNN/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/07/27/RNN-CNN/","path":"2026/07/27/RNN-CNN/","title":"RNN 与 CNN：序列建模的两条经典路线"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RNN 与 CNN：序列建模的两条经典路线 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script src="/js/visitor-map.js"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RNN-%E4%B8%8E-CNN%EF%BC%9A%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1%E7%9A%84%E4%B8%A4%E6%9D%A1%E7%BB%8F%E5%85%B8%E8%B7%AF%E7%BA%BF"><span class="nav-number">1.</span> <span class="nav-text">RNN 与 CNN：序列建模的两条经典路线</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%99%AE%E9%80%9A-MLP-%E4%B8%8D%E9%80%82%E5%90%88%E7%9B%B4%E6%8E%A5%E5%A4%84%E7%90%86%E5%8F%98%E9%95%BF%E5%BA%8F%E5%88%97"><span class="nav-number">1.1.</span> <span class="nav-text">一、普通 MLP 不适合直接处理变长序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-RNN"><span class="nav-number">1.2.</span> <span class="nav-text">二、循环神经网络 RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-RNN-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. RNN 如何工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%80%E4%B8%AA%E7%9B%B4%E8%A7%82%E4%BE%8B%E5%AD%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 一个直观例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-RNN-%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. RNN 的输入与输出形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-RNN-%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. RNN 如何训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-RNN-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.5.</span> <span class="nav-text">5. RNN 的主要问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-%E9%95%BF%E6%9C%9F%E4%BE%9D%E8%B5%96%E5%9B%B0%E9%9A%BE"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">5.1 长期依赖困难</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#frac-partial-h-T-partial-h-t"><span class="nav-number">2.</span> <span class="nav-text">$$\frac{\partial h_T}{\partial h_t}</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81%E6%9E%84%E6%88%90%E4%BF%A1%E6%81%AF%E7%93%B6%E9%A2%88"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">5.2 隐藏状态构成信息瓶颈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-%E6%97%A0%E6%B3%95%E5%85%85%E5%88%86%E5%B9%B6%E8%A1%8C"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">5.3 无法充分并行</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-LSTM-%E5%92%8C-GRU"><span class="nav-number">2.0.1.</span> <span class="nav-text">6. LSTM 和 GRU</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-CNN"><span class="nav-number">2.1.</span> <span class="nav-text">三、卷积神经网络 CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%8E%E5%9B%BE%E5%83%8F%E5%8D%B7%E7%A7%AF%E5%88%B0%E5%BA%8F%E5%88%97%E5%8D%B7%E7%A7%AF"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 从图像卷积到序列卷积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%80%E7%BB%B4-CNN-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. 一维 CNN 如何工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E6%98%AF%E4%B8%80%E7%A7%8D%E5%B1%80%E9%83%A8%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8"><span class="nav-number">2.1.3.</span> <span class="nav-text">3. 卷积核是一种局部特征检测器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%8D%B7%E7%A7%AF%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.4.</span> <span class="nav-text">4. 卷积中的几个重要概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">4.1 卷积核大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E6%AD%A5%E5%B9%85"><span class="nav-number">2.1.4.2.</span> <span class="nav-text">4.2 步幅</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E5%A1%AB%E5%85%85"><span class="nav-number">2.1.4.3.</span> <span class="nav-text">4.3 填充</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-%E6%B1%A0%E5%8C%96"><span class="nav-number">2.1.4.4.</span> <span class="nav-text">4.4 池化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%A4%9A%E5%B1%82-CNN-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E"><span class="nav-number">2.1.5.</span> <span class="nav-text">5. 多层 CNN 与感受野</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%A6%82%E4%BD%95%E6%89%A9%E5%A4%A7%E6%84%9F%E5%8F%97%E9%87%8E"><span class="nav-number">2.1.6.</span> <span class="nav-text">6. 空洞卷积如何扩大感受野</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-CNN-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97"><span class="nav-number">2.1.7.</span> <span class="nav-text">7. CNN 为什么可以并行计算</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#h-i-l"><span class="nav-number">3.</span> <span class="nav-text">$$h_i^{(l)}</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-CNN-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98"><span class="nav-number">3.0.1.</span> <span class="nav-text">8. CNN 的主要问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-1-%E9%95%BF%E8%B7%9D%E7%A6%BB%E4%BE%9D%E8%B5%96%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B1%82%E4%BC%A0%E6%92%AD"><span class="nav-number">3.0.1.1.</span> <span class="nav-text">8.1 长距离依赖需要多层传播</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-%E5%B1%80%E9%83%A8%E7%AA%97%E5%8F%A3%E9%99%90%E5%88%B6%E5%8D%95%E5%B1%82%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">3.0.1.2.</span> <span class="nav-text">8.2 局部窗口限制单层上下文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-3-%E5%B1%80%E9%83%A8%E6%80%A7%E5%81%87%E8%AE%BE%E5%B9%B6%E4%B8%8D%E9%80%82%E5%90%88%E6%89%80%E6%9C%89%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.0.1.3.</span> <span class="nav-text">8.3 局部性假设并不适合所有任务</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81RNN-%E4%B8%8E-CNN-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">四、RNN 与 CNN 的核心区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BB%8E-RNN%E3%80%81CNN-%E5%88%B0-Transformer"><span class="nav-number">3.2.</span> <span class="nav-text">五、从 RNN、CNN 到 Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">六、总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">93</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/27/RNN-CNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RNN 与 CNN：序列建模的两条经典路线 | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RNN 与 CNN：序列建模的两条经典路线
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-27 20:48:39 / 修改时间：21:07:34" itemprop="dateCreated datePublished" datetime="2026-07-27T20:48:39+08:00">2026-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#rnn-%E4%B8%8E-cnn%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1%E7%9A%84%E4%B8%A4%E6%9D%A1%E7%BB%8F%E5%85%B8%E8%B7%AF%E7%BA%BF">RNN 与 CNN：序列建模的两条经典路线</a><ul>
+<li><a href="#%E4%B8%80%E6%99%AE%E9%80%9A-mlp-%E4%B8%8D%E9%80%82%E5%90%88%E7%9B%B4%E6%8E%A5%E5%A4%84%E7%90%86%E5%8F%98%E9%95%BF%E5%BA%8F%E5%88%97">一、普通 MLP 不适合直接处理变长序列</a></li>
+<li><a href="#%E4%BA%8C%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-rnn">二、循环神经网络 RNN</a><ul>
+<li><a href="#1-rnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. RNN 如何工作</a></li>
+<li><a href="#2-%E4%B8%80%E4%B8%AA%E7%9B%B4%E8%A7%82%E4%BE%8B%E5%AD%90">2. 一个直观例子</a></li>
+<li><a href="#3-rnn-%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA%E5%BD%A2%E5%BC%8F">3. RNN 的输入与输出形式</a></li>
+<li><a href="#4-rnn-%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83">4. RNN 如何训练</a></li>
+<li><a href="#5-rnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">5. RNN 的主要问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#fracpartial-h_tpartial-h_t">\frac{\partial h_T}{\partial h_t}</a><ul>
+<li><a href="#6-lstm-%E5%92%8C-gru">6. LSTM 和 GRU</a></li>
+<li><a href="#%E4%B8%89%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-cnn">三、卷积神经网络 CNN</a><ul>
+<li><a href="#1-%E4%BB%8E%E5%9B%BE%E5%83%8F%E5%8D%B7%E7%A7%AF%E5%88%B0%E5%BA%8F%E5%88%97%E5%8D%B7%E7%A7%AF">1. 从图像卷积到序列卷积</a></li>
+<li><a href="#2-%E4%B8%80%E7%BB%B4-cnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">2. 一维 CNN 如何工作</a></li>
+<li><a href="#3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E6%98%AF%E4%B8%80%E7%A7%8D%E5%B1%80%E9%83%A8%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8">3. 卷积核是一种局部特征检测器</a></li>
+<li><a href="#4-%E5%8D%B7%E7%A7%AF%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5">4. 卷积中的几个重要概念</a></li>
+<li><a href="#5-%E5%A4%9A%E5%B1%82-cnn-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E">5. 多层 CNN 与感受野</a></li>
+<li><a href="#6-%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%A6%82%E4%BD%95%E6%89%A9%E5%A4%A7%E6%84%9F%E5%8F%97%E9%87%8E">6. 空洞卷积如何扩大感受野</a></li>
+<li><a href="#7-cnn-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">7. CNN 为什么可以并行计算</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#h_il">h_i^{(l)}</a><ul>
+<li><a href="#8-cnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">8. CNN 的主要问题</a></li>
+<li><a href="#%E5%9B%9Brnn-%E4%B8%8E-cnn-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB">四、RNN 与 CNN 的核心区别</a></li>
+<li><a href="#%E4%BA%94%E4%BB%8E-rnncnn-%E5%88%B0-transformer">五、从 RNN、CNN 到 Transformer</a></li>
+<li><a href="#%E5%85%AD%E6%80%BB%E7%BB%93">六、总结</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="RNN-与-CNN：序列建模的两条经典路线"><a href="#RNN-与-CNN：序列建模的两条经典路线" class="headerlink" title="RNN 与 CNN：序列建模的两条经典路线"></a>RNN 与 CNN：序列建模的两条经典路线</h1><p>在 Transformer 成为自然语言处理主流架构之前，循环神经网络（Recurrent Neural Network，RNN）和卷积神经网络（Convolutional Neural Network，CNN）是处理序列数据的两类重要模型。</p>
+<p>二者采用了截然不同的信息组织方式：</p>
+<ul>
+<li>RNN 沿序列逐步更新隐藏状态，通过“记忆”传递上下文；</li>
+<li>CNN 使用卷积核扫描局部区域，通过堆叠卷积逐层扩大感受野。</li>
+</ul>
+<p>RNN 更贴近序列的时间顺序，CNN 则更擅长提取局部模式和进行并行计算。理解这两种模型，不仅有助于掌握经典深度学习方法，也能更好地理解 Transformer 为什么要使用自注意力替代循环和卷积结构。</p>
+<hr>
+<h2 id="一、普通-MLP-不适合直接处理变长序列"><a href="#一、普通-MLP-不适合直接处理变长序列" class="headerlink" title="一、普通 MLP 不适合直接处理变长序列"></a>一、普通 MLP 不适合直接处理变长序列</h2><p>多层感知机（Multi-Layer Perceptron，MLP）通常接收一个固定维度的输入向量。假设输入维度为 (d_{\text{in}})，第一层参数矩阵可以表示为：</p>
+<p>$$<br>W\in\mathbb{R}^{d_{\text{out}}\times d_{\text{in}}}<br>$$</p>
+<p>这意味着模型在定义时就需要确定 (d_{\text{in}})。然而，现实中的序列长度通常并不固定：</p>
+<ul>
+<li>一句话可能包含 5 个 Token，也可能包含 50 个 Token；</li>
+<li>一段语音可能持续几秒，也可能持续几分钟；</li>
+<li>时间序列可能由不同数量的采样点组成。</li>
+</ul>
+<p>如果直接把整个序列拼接成一个向量，那么不同长度的序列就会对应不同的输入维度，无法直接送入同一个普通 MLP。</p>
+<p>当然，可以通过截断、填充或池化等方式把序列转换为固定长度，但这些方法可能丢失信息，或者无法自然表达序列的先后关系。RNN 和 CNN 则通过<strong>参数共享</strong>，让同一组参数可以作用于任意长度的序列。</p>
+<hr>
+<h2 id="二、循环神经网络-RNN"><a href="#二、循环神经网络-RNN" class="headerlink" title="二、循环神经网络 RNN"></a>二、循环神经网络 RNN</h2><p>循环神经网络是一类专门处理序列数据的神经网络。它的核心特点是：在处理当前输入时，同时使用前面步骤留下的信息，因此具有一定的“记忆能力”。</p>
+<p>RNN 的基本思路是引入一个隐藏状态（Hidden State），然后让同一组参数沿着序列反复使用。无论输入包含 5 个位置还是 50 个位置，模型都可以按照相同方式逐步处理。</p>
+<h3 id="1-RNN-如何工作"><a href="#1-RNN-如何工作" class="headerlink" title="1. RNN 如何工作"></a>1. RNN 如何工作</h3><p>假设输入序列为：</p>
+<p>$$<br>x_1,x_2,x_3,\ldots,x_T<br>$$</p>
+<p>RNN 按照序列顺序逐个处理输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    X1[&quot;输入 x₁&quot;] --&gt; H1[&quot;隐藏状态 h₁&quot;]</span><br><span class="line">    H1 --&gt; H2[&quot;隐藏状态 h₂&quot;]</span><br><span class="line">    X2[&quot;输入 x₂&quot;] --&gt; H2</span><br><span class="line">    H2 --&gt; H3[&quot;隐藏状态 h₃&quot;]</span><br><span class="line">    X3[&quot;输入 x₃&quot;] --&gt; H3</span><br><span class="line">    H3 --&gt; O[&quot;输出&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>在第 (t) 个时刻，RNN 根据当前输入 (x_t) 和上一步的隐藏状态 (h_{t-1})，计算新的隐藏状态：</p>
+<p>$$<br>h_t&#x3D;\tanh(W_xx_t+W_hh_{t-1}+b_h)<br>$$</p>
+<p>如果每一步都需要产生输出，还可以计算：</p>
+<p>$$<br>y_t&#x3D;W_yh_t+b_y<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>(x_t)：第 (t) 个位置的输入；</li>
+<li>(h_{t-1})：处理前 (t-1) 个位置后得到的隐藏状态；</li>
+<li>(h_t)：加入当前输入后得到的新隐藏状态；</li>
+<li>(y_t)：第 (t) 个位置的输出；</li>
+<li>(W_x)、(W_h)、(W_y)：模型通过训练得到的参数矩阵；</li>
+<li>(b_h)、(b_y)：偏置项；</li>
+<li>(\tanh)：非线性激活函数。</li>
+</ul>
+<p>隐藏状态 (h_t) 可以理解为 RNN 处理到当前位置时形成的“记忆”。它不是对前文的逐字保存，而是一个压缩了此前序列信息的数值向量。</p>
+<p>将 RNN 沿时间维度展开，可以得到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    subgraph T1[&quot;时刻 1&quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X1[&quot;x₁&quot;] --&gt; H1[&quot;h₁&quot;] --&gt; Y1[&quot;y₁&quot;]</span><br><span class="line">    end</span><br><span class="line">    subgraph T2[&quot;时刻 2&quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X2[&quot;x₂&quot;] --&gt; H2[&quot;h₂&quot;] --&gt; Y2[&quot;y₂&quot;]</span><br><span class="line">    end</span><br><span class="line">    subgraph T3[&quot;时刻 3&quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X3[&quot;x₃&quot;] --&gt; H3[&quot;h₃&quot;] --&gt; Y3[&quot;y₃&quot;]</span><br><span class="line">    end</span><br><span class="line">    subgraph T4[&quot;时刻 4&quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X4[&quot;x₄&quot;] --&gt; H4[&quot;h₄&quot;] --&gt; Y4[&quot;y₄&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    H1 --&gt; H2 --&gt; H3 --&gt; H4</span><br></pre></td></tr></table></figure>
+
+<p>图中虽然画出了多个 RNN 单元，但这些单元并不是相互独立的网络。所有时刻共享同一组 (W_x)、(W_h) 和 (W_y)，这就是 RNN 的参数共享机制。</p>
+<h3 id="2-一个直观例子"><a href="#2-一个直观例子" class="headerlink" title="2. 一个直观例子"></a>2. 一个直观例子</h3><p>假设 RNN 依次读取：</p>
+<blockquote>
+<p>我 → 喜欢 → 计算机 → 网络</p>
+</blockquote>
+<p>其处理过程可以直观地理解为：</p>
+<table>
+<thead>
+<tr>
+<th>当前输入</th>
+<th>此前信息</th>
+<th>新的隐藏状态需要编码的信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>我</td>
+<td>无</td>
+<td>当前主语是“我”</td>
+</tr>
+<tr>
+<td>喜欢</td>
+<td>主语是“我”</td>
+<td>“我”具有某种偏好</td>
+</tr>
+<tr>
+<td>计算机</td>
+<td>“我喜欢……”</td>
+<td>“我喜欢计算机”</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>前面的语义</td>
+<td>“我喜欢计算机网络”</td>
+</tr>
+</tbody></table>
+<p>实际模型并不会在隐藏状态中存储这些自然语言描述，而是使用一个连续向量表示有关语义、句法和上下文的信息。</p>
+<h3 id="3-RNN-的输入与输出形式"><a href="#3-RNN-的输入与输出形式" class="headerlink" title="3. RNN 的输入与输出形式"></a>3. RNN 的输入与输出形式</h3><p>根据任务需要，RNN 可以采用多种输入输出结构：</p>
+<table>
+<thead>
+<tr>
+<th>结构</th>
+<th>输入与输出</th>
+<th>典型任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一对一</td>
+<td>一个输入对应一个输出</td>
+<td>普通分类</td>
+</tr>
+<tr>
+<td>一对多</td>
+<td>一个输入生成一个序列</td>
+<td>图像描述、音乐生成</td>
+</tr>
+<tr>
+<td>多对一</td>
+<td>一个序列产生一个输出</td>
+<td>情感分类、序列分类</td>
+</tr>
+<tr>
+<td>多对多（不同长度）</td>
+<td>输入序列转换为输出序列</td>
+<td>机器翻译</td>
+</tr>
+<tr>
+<td>多对多（等长）</td>
+<td>每个输入位置对应一个输出</td>
+<td>序列标注、词性标注</td>
+</tr>
+</tbody></table>
+<p>例如，在情感分类中，可以使用最终隐藏状态 (h_T) 表示整段文本，再预测其类别：</p>
+<p>$$<br>\hat{y}&#x3D;\operatorname{softmax}(Wh_T+b)<br>$$</p>
+<p>在逐位置预测任务中，则可以根据每一个 (h_t) 产生相应输出 (y_t)。</p>
+<h3 id="4-RNN-如何训练"><a href="#4-RNN-如何训练" class="headerlink" title="4. RNN 如何训练"></a>4. RNN 如何训练</h3><p>RNN 通常使用随时间反向传播（Backpropagation Through Time，BPTT）进行训练。其基本过程是：</p>
+<ol>
+<li>沿序列正向计算 (h_1,h_2,\ldots,h_T)；</li>
+<li>根据模型输出计算损失；</li>
+<li>将展开后的 RNN 视为一个深层计算图；</li>
+<li>从后向前传播梯度，并更新所有时刻共享的参数。</li>
+</ol>
+<p>由于同一组参数在各个时间步反复使用，梯度会累积这些时间步对参数的共同影响。</p>
+<h3 id="5-RNN-的主要问题"><a href="#5-RNN-的主要问题" class="headerlink" title="5. RNN 的主要问题"></a>5. RNN 的主要问题</h3><h4 id="5-1-长期依赖困难"><a href="#5-1-长期依赖困难" class="headerlink" title="5.1 长期依赖困难"></a>5.1 长期依赖困难</h4><p>随着序列变长，早期信息需要经过多次状态传递：</p>
+<p>$$<br>h_1\rightarrow h_2\rightarrow\cdots\rightarrow h_T<br>$$</p>
+<p>在反向传播过程中，梯度需要连续乘以与循环权重和激活函数导数相关的矩阵。简化来看，早期状态对后续状态的影响包含：</p>
+<h1 id="frac-partial-h-T-partial-h-t"><a href="#frac-partial-h-T-partial-h-t" class="headerlink" title="$$\frac{\partial h_T}{\partial h_t}"></a>$$<br>\frac{\partial h_T}{\partial h_t}</h1><p>\prod_{k&#x3D;t+1}^{T}<br>\frac{\partial h_k}{\partial h_{k-1}}<br>$$</p>
+<p>当这些连乘项的尺度长期小于 1 时，容易发生<strong>梯度消失</strong>，使早期信息几乎无法影响模型训练；当其尺度长期大于 1 时，则容易发生<strong>梯度爆炸</strong>，导致训练不稳定。</p>
+<p>因此，普通 RNN 很难学习距离较远的信息依赖。例如，一句话开头出现的主语可能在传递许多步后，难以继续影响句子末尾的预测。</p>
+<p>梯度裁剪（Gradient Clipping）可以缓解梯度爆炸，但不能从根本上解决长期依赖和梯度消失问题。</p>
+<h4 id="5-2-隐藏状态构成信息瓶颈"><a href="#5-2-隐藏状态构成信息瓶颈" class="headerlink" title="5.2 隐藏状态构成信息瓶颈"></a>5.2 隐藏状态构成信息瓶颈</h4><p>在最基本的 RNN 中，所有历史信息都需要压缩到固定维度的隐藏状态 (h_t) 中。当序列很长、信息量很大时，单个固定长度向量可能难以保留所有重要内容。</p>
+<h4 id="5-3-无法充分并行"><a href="#5-3-无法充分并行" class="headerlink" title="5.3 无法充分并行"></a>5.3 无法充分并行</h4><p>RNN 必须先得到 (h_{t-1})，才能计算 (h_t)：</p>
+<p>$$<br>h_t&#x3D;f(x_t,h_{t-1})<br>$$</p>
+<p>因此，同一序列中的不同时间步通常需要依次计算。即使训练时已经获得完整输入，也难以像 CNN 或 Transformer 一样同时计算所有位置的表示。</p>
+<p>这类顺序依赖不仅影响训练并行度，也使长序列的计算延迟随序列长度增加。</p>
+<h3 id="6-LSTM-和-GRU"><a href="#6-LSTM-和-GRU" class="headerlink" title="6. LSTM 和 GRU"></a>6. LSTM 和 GRU</h3><p>长短期记忆网络（Long Short-Term Memory，LSTM）和门控循环单元（Gated Recurrent Unit，GRU）都是对普通 RNN 的改进。</p>
+<ul>
+<li><strong>LSTM</strong> 使用输入门、遗忘门和输出门控制信息的写入、保留与读取，并额外维护细胞状态；</li>
+<li><strong>GRU</strong> 使用更新门和重置门管理信息，结构通常比 LSTM 更简单。</li>
+</ul>
+<p>它们通过门控机制为信息提供更稳定的传递路径，可以更好地学习较长距离的依赖关系。不过，LSTM 和 GRU 本质上仍属于循环结构，因此仍然存在时间步之间难以充分并行的问题。</p>
+<hr>
+<h2 id="三、卷积神经网络-CNN"><a href="#三、卷积神经网络-CNN" class="headerlink" title="三、卷积神经网络 CNN"></a>三、卷积神经网络 CNN</h2><p>卷积神经网络是一类通过<strong>卷积操作提取局部特征</strong>的神经网络。CNN 最初主要用于图像处理，也可以用于文本、语音和时间序列。</p>
+<p>CNN 的三个核心特点是：</p>
+<ul>
+<li><strong>局部连接</strong>：每次只处理输入中的一小块区域；</li>
+<li><strong>参数共享</strong>：同一个卷积核在输入的不同位置重复使用；</li>
+<li><strong>并行计算</strong>：同一卷积层中不同位置的输出可以同时计算。</li>
+</ul>
+<p>对于序列任务，CNN 提供了另一种不同于 RNN 的处理思路：不再维护一个沿序列逐步传递的状态，而是在所有位置上并行提取局部模式。</p>
+<h3 id="1-从图像卷积到序列卷积"><a href="#1-从图像卷积到序列卷积" class="headerlink" title="1. 从图像卷积到序列卷积"></a>1. 从图像卷积到序列卷积</h3><p>图像通常由高度、宽度和通道三个维度组成，因此图像模型主要使用二维卷积。一个卷积核在图像的空间维度上滑动，逐步识别：</p>
+<ul>
+<li>边缘；</li>
+<li>纹理；</li>
+<li>局部形状；</li>
+<li>更复杂的物体结构。</li>
+</ul>
+<p>文本、语音和时间序列主要沿一个维度排列，因此通常使用一维卷积。对文本而言，首先需要把每个词或 Token 转换为向量：</p>
+<p>$$<br>X&#x3D;[x_1,x_2,\ldots,x_T],\qquad x_i\in\mathbb{R}^{d}<br>$$</p>
+<p>其中，(T) 为序列长度，(d) 为每个 Token 的表示维度。</p>
+<h3 id="2-一维-CNN-如何工作"><a href="#2-一维-CNN-如何工作" class="headerlink" title="2. 一维 CNN 如何工作"></a>2. 一维 CNN 如何工作</h3><p>假设卷积核大小为 3。为了计算第 (i) 个位置的输出，卷积层读取其附近的三个输入：</p>
+<p>$$<br>h_i&#x3D;\sigma\left(W[x_{i-1};x_i;x_{i+1}]+b\right)<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>(x_{i-1})、(x_i)、(x_{i+1})：当前位置附近的输入向量；</li>
+<li>([,;,])：向量拼接操作；</li>
+<li>(W) 和 (b)：模型通过训练得到的卷积参数；</li>
+<li>(\sigma)：非线性激活函数；</li>
+<li>(h_i)：卷积后得到的局部特征表示。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">    subgraph I[&quot;输入序列&quot;]</span><br><span class="line">        direction LR</span><br><span class="line">        X1[&quot;x₁&quot;]</span><br><span class="line">        X2[&quot;x₂&quot;]</span><br><span class="line">        X3[&quot;x₃&quot;]</span><br><span class="line">        X4[&quot;x₄&quot;]</span><br><span class="line">        X5[&quot;x₅&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    X1 --&gt; H2[&quot;h₂&quot;]</span><br><span class="line">    X2 --&gt; H2</span><br><span class="line">    X3 --&gt; H2</span><br><span class="line"></span><br><span class="line">    X2 --&gt; H3[&quot;h₃&quot;]</span><br><span class="line">    X3 --&gt; H3</span><br><span class="line">    X4 --&gt; H3</span><br><span class="line"></span><br><span class="line">    X3 --&gt; H4[&quot;h₄&quot;]</span><br><span class="line">    X4 --&gt; H4</span><br><span class="line">    X5 --&gt; H4</span><br></pre></td></tr></table></figure>
+
+<p>计算 (h_2)、(h_3) 和 (h_4) 时使用的是同一组参数 (W) 和 (b)。因此，无论输入序列多长，同一个卷积核都可以在整个序列上重复使用。</p>
+<h3 id="3-卷积核是一种局部特征检测器"><a href="#3-卷积核是一种局部特征检测器" class="headerlink" title="3. 卷积核是一种局部特征检测器"></a>3. 卷积核是一种局部特征检测器</h3><p>在文本任务中，不同卷积核可以学习不同类型的局部模式，例如：</p>
+<ul>
+<li>相邻词之间的组合；</li>
+<li>短语结构；</li>
+<li>局部语义模式；</li>
+<li>特定的关键词组合。</li>
+</ul>
+<p>以句子为例：</p>
+<blockquote>
+<p>我非常喜欢计算机网络</p>
+</blockquote>
+<p>大小为 3 的卷积核会依次观察：</p>
+<ul>
+<li>“我—非常—喜欢”；</li>
+<li>“非常—喜欢—计算机”；</li>
+<li>“喜欢—计算机—网络”。</li>
+</ul>
+<p>在实际模型中，通常会同时使用多个卷积核。假设某层有 (C_{\text{out}}) 个卷积核，那么每个位置就会得到 (C_{\text{out}}) 个特征值，这些特征共同构成该位置的新表示。</p>
+<h3 id="4-卷积中的几个重要概念"><a href="#4-卷积中的几个重要概念" class="headerlink" title="4. 卷积中的几个重要概念"></a>4. 卷积中的几个重要概念</h3><h4 id="4-1-卷积核大小"><a href="#4-1-卷积核大小" class="headerlink" title="4.1 卷积核大小"></a>4.1 卷积核大小</h4><p>卷积核大小（Kernel Size）决定每次观察多少个相邻位置。较小的卷积核擅长提取细粒度局部模式；较大的卷积核可以一次覆盖更多上下文，但参数量和计算量也会增加。</p>
+<h4 id="4-2-步幅"><a href="#4-2-步幅" class="headerlink" title="4.2 步幅"></a>4.2 步幅</h4><p>步幅（Stride）表示卷积核每次移动的距离。当步幅为 1 时，卷积核逐位置移动；当步幅大于 1 时，输出序列会被下采样。</p>
+<h4 id="4-3-填充"><a href="#4-3-填充" class="headerlink" title="4.3 填充"></a>4.3 填充</h4><p>序列两端没有完整的相邻输入。例如，在大小为 3 的卷积中，(x_1) 左侧不存在输入。为了保持输入和输出长度一致，通常会在序列两侧添加填充值，这一操作称为填充（Padding）。</p>
+<p>需要注意的是，在自回归文本生成中，模型不能使用未来位置的信息，因此通常使用<strong>因果卷积（Causal Convolution）</strong>。此时，第 (t) 个位置只能读取 (x_t) 及其之前的输入。</p>
+<h4 id="4-4-池化"><a href="#4-4-池化" class="headerlink" title="4.4 池化"></a>4.4 池化</h4><p>池化（Pooling）用于对局部或全局特征进行聚合。以文本分类为例，可以对所有位置进行最大池化：</p>
+<p>$$<br>z_j&#x3D;\max_{1\leq i\leq T}h_{i,j}<br>$$</p>
+<p>其中，(h_{i,j}) 表示第 (i) 个位置在第 (j) 个通道上的特征。经过全局池化后，不同长度的输入序列都可以转换为固定维度的向量，再用于分类。</p>
+<h3 id="5-多层-CNN-与感受野"><a href="#5-多层-CNN-与感受野" class="headerlink" title="5. 多层 CNN 与感受野"></a>5. 多层 CNN 与感受野</h3><p>单层 CNN 主要提取局部信息。为了让模型获取更大范围的上下文，可以堆叠多层卷积。</p>
+<p>假设每层均使用大小为 3、步幅为 1 的普通卷积：</p>
+<ul>
+<li>第 1 层的一个位置可以观察 3 个输入；</li>
+<li>第 2 层可以间接观察 5 个输入；</li>
+<li>第 3 层可以间接观察 7 个输入。</li>
+</ul>
+<p>一个隐藏表示能够关联的原始输入范围称为<strong>感受野（Receptive Field）</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">    O[&quot;第 2 层表示&quot;] --&gt; H1[&quot;第 1 层表示 h₁&quot;]</span><br><span class="line">    O --&gt; H2[&quot;第 1 层表示 h₂&quot;]</span><br><span class="line">    O --&gt; H3[&quot;第 1 层表示 h₃&quot;]</span><br><span class="line"></span><br><span class="line">    H1 --&gt; X1[&quot;x₁&quot;]</span><br><span class="line">    H1 --&gt; X2[&quot;x₂&quot;]</span><br><span class="line">    H1 --&gt; X3[&quot;x₃&quot;]</span><br><span class="line"></span><br><span class="line">    H2 --&gt; X2</span><br><span class="line">    H2 --&gt; X3</span><br><span class="line">    H2 --&gt; X4[&quot;x₄&quot;]</span><br><span class="line"></span><br><span class="line">    H3 --&gt; X3</span><br><span class="line">    H3 --&gt; X4</span><br><span class="line">    H3 --&gt; X5[&quot;x₅&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>对于卷积核大小为 (k)、步幅为 1、无空洞的 (L) 层 CNN，感受野大小为：</p>
+<p>$$<br>R&#x3D;1+L(k-1)<br>$$</p>
+<p>因此，普通卷积的感受野会随着网络深度线性扩大。</p>
+<h3 id="6-空洞卷积如何扩大感受野"><a href="#6-空洞卷积如何扩大感受野" class="headerlink" title="6. 空洞卷积如何扩大感受野"></a>6. 空洞卷积如何扩大感受野</h3><p>空洞卷积（Dilated Convolution）会在卷积核覆盖的位置之间加入间隔。例如，大小为 3、空洞率为 2 的卷积，不再读取连续的三个位置，而可能读取：</p>
+<p>$$<br>x_{i-2},x_i,x_{i+2}<br>$$</p>
+<p>当空洞率随着网络层数成倍增加时，模型可以使用较少的卷积层覆盖很长的序列。普通卷积连接两个相距 (d) 的位置通常需要 (O(d)) 层级路径，而合适设计的空洞卷积可以将路径长度降低到 (O(\log d))。</p>
+<h3 id="7-CNN-为什么可以并行计算"><a href="#7-CNN-为什么可以并行计算" class="headerlink" title="7. CNN 为什么可以并行计算"></a>7. CNN 为什么可以并行计算</h3><p>在同一卷积层中，每个位置的输出只依赖上一层已经确定的局部输入：</p>
+<h1 id="h-i-l"><a href="#h-i-l" class="headerlink" title="$$h_i^{(l)}"></a>$$<br>h_i^{(l)}</h1><p>\operatorname{CNN}<br>\left(<br>h_{i-k}^{(l-1)},\ldots,h_i^{(l-1)},\ldots,h_{i+k}^{(l-1)}<br>\right)<br>$$</p>
+<p>同一层的 (h_1^{(l)},h_2^{(l)},\ldots,h_T^{(l)}) 之间不存在像 RNN 那样的前后状态依赖，因此可以同时计算。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">    X[&quot;上一层的完整序列&quot;] --&gt; H1[&quot;并行计算 h₁&quot;]</span><br><span class="line">    X --&gt; H2[&quot;并行计算 h₂&quot;]</span><br><span class="line">    X --&gt; H3[&quot;并行计算 h₃&quot;]</span><br><span class="line">    X --&gt; HT[&quot;并行计算 hₜ&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>CNN 仍然需要逐层计算：第 (l) 层必须等待第 (l-1) 层完成。但在每一层内部，序列中的各个位置可以高度并行。</p>
+<h3 id="8-CNN-的主要问题"><a href="#8-CNN-的主要问题" class="headerlink" title="8. CNN 的主要问题"></a>8. CNN 的主要问题</h3><h4 id="8-1-长距离依赖需要多层传播"><a href="#8-1-长距离依赖需要多层传播" class="headerlink" title="8.1 长距离依赖需要多层传播"></a>8.1 长距离依赖需要多层传播</h4><p>CNN 每一层通常只能连接局部位置。两个位置距离越远，信息就需要经过越多层卷积才能完成传递。</p>
+<p>例如，使用大小为 3 的普通卷积时，要让 (x_1) 的信息影响距离较远的 (x_T)，需要通过多个中间表示逐层传播：</p>
+<p>$$<br>x_1<br>\rightarrow h_2^{(1)}<br>\rightarrow h_3^{(2)}<br>\rightarrow\cdots<br>\rightarrow h_T^{(T-1)}<br>$$</p>
+<p>较长的信息传递路径会增加学习远距离依赖的难度。</p>
+<h4 id="8-2-局部窗口限制单层上下文"><a href="#8-2-局部窗口限制单层上下文" class="headerlink" title="8.2 局部窗口限制单层上下文"></a>8.2 局部窗口限制单层上下文</h4><p>单层 CNN 只能观察固定大小的局部窗口。为了获取更大范围的信息，通常需要：</p>
+<ul>
+<li>堆叠更多卷积层；</li>
+<li>增大卷积核；</li>
+<li>使用空洞卷积；</li>
+<li>引入注意力机制。</li>
+</ul>
+<h4 id="8-3-局部性假设并不适合所有任务"><a href="#8-3-局部性假设并不适合所有任务" class="headerlink" title="8.3 局部性假设并不适合所有任务"></a>8.3 局部性假设并不适合所有任务</h4><p>CNN 隐含了一个重要假设：相邻位置通常比远距离位置更相关。该假设非常适合图像纹理、语音片段和局部短语，但在需要直接关联远距离信息的任务中未必理想。</p>
+<hr>
+<h2 id="四、RNN-与-CNN-的核心区别"><a href="#四、RNN-与-CNN-的核心区别" class="headerlink" title="四、RNN 与 CNN 的核心区别"></a>四、RNN 与 CNN 的核心区别</h2><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>RNN</th>
+<th>CNN</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基本思想</td>
+<td>沿序列更新隐藏状态</td>
+<td>使用卷积核提取局部特征</td>
+</tr>
+<tr>
+<td>参数共享方式</td>
+<td>不同时间步共享同一组循环参数</td>
+<td>不同位置共享同一组卷积参数</td>
+</tr>
+<tr>
+<td>单层信息来源</td>
+<td>当前输入和上一隐藏状态</td>
+<td>固定大小的局部窗口</td>
+</tr>
+<tr>
+<td>顺序信息</td>
+<td>由状态传递顺序自然体现</td>
+<td>由卷积位置和局部排列体现</td>
+</tr>
+<tr>
+<td>并行计算</td>
+<td>时间步之间存在依赖，较困难</td>
+<td>同一层中的不同位置可以并行</td>
+</tr>
+<tr>
+<td>长距离依赖</td>
+<td>信息需要经过多个时间步</td>
+<td>信息需要经过多层卷积</td>
+</tr>
+<tr>
+<td>变长输入</td>
+<td>天然支持逐步读取</td>
+<td>可对任意长度滑动，并结合池化处理</td>
+</tr>
+<tr>
+<td>典型优势</td>
+<td>适合时间顺序和状态演化</td>
+<td>擅长局部模式，计算并行度高</td>
+</tr>
+<tr>
+<td>主要问题</td>
+<td>梯度问题、信息瓶颈、顺序计算</td>
+<td>局部窗口受限、远距离传播路径较长</td>
+</tr>
+<tr>
+<td>典型应用</td>
+<td>文本、语音、时间序列</td>
+<td>图像、文本、语音、时间序列</td>
+</tr>
+</tbody></table>
+<p>简单来说：</p>
+<blockquote>
+<p><strong>RNN 通过不断更新“记忆”处理序列，CNN 通过在输入上滑动卷积核提取局部特征。</strong></p>
+</blockquote>
+<p>RNN 的归纳偏置是“过去状态会影响当前状态”，CNN 的归纳偏置则是“局部邻域中存在可复用的模式”。两种归纳偏置决定了它们各自擅长的问题。</p>
+<hr>
+<h2 id="五、从-RNN、CNN-到-Transformer"><a href="#五、从-RNN、CNN-到-Transformer" class="headerlink" title="五、从 RNN、CNN 到 Transformer"></a>五、从 RNN、CNN 到 Transformer</h2><p>RNN 和 CNN 都可以处理序列，但任意两个远距离位置之间的信息交互都需要经过一条由中间状态或中间卷积层组成的路径。</p>
+<p>设两个位置之间的距离为 (d)，其信息传递路径长度可以粗略比较为：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th align="right">两个相距 (d) 的位置之间的路径长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RNN</td>
+<td align="right">(O(d))</td>
+</tr>
+<tr>
+<td>普通 CNN</td>
+<td align="right">(O(d))</td>
+</tr>
+<tr>
+<td>空洞 CNN</td>
+<td align="right">(O(\log d))</td>
+</tr>
+<tr>
+<td>自注意力</td>
+<td align="right">(O(1))</td>
+</tr>
+</tbody></table>
+<p>自注意力允许任意两个位置直接计算相关性，因此更容易建立远距离联系；同时，它不像 RNN 那样要求所有位置严格顺序计算。这也是 Transformer 使用自注意力取代与序列对齐的循环和卷积结构的重要原因。</p>
+<p>不过，自注意力也有自己的代价。长度为 (T) 的序列通常需要构造 (T\times T) 的注意力分数矩阵，标准自注意力的计算与存储开销会随序列长度呈二次增长。相比之下，RNN 和固定卷积核 CNN 对序列长度的计算复杂度通常近似为线性。</p>
+<p>因此，RNN、CNN 和 Transformer 并不是简单的“旧模型—新模型”替代关系，而是代表了三种不同的信息交互方式：</p>
+<ul>
+<li>RNN：沿时间逐步传递；</li>
+<li>CNN：在局部邻域内逐层传播；</li>
+<li>Transformer：在全局范围内直接建立联系。</li>
+</ul>
+<p>理解这些差异，是进一步学习注意力机制、Transformer 以及现代大模型架构的重要基础。</p>
+<hr>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>RNN 通过隐藏状态把历史信息传递到当前时刻，使同一模型能够处理不同长度的序列。它自然体现了序列顺序，但容易受到梯度消失、长期依赖和顺序计算的限制。</p>
+<p>CNN 通过局部连接与参数共享提取可复用的模式，并允许同一层中的不同位置并行计算。它在图像和局部特征建模方面十分有效，但要建立远距离依赖，通常需要增加网络深度、扩大卷积核或使用空洞卷积。</p>
+<blockquote>
+<p><strong>RNN 沿着序列传递记忆，CNN 沿着空间或时间维度扫描局部模式。</strong></p>
+</blockquote>
+<p>这两条经典路线共同构成了理解现代序列建模技术的重要起点。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RNN/" rel="tag"># RNN</a>
+              <a href="/tags/CNN/" rel="tag"># CNN</a>
+              <a href="/tags/%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1/" rel="tag"># 序列建模</a>
+              <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag"># 神经网络</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/27/NIPS2017-AttentionIsAllyouNeed/" rel="prev" title="NIPS2017-AttentionIsAllyouNeed">
+                  <i class="fa fa-angle-left"></i> NIPS2017-AttentionIsAllyouNeed
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

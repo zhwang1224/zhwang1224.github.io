@@ -64,7 +64,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js" defer></script>
 
 
@@ -73,7 +73,119 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-</head>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -173,18 +285,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -201,6 +313,225 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/27/RNN-CNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/27/RNN-CNN/" class="post-title-link" itemprop="url">RNN 与 CNN：序列建模的两条经典路线</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-27 20:48:39 / 修改时间：21:07:34" itemprop="dateCreated datePublished" datetime="2026-07-27T20:48:39+08:00">2026-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#rnn-%E4%B8%8E-cnn%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1%E7%9A%84%E4%B8%A4%E6%9D%A1%E7%BB%8F%E5%85%B8%E8%B7%AF%E7%BA%BF">RNN 与 CNN：序列建模的两条经典路线</a><ul>
+<li><a href="#%E4%B8%80%E6%99%AE%E9%80%9A-mlp-%E4%B8%8D%E9%80%82%E5%90%88%E7%9B%B4%E6%8E%A5%E5%A4%84%E7%90%86%E5%8F%98%E9%95%BF%E5%BA%8F%E5%88%97">一、普通 MLP 不适合直接处理变长序列</a></li>
+<li><a href="#%E4%BA%8C%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-rnn">二、循环神经网络 RNN</a><ul>
+<li><a href="#1-rnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. RNN 如何工作</a></li>
+<li><a href="#2-%E4%B8%80%E4%B8%AA%E7%9B%B4%E8%A7%82%E4%BE%8B%E5%AD%90">2. 一个直观例子</a></li>
+<li><a href="#3-rnn-%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA%E5%BD%A2%E5%BC%8F">3. RNN 的输入与输出形式</a></li>
+<li><a href="#4-rnn-%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83">4. RNN 如何训练</a></li>
+<li><a href="#5-rnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">5. RNN 的主要问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#fracpartial-h_tpartial-h_t">\frac{\partial h_T}{\partial h_t}</a><ul>
+<li><a href="#6-lstm-%E5%92%8C-gru">6. LSTM 和 GRU</a></li>
+<li><a href="#%E4%B8%89%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-cnn">三、卷积神经网络 CNN</a><ul>
+<li><a href="#1-%E4%BB%8E%E5%9B%BE%E5%83%8F%E5%8D%B7%E7%A7%AF%E5%88%B0%E5%BA%8F%E5%88%97%E5%8D%B7%E7%A7%AF">1. 从图像卷积到序列卷积</a></li>
+<li><a href="#2-%E4%B8%80%E7%BB%B4-cnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">2. 一维 CNN 如何工作</a></li>
+<li><a href="#3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E6%98%AF%E4%B8%80%E7%A7%8D%E5%B1%80%E9%83%A8%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8">3. 卷积核是一种局部特征检测器</a></li>
+<li><a href="#4-%E5%8D%B7%E7%A7%AF%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5">4. 卷积中的几个重要概念</a></li>
+<li><a href="#5-%E5%A4%9A%E5%B1%82-cnn-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E">5. 多层 CNN 与感受野</a></li>
+<li><a href="#6-%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%A6%82%E4%BD%95%E6%89%A9%E5%A4%A7%E6%84%9F%E5%8F%97%E9%87%8E">6. 空洞卷积如何扩大感受野</a></li>
+<li><a href="#7-cnn-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">7. CNN 为什么可以并行计算</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#h_il">h_i^{(l)}</a><ul>
+<li><a href="#8-cnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">8. CNN 的主要问题</a></li>
+<li><a href="#%E5%9B%9Brnn-%E4%B8%8E-cnn-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB">四、RNN 与 CNN 的核心区别</a></li>
+<li><a href="#%E4%BA%94%E4%BB%8E-rnncnn-%E5%88%B0-transformer">五、从 RNN、CNN 到 Transformer</a></li>
+<li><a href="#%E5%85%AD%E6%80%BB%E7%BB%93">六、总结</a></li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/07/27/RNN-CNN/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/27/NIPS2017-AttentionIsAllyouNeed/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/27/NIPS2017-AttentionIsAllyouNeed/" class="post-title-link" itemprop="url">NIPS2017-AttentionIsAllyouNeed</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-27 19:55:31 / 修改时间：20:44:14" itemprop="dateCreated datePublished" datetime="2026-07-27T19:55:31+08:00">2026-07-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#nips2017-attentionisallyouneed">NIPS2017-AttentionIsAllyouNeed</a><ul>
+<li><a href="#%E8%83%8C%E6%99%AF---rnn">背景 - RNN</a><ul>
+<li><a href="#1-rnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. RNN 如何工作</a></li>
+<li><a href="#2-rnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">2. RNN 的主要问题</a></li>
+</ul>
+</li>
+<li><a href="#%E8%83%8C%E6%99%AF---cnn">背景 - CNN</a><ul>
+<li><a href="#1-cnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. CNN 如何工作</a></li>
+<li><a href="#2-cnn-%E5%A6%82%E4%BD%95%E6%8F%90%E5%8F%96%E7%89%B9%E5%BE%81">2. CNN 如何提取特征</a></li>
+<li><a href="#3-%E5%A4%9A%E5%B1%82-cnn-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E">3. 多层 CNN 与感受野</a></li>
+<li><a href="#4-cnn-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">4. CNN 为什么可以并行计算</a></li>
+<li><a href="#5-cnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">5. CNN 的主要问题</a></li>
+<li><a href="#6-rnn-%E4%B8%8E-cnn-%E7%9A%84%E5%8C%BA%E5%88%AB">6. RNN 与 CNN 的区别</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/07/27/NIPS2017-AttentionIsAllyouNeed/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -238,9 +569,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-07-16 17:29:14 / 修改时间：23:01:03" itemprop="dateCreated datePublished" datetime="2026-07-16T17:29:14+08:00">2026-07-16</time>
+      <time title="创建时间：2026-07-16 17:29:14" itemprop="dateCreated datePublished" datetime="2026-07-16T17:29:14+08:00">2026-07-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-27 18:54:23" itemprop="dateModified" datetime="2026-07-27T18:54:23+08:00">2026-07-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -262,210 +599,80 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="大模型推理基础"><a href="#大模型推理基础" class="headerlink" title="大模型推理基础"></a>大模型推理基础</h1><h2 id="一、大模型推理"><a href="#一、大模型推理" class="headerlink" title="一、大模型推理"></a>一、大模型推理</h2><p>大模型通常经历训练和推理两个阶段。</p>
-<ul>
-<li><strong>训练（Training）</strong>：模型读取大量样本，通过前向传播得到预测结果，计算损失，再通过反向传播和优化器更新参数。</li>
-<li><strong>推理（Inference）</strong>：模型参数通常保持不变，系统加载训练完成的权重，对新的输入执行前向计算并生成结果。</li>
+          <ul>
+<li><a href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80">大模型推理基础</a><ul>
+<li><a href="#%E4%B8%80%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E7%9B%AE%E6%A0%87%E4%B8%8E%E8%BE%B9%E7%95%8C">一、大模型推理：目标与边界</a><ul>
+<li><a href="#11-%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%8E%A8%E7%90%86%E7%9A%84%E5%88%86%E5%B7%A5">1.1 训练与推理的分工</a></li>
+<li><a href="#12-inference-%E4%B8%8E-serving">1.2 inference 与 serving</a></li>
+<li><a href="#13-%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%8E%A8%E7%90%86%E7%9A%84%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%B7%AE%E5%BC%82">1.3 训练与推理的系统性差异</a></li>
 </ul>
-<p>可以把训练理解为“形成模型能力”，把推理理解为“在真实请求中使用这种能力”。ChatGPT、智能客服、代码助手、RAG 问答和 Agent 系统对外提供服务时，主要执行的都是推理。</p>
-<p>不过，在工程语境中还需要区分 <strong>inference</strong> 和 <strong>serving</strong>：</p>
-<ul>
-<li>inference 更强调模型完成一次前向计算或生成过程；</li>
-<li>serving 则包括模型加载、请求接入、排队、批处理、调度、并行执行、KV Cache 管理、流式传输、监控和故障恢复等完整服务链路。</li>
+</li>
+<li><a href="#%E4%BA%8C%E4%B8%80%E6%AC%A1%E6%8E%A8%E7%90%86%E8%AF%B7%E6%B1%82%E7%9A%84%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">二、一次推理请求的完整生命周期</a><ul>
+<li><a href="#21-tokenization%E6%96%87%E6%9C%AC%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%85%A5">2.1 Tokenization：文本如何成为模型输入</a></li>
+<li><a href="#22-embedding%E4%BB%8E-token-id-%E5%88%B0%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81">2.2 Embedding：从 Token ID 到隐藏状态</a></li>
+<li><a href="#23-%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E5%A6%82%E4%BD%95%E8%BF%9B%E5%85%A5%E6%A8%A1%E5%9E%8B">2.3 位置信息如何进入模型</a></li>
+<li><a href="#24-transformer-%E5%8D%95%E5%B1%82%E5%9C%A8%E8%AE%A1%E7%AE%97%E4%BB%80%E4%B9%88">2.4 Transformer 单层在计算什么</a></li>
+<li><a href="#25-prefill%E5%B9%B6%E8%A1%8C%E7%90%86%E8%A7%A3%E5%AE%8C%E6%95%B4%E4%B8%8A%E4%B8%8B%E6%96%87">2.5 Prefill：并行理解完整上下文</a></li>
+<li><a href="#26-decode%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E8%83%BD%E9%80%90-token-%E7%94%9F%E6%88%90">2.6 Decode：为什么只能逐 Token 生成</a></li>
+<li><a href="#27-%E9%87%87%E6%A0%B7%E4%BB%8E-logits-%E5%88%B0%E4%B8%8B%E4%B8%80%E4%B8%AA-token">2.7 采样：从 logits 到下一个 Token</a></li>
+<li><a href="#28-%E5%81%9C%E6%AD%A2%E6%9D%A1%E4%BB%B6detokenization-%E4%B8%8E%E6%B5%81%E5%BC%8F%E8%BF%94%E5%9B%9E">2.8 停止条件、Detokenization 与流式返回</a></li>
 </ul>
-<p>因此，一个模型“理论推理很快”，并不代表它在生产服务中的端到端延迟一定很低。客户端网络、服务排队、批处理策略和跨设备通信都可能进入关键路径。</p>
-<p>虽然推理不需要保存梯度和优化器状态，也不执行反向传播，但在线服务面对的是另一组挑战：大量用户同时访问、输入和输出长度动态变化、持续增长的 KV Cache、严格的首 Token 延迟，以及吞吐量与单用户延迟之间的权衡。推理并不一定比训练简单，只是优化目标不同。</p>
-<table>
-<thead>
-<tr>
-<th>对比维度</th>
-<th>模型训练</th>
-<th>模型推理</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>核心目标</td>
-<td>提高模型精度和能力</td>
-<td>降低延迟、提高吞吐量和性价比</td>
-</tr>
-<tr>
-<td>参数状态</td>
-<td>持续更新</td>
-<td>通常只读</td>
-</tr>
-<tr>
-<td>主要计算</td>
-<td>前向传播、反向传播、优化器更新</td>
-<td>Prefill 与自回归 Decode</td>
-</tr>
-<tr>
-<td>额外状态</td>
-<td>激活值、梯度、优化器状态</td>
-<td>KV Cache、请求状态、运行时缓冲区</td>
-</tr>
-<tr>
-<td>常见并行方式</td>
-<td>数据、张量、流水线、专家并行</td>
-<td>张量、流水线、专家并行和请求批处理</td>
-</tr>
-<tr>
-<td>主要资源压力</td>
-<td>计算量和训练状态容量</td>
-<td>权重读取、KV Cache、内存带宽和通信</td>
-</tr>
-</tbody></table>
-<h2 id="二、从输入文本到输出-Token：一次推理请求的完整过程"><a href="#二、从输入文本到输出-Token：一次推理请求的完整过程" class="headerlink" title="二、从输入文本到输出 Token：一次推理请求的完整过程"></a>二、从输入文本到输出 Token：一次推理请求的完整过程</h2><p>一个典型的自回归 LLM 请求可以划分为请求接入、Tokenization、Prefill、Decode、Detokenization 和流式返回等阶段。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    A[&quot;请求接入与排队&quot;] --&gt; B[&quot;Tokenization&quot;]</span><br><span class="line">    B --&gt; C[&quot;Prefill&quot;]</span><br><span class="line">    C --&gt; D[&quot;首 Token&quot;]</span><br><span class="line">    D --&gt; E[&quot;Iterative Decode&quot;]</span><br><span class="line">    E --&gt; F[&quot;Detokenization 与流式返回&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>其中，Prefill 和 Decode 都运行同一个 Transformer 模型，但二者处理的张量形状、并行度、访存特征和主要性能瓶颈明显不同。这一区别是理解 LLM 推理系统的关键。</p>
-<h3 id="1-Tokenization：文本如何成为模型输入"><a href="#1-Tokenization：文本如何成为模型输入" class="headerlink" title="1. Tokenization：文本如何成为模型输入"></a>1. Tokenization：文本如何成为模型输入</h3><p>神经网络的核心数值运算主要是矩阵乘法，例如：</p>
-<p>[<br>\mathbf{Y}&#x3D;\mathbf{X}\mathbf{W}<br>]</p>
-<p>此外还包括向量加法、归一化、激活函数和 Softmax 等操作。模型的计算图不能直接处理“我喜欢机器学习”这样的字符串及其语义，因此需要先通过 Tokenizer 将文本编码为整数形式的 Token ID。</p>
-<p>现代 LLM 常使用 BPE、WordPiece、Unigram、SentencePiece 或字节级编码及其变体。它们可能把文本拆分为词、子词、字符、标点或字节片段。例如，输入：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我喜欢机器学习。</span><br></pre></td></tr></table></figure>
-
-<p>在不同 Tokenizer 下，可能得到类似下面的结果：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;我&quot;, &quot;喜欢&quot;, &quot;机器&quot;, &quot;学习&quot;, &quot;。&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>也可能得到：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;我&quot;, &quot;喜&quot;, &quot;欢&quot;, &quot;机器学习&quot;, &quot;。&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>这只是用于说明的示例，真实切分结果由模型的词表、训练语料和分词算法共同决定。<strong>Token 是模型处理文本的基本离散单位，它不一定等于一个完整的词，也不一定等于一个字符。</strong></p>
-<p>设输入文本经过分词后得到：</p>
-<p>[<br>\mathbf{x}&#x3D;[x_1,x_2,\ldots,x_S]<br>]</p>
-<p>其中 $S$ 是输入序列长度。每个 $x_i$ 是词表中的整数编号。编号本身只用于索引，并不存在“编号越大、语义越强”这样的关系。</p>
-<h4 id="从-Token-ID-到词向量"><a href="#从-Token-ID-到词向量" class="headerlink" title="从 Token ID 到词向量"></a>从 Token ID 到词向量</h4><p>模型内部维护一张可训练的嵌入表：</p>
-<p>[<br>\mathbf{E}\in\mathbb{R}^{|V|\times d_{model}}<br>]</p>
-<p>其中 $|V|$ 是词表大小，$d_{model}$ 是隐藏维度。对于 Token ID $x_i$，嵌入层本质上是从 $\mathbf{E}$ 中取出第 $x_i$ 行：</p>
-<p>[<br>\mathbf{e}_i&#x3D;\mathbf{E}[x_i]<br>]</p>
-<p>例如，文本“我 喜欢 猫”被编码为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Token ID = [101, 205, 309]</span><br></pre></td></tr></table></figure>
-
-<p>假设 $d_{model}&#x3D;4$，嵌入查询可能得到：</p>
-<p>[<br>101\rightarrow[0.2,-0.1,0.7,0.3]<br>]</p>
-<p>[<br>205\rightarrow[0.8,0.4,-0.2,0.1]<br>]</p>
-<p>[<br>309\rightarrow[-0.3,0.9,0.5,0.6]<br>]</p>
-<p>这些数值同样只是示意。将三个 Token 的向量按文本顺序排列，可以得到单条序列的初始表示：</p>
-<p>[<br>\mathbf{X}&#x3D;<br>\begin{bmatrix}<br>0.2 &amp; -0.1 &amp; 0.7 &amp; 0.3\<br>0.8 &amp; 0.4 &amp; -0.2 &amp; 0.1\<br>-0.3 &amp; 0.9 &amp; 0.5 &amp; 0.6<br>\end{bmatrix}<br>\in\mathbb{R}^{3\times4}<br>]</p>
-<p>这里：</p>
-<ul>
-<li>每一行对应一个 Token；</li>
-<li>每一列对应一个隐藏特征维度；</li>
-<li>$S&#x3D;3$，表示序列包含 3 个 Token；</li>
-<li>$d_{model}&#x3D;4$，表示每个 Token 用 4 个数表示。</li>
+</li>
+<li><a href="#%E4%B8%89kv-cache%E6%8E%A8%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%A0%B8%E5%BF%83%E7%8A%B6%E6%80%81">三、KV Cache：推理系统真正的核心状态</a><ul>
+<li><a href="#31-%E6%B2%A1%E6%9C%89-kv-cache-%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88">3.1 没有 KV Cache 会发生什么</a></li>
+<li><a href="#32-%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8%E5%85%AC%E5%BC%8F%E4%B8%8E%E6%95%B0%E9%87%8F%E7%BA%A7">3.2 显存占用：公式与数量级</a></li>
+<li><a href="#33-mhamqagqa-%E4%B8%8E-mla">3.3 MHA、MQA、GQA 与 MLA</a></li>
+<li><a href="#34-%E5%88%86%E9%A1%B5%E7%AE%A1%E7%90%86%E4%BB%8E%E6%98%BE%E5%AD%98%E7%A2%8E%E7%89%87%E5%88%B0-pagedattention">3.4 分页管理：从显存碎片到 PagedAttention</a></li>
+<li><a href="#35-%E5%89%8D%E7%BC%80%E5%A4%8D%E7%94%A8prefix-caching">3.5 前缀复用：Prefix Caching</a></li>
+<li><a href="#36-%E9%87%8F%E5%8C%96%E5%8D%B8%E8%BD%BD%E4%B8%8E%E7%A8%80%E7%96%8F%E5%8C%96">3.6 量化、卸载与稀疏化</a></li>
 </ul>
-<p>因此，单条文本的隐藏状态形状为：</p>
-<p>[<br>\mathbf{X}\in\mathbb{R}^{S\times d_{model}}<br>]</p>
-<p>实际服务通常一次处理多条请求。加入 batch 维度后，隐藏状态矩阵写为：</p>
-<p>[<br>\mathbf{X}\in\mathbb{R}^{B\times S\times d_{model}}<br>]</p>
-<p>例如，一次处理 $B&#x3D;2$ 条文本，每条文本经过 Padding 或批处理调度后具有 $S&#x3D;3$ 个 Token，每个 Token 的隐藏维度为 $d_{model}&#x3D;4$，那么整体张量形状就是：</p>
-<p>[<br>\mathbf{X}\in\mathbb{R}^{2\times3\times4}<br>]</p>
-<p>“隐藏状态”中的“隐藏”不是指数据被加密，而是指它属于模型内部的中间表示，人通常无法给每个维度赋予稳定、独立的自然语言含义。</p>
-<h4 id="位置如何进入模型？"><a href="#位置如何进入模型？" class="headerlink" title="位置如何进入模型？"></a>位置如何进入模型？</h4><p>仅有词嵌入还不足以区分 Token 的先后顺序。不同架构会采用不同的位置编码方式：</p>
-<ul>
-<li>早期 Transformer 常把绝对位置嵌入直接加到 Token Embedding 上；</li>
-<li>Llama、Qwen 等许多现代 Decoder-only LLM 使用 RoPE，在注意力计算中对 Q 和 K 注入相对位置信息；</li>
-<li>还有模型使用 ALiBi 或其他位置偏置方法。</li>
+</li>
+<li><a href="#%E5%9B%9B%E6%80%A7%E8%83%BD%E8%A7%86%E8%A7%92%E6%8C%87%E6%A0%87roofline-%E4%B8%8E%E7%93%B6%E9%A2%88">四、性能视角：指标、Roofline 与瓶颈</a><ul>
+<li><a href="#41-%E5%85%88%E6%8A%8A%E6%8C%87%E6%A0%87%E5%AE%9A%E4%B9%89%E6%B8%85%E6%A5%9A">4.1 先把指标定义清楚</a></li>
+<li><a href="#42-%E7%AE%97%E6%9C%AF%E5%BC%BA%E5%BA%A6%E4%B8%8E-roofline">4.2 算术强度与 Roofline</a></li>
+<li><a href="#43-%E4%B8%BA%E4%BB%80%E4%B9%88-decode-%E5%8F%97%E9%99%90%E4%BA%8E%E8%AE%BF%E5%AD%98%E4%B8%80%E6%AC%A1%E6%95%B0%E9%87%8F%E7%BA%A7%E4%BC%B0%E7%AE%97">4.3 为什么 Decode 受限于访存：一次数量级估算</a></li>
+<li><a href="#44-batch-size%E5%90%9E%E5%90%90%E4%B8%8E%E5%BB%B6%E8%BF%9F%E7%9A%84%E6%9D%83%E8%A1%A1">4.4 Batch Size：吞吐与延迟的权衡</a></li>
+<li><a href="#45-%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BC%9A%E8%AE%A9%E7%93%B6%E9%A2%88%E8%BF%81%E7%A7%BB">4.5 长上下文会让瓶颈迁移</a></li>
 </ul>
-<p>因此，更一般地说，最初的 $\mathbf{X}^{(0)}$ 包含 Token 的语义表示，而位置信息会根据具体架构在嵌入阶段或注意力阶段被注入。隐藏状态经过每一层 Transformer 后不断更新：</p>
-<p>[<br>\mathbf{X}^{(0)}<br>\rightarrow\mathbf{X}^{(1)}<br>\rightarrow\mathbf{X}^{(2)}<br>\rightarrow\cdots<br>\rightarrow\mathbf{X}^{(L)}<br>]</p>
-<p>随着层数加深，每个 Token 的表示逐渐融入当前因果上下文中的语法、语义和任务信息。</p>
-<p>同一段自然语言在不同 Tokenizer 下可能产生不同数量的 Token。因此，模型上下文上限、Prefill 计算量、KV Cache 容量、推理费用都应以 Token 数而不是字符数衡量。</p>
-<h3 id="2-Transformer-单层在计算什么？"><a href="#2-Transformer-单层在计算什么？" class="headerlink" title="2. Transformer 单层在计算什么？"></a>2. Transformer 单层在计算什么？</h3><p>为了理解 Prefill、Decode 和 KV Cache，需要先观察一个简化的 Transformer Decoder 层。</p>
-<h4 id="2-1-从隐藏状态生成-Q、K-和-V"><a href="#2-1-从隐藏状态生成-Q、K-和-V" class="headerlink" title="2.1 从隐藏状态生成 Q、K 和 V"></a>2.1 从隐藏状态生成 Q、K 和 V</h4><p>自注意力机制需要解决的问题是：对于当前位置，前文中哪些位置的信息更加重要？为此，输入隐藏状态会经过三组不同的线性投影，得到 Query、Key 和 Value：</p>
-<p>[<br>\mathbf{Q}&#x3D;\mathbf{X}\mathbf{W}_Q,\qquad<br>\mathbf{K}&#x3D;\mathbf{X}\mathbf{W}_K,\qquad<br>\mathbf{V}&#x3D;\mathbf{X}\mathbf{W}_V<br>]</p>
-<p>可以把三者直观理解为：</p>
-<ul>
-<li><strong>Query（Q）</strong>：当前位置正在查找什么信息；</li>
-<li><strong>Key（K）</strong>：当前位置能够与什么查询相匹配；</li>
-<li><strong>Value（V）</strong>：如果当前位置被关注，它实际提供什么内容。</li>
+</li>
+<li><a href="#%E4%BA%94%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E7%9A%84%E5%85%B3%E9%94%AE%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF">五、推理引擎的关键优化技术</a><ul>
+<li><a href="#51-%E8%B0%83%E5%BA%A6%E4%BB%8E-static-batching-%E5%88%B0-continuous-batching">5.1 调度：从 Static Batching 到 Continuous Batching</a></li>
+<li><a href="#52-chunked-prefill-%E4%B8%8E-pd-%E5%88%86%E7%A6%BB">5.2 Chunked Prefill 与 PD 分离</a></li>
+<li><a href="#53-%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%AE%97%E5%AD%90flashattention-%E4%B8%8E-pagedattention">5.3 注意力算子：FlashAttention 与 PagedAttention</a></li>
+<li><a href="#54-%E9%87%8F%E5%8C%96">5.4 量化</a></li>
+<li><a href="#55-%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81">5.5 投机解码</a></li>
+<li><a href="#56-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B1%82%E9%9D%A2%E7%9A%84%E5%B8%B8%E8%A7%84%E4%BC%98%E5%8C%96">5.6 运行时层面的常规优化</a></li>
 </ul>
-<p>这种解释有助于理解注意力，但 Q、K、V 本质上都是模型训练得到的连续向量，并不是人工定义的数据库查询字段。</p>
-<h4 id="2-2-缩放点积注意力"><a href="#2-2-缩放点积注意力" class="headerlink" title="2.2 缩放点积注意力"></a>2.2 缩放点积注意力</h4><p>对于第 $h$ 个注意力头，缩放点积注意力为：</p>
-<p>[<br>\operatorname{Attention}(\mathbf{Q}_h,\mathbf{K}_h,\mathbf{V}_h)<br>&#x3D;\operatorname{Softmax}<br>\left(<br>\frac{\mathbf{Q}_h\mathbf{K}_h^{\mathsf T}}{\sqrt{d_h}}+\mathbf{M}<br>\right)\mathbf{V}_h<br>]</p>
-<p>其中 $d_h$ 是单个注意力头的维度，$\mathbf{M}$ 是因果掩码。</p>
-<p>矩阵 $\mathbf{Q}\mathbf{K}^{\mathsf T}$ 计算每个 Query 与每个 Key 的向量点积。假设序列有 4 个 Token，单头注意力分数矩阵的形状就是 $4\times4$：</p>
-<p>[<br>\mathbf{Q}\mathbf{K}^{\mathsf T}&#x3D;<br>\begin{bmatrix}<br>\mathbf{q}_1\cdot\mathbf{k}_1 &amp; \mathbf{q}_1\cdot\mathbf{k}_2 &amp; \mathbf{q}_1\cdot\mathbf{k}_3 &amp; \mathbf{q}_1\cdot\mathbf{k}_4\<br>\mathbf{q}_2\cdot\mathbf{k}_1 &amp; \mathbf{q}_2\cdot\mathbf{k}_2 &amp; \mathbf{q}_2\cdot\mathbf{k}_3 &amp; \mathbf{q}_2\cdot\mathbf{k}_4\<br>\mathbf{q}_3\cdot\mathbf{k}_1 &amp; \mathbf{q}_3\cdot\mathbf{k}_2 &amp; \mathbf{q}_3\cdot\mathbf{k}_3 &amp; \mathbf{q}_3\cdot\mathbf{k}_4\<br>\mathbf{q}_4\cdot\mathbf{k}_1 &amp; \mathbf{q}_4\cdot\mathbf{k}_2 &amp; \mathbf{q}_4\cdot\mathbf{k}_3 &amp; \mathbf{q}_4\cdot\mathbf{k}_4<br>\end{bmatrix}<br>]</p>
-<p>其中：</p>
-<ul>
-<li>第 $i$ 行描述位置 $i$ 对各历史位置的关注程度；</li>
-<li>第 $j$ 列对应位置 $j$ 被其他位置查询时的匹配分数；</li>
-<li>$\mathbf{q}_i\cdot\mathbf{k}_j$ 是位置 $i$ 的 Query 和位置 $j$ 的 Key 的点积。</li>
+</li>
+<li><a href="#%E5%85%AD%E5%88%86%E5%B8%83%E5%BC%8F%E6%8E%A8%E7%90%86%E4%B8%8E%E5%B9%B6%E8%A1%8C%E7%AD%96%E7%95%A5">六、分布式推理与并行策略</a><ul>
+<li><a href="#61-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%A4%9A%E5%8D%A1">6.1 为什么需要多卡</a></li>
+<li><a href="#62-%E5%9B%9B%E7%A7%8D%E5%B9%B6%E8%A1%8C%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%85%B6%E9%80%9A%E4%BF%A1%E7%89%B9%E5%BE%81">6.2 四种并行方式及其通信特征</a></li>
+<li><a href="#63-moe-%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%8E%A8%E7%90%86%E7%89%B9%E7%82%B9">6.3 MoE 模型的推理特点</a></li>
 </ul>
-<p>如果四个 Token 是“我、喜欢、吃、苹果”，最后一行描述的就是“苹果”这个位置分别与“我、喜欢、吃、苹果”匹配到什么程度。</p>
-<h4 id="2-3-为什么需要除以-sqrt-d-h-？"><a href="#2-3-为什么需要除以-sqrt-d-h-？" class="headerlink" title="2.3 为什么需要除以 $\sqrt{d_h}$？"></a>2.3 为什么需要除以 $\sqrt{d_h}$？</h4><p>当向量维度 $d_h$ 增大时，点积的数值幅度通常也会增大。如果直接送入 Softmax，分布容易过于尖锐，造成梯度或数值不稳定。因此使用：</p>
-<p>[<br>\frac{\mathbf{Q}\mathbf{K}^{\mathsf T}}{\sqrt{d_h}}<br>]</p>
-<p>对分数进行缩放，使其保持在更稳定的范围。</p>
-<h4 id="2-4-因果掩码"><a href="#2-4-因果掩码" class="headerlink" title="2.4 因果掩码"></a>2.4 因果掩码</h4><p>自回归模型在训练和 Prefill 时虽然可以并行计算多个位置，但位置 $i$ 不能使用位置 $i+1$ 及之后的信息。对于长度为 4 的序列，加性因果掩码可以写成：</p>
-<p>[<br>\mathbf{M}&#x3D;<br>\begin{bmatrix}<br>0 &amp; -\infty &amp; -\infty &amp; -\infty\<br>0 &amp; 0       &amp; -\infty &amp; -\infty\<br>0 &amp; 0       &amp; 0       &amp; -\infty\<br>0 &amp; 0       &amp; 0       &amp; 0<br>\end{bmatrix}<br>]</p>
-<p>未来位置的分数加上 $-\infty$ 后，经 Softmax 转换为 0。于是，位置 $t$ 只能关注位置 1 到 $t$，不能提前看到未来 Token。</p>
-<h4 id="2-5-Softmax-与-Value-加权求和"><a href="#2-5-Softmax-与-Value-加权求和" class="headerlink" title="2.5 Softmax 与 Value 加权求和"></a>2.5 Softmax 与 Value 加权求和</h4><p>注意力分数可以是任意实数。Softmax 将每一行转换为非负且总和为 1 的注意力权重。假设“苹果”对应位置得到的权重为：</p>
-<p>[<br>[0.07,0.10,0.62,0.21]<br>]</p>
-<p>则该位置的注意力输出为：</p>
-<p>[<br>\mathbf{o}<em>{\text{苹果}}<br>&#x3D;0.07\mathbf{v}</em>{\text{我}}<br>+0.10\mathbf{v}<em>{\text{喜欢}}<br>+0.62\mathbf{v}</em>{\text{吃}}<br>+0.21\mathbf{v}_{\text{苹果}}<br>]</p>
-<p>因此，缩放点积注意力公式可以拆解为五步：</p>
-<ol>
-<li>用 $\mathbf{Q}\mathbf{K}^{\mathsf T}$ 计算位置之间的匹配分数；</li>
-<li>用 $\sqrt{d_h}$ 缩放数值；</li>
-<li>用因果掩码 $\mathbf{M}$ 屏蔽未来位置；</li>
-<li>用 Softmax 得到归一化注意力权重；</li>
-<li>根据权重对 $\mathbf{V}$ 进行加权求和。</li>
-</ol>
-<h4 id="2-6-多头注意力"><a href="#2-6-多头注意力" class="headerlink" title="2.6 多头注意力"></a>2.6 多头注意力</h4><p>模型不会只执行一组注意力，而是并行使用多个注意力头。不同注意力头可以在训练中形成不同的表示子空间，有些头可能对局部搭配、长距离依赖、指代、位置或格式信息更加敏感。不过，这种分工是模型训练后形成的统计现象，不应把每个头理解成具有固定、人工指定的功能。</p>
-<p>假设：</p>
-<p>[<br>d_{model}&#x3D;4096,\qquad H_q&#x3D;32<br>]</p>
-<p>在标准 MHA 且各头维度相等时：</p>
-<p>[<br>d_h&#x3D;\frac{d_{model}}{H_q}<br>&#x3D;\frac{4096}{32}&#x3D;128<br>]</p>
-<p>各个头分别完成注意力计算，然后拼接并通过输出投影：</p>
-<p>[<br>\operatorname{MHA}(\mathbf{X})<br>&#x3D;\operatorname{Concat}<br>(\mathbf{O}<em>1,\ldots,\mathbf{O}</em>{H_q})\mathbf{W}_O<br>]</p>
-<p>对于 GQA 和 MQA，Query Head 数量与 KV Head 数量并不相等，但多个 Query Head 会按组共享 K&#x2F;V；后文将在 KV Cache 部分进一步说明。</p>
-<h4 id="2-7-残差连接、归一化与-MLP"><a href="#2-7-残差连接、归一化与-MLP" class="headerlink" title="2.7 残差连接、归一化与 MLP"></a>2.7 残差连接、归一化与 MLP</h4><p>注意力产生的新信息不会直接覆盖原隐藏状态，而是通过残差连接与输入相加。许多现代 LLM 使用 Pre-Norm 结构，一个简化的 Transformer 层可以写成：</p>
-<p>[<br>\widetilde{\mathbf{X}}<br>&#x3D;\mathbf{X}<br>+\operatorname{MHA}(\operatorname{Norm}(\mathbf{X}))<br>]</p>
-<p>[<br>\mathbf{Y}<br>&#x3D;\widetilde{\mathbf{X}}<br>+\operatorname{MLP}(\operatorname{Norm}(\widetilde{\mathbf{X}}))<br>]</p>
-<p>残差连接为深层网络提供更直接的信息和梯度路径；LayerNorm 或 RMSNorm 等归一化方法则帮助控制数值尺度、稳定深层网络计算。</p>
-<p>MLP 主要对每个 Token 的隐藏向量独立进行非线性变换。以常见的 SwiGLU 为例，可以简化表示为：</p>
-<p>[<br>\operatorname{MLP}(\mathbf{x})<br>&#x3D;\left[<br>\operatorname{SiLU}(\mathbf{x}\mathbf{W}<em>{gate})<br>\odot(\mathbf{x}\mathbf{W}</em>{up})<br>\right]\mathbf{W}_{down}<br>]</p>
-<p>其中 $\odot$ 表示逐元素乘法。注意力负责在 Token 之间混合信息，MLP 则在每个 Token 内部进行特征变换；二者共同构成 Transformer 层的主要计算。</p>
-<h4 id="2-8-从最终隐藏状态到下一个-Token"><a href="#2-8-从最终隐藏状态到下一个-Token" class="headerlink" title="2.8 从最终隐藏状态到下一个 Token"></a>2.8 从最终隐藏状态到下一个 Token</h4><p>所有 Transformer 层执行结束后，最终隐藏状态经过 LM Head 投影到词表维度，得到 logits：</p>
-<p>[<br>\mathbf{z}_t&#x3D;\mathbf{h}<em>t\mathbf{W}</em>{vocab}<br>]</p>
-<p>其中 $\mathbf{z}_t\in\mathbb{R}^{|V|}$，每一个元素对应词表中一个 Token 的未归一化分数。经过 Softmax 后得到概率分布：</p>
-<p>[<br>P(x_{t+1}&#x3D;v\mid x_{\leq t})<br>&#x3D;\operatorname{Softmax}(\mathbf{z}_t)_v<br>]</p>
-<p>系统再通过 greedy decoding、temperature、top-k、top-p 或其他采样策略选择下一个 Token。被选中的 Token 会加入上下文，随后进入下一轮 Decode。</p>
-<h3 id="3-Prefill：并行理解完整输入上下文"><a href="#3-Prefill：并行理解完整输入上下文" class="headerlink" title="3. Prefill：并行理解完整输入上下文"></a>3. Prefill：并行理解完整输入上下文</h3><p>Prefill 也称 prompt processing 或 context encoding。它接收全部 $S$ 个输入 Token，并在每一层同时计算这些 Token 的 Q、K、V、Attention 和 MLP。</p>
-<p>在单层自注意力中，Prefill 的 Q、K、V 都覆盖整个序列。忽略常数项后：</p>
-<ul>
-<li>Q&#x2F;K&#x2F;V 投影和 MLP 的计算量大致随 $S$ 线性增长；</li>
-<li>注意力分数 $\mathbf{Q}\mathbf{K}^{\mathsf T}$ 的计算和中间逻辑规模随 $S^2$ 增长；</li>
-<li>每层都会生成并保存全部输入 Token 的 K 和 V，作为后续 Decode 的初始 KV Cache。</li>
+</li>
+<li><a href="#%E4%B8%83%E6%98%BE%E5%AD%98%E9%A2%84%E7%AE%97%E4%B8%8E%E5%AE%B9%E9%87%8F%E8%A7%84%E5%88%92">七、显存预算与容量规划</a><ul>
+<li><a href="#71-%E6%98%BE%E5%AD%98%E7%94%B1%E5%93%AA%E5%87%A0%E9%83%A8%E5%88%86%E6%9E%84%E6%88%90">7.1 显存由哪几部分构成</a></li>
+<li><a href="#72-%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%AE%97%E4%BE%8B">7.2 一个完整算例</a></li>
+<li><a href="#73-%E4%B8%8A%E7%BA%BF%E5%89%8D%E7%9A%84%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95">7.3 上线前的检查清单</a></li>
 </ul>
-<p>可将注意力部分的时间复杂度简化表示为：</p>
-<p>[<br>O(B\times H_q\times S^2\times d_h)<br>]</p>
-<p>其中 $H_q$ 是 Query Head 数量。严格来说，完整 Transformer 的主要线性层还包含与 $d_{model}^2$ 相关的计算，因此不能只用 $O(S^2)$ 概括整个模型成本。</p>
-<p>Prefill 的重要特点是：序列中大量 Token 可以并行处理，形成尺寸较大的矩阵乘法，通常更容易提高 Tensor Core 或矩阵计算阵列的利用率。因此，中短上下文下的 Prefill 经常表现出较强的 compute-bound 特征。</p>
-<p>但“Prefill 一定是计算受限”并不严谨。随着上下文增长，注意力矩阵的计算和数据移动迅速增加，HBM 带宽、片上缓存容量以及 Attention Kernel 的 I&#x2F;O 效率也可能成为瓶颈。FlashAttention 等技术正是通过分块和算子融合减少 HBM 读写，而不是改变注意力的数学结果。</p>
-<p>Prefill 完成后，最后一个输入位置的隐藏状态产生首个输出 Token 的 logits。因此，Prefill 性能会直接影响 TTFT。输入越长、系统排队越严重，用户等待首 Token 的时间通常越长。</p>
-<h3 id="4-Decode：为什么只能逐-Token-生成？"><a href="#4-Decode：为什么只能逐-Token-生成？" class="headerlink" title="4. Decode：为什么只能逐 Token 生成？"></a>4. Decode：为什么只能逐 Token 生成？</h3><p>自回归语言模型的联合概率可以分解为：</p>
-<p>[<br>P(x_{1:T})&#x3D;\prod_{t&#x3D;1}^{T}P(x_t\mid x_{&lt;t})<br>]</p>
-<p>第 $t+1$ 个 Token 的概率依赖包括第 $t$ 个 Token 在内的全部历史。因此，对于同一条序列，后一个输出 Token 必须等待前一个 Token 被选出，输出长度维度上存在天然的串行依赖。</p>
-<p>每个 Decode Step 的过程是：</p>
-<ol>
-<li>将上一轮选出的 Token 送入模型；</li>
-<li>在每一层只计算这个新 Token 的 Q、K 和 V；</li>
-<li>用新 Query 与 KV Cache 中全部历史 Key 计算注意力分数；</li>
-<li>对历史 Value 加权求和；</li>
-<li>把新 K、V 追加到缓存；</li>
-<li>通过 MLP、LM Head 和采样得到下一个 Token；</li>
-<li>重复执行，直至生成 EOS、命中停止条件或达到长度上限。</li>
-</ol>
-<p>假设当前上下文长度为 $S_t$，单个请求在某层 Decode 时的主要张量形状可近似写为：</p>
-<p>[<br>\mathbf{Q}_t\in\mathbb{R}^{B\times H_q\times1\times d_h}<br>]</p>
-<p>[<br>\mathbf{K}<em>{cache},\mathbf{V}</em>{cache}<br>\in\mathbb{R}^{B\times H_{kv}\times S_t\times d_h}<br>]</p>
-<p>新 Query 需要与历史 Key 做长度为 $S_t$ 的注意力计算。随着输出不断生成，$S_t&#x3D;S_{input}+S_{generated}$ 持续增大，所以较长回答后半段的单 Token 延迟可能高于前半段。</p>
-<p>与 Prefill 相比，Decode 的序列维度通常只有 1，矩阵乘法更“瘦”，单个请求提供的计算并行度有限。然而，模型每生成一个 Token，仍需要执行各层的大规模权重投影。低 batch 场景下，同一批权重的数据复用不足，硬件往往花费大量时间把权重从 HBM 或其他存储层级搬运到计算单元，因此 Decode 通常更偏向 memory-bandwidth-bound。</p>
-<p>对 batch size 约为 1 的粗略理想模型，可以写出：</p>
-<p>[<br>\text{Decode Tokens&#x2F;s}<br>\lesssim<br>\frac{\text{Effective Memory Bandwidth}}<br>{\text{Model Weight Bytes per Step}+\text{KV Traffic}}<br>]</p>
-<p>这不是精确性能公式，但能够解释为什么峰值 FLOPS 很高的设备，单用户输出速度仍可能不高。增大 batch 可以让多个请求复用同一轮权重读取，提高总吞吐量；代价是可能增加排队时间、调度开销和单请求延迟。</p>
-
+</li>
+<li><a href="#%E5%85%AB%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA%E4%B8%8E%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB">八、常见误区与延伸阅读</a><ul>
+<li><a href="#81-%E5%85%AB%E4%B8%AA%E5%AE%B9%E6%98%93%E5%87%BA%E9%94%99%E7%9A%84%E7%9B%B4%E8%A7%89">8.1 八个容易出错的直觉</a></li>
+<li><a href="#82-%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%9B%9E%E9%A1%BE">8.2 一句话回顾</a></li>
+<li><a href="#83-%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB">8.3 延伸阅读</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1213,184 +1420,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/18/SimAI/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/18/SimAI/" class="post-title-link" itemprop="url">SimAI</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2026-06-18 15:45:48 / 修改时间：18:51:47" itemprop="dateCreated datePublished" datetime="2026-06-18T15:45:48+08:00">2026-06-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%A8%A1%E6%8B%9F%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">模拟器</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>SimAI 通过集成主流训练框架与集合通信库的关键流程,实现了与真实结果平均 98.1% 的吻合度;通过无锁多线程优化保障了可扩展性与性能;并已在阿里云生产环境广泛应用、产出了实用的运营指导。</p>
-<ul>
-<li><a href="#simai">SimAI</a><ul>
-<li><a href="#1-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98%E5%8A%A8%E6%9C%BA">1. 研究背景与问题动机</a></li>
-<li><a href="#2-%E5%9B%9B%E4%B8%AA%E6%8C%91%E6%88%98">2. 四个挑战</a></li>
-<li><a href="#3-%E6%A8%A1%E6%8B%9F%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87">3. 模拟的应用场景与设计目标</a></li>
-<li><a href="#4-simai">4. SimAI</a><ul>
-<li><a href="#41-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E7%94%9F%E6%88%90%E5%99%A8">4.1 工作负载生成器</a></li>
-<li><a href="#42-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F">4.2 计算模拟</a></li>
-<li><a href="#43-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F">4.3 通信模拟</a></li>
-<li><a href="#44-%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%A8%A1%E6%8B%9F%E5%8A%A0%E9%80%9F">4.4 大规模模拟加速</a></li>
-</ul>
-</li>
-<li><a href="#5-%E8%AF%84%E4%BC%B0">5. 评估</a><ul>
-<li><a href="#51-%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.1 通信模拟的精度</a></li>
-<li><a href="#52-%E8%AE%A1%E7%AE%97%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.2 计算模拟的精度</a></li>
-<li><a href="#53-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%A8%A1%E6%8B%9F%E7%9A%84%E7%B2%BE%E5%BA%A6">5.3 端到端模拟的精度</a></li>
-</ul>
-</li>
-<li><a href="#6-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E6%94%B6%E7%9B%8A">6. 生产环境中的收益</a></li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/06/18/SimAI/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/18/ISCA2025-CrammingaDataCenter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/18/ISCA2025-CrammingaDataCenter/" class="post-title-link" itemprop="url">ISCA2025-CrammingaDataCenter</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-06-18 11:03:39" itemprop="dateCreated datePublished" datetime="2026-06-18T11:03:39+08:00">2026-06-18</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
