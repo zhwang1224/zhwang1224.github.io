@@ -32,7 +32,10 @@
   }
 
   function fetchVisitors() {
-    return request('/visitors', { headers: { Accept: 'application/json' } });
+    return request('/visitors', {
+      headers: { Accept: 'application/json' },
+      cache: 'no-store'
+    });
   }
 
   function record() {
@@ -45,7 +48,11 @@
 
     promise = request('/visit', {
       method: 'POST',
-      headers: { Accept: 'application/json' }
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: '{}'
     }).then(function (payload) {
       markRecordedToday();
       return payload;
@@ -63,6 +70,6 @@
   };
 
   record().catch(function (error) {
-    console.warn('Failed to record visitor', error);
+    console.warn('访问统计暂时不可用', error);
   });
 })();
