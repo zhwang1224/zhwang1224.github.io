@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Transformer 前向计算流程详解摘要　本节以单条源—目标句对为例，逐步骤刻画 Transformer 的完整前向计算过程。对每一步骤，给出其形式化定义、张量形状变化及其在整体架构中承担的功能。除特别说明外，全部超参数取自 Vaswani 等人 (2017) 所述的 base 配置。本节的组织顺序遵循数据流方向：输入表示的构建（步骤 1–5）、编码器堆栈（步骤 6–15）、解码器堆栈（步骤">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer计算流程">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="Transformer 前向计算流程详解摘要　本节以单条源—目标句对为例，逐步骤刻画 Transformer 的完整前向计算过程。对每一步骤，给出其形式化定义、张量形状变化及其在整体架构中承担的功能。除特别说明外，全部超参数取自 Vaswani 等人 (2017) 所述的 base 配置。本节的组织顺序遵循数据流方向：输入表示的构建（步骤 1–5）、编码器堆栈（步骤 6–15）、解码器堆栈（步骤">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-28T04:52:22.000Z">
+<meta property="article:modified_time" content="2026-07-28T05:14:59.720Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/","path":"2026/07/28/Transformer计算流程/","title":"Transformer计算流程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Transformer计算流程 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script src="/js/visitor-map.js"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-clustrmap"><a href="/stat/" rel="section"><i class="fa fa-map fa-fw"></i>clustrmap</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>photography</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Transformer-%E5%89%8D%E5%90%91%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">Transformer 前向计算流程详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E8%AE%B0%E5%8F%B7%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E7%BA%A6%E5%AE%9A"><span class="nav-number">1.1.</span> <span class="nav-text">0　记号与超参数约定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%BE%93%E5%85%A5%E8%A1%A8%E7%A4%BA%E7%9A%84%E6%9E%84%E5%BB%BA%EF%BC%88%E6%AD%A5%E9%AA%A4-1%E2%80%935%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">1　输入表示的构建（步骤 1–5）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1-%E5%AD%90%E8%AF%8D%E5%88%87%E5%88%86%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%98%A0%E5%B0%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">步骤 1　子词切分与索引映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2-%E8%AF%8D%E5%B5%8C%E5%85%A5"><span class="nav-number">1.2.2.</span> <span class="nav-text">步骤 2　词嵌入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3-%E5%B5%8C%E5%85%A5%E5%B0%BA%E5%BA%A6%E6%A0%A1%E6%AD%A3"><span class="nav-number">1.2.3.</span> <span class="nav-text">步骤 3　嵌入尺度校正</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E7%9A%84%E5%8F%A0%E5%8A%A0%EF%BC%88%E5%8A%A0%E5%85%A5%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%EF%BC%89"><span class="nav-number">1.2.4.</span> <span class="nav-text">步骤 4　位置编码的叠加（加入位置信息）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#begin-bmatrix-sin-pos-k-omega-i-cos-pos-k-omega-i-end-bmatrix"><span class="nav-number">2.</span> <span class="nav-text">$$\begin{bmatrix}\sin((pos+k)\omega_i)\ \cos((pos+k)\omega_i)\end{bmatrix}</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-5-%E8%BE%93%E5%85%A5-dropout"><span class="nav-number">2.0.1.</span> <span class="nav-text">步骤 5　输入 dropout</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BC%96%E7%A0%81%E5%99%A8%E5%B1%82%EF%BC%88%E6%AD%A5%E9%AA%A4-6%E2%80%9315%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2　编码器层（步骤 6–15）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%A4%9A%E5%A4%B4%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%AD%90%E5%B1%82"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1　多头自注意力子层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-6-%E6%9F%A5%E8%AF%A2%E3%80%81%E9%94%AE%E3%80%81%E5%80%BC%E7%9A%84%E7%BA%BF%E6%80%A7%E6%8A%95%E5%BD%B1"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">步骤 6　查询、键、值的线性投影</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-7-%E5%A4%9A%E5%A4%B4%E6%8B%86%E5%88%86"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">步骤 7　多头拆分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-8-%E5%85%BC%E5%AE%B9%E6%80%A7%E6%89%93%E5%88%86"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">步骤 8　兼容性打分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-9-%E5%B0%BA%E5%BA%A6%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">步骤 9　尺度归一化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-10-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9D%83%E9%87%8D%E7%9A%84%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">2.1.1.5.</span> <span class="nav-text">步骤 10　注意力权重的归一化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-11-%E5%80%BC%E5%90%91%E9%87%8F%E7%9A%84%E5%8A%A0%E6%9D%83%E8%81%9A%E5%90%88"><span class="nav-number">2.1.1.6.</span> <span class="nav-text">步骤 11　值向量的加权聚合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-12-%E5%A4%9A%E5%A4%B4%E5%90%88%E5%B9%B6%E4%B8%8E%E8%BE%93%E5%87%BA%E6%8A%95%E5%BD%B1"><span class="nav-number">2.1.1.7.</span> <span class="nav-text">步骤 12　多头合并与输出投影</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-13-%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E4%B8%8E%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">2.1.1.8.</span> <span class="nav-text">步骤 13　残差连接与层归一化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%80%90%E4%BD%8D%E7%BD%AE%E5%89%8D%E9%A6%88%E5%AD%90%E5%B1%82"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.2　逐位置前馈子层</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-14-%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">步骤 14　前馈网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-15-%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E4%B8%8E%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">步骤 15　第二次残差连接与层归一化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%B1%82%E7%9A%84%E5%A0%86%E5%8F%A0"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.3　层的堆叠</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%A7%A3%E7%A0%81%E5%99%A8%E5%B1%82%EF%BC%88%E6%AD%A5%E9%AA%A4-16%E2%80%9319%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">3　解码器层（步骤 16–19）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-16-%E7%9B%AE%E6%A0%87%E5%BA%8F%E5%88%97%E7%9A%84%E5%8F%B3%E7%A7%BB%E3%80%81%E5%B5%8C%E5%85%A5%E4%B8%8E%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.1.</span> <span class="nav-text">步骤 16　目标序列的右移、嵌入与位置编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-17-%E6%8E%A9%E7%A0%81%E5%A4%9A%E5%A4%B4%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%AD%90%E5%B1%82"><span class="nav-number">2.2.2.</span> <span class="nav-text">步骤 17　掩码多头自注意力子层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-18-%E7%BC%96%E7%A0%81%E5%99%A8%E2%80%94%E8%A7%A3%E7%A0%81%E5%99%A8%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%AD%90%E5%B1%82"><span class="nav-number">2.2.3.</span> <span class="nav-text">步骤 18　编码器—解码器注意力子层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-19-%E5%89%8D%E9%A6%88%E5%AD%90%E5%B1%82"><span class="nav-number">2.2.4.</span> <span class="nav-text">步骤 19　前馈子层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%BE%93%E5%87%BA%E5%B1%82%E4%B8%8E%E8%A7%A3%E7%A0%81%EF%BC%88%E6%AD%A5%E9%AA%A4-20%E2%80%9323%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">4　输出层与解码（步骤 20–23）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-20-%E4%BD%8D%E7%BD%AE%E9%80%89%E5%8F%96"><span class="nav-number">2.3.1.</span> <span class="nav-text">步骤 20　位置选取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-21-%E7%BA%BF%E6%80%A7%E6%8A%95%E5%BD%B1%E8%87%B3%E8%AF%8D%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="nav-number">2.3.2.</span> <span class="nav-text">步骤 21　线性投影至词表空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-22-Softmax-%E4%B8%8E%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="nav-number">2.3.3.</span> <span class="nav-text">步骤 22　Softmax 与训练目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-23-%E8%87%AA%E5%9B%9E%E5%BD%92%E8%A7%A3%E7%A0%81"><span class="nav-number">2.3.4.</span> <span class="nav-text">步骤 23　自回归解码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%BC%A0%E9%87%8F%E5%BD%A2%E7%8A%B6%E6%B1%87%E6%80%BB"><span class="nav-number">2.4.</span> <span class="nav-text">5　张量形状汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%8E%E5%B9%B6%E8%A1%8C%E6%80%A7"><span class="nav-number">2.5.</span> <span class="nav-text">6　复杂度与并行性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%B0%8F%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">7　小结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">97</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Transformer计算流程 | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Transformer计算流程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-07-28 12:52:22 / 修改时间：13:14:59" itemprop="dateCreated datePublished" datetime="2026-07-28T12:52:22+08:00">2026-07-28</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Transformer-前向计算流程详解"><a href="#Transformer-前向计算流程详解" class="headerlink" title="Transformer 前向计算流程详解"></a>Transformer 前向计算流程详解</h1><p><strong>摘要</strong>　本节以单条源—目标句对为例，逐步骤刻画 Transformer 的完整前向计算过程。对每一步骤，给出其形式化定义、张量形状变化及其在整体架构中承担的功能。除特别说明外，全部超参数取自 Vaswani 等人 (2017) 所述的 base 配置。本节的组织顺序遵循数据流方向：输入表示的构建（步骤 1–5）、编码器堆栈（步骤 6–15）、解码器堆栈（步骤 16–19）、输出层与解码（步骤 20–23）。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="0-记号与超参数约定"><a href="#0-记号与超参数约定" class="headerlink" title="0　记号与超参数约定"></a>0　记号与超参数约定</h2><p>为便于后续引用，先约定记号如下。所有张量形状均省略批次维度。</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+<th>base 配置取值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$n$</td>
+<td>源序列长度（子词单元数）</td>
+<td>示例中取 4</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>目标序列长度</td>
+<td>示例中取 4</td>
+</tr>
+<tr>
+<td>$d_{\text{model}}$</td>
+<td>模型隐藏维度</td>
+<td>512</td>
+</tr>
+<tr>
+<td>$h$</td>
+<td>注意力头数</td>
+<td>8</td>
+</tr>
+<tr>
+<td>$d_k,\ d_v$</td>
+<td>每个注意力头的键&#x2F;值维度</td>
+<td>64（$&#x3D;d_{\text{model}}&#x2F;h$）</td>
+</tr>
+<tr>
+<td>$d_{ff}$</td>
+<td>前馈子层内层维度</td>
+<td>2048</td>
+</tr>
+<tr>
+<td>$N$</td>
+<td>编码器与解码器的层数</td>
+<td>6</td>
+</tr>
+<tr>
+<td>$\lvert V \rvert$</td>
+<td>共享源—目标词表规模</td>
+<td>约 37000（EN-DE）</td>
+</tr>
+<tr>
+<td>$P_{drop}$</td>
+<td>dropout 比率</td>
+<td>0.1</td>
+</tr>
+</tbody></table>
+<p>记源序列的符号表示为 $(x_1,\dots,x_n)$，编码器输出的连续表示为 $Z&#x3D;(z_1,\dots,z_n)$，目标序列为 $(y_1,\dots,y_m)$。全文以 <code>the cat sat down</code> → <code>猫 坐 下 了</code> 作为贯穿示例。</p>
+<hr>
+<h2 id="1-输入表示的构建（步骤-1–5）"><a href="#1-输入表示的构建（步骤-1–5）" class="headerlink" title="1　输入表示的构建（步骤 1–5）"></a>1　输入表示的构建（步骤 1–5）</h2><p>本阶段的任务是将离散符号序列转换为可微的连续张量，并注入位置信息。</p>
+<h3 id="步骤-1-子词切分与索引映射"><a href="#步骤-1-子词切分与索引映射" class="headerlink" title="步骤 1　子词切分与索引映射"></a>步骤 1　子词切分与索引映射</h3><p><strong>操作</strong>　对源句施加字节对编码（BPE），得到子词单元序列，并按共享词表映射为整数索引，形状由文本变为 $(n,)$。</p>
+<p><strong>功能</strong>　子词切分在开放词表与序列长度之间取得折中：相较于词级切分，它消除了未登录词问题；相较于字符级切分，它避免了序列长度的过度膨胀。需要指出的是，此阶段的输出仍为离散索引，不承载任何语义信息，亦不参与梯度计算。</p>
+<h3 id="步骤-2-词嵌入"><a href="#步骤-2-词嵌入" class="headerlink" title="步骤 2　词嵌入"></a>步骤 2　词嵌入</h3><p><strong>操作</strong>　以嵌入矩阵 $E\in\mathbb{R}^{\lvert V\rvert \times d_{\text{model}}}$ 按索引取行，得到 $X_{\text{emb}}\in\mathbb{R}^{n\times d_{\text{model}}}$。</p>
+<p>$$(n,) \longrightarrow (n,\ 512)$$</p>
+<p><strong>功能</strong>　该步骤构成模型中第一个可微环节，梯度回传至此为止。此时得到的表示是<strong>上下文无关的</strong>：同一子词在任意句子中获得的向量完全相同，词义歧义尚未消解。</p>
+<p>需要说明的是，原文将 $E$ 同时用于源端嵌入、目标端嵌入与输出层的前置线性变换（详见步骤 21），即三处共享同一参数矩阵。</p>
+<h3 id="步骤-3-嵌入尺度校正"><a href="#步骤-3-嵌入尺度校正" class="headerlink" title="步骤 3　嵌入尺度校正"></a>步骤 3　嵌入尺度校正</h3><p><strong>操作</strong>　将 $X_{\text{emb}}$ 整体乘以 $\sqrt{d_{\text{model}}}$，本例中约为 22.6。</p>
+<p><strong>功能</strong>　该操作的目的在于量纲对齐。嵌入矩阵在常用初始化方案下各分量的标准差约为 $10^{-2}$ 量级，而步骤 4 中待叠加的正弦位置编码振幅为 1。若不施加放大，位置信号将在数值上主导语义信号。该缩放同时缓解了嵌入层与输出投影共享权重时二者对参数尺度要求不一致的矛盾。</p>
+<h3 id="步骤-4-位置编码的叠加（加入位置信息）"><a href="#步骤-4-位置编码的叠加（加入位置信息）" class="headerlink" title="步骤 4　位置编码的叠加（加入位置信息）"></a>步骤 4　位置编码的叠加（加入位置信息）</h3><p><strong>操作</strong>　构造位置编码矩阵 $PE\in\mathbb{R}^{n\times d_{\text{model}}}$：</p>
+<p>$$PE_{(pos,,2i)}&#x3D;\sin!\left(\frac{pos}{10000^{2i&#x2F;d_{\text{model}}}}\right),\qquad<br>PE_{(pos,,2i+1)}&#x3D;\cos!\left(\frac{pos}{10000^{2i&#x2F;d_{\text{model}}}}\right)$$</p>
+<p>并与 $X_{\text{emb}}$ 逐元素相加。</p>
+<p><strong>功能</strong>　自注意力算子对输入序列的排列具有等变性，即在无外部位置信息的条件下，模型无法区分 <code>the cat sat down</code> 与其任意置换。位置编码的作用即在于打破这一等变性。</p>
+<p>此处有两点值得强调。其一，位置信息以<strong>相加</strong>而非拼接方式注入，从而不额外占用表示维度，容量在语义与位置之间的分配由模型自行学习。其二，正弦函数的选取具有明确动机：记 $\omega_i&#x3D;1&#x2F;10000^{2i&#x2F;d_{\text{model}}}$，对任意固定偏移 $k$ 有</p>
+<h1 id="begin-bmatrix-sin-pos-k-omega-i-cos-pos-k-omega-i-end-bmatrix"><a href="#begin-bmatrix-sin-pos-k-omega-i-cos-pos-k-omega-i-end-bmatrix" class="headerlink" title="$$\begin{bmatrix}\sin((pos+k)\omega_i)\ \cos((pos+k)\omega_i)\end{bmatrix}"></a>$$<br>\begin{bmatrix}\sin((pos+k)\omega_i)\ \cos((pos+k)\omega_i)\end{bmatrix}</h1><p>\begin{bmatrix}\cos k\omega_i &amp; \sin k\omega_i\ -\sin k\omega_i &amp; \cos k\omega_i\end{bmatrix}<br>\begin{bmatrix}\sin(pos,\omega_i)\ \cos(pos,\omega_i)\end{bmatrix}<br>$$</p>
+<p>即 $PE_{pos+k}&#x3D;R_k,PE_{pos}$，其中旋转矩阵 $R_k$ 仅依赖于偏移量 $k$ 而与绝对位置 $pos$ 无关。这使得”按相对位置对齐”在该编码下可由线性变换实现。原文的消融实验表明，将其替换为可学习的位置嵌入所得结果几乎相同；作者保留正弦形式的理由在于其对超出训练长度的序列具备潜在外推能力。</p>
+<h3 id="步骤-5-输入-dropout"><a href="#步骤-5-输入-dropout" class="headerlink" title="步骤 5　输入 dropout"></a>步骤 5　输入 dropout</h3><p><strong>操作</strong>　对嵌入与位置编码之和施加比率为 $P_{drop}&#x3D;0.1$ 的 dropout，得到编码器输入 $X\in\mathbb{R}^{n\times d_{\text{model}}}$。</p>
+<p><strong>功能</strong>　正则化。原文明确指出 dropout 不仅作用于各子层输出，亦作用于此处的求和结果。消融实验显示，完全移除 dropout 将导致约 1.2 BLEU 的性能下降，表明在该模型规模与数据量下过拟合是实际存在的。</p>
+<hr>
+<h2 id="2-编码器层（步骤-6–15）"><a href="#2-编码器层（步骤-6–15）" class="headerlink" title="2　编码器层（步骤 6–15）"></a>2　编码器层（步骤 6–15）</h2><p>编码器由 $N&#x3D;6$ 个结构相同的层堆叠而成。以下步骤 6–15 描述其中<strong>一层</strong>的计算，各层参数相互独立、不共享。</p>
+<h3 id="2-1-多头自注意力子层"><a href="#2-1-多头自注意力子层" class="headerlink" title="2.1　多头自注意力子层"></a>2.1　多头自注意力子层</h3><h4 id="步骤-6-查询、键、值的线性投影"><a href="#步骤-6-查询、键、值的线性投影" class="headerlink" title="步骤 6　查询、键、值的线性投影"></a>步骤 6　查询、键、值的线性投影</h4><p><strong>操作</strong>　以三组独立参数矩阵 $W^Q,W^K,W^V\in\mathbb{R}^{d_{\text{model}}\times d_{\text{model}}}$ 分别左乘输入：</p>
+<p>$$Q&#x3D;XW^Q,\quad K&#x3D;XW^K,\quad V&#x3D;XW^V,\qquad Q,K,V\in\mathbb{R}^{n\times d_{\text{model}}}$$</p>
+<p><strong>功能</strong>　同一表示需同时承担三种功能角色：作为查询表达”所需信息的类型”，作为键表达”可供检索的特征”，作为值表达”实际携带的内容”。三者的最优表示空间不同，故以三组独立投影分别学习。</p>
+<p>本子层中 $Q,K,V$ 均由同一输入 $X$ 导出，此即”自注意力”之定义。</p>
+<h4 id="步骤-7-多头拆分"><a href="#步骤-7-多头拆分" class="headerlink" title="步骤 7　多头拆分"></a>步骤 7　多头拆分</h4><p><strong>操作</strong>　将 $d_{\text{model}}&#x3D;512$ 维沿特征轴均分为 $h&#x3D;8$ 段，每段 $d_k&#x3D;64$ 维，并调整轴序：</p>
+<p>$$(n,\ 512)\longrightarrow(n,\ 8,\ 64)\longrightarrow(8,\ n,\ 64)$$</p>
+<p><strong>功能</strong>　使 $h$ 组注意力在不同的表示子空间内并行运作。需澄清一个常见误解：多头机制并非对同一注意力函数的重复平均，而是对表示空间的划分——单头注意力的输出是对全部值向量的一次加权平均，该平均操作会抹平不同性质信息之间的差异；多头则允许各头分别捕捉句法依存、共指等异质关系。由于每头维度降至 $1&#x2F;h$，多头的总计算开销与全维度单头注意力基本相当。</p>
+<h4 id="步骤-8-兼容性打分"><a href="#步骤-8-兼容性打分" class="headerlink" title="步骤 8　兼容性打分"></a>步骤 8　兼容性打分</h4><p><strong>操作</strong>　逐头计算 $QK^{\top}$，得到形状为 $(h,n,n)$ 的分数张量。</p>
+<p><strong>功能</strong>　计算每个token之间的相似度，并构造位置间的相关性矩阵，其第 $(i,j)$ 元表示位置 $i$ 的查询与位置 $j$ 的键之间的兼容性原始得分。该步骤是自注意力层 $O(n^2\cdot d)$ 复杂度的来源。</p>
+<h4 id="步骤-9-尺度归一化"><a href="#步骤-9-尺度归一化" class="headerlink" title="步骤 9　尺度归一化"></a>步骤 9　尺度归一化</h4><p><strong>操作</strong>　将分数矩阵整体除以 $\sqrt{d_k}&#x3D;8$。</p>
+<p><strong>功能</strong>　控制送入 softmax 的 logits 方差。设 $q,k$ 各分量为均值 0、方差 1 的独立随机变量，则 $q\cdot k&#x3D;\sum_{i&#x3D;1}^{d_k}q_ik_i$ 的均值为 0、方差为 $d_k$，标准差为 $\sqrt{d_k}$。当 $d_k&#x3D;64$ 时典型取值可达 $\pm 8$ 量级，此时 softmax 输出将高度尖锐化，其雅可比矩阵趋近于零，导致该层在训练初期即丧失有效梯度。除以 $\sqrt{d_k}$ 使方差恢复至 1，将 logits 约束在 softmax 的敏感区间内。</p>
+<h4 id="步骤-10-注意力权重的归一化"><a href="#步骤-10-注意力权重的归一化" class="headerlink" title="步骤 10　注意力权重的归一化"></a>步骤 10　注意力权重的归一化</h4><p><strong>操作</strong>　沿最后一维施加 softmax，得到 $(h,n,n)$ 的注意力权重张量，各行之和为 1。</p>
+<p><strong>功能</strong>　将原始得分转换为概率分布。第 $i$ 行刻画位置 $i$ 在全部 $n$ 个位置上的注意力分配。编码器自注意力不施加掩码，故每个位置可访问包括自身在内的全部位置，具有双向性。</p>
+<h4 id="步骤-11-值向量的加权聚合"><a href="#步骤-11-值向量的加权聚合" class="headerlink" title="步骤 11　值向量的加权聚合"></a>步骤 11　值向量的加权聚合</h4><p><strong>操作</strong>　以注意力权重左乘 $V$，逐头得到 $(h,n,d_v)$。</p>
+<p><strong>功能</strong>　<strong>跨位置的信息搬运在此步骤实际发生</strong>。位置 $i$ 的输出为全部位置值向量的凸组合。步骤 8–10 仅确定组合系数，本步骤方才完成信息的实际转移。</p>
+<h4 id="步骤-12-多头合并与输出投影"><a href="#步骤-12-多头合并与输出投影" class="headerlink" title="步骤 12　多头合并与输出投影"></a>步骤 12　多头合并与输出投影</h4><p><strong>操作</strong>　将各头输出沿特征轴拼接还原为 $(n,\ 512)$，再以 $W^O\in\mathbb{R}^{hd_v\times d_{\text{model}}}$ 右乘：</p>
+<p>$$\text{MultiHead}(Q,K,V)&#x3D;\text{Concat}(\text{head}_1,\dots,\text{head}_h)W^O$$</p>
+<p><strong>功能</strong>　$W^O$ 并非形式化的补充步骤。拼接操作本身仅将各头输出并置，头与头之间尚无交互；$W^O$ 承担了跨头信息的重新混合，是多头机制得以形成统一表示的必要环节。</p>
+<h4 id="步骤-13-残差连接与层归一化"><a href="#步骤-13-残差连接与层归一化" class="headerlink" title="步骤 13　残差连接与层归一化"></a>步骤 13　残差连接与层归一化</h4><p><strong>操作</strong></p>
+<p>$$X’&#x3D;\operatorname{LayerNorm}\big(X+\operatorname{Dropout}(\text{MultiHead}(X,X,X))\big)$$</p>
+<p><strong>功能</strong>　该复合操作承担三项互异的职能。</p>
+<p>其一，<strong>残差连接</strong>使子层学习的目标由”重建表示”转变为”计算对现有表示的增量修正”，同时为梯度提供一条恒等直通路径。由于该加法要求两个操作数形状严格一致，模型中所有子层及嵌入层的输出维度被统一约束为 $d_{\text{model}}&#x3D;512$。这一约束的结果是形成了一条贯穿网络全深度的定宽通道（后文文献中称为残差流），各子层对其执行”读取—修正—写回”操作。</p>
+<p>其二，<strong>层归一化</strong>沿单个位置的特征维统计均值与方差并施加标准化。此处选用层归一化而非批归一化，原因有三：批内序列长度不一，填充位置将污染批统计量；各位置对批统计量的贡献不均衡；自回归推理逐符号进行，批统计量在推理时不可得，将导致训练与推理行为不一致。层归一化的统计量仅依赖当前位置自身，从而与批大小、序列长度及运行模式均无关。</p>
+<p>其三，需注意原文采用的是<strong>后置归一化</strong>（Post-LN），即归一化施加于残差求和之后。该顺序使残差主干每隔一个子层即被重新标准化，恒等路径并非完全无损，这构成了原始 Transformer 必须配合学习率预热方可稳定训练的原因之一。后续工作普遍改用前置归一化（Pre-LN），以改善深层模型的训练稳定性。</p>
+<h3 id="2-2-逐位置前馈子层"><a href="#2-2-逐位置前馈子层" class="headerlink" title="2.2　逐位置前馈子层"></a>2.2　逐位置前馈子层</h3><h4 id="步骤-14-前馈网络"><a href="#步骤-14-前馈网络" class="headerlink" title="步骤 14　前馈网络"></a>步骤 14　前馈网络</h4><p><strong>操作</strong></p>
+<p>$$\operatorname{FFN}(x)&#x3D;\max(0,\ xW_1+b_1)W_2+b_2,\qquad W_1\in\mathbb{R}^{512\times 2048},\ W_2\in\mathbb{R}^{2048\times 512}$$</p>
+<p>$$(n,\ 512)\longrightarrow(n,\ 2048)\xrightarrow{\ \text{ReLU}\ }(n,\ 2048)\longrightarrow(n,\ 512)$$</p>
+<p><strong>功能</strong>　若将注意力子层的职能概括为<strong>信息的跨位置搬运</strong>，则前馈子层承担的是<strong>信息在各位置上的非线性加工</strong>。</p>
+<p>三点需要说明。第一，”逐位置”意味着该变换对各位置独立且同等地施加，子层内部不存在任何跨位置运算；参数在位置间共享而在层间独立，等价于两个核宽为 1 的卷积。这一性质使其天然支持变长输入。第二，中间层维度扩张至输入的 4 倍，为非线性特征组合提供充分的工作空间。第三，就参数量而言，单层中前馈子层约占 $2\times 512\times 2048\approx 2.10\times 10^6$，注意力子层约占 $4\times 512^2\approx 1.05\times 10^6$，即前馈子层占据每层参数总量的约三分之二。这一事实为后续关于事实性知识主要存储于前馈层的研究提供了结构上的依据。</p>
+<h4 id="步骤-15-第二次残差连接与层归一化"><a href="#步骤-15-第二次残差连接与层归一化" class="headerlink" title="步骤 15　第二次残差连接与层归一化"></a>步骤 15　第二次残差连接与层归一化</h4><p><strong>操作</strong>　与步骤 13 同构：$\ \operatorname{LayerNorm}\big(X’+\operatorname{Dropout}(\operatorname{FFN}(X’))\big)$，输出形状 $(n,512)$。</p>
+<h3 id="2-3-层的堆叠"><a href="#2-3-层的堆叠" class="headerlink" title="2.3　层的堆叠"></a>2.3　层的堆叠</h3><p><strong>操作</strong>　重复步骤 6–15 共 $N&#x3D;6$ 次，记最终输出为 $Z\in\mathbb{R}^{n\times d_{\text{model}}}$。</p>
+<p><strong>功能</strong>　编码器不改变序列长度，$Z$ 与输入位置一一对应。但需强调，$z_i$ 并非第 $i$ 个符号的词向量，而是<strong>该位置在当前句子语境下的表示</strong>——其已通过 6 层双向自注意力吸收了全序列信息，词义歧义在此过程中得以消解。$Z$ 构成编码器向解码器交付的全部产物，亦是二者之间唯一的接口。</p>
+<hr>
+<h2 id="3-解码器层（步骤-16–19）"><a href="#3-解码器层（步骤-16–19）" class="headerlink" title="3　解码器层（步骤 16–19）"></a>3　解码器层（步骤 16–19）</h2><p>解码器同样由 $N&#x3D;6$ 个相同层构成，每层含三个子层。以下以”已生成 <code>猫 坐</code>，待预测第三个符号”的推理时刻为例。</p>
+<h3 id="步骤-16-目标序列的右移、嵌入与位置编码"><a href="#步骤-16-目标序列的右移、嵌入与位置编码" class="headerlink" title="步骤 16　目标序列的右移、嵌入与位置编码"></a>步骤 16　目标序列的右移、嵌入与位置编码</h3><p><strong>操作</strong>　取已生成序列并整体右移一位，即以起始符 <code>&lt;bos&gt;</code> 填充首位，得到输入 <code>[&lt;bos&gt;, 猫, 坐]</code>，随后施加与步骤 2–5 完全相同的处理，得到 $(m’,512)$。</p>
+<p><strong>功能</strong>　右移确保位置 $i$ 的<strong>输入</strong>为 $y_{i-1}$ 而<strong>预测目标</strong>为 $y_i$。若不施加移位，位置 $i$ 的输入即为其待预测的目标，模型可通过恒等映射平凡地最小化训练损失，学习过程随之退化。</p>
+<h3 id="步骤-17-掩码多头自注意力子层"><a href="#步骤-17-掩码多头自注意力子层" class="headerlink" title="步骤 17　掩码多头自注意力子层"></a>步骤 17　掩码多头自注意力子层</h3><p><strong>操作</strong>　计算流程与步骤 6–12 相同，但在步骤 9 之后、步骤 10 之前，将分数矩阵中所有满足 $j&gt;i$ 的元素置为 $-\infty$（即施加下三角掩码），继而执行 softmax 与后续步骤，最后经残差连接与层归一化得到 $D_1$。</p>
+<p><strong>功能</strong>　阻断信息自右向左的流动，以维持模型的自回归性质。</p>
+<p>此处两点需要辨析。其一，<strong>掩码必须施加于 softmax 之前</strong>：若在得到归一化权重后再将非法位置置零，剩余权重之和将不再为 1；置为 $-\infty$ 则使 softmax 的归一化天然仅在合法位置上进行。其二，<strong>掩码与右移分别解决不同问题，二者缺一不可</strong>：掩码约束模型不可访问未来位置，右移约束模型不可访问当前位置的目标本身。</p>
+<h3 id="步骤-18-编码器—解码器注意力子层"><a href="#步骤-18-编码器—解码器注意力子层" class="headerlink" title="步骤 18　编码器—解码器注意力子层"></a>步骤 18　编码器—解码器注意力子层</h3><p><strong>操作</strong></p>
+<p>$$\operatorname{MultiHead}\big(Q&#x3D;D_1W^Q,\ K&#x3D;ZW^K,\ V&#x3D;ZW^V\big)$$</p>
+<p>其分数矩阵形状为 $(m’,n)$，一般为非方阵。经残差连接与层归一化得到 $D_2$。</p>
+<p><strong>功能</strong>　该子层是模型中源语言与目标语言发生实质交互的唯一位置：目标端各位置以其查询向量在源端全部位置上执行检索并取回内容，所得注意力权重构成一个软对齐矩阵。</p>
+<p>两点需予澄清。其一，该子层<strong>不施加掩码</strong>——源序列作为完整已知的输入，解码器访问其全部位置并不违反自回归约束。其二，<strong>全部 6 个解码器层共享同一个 $Z$</strong>，即编码器堆栈的最终输出，而非与编码器层逐层对应。$Z$ 作为一份固定的记忆被广播至各解码器层；在推理阶段，这意味着编码器仅需执行一次，其代价与生成长度无关。</p>
+<h3 id="步骤-19-前馈子层"><a href="#步骤-19-前馈子层" class="headerlink" title="步骤 19　前馈子层"></a>步骤 19　前馈子层</h3><p><strong>操作</strong>　与步骤 14–15 完全同构，输出 $D_3$。重复步骤 17–19 共 $N&#x3D;6$ 次。</p>
+<hr>
+<h2 id="4-输出层与解码（步骤-20–23）"><a href="#4-输出层与解码（步骤-20–23）" class="headerlink" title="4　输出层与解码（步骤 20–23）"></a>4　输出层与解码（步骤 20–23）</h2><h3 id="步骤-20-位置选取"><a href="#步骤-20-位置选取" class="headerlink" title="步骤 20　位置选取"></a>步骤 20　位置选取</h3><p><strong>操作</strong>　推理阶段自解码器输出中取末位表示，形状 $(512,)$。</p>
+<p><strong>功能</strong>　仅末位表示对应”下一符号”的预测。需要指出，<strong>训练阶段不执行该步骤</strong>：由于掩码已保证信息不泄漏，全部目标位置可在单次前向传播中并行计算，各位置同时预测其后继符号，从而获得完整的监督信号。</p>
+<h3 id="步骤-21-线性投影至词表空间"><a href="#步骤-21-线性投影至词表空间" class="headerlink" title="步骤 21　线性投影至词表空间"></a>步骤 21　线性投影至词表空间</h3><p><strong>操作</strong>　以 $E^{\top}$ 右乘，$(512,)\longrightarrow(\lvert V\rvert,)$。</p>
+<p><strong>功能</strong>　产生各候选符号的原始得分。此处的权重矩阵与步骤 2 的嵌入矩阵绑定，其效果一方面在于削减参数量，另一方面在于强制”读入某符号”与”生成某符号”共用同一表示空间。</p>
+<h3 id="步骤-22-Softmax-与训练目标"><a href="#步骤-22-Softmax-与训练目标" class="headerlink" title="步骤 22　Softmax 与训练目标"></a>步骤 22　Softmax 与训练目标</h3><p><strong>操作</strong>　施加 softmax 得到词表上的概率分布；训练阶段据此与真实标签计算交叉熵损失，并施加值为 $\epsilon_{ls}&#x3D;0.1$ 的标签平滑。</p>
+<p><strong>功能</strong>　标签平滑迫使模型对预测保持一定的不确定性。原文明确记录了该操作的双向效应：困惑度因之上升，而准确率与 BLEU 得分反而改善。这构成了优化目标与评价指标不一致的一个典型实例。</p>
+<h3 id="步骤-23-自回归解码"><a href="#步骤-23-自回归解码" class="headerlink" title="步骤 23　自回归解码"></a>步骤 23　自回归解码</h3><p><strong>操作</strong>　推理阶段以束宽为 4 的束搜索、长度惩罚 $\alpha&#x3D;0.6$ 选取候选符号，将其追加至已生成序列，返回步骤 16，直至产生终止符或达到长度上限。</p>
+<p><strong>功能</strong>　完成由连续概率分布向离散符号的转换。该过程严格串行，构成整个架构中唯一无法并行化的环节。由此形成的<strong>训练可并行、推理必串行</strong>的不对称性，是后续键值缓存、投机解码等推理优化技术的共同出发点。</p>
+<hr>
+<h2 id="5-张量形状汇总"><a href="#5-张量形状汇总" class="headerlink" title="5　张量形状汇总"></a>5　张量形状汇总</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>步骤</th>
+<th>输入形状</th>
+<th>输出形状</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>索引映射</td>
+<td>1</td>
+<td>文本</td>
+<td>$(n,)$</td>
+</tr>
+<tr>
+<td>词嵌入</td>
+<td>2–3</td>
+<td>$(n,)$</td>
+<td>$(n,512)$</td>
+</tr>
+<tr>
+<td>位置编码</td>
+<td>4–5</td>
+<td>$(n,512)$</td>
+<td>$(n,512)$</td>
+</tr>
+<tr>
+<td>Q&#x2F;K&#x2F;V 投影</td>
+<td>6</td>
+<td>$(n,512)$</td>
+<td>$3\times(n,512)$</td>
+</tr>
+<tr>
+<td>多头拆分</td>
+<td>7</td>
+<td>$(n,512)$</td>
+<td>$(8,n,64)$</td>
+</tr>
+<tr>
+<td>兼容性打分</td>
+<td>8–10</td>
+<td>$(8,n,64)$</td>
+<td>$(8,n,n)$</td>
+</tr>
+<tr>
+<td>值聚合</td>
+<td>11</td>
+<td>$(8,n,n)$</td>
+<td>$(8,n,64)$</td>
+</tr>
+<tr>
+<td>合并与投影</td>
+<td>12</td>
+<td>$(8,n,64)$</td>
+<td>$(n,512)$</td>
+</tr>
+<tr>
+<td>前馈子层</td>
+<td>14</td>
+<td>$(n,512)$</td>
+<td>$(n,512)$</td>
+</tr>
+<tr>
+<td>编码器输出</td>
+<td>15</td>
+<td>$(n,512)$</td>
+<td>$Z:(n,512)$</td>
+</tr>
+<tr>
+<td>交叉注意力打分</td>
+<td>18</td>
+<td>$Q:(m,512),\ K:(n,512)$</td>
+<td>$(8,m,n)$</td>
+</tr>
+<tr>
+<td>输出投影</td>
+<td>21</td>
+<td>$(512,)$</td>
+<td>$(\lvert V\rvert,)$</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-复杂度与并行性"><a href="#6-复杂度与并行性" class="headerlink" title="6　复杂度与并行性"></a>6　复杂度与并行性</h2><p>将上述流程置于原文 Table 1 的框架下考察，可得如下对照：</p>
+<table>
+<thead>
+<tr>
+<th>层类型</th>
+<th>每层复杂度</th>
+<th>最少顺序操作数</th>
+<th>最大路径长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自注意力</td>
+<td>$O(n^2\cdot d)$</td>
+<td>$O(1)$</td>
+<td>$O(1)$</td>
+</tr>
+<tr>
+<td>循环层</td>
+<td>$O(n\cdot d^2)$</td>
+<td>$O(n)$</td>
+<td>$O(n)$</td>
+</tr>
+<tr>
+<td>卷积层</td>
+<td>$O(k\cdot n\cdot d^2)$</td>
+<td>$O(1)$</td>
+<td>$O(\log_k n)$</td>
+</tr>
+<tr>
+<td>受限自注意力</td>
+<td>$O(r\cdot n\cdot d)$</td>
+<td>$O(1)$</td>
+<td>$O(n&#x2F;r)$</td>
+</tr>
+</tbody></table>
+<p>步骤 8 所引入的 $n^2$ 项是自注意力的主要代价，而其收益体现在后两列：任意两个位置间的信息传递路径长度为常数，且层内计算不含顺序依赖。当 $n&lt;d$ 时——在采用子词切分的机器翻译任务中该条件通常成立——自注意力层的实际复杂度亦低于循环层。</p>
+<p>由此可以给出对整体设计的一个概括：该架构以 $O(n^2)$ 的计算量换取了对 $O(n)$ 顺序深度的消除，从而将”学习长程依赖”这一优化难题转化为吞吐量问题，而后者可通过并行硬件加以解决。</p>
+<hr>
+<h2 id="7-小结"><a href="#7-小结" class="headerlink" title="7　小结"></a>7　小结</h2><p>综观全流程，步骤 1–5 与步骤 20–23 分别承担符号空间与连续向量空间之间的双向转换，模型内部流动的始终是连续表示；中间的 12 层则反复执行同一组操作：先由注意力机制确定信息在位置之间的流动方式并完成搬运，再由前馈网络在各位置上独立完成非线性加工，两者的输出均以增量形式写回统一的 $d_{\text{model}}$ 维残差主干。掩码机制将”不可访问未来”这一流程约束转化为矩阵运算，从而使训练阶段的完全并行化成为可能。</p>
+<hr>
+<p><strong>参考文献</strong></p>
+<p>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., &amp; Polosukhin, I. (2017). Attention Is All You Need. <em>Advances in Neural Information Processing Systems 30</em> (NIPS 2017).</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/27/RNN-CNN/" rel="prev" title="RNN 与 CNN：序列建模的两条经典路线">
+                  <i class="fa fa-angle-left"></i> RNN 与 CNN：序列建模的两条经典路线
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
