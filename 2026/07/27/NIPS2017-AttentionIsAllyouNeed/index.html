@@ -19,17 +19,24 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="NIPS2017-AttentionIsAllyouNeed 背景 - RNN 1. RNN 如何工作 2. RNN 的主要问题   背景 - CNN 1. CNN 如何工作 2. CNN 如何提取特征 3. 多层 CNN 与感受野 4. CNN 为什么可以并行计算 5. CNN 的主要问题 6. RNN 与 CNN 的区别">
+    <meta name="description" content="NIPS2017-AttentionIsAllyouNeed 背景：RNN 与 CNN 的局限 1. RNN：沿序列传递状态 2. CNN：在局部窗口上并行卷积 3. 共同的瓶颈：路径长度与并行度   一、Transformer 模型架构 1. 编码器-解码器与自回归生成 2. 编码器 3. 解码器   二、注意力机制 1. 查询、键与值 2. 缩放点积注意力 3. 缩放因子的作用 4. 多头注">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NIPS2017-AttentionIsAllyouNeed">
 <meta property="og:url" content="https://zhwang1224.github.io/2026/07/27/NIPS2017-AttentionIsAllyouNeed/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="NIPS2017-AttentionIsAllyouNeed 背景 - RNN 1. RNN 如何工作 2. RNN 的主要问题   背景 - CNN 1. CNN 如何工作 2. CNN 如何提取特征 3. 多层 CNN 与感受野 4. CNN 为什么可以并行计算 5. CNN 的主要问题 6. RNN 与 CNN 的区别">
+<meta property="og:description" content="NIPS2017-AttentionIsAllyouNeed 背景：RNN 与 CNN 的局限 1. RNN：沿序列传递状态 2. CNN：在局部窗口上并行卷积 3. 共同的瓶颈：路径长度与并行度   一、Transformer 模型架构 1. 编码器-解码器与自回归生成 2. 编码器 3. 解码器   二、注意力机制 1. 查询、键与值 2. 缩放点积注意力 3. 缩放因子的作用 4. 多头注">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/image.png">
+<meta property="og:image" content="https://zhwang1224.github.io/image-1.png">
 <meta property="article:published_time" content="2026-07-27T11:55:31.000Z">
-<meta property="article:modified_time" content="2026-07-27T12:44:14.510Z">
+<meta property="article:modified_time" content="2026-07-28T04:13:32.237Z">
 <meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="注意力机制">
+<meta property="article:tag" content="自然语言处理">
+<meta property="article:tag" content="论文笔记">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/image.png">
 
 
 <link rel="canonical" href="https://zhwang1224.github.io/2026/07/27/NIPS2017-AttentionIsAllyouNeed/">
@@ -163,7 +170,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NIPS2017-AttentionIsAllyouNeed"><span class="nav-number">1.</span> <span class="nav-text">NIPS2017-AttentionIsAllyouNeed</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-RNN"><span class="nav-number">1.1.</span> <span class="nav-text">背景 - RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-RNN-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. RNN 如何工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-RNN-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. RNN 的主要问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF-CNN"><span class="nav-number">1.2.</span> <span class="nav-text">背景 - CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-CNN-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. CNN 如何工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-CNN-%E5%A6%82%E4%BD%95%E6%8F%90%E5%8F%96%E7%89%B9%E5%BE%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. CNN 如何提取特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A4%9A%E5%B1%82-CNN-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 多层 CNN 与感受野</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-CNN-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. CNN 为什么可以并行计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-CNN-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.5.</span> <span class="nav-text">5. CNN 的主要问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-%E9%95%BF%E8%B7%9D%E7%A6%BB%E4%BE%9D%E8%B5%96%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B1%82%E5%8D%B7%E7%A7%AF"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">5.1 长距离依赖需要多层卷积</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-%E5%B1%80%E9%83%A8%E7%AA%97%E5%8F%A3%E5%8F%AF%E8%83%BD%E9%99%90%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E8%8C%83%E5%9B%B4"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">5.2 局部窗口可能限制上下文范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-%E8%BE%B9%E7%95%8C%E4%BD%8D%E7%BD%AE%E9%9C%80%E8%A6%81%E7%89%B9%E6%AE%8A%E5%A4%84%E7%90%86"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">5.3 边界位置需要特殊处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-RNN-%E4%B8%8E-CNN-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.6.</span> <span class="nav-text">6. RNN 与 CNN 的区别</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NIPS2017-AttentionIsAllyouNeed"><span class="nav-number">1.</span> <span class="nav-text">NIPS2017-AttentionIsAllyouNeed</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%EF%BC%9ARNN-%E4%B8%8E-CNN-%E7%9A%84%E5%B1%80%E9%99%90"><span class="nav-number">1.1.</span> <span class="nav-text">背景：RNN 与 CNN 的局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-RNN%EF%BC%9A%E6%B2%BF%E5%BA%8F%E5%88%97%E4%BC%A0%E9%80%92%E7%8A%B6%E6%80%81"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. RNN：沿序列传递状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-CNN%EF%BC%9A%E5%9C%A8%E5%B1%80%E9%83%A8%E7%AA%97%E5%8F%A3%E4%B8%8A%E5%B9%B6%E8%A1%8C%E5%8D%B7%E7%A7%AF"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. CNN：在局部窗口上并行卷积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%85%B1%E5%90%8C%E7%9A%84%E7%93%B6%E9%A2%88%EF%BC%9A%E8%B7%AF%E5%BE%84%E9%95%BF%E5%BA%A6%E4%B8%8E%E5%B9%B6%E8%A1%8C%E5%BA%A6"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 共同的瓶颈：路径长度与并行度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Transformer-%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">一、Transformer 模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BC%96%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B8%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 编码器-解码器与自回归生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 编码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 解码器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">1.3.</span> <span class="nav-text">二、注意力机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9F%A5%E8%AF%A2%E3%80%81%E9%94%AE%E4%B8%8E%E5%80%BC"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 查询、键与值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BC%A9%E6%94%BE%E7%82%B9%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 缩放点积注意力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BC%A9%E6%94%BE%E5%9B%A0%E5%AD%90%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 缩放因子的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 多头注意力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Transformer-%E4%B8%AD%E7%9A%84%E4%B8%89%E5%A4%84%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. Transformer 中的三处注意力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%85%B6%E4%BB%96%E7%BB%84%E4%BB%B6"><span class="nav-number">1.4.</span> <span class="nav-text">三、其他组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%80%90%E4%BD%8D%E7%BD%AE%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. 逐位置前馈网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B5%8C%E5%85%A5%E4%B8%8E-Softmax"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. 嵌入与 Softmax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81"><span class="nav-number">1.4.3.</span> <span class="nav-text">3. 位置编码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.5.</span> <span class="nav-text">四、为什么用自注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%AE%AD%E7%BB%83%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.6.</span> <span class="nav-text">五、训练设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE%E4%B8%8E%E6%89%B9%E5%A4%84%E7%90%86"><span class="nav-number">1.6.1.</span> <span class="nav-text">1. 数据与批处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%A1%AC%E4%BB%B6%E4%B8%8E%E8%AE%AD%E7%BB%83%E6%97%B6%E9%97%B4"><span class="nav-number">1.6.2.</span> <span class="nav-text">2. 硬件与训练时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BC%98%E5%8C%96%E5%99%A8%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%8E%87"><span class="nav-number">1.6.3.</span> <span class="nav-text">3. 优化器与学习率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">1.6.4.</span> <span class="nav-text">4. 正则化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.7.</span> <span class="nav-text">六、实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91"><span class="nav-number">1.7.1.</span> <span class="nav-text">1. 机器翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.7.2.</span> <span class="nav-text">2. 消融实验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">七、总结</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -189,7 +196,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">93</span>
+        <span class="site-state-item-count">97</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -244,9 +251,28 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-07-27 19:55:31 / 修改时间：20:44:14" itemprop="dateCreated datePublished" datetime="2026-07-27T19:55:31+08:00">2026-07-27</time>
+      <time title="创建时间：2026-07-27 19:55:31" itemprop="dateCreated datePublished" datetime="2026-07-27T19:55:31+08:00">2026-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-28 12:13:32" itemprop="dateModified" datetime="2026-07-28T12:13:32+08:00">2026-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+        </span>
     </span>
 
   
@@ -260,192 +286,351 @@
     
     <div class="post-body" itemprop="articleBody"><ul>
 <li><a href="#nips2017-attentionisallyouneed">NIPS2017-AttentionIsAllyouNeed</a><ul>
-<li><a href="#%E8%83%8C%E6%99%AF---rnn">背景 - RNN</a><ul>
-<li><a href="#1-rnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. RNN 如何工作</a></li>
-<li><a href="#2-rnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">2. RNN 的主要问题</a></li>
+<li><a href="#%E8%83%8C%E6%99%AFrnn-%E4%B8%8E-cnn-%E7%9A%84%E5%B1%80%E9%99%90">背景：RNN 与 CNN 的局限</a><ul>
+<li><a href="#1-rnn%E6%B2%BF%E5%BA%8F%E5%88%97%E4%BC%A0%E9%80%92%E7%8A%B6%E6%80%81">1. RNN：沿序列传递状态</a></li>
+<li><a href="#2-cnn%E5%9C%A8%E5%B1%80%E9%83%A8%E7%AA%97%E5%8F%A3%E4%B8%8A%E5%B9%B6%E8%A1%8C%E5%8D%B7%E7%A7%AF">2. CNN：在局部窗口上并行卷积</a></li>
+<li><a href="#3-%E5%85%B1%E5%90%8C%E7%9A%84%E7%93%B6%E9%A2%88%E8%B7%AF%E5%BE%84%E9%95%BF%E5%BA%A6%E4%B8%8E%E5%B9%B6%E8%A1%8C%E5%BA%A6">3. 共同的瓶颈：路径长度与并行度</a></li>
 </ul>
 </li>
-<li><a href="#%E8%83%8C%E6%99%AF---cnn">背景 - CNN</a><ul>
-<li><a href="#1-cnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. CNN 如何工作</a></li>
-<li><a href="#2-cnn-%E5%A6%82%E4%BD%95%E6%8F%90%E5%8F%96%E7%89%B9%E5%BE%81">2. CNN 如何提取特征</a></li>
-<li><a href="#3-%E5%A4%9A%E5%B1%82-cnn-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E">3. 多层 CNN 与感受野</a></li>
-<li><a href="#4-cnn-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">4. CNN 为什么可以并行计算</a></li>
-<li><a href="#5-cnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">5. CNN 的主要问题</a></li>
-<li><a href="#6-rnn-%E4%B8%8E-cnn-%E7%9A%84%E5%8C%BA%E5%88%AB">6. RNN 与 CNN 的区别</a></li>
+<li><a href="#%E4%B8%80transformer-%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84">一、Transformer 模型架构</a><ul>
+<li><a href="#1-%E7%BC%96%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B8%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90">1. 编码器-解码器与自回归生成</a></li>
+<li><a href="#2-%E7%BC%96%E7%A0%81%E5%99%A8">2. 编码器</a></li>
+<li><a href="#3-%E8%A7%A3%E7%A0%81%E5%99%A8">3. 解码器</a></li>
 </ul>
 </li>
+<li><a href="#%E4%BA%8C%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6">二、注意力机制</a><ul>
+<li><a href="#1-%E6%9F%A5%E8%AF%A2%E9%94%AE%E4%B8%8E%E5%80%BC">1. 查询、键与值</a></li>
+<li><a href="#2-%E7%BC%A9%E6%94%BE%E7%82%B9%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B">2. 缩放点积注意力</a></li>
+<li><a href="#3-%E7%BC%A9%E6%94%BE%E5%9B%A0%E5%AD%90%E7%9A%84%E4%BD%9C%E7%94%A8">3. 缩放因子的作用</a></li>
+<li><a href="#4-%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B">4. 多头注意力</a></li>
+<li><a href="#5-transformer-%E4%B8%AD%E7%9A%84%E4%B8%89%E5%A4%84%E6%B3%A8%E6%84%8F%E5%8A%9B">5. Transformer 中的三处注意力</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89%E5%85%B6%E4%BB%96%E7%BB%84%E4%BB%B6">三、其他组件</a><ul>
+<li><a href="#1-%E9%80%90%E4%BD%8D%E7%BD%AE%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C">1. 逐位置前馈网络</a></li>
+<li><a href="#2-%E5%B5%8C%E5%85%A5%E4%B8%8E-softmax">2. 嵌入与 Softmax</a></li>
+<li><a href="#3-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81">3. 位置编码</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B">四、为什么用自注意力</a></li>
+<li><a href="#%E4%BA%94%E8%AE%AD%E7%BB%83%E8%AE%BE%E7%BD%AE">五、训练设置</a><ul>
+<li><a href="#1-%E6%95%B0%E6%8D%AE%E4%B8%8E%E6%89%B9%E5%A4%84%E7%90%86">1. 数据与批处理</a></li>
+<li><a href="#2-%E7%A1%AC%E4%BB%B6%E4%B8%8E%E8%AE%AD%E7%BB%83%E6%97%B6%E9%97%B4">2. 硬件与训练时间</a></li>
+<li><a href="#3-%E4%BC%98%E5%8C%96%E5%99%A8%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%8E%87">3. 优化器与学习率</a></li>
+<li><a href="#4-%E6%AD%A3%E5%88%99%E5%8C%96">4. 正则化</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C">六、实验结果</a><ul>
+<li><a href="#1-%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91">1. 机器翻译</a></li>
+<li><a href="#2-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C">2. 消融实验</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%83%E6%80%BB%E7%BB%93">七、总结</a></li>
 </ul>
 </li>
 </ul>
 <span id="more"></span>
 
-<h1 id="NIPS2017-AttentionIsAllyouNeed"><a href="#NIPS2017-AttentionIsAllyouNeed" class="headerlink" title="NIPS2017-AttentionIsAllyouNeed"></a>NIPS2017-AttentionIsAllyouNeed</h1><h2 id="背景-RNN"><a href="#背景-RNN" class="headerlink" title="背景 - RNN"></a>背景 - RNN</h2><p>循环神经网络（Recurrent Neural Network，RNN）是一类专门处理序列数据的神经网络。它的核心特点是：在处理当前输入时，会同时使用前面步骤留下的信息，因此具有一定的“记忆能力”。</p>
-<p>RNN 要解决的问题很具体：普通神经网络的输入长度是固定的，而句子不是。一个 MLP(Multi-Layer Perceptron，多层感知机) 要求输入维度写死在参数矩阵里；没法用同一个模型同时处理 5 个词和 50 个词的句子。RNN 的解法是引入一个状态（state），然后让同一组参数沿着序列反复施加。</p>
-<h3 id="1-RNN-如何工作"><a href="#1-RNN-如何工作" class="headerlink" title="1. RNN 如何工作"></a>1. RNN 如何工作</h3><p>假设输入序列为：<br>$$<br>x_1,x_2,x_3,\ldots,x_T<br>$$</p>
-<p>RNN 按顺序逐个处理输入：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    X1[&quot;输入 x₁&quot;] --&gt; H1[&quot;隐藏状态 h₁&quot;]</span><br><span class="line">    H1 --&gt; H2[&quot;隐藏状态 h₂&quot;]</span><br><span class="line">    X2[&quot;输入 x₂&quot;] --&gt; H2</span><br><span class="line">    H2 --&gt; H3[&quot;隐藏状态 h₃&quot;]</span><br><span class="line">    X3[&quot;输入 x₃&quot;] --&gt; H3</span><br><span class="line">    H3 --&gt; O[&quot;输出&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>在第 $t$ 个时刻，RNN 根据当前输入 $x_t$ 和上一步的隐藏状态 $h_{t-1}$，计算新的隐藏状态：</p>
+<h1 id="NIPS2017-AttentionIsAllyouNeed"><a href="#NIPS2017-AttentionIsAllyouNeed" class="headerlink" title="NIPS2017-AttentionIsAllyouNeed"></a>NIPS2017-AttentionIsAllyouNeed</h1><h2 id="背景：RNN-与-CNN-的局限"><a href="#背景：RNN-与-CNN-的局限" class="headerlink" title="背景：RNN 与 CNN 的局限"></a>背景：RNN 与 CNN 的局限</h2><p>在 Transformer 出现之前，序列建模主要有两条路线：RNN 沿序列逐步更新隐藏状态，CNN 用卷积核在局部窗口上提取特征。两者的完整介绍见 <a href="/2026/07/27/RNN-CNN/">RNN 与 CNN：序列建模的两条经典路线</a>。</p>
+<h3 id="1-RNN：沿序列传递状态"><a href="#1-RNN：沿序列传递状态" class="headerlink" title="1. RNN：沿序列传递状态"></a>1. RNN：沿序列传递状态</h3><p>RNN 在每个位置根据当前输入 $x_t$ 和上一步的隐藏状态 $h_{t-1}$ 更新“记忆”：</p>
 <p>$$<br>h_t&#x3D;\tanh(W_xx_t+W_hh_{t-1}+b)<br>$$</p>
-<p>其中：</p>
+<p>同一组参数沿序列反复使用，因此可以处理任意长度的输入。但这种结构带来两个问题：</p>
 <ul>
-<li>$x_t$：当前时刻的输入；</li>
-<li>$h_{t-1}$：此前序列信息的概括；</li>
-<li>$h_t$：加入当前输入后得到的新状态；</li>
-<li>$W_x$、$W_h$ 和 $b$：模型通过训练得到的参数；</li>
-<li>$\tanh$：非线性激活函数。</li>
+<li><strong>无法在序列维度并行</strong>：必须先算出 $h_{t-1}$ 才能算 $h_t$，训练和推理的计算时间都随序列长度线性增长；</li>
+<li><strong>长期依赖困难</strong>：早期信息要经过 $h_1\rightarrow h_2\rightarrow\cdots\rightarrow h_T$ 逐步传递，反向传播时梯度连乘，容易梯度消失或爆炸。</li>
 </ul>
-<p>如果每一步都需要产生输出，还可以计算：</p>
-<p>$$<br>y_t&#x3D;W_yh_t+b_y<br>$$</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    subgraph T1[&quot; &quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X1[&quot;x₁&quot;] --&gt; H1[&quot;h₁&quot;] --&gt; Y1[&quot;y₁&quot;]</span><br><span class="line">    end</span><br><span class="line">    subgraph T2[&quot; &quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X2[&quot;x₂&quot;] --&gt; H2[&quot;h₂&quot;] --&gt; Y2[&quot;y₂&quot;]</span><br><span class="line">    end</span><br><span class="line">    subgraph T3[&quot; &quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X3[&quot;x₃&quot;] --&gt; H3[&quot;h₃&quot;] --&gt; Y3[&quot;y₃&quot;]</span><br><span class="line">    end</span><br><span class="line">    subgraph T4[&quot; &quot;]</span><br><span class="line">        direction BT</span><br><span class="line">        X4[&quot;x₄&quot;] --&gt; H4[&quot;h₄&quot;] --&gt; Y4[&quot;y₄&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    T1 --&gt;|Wx| T2 --&gt;|Wx| T3 --&gt;|Wx| T4</span><br><span class="line"></span><br><span class="line">    classDef inp fill:#F1EFE8,stroke:#B4B2A9,color:#2C2C2A</span><br><span class="line">    classDef hid fill:#EEEDFE,stroke:#AFA9EC,color:#26215C</span><br><span class="line">    classDef out fill:#E1F5EE,stroke:#5DCAA5,color:#04342C</span><br><span class="line">    class X1,X2,X3,X4 inp</span><br><span class="line">    class H1,H2,H3,H4 hid</span><br><span class="line">    class Y1,Y2,Y3,Y4 out</span><br></pre></td></tr></table></figure>
-
-<p>因此，隐藏状态 $h_t$ 可以理解为 RNN 读到当前位置时形成的“记忆”。“循环”指上一时刻的隐藏状态会被传递到下一时刻。无论序列有多长，RNN 都会重复使用相同的 $W_x$ 和 $W_h$。</p>
-<h3 id="2-RNN-的主要问题"><a href="#2-RNN-的主要问题" class="headerlink" title="2. RNN 的主要问题"></a>2. RNN 的主要问题</h3><ol>
-<li>长期依赖困难</li>
-</ol>
-<p>随着序列变长，早期信息需要经过多次状态传递：</p>
-<p>$$<br>h_1\rightarrow h_2\rightarrow\cdots\rightarrow h_T<br>$$</p>
-<p>在反向传播过程中，梯度需要连续进行多次矩阵乘法，容易出现：</p>
-<ul>
-<li><strong>梯度消失</strong>：早期信息几乎无法影响模型训练；</li>
-<li><strong>梯度爆炸</strong>：梯度变得非常大，导致训练不稳定。</li>
-</ul>
-<p>因此，普通 RNN 很难记住距离较远的信息。</p>
-<ol start="2">
-<li>无法充分并行</li>
-</ol>
-<p>RNN 必须先得到 $h_{t-1}$，才能计算 $h_t$。因此，各个位置通常需要依次计算，难以像 Transformer 一样同时处理整个序列。</p>
-<h2 id="背景-CNN"><a href="#背景-CNN" class="headerlink" title="背景 - CNN"></a>背景 - CNN</h2><p>卷积神经网络（Convolutional Neural Network，CNN）是一类通过<strong>卷积操作提取局部特征</strong>的神经网络。CNN 最初主要用于图像处理，也可以用于文本、语音和时间序列等序列数据。</p>
-<p>CNN 的核心特点是：</p>
-<ul>
-<li><strong>局部连接</strong>：每次只观察输入中的一小块区域；</li>
-<li><strong>参数共享</strong>：同一个卷积核会在输入的不同位置重复使用；</li>
-<li><strong>并行计算</strong>：不同位置的卷积结果可以同时计算。</li>
-</ul>
-<p>对于序列任务，CNN 要解决的问题之一是 RNN 无法充分并行。RNN 必须按照：</p>
-<p>$$<br>h_1\rightarrow h_2\rightarrow\cdots\rightarrow h_T<br>$$</p>
-<p>依次计算隐藏状态，而 CNN 可以同时计算所有位置的隐藏表示。</p>
-<h3 id="1-CNN-如何工作"><a href="#1-CNN-如何工作" class="headerlink" title="1. CNN 如何工作"></a>1. CNN 如何工作</h3><p>以文本序列为例，假设输入为：</p>
-<p>$$<br>x_1,x_2,x_3,\ldots,x_T<br>$$</p>
-<p>其中，每个 $x_i$ 都是一个词或 Token 对应的向量。</p>
-<p>一维卷积会使用一个固定大小的卷积核，在序列上滑动。例如，当卷积核大小为 3 时，第 $i$ 个位置的输出由相邻的三个输入共同决定：</p>
+<p>LSTM 和 GRU 用门控机制缓解了第二点，但第一点是循环结构固有的。</p>
+<h3 id="2-CNN：在局部窗口上并行卷积"><a href="#2-CNN：在局部窗口上并行卷积" class="headerlink" title="2. CNN：在局部窗口上并行卷积"></a>2. CNN：在局部窗口上并行卷积</h3><p>一维卷积在序列上滑动一个固定大小的卷积核，例如核大小为 3 时：</p>
 <p>$$<br>h_i&#x3D;\sigma(W[x_{i-1};x_i;x_{i+1}]+b)<br>$$</p>
-<p>其中：</p>
-<ul>
-<li>$x_{i-1}$、$x_i$ 和 $x_{i+1}$：当前位置附近的输入；</li>
-<li>$[,;,]$：向量拼接操作；</li>
-<li>$W$ 和 $b$：模型通过训练得到的卷积参数；</li>
-<li>$\sigma$：非线性激活函数；</li>
-<li>$h_i$：卷积后得到的局部特征表示。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">    subgraph I[&quot;输入序列&quot;]</span><br><span class="line">        direction LR</span><br><span class="line">        X1[&quot;x₁&quot;]</span><br><span class="line">        X2[&quot;x₂&quot;]</span><br><span class="line">        X3[&quot;x₃&quot;]</span><br><span class="line">        X4[&quot;x₄&quot;]</span><br><span class="line">        X5[&quot;x₅&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    X1 --&gt; H2[&quot;h₂&quot;]</span><br><span class="line">    X2 --&gt; H2</span><br><span class="line">    X3 --&gt; H2</span><br><span class="line"></span><br><span class="line">    X2 --&gt; H3[&quot;h₃&quot;]</span><br><span class="line">    X3 --&gt; H3</span><br><span class="line">    X4 --&gt; H3</span><br><span class="line"></span><br><span class="line">    X3 --&gt; H4[&quot;h₄&quot;]</span><br><span class="line">    X4 --&gt; H4</span><br><span class="line">    X5 --&gt; H4</span><br></pre></td></tr></table></figure>
-
-<p>对于每个位置，CNN 都使用相同的卷积参数 $W$。这就是<strong>参数共享</strong>。</p>
-<p>因此，无论输入序列有多长，同一个卷积核都可以在整个序列上重复使用。</p>
-<h3 id="2-CNN-如何提取特征"><a href="#2-CNN-如何提取特征" class="headerlink" title="2. CNN 如何提取特征"></a>2. CNN 如何提取特征</h3><p>卷积核可以理解为一个局部特征检测器。</p>
-<p>在图像任务中，不同卷积核可能分别识别：</p>
-<ul>
-<li>边缘；</li>
-<li>纹理；</li>
-<li>形状；</li>
-<li>更复杂的物体结构。</li>
-</ul>
-<p>在文本任务中，不同卷积核可能分别识别：</p>
-<ul>
-<li>相邻词之间的组合；</li>
-<li>短语结构；</li>
-<li>局部语义模式；</li>
-<li>特定的关键词组合。</li>
-</ul>
-<p>例如，对于句子：</p>
-<blockquote>
-<p>我非常喜欢计算机网络</p>
-</blockquote>
-<p>一个大小为 3 的卷积核每次只能观察三个相邻位置，例如：</p>
-<ul>
-<li>“我—非常—喜欢”；</li>
-<li>“非常—喜欢—计算机”；</li>
-<li>“喜欢—计算机—网络”。</li>
-</ul>
-<p>因此，单层 CNN 主要提取局部信息。</p>
-<h3 id="3-多层-CNN-与感受野"><a href="#3-多层-CNN-与感受野" class="headerlink" title="3. 多层 CNN 与感受野"></a>3. 多层 CNN 与感受野</h3><p>为了获取更大范围的信息，可以堆叠多层卷积。</p>
-<p>假设卷积核大小为 3：</p>
-<ul>
-<li>第 1 层的一个位置可以观察 3 个输入；</li>
-<li>第 2 层可以间接观察 5 个输入；</li>
-<li>第 3 层可以间接观察 7 个输入。</li>
-</ul>
-<p>一个隐藏表示能够关联的输入范围称为<strong>感受野（Receptive Field）</strong>。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">    O[&quot;第 2 层表示&quot;] --&gt; H1[&quot;第 1 层表示 h₁&quot;]</span><br><span class="line">    O --&gt; H2[&quot;第 1 层表示 h₂&quot;]</span><br><span class="line">    O --&gt; H3[&quot;第 1 层表示 h₃&quot;]</span><br><span class="line"></span><br><span class="line">    H1 --&gt; X1[&quot;x₁&quot;]</span><br><span class="line">    H1 --&gt; X2[&quot;x₂&quot;]</span><br><span class="line">    H1 --&gt; X3[&quot;x₃&quot;]</span><br><span class="line"></span><br><span class="line">    H2 --&gt; X2</span><br><span class="line">    H2 --&gt; X3</span><br><span class="line">    H2 --&gt; X4[&quot;x₄&quot;]</span><br><span class="line"></span><br><span class="line">    H3 --&gt; X3</span><br><span class="line">    H3 --&gt; X4</span><br><span class="line">    H3 --&gt; X5[&quot;x₅&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>随着卷积层数增加，模型可以逐渐整合更大范围的信息。</p>
-<p>一些模型还会使用**空洞卷积（Dilated Convolution）**扩大感受野。空洞卷积会跳过部分相邻位置，使感受野随着层数更快增长。</p>
-<h3 id="4-CNN-为什么可以并行计算"><a href="#4-CNN-为什么可以并行计算" class="headerlink" title="4. CNN 为什么可以并行计算"></a>4. CNN 为什么可以并行计算</h3><p>在同一卷积层中，各个位置的输出之间不存在前后依赖关系：</p>
-<p>$$<br>h_i&#x3D;\operatorname{CNN}(x_{i-k},\ldots,x_i,\ldots,x_{i+k})<br>$$</p>
-<p>只要输入序列已经确定，$h_1$、$h_2$、……、$h_T$ 就可以同时计算。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flowchart TB</span><br><span class="line">    X[&quot;完整输入序列&quot;] --&gt; H1[&quot;并行计算 h₁&quot;]</span><br><span class="line">    X --&gt; H2[&quot;并行计算 h₂&quot;]</span><br><span class="line">    X --&gt; H3[&quot;并行计算 h₃&quot;]</span><br><span class="line">    X --&gt; HT[&quot;并行计算 hₜ&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>这与 RNN 不同。RNN 计算 $h_t$ 时必须等待 $h_{t-1}$，而 CNN 不需要按照序列顺序逐步计算。</p>
-<h3 id="5-CNN-的主要问题"><a href="#5-CNN-的主要问题" class="headerlink" title="5. CNN 的主要问题"></a>5. CNN 的主要问题</h3><h4 id="5-1-长距离依赖需要多层卷积"><a href="#5-1-长距离依赖需要多层卷积" class="headerlink" title="5.1 长距离依赖需要多层卷积"></a>5.1 长距离依赖需要多层卷积</h4><p>CNN 每一层通常只能连接局部位置。两个位置距离越远，信息就需要经过越多层卷积才能完成传递。</p>
-<p>例如，使用大小为 3 的普通卷积核时，要让 $x_1$ 的信息影响距离较远的 $x_T$，通常需要堆叠多层卷积：</p>
-<p>$$<br>x_1\rightarrow h_2^{(1)}<br>\rightarrow h_3^{(2)}<br>\rightarrow\cdots\rightarrow h_T^{(T-1)}<br>$$</p>
-<p>因此，在普通卷积结构中，连接两个相距 $d$ 的位置所需的操作数量通常随距离线性增长：</p>
-<p>$$<br>O(d)<br>$$</p>
-<p>如果使用空洞卷积，路径长度可以降低到：</p>
-<p>$$<br>O(\log d)<br>$$</p>
-<p>但在自注意力中，两个任意位置可以通过一次注意力操作直接建立联系，路径长度为：</p>
-<p>$$<br>O(1)<br>$$</p>
-<h4 id="5-2-局部窗口可能限制上下文范围"><a href="#5-2-局部窗口可能限制上下文范围" class="headerlink" title="5.2 局部窗口可能限制上下文范围"></a>5.2 局部窗口可能限制上下文范围</h4><p>单层 CNN 只能观察固定大小的局部窗口。为了获取完整上下文，通常需要：</p>
-<ul>
-<li>堆叠更多卷积层；</li>
-<li>增大卷积核；</li>
-<li>使用空洞卷积；</li>
-<li>引入注意力机制。</li>
-</ul>
-<h4 id="5-3-边界位置需要特殊处理"><a href="#5-3-边界位置需要特殊处理" class="headerlink" title="5.3 边界位置需要特殊处理"></a>5.3 边界位置需要特殊处理</h4><p>位于序列两端的位置没有完整的相邻输入。为了保持输入和输出长度一致，通常需要在序列两侧进行填充，即 Padding。</p>
-<h3 id="6-RNN-与-CNN-的区别"><a href="#6-RNN-与-CNN-的区别" class="headerlink" title="6. RNN 与 CNN 的区别"></a>6. RNN 与 CNN 的区别</h3><table>
+<p>同一层中各个位置之间没有前后依赖，$h_1,\ldots,h_T$ 可以同时算出，这解决了 RNN 的并行问题。代价是单层只能看到一个固定窗口：要让相距较远的两个位置产生联系，信息必须经过多层卷积逐层传播。</p>
+<h3 id="3-共同的瓶颈：路径长度与并行度"><a href="#3-共同的瓶颈：路径长度与并行度" class="headerlink" title="3. 共同的瓶颈：路径长度与并行度"></a>3. 共同的瓶颈：路径长度与并行度</h3><p>两条路线的共同点是，任意两个远距离位置之间的信息交互都要经过一条由中间状态或中间卷积层构成的路径。设两个位置相距 $d$：</p>
+<table>
 <thead>
 <tr>
-<th>对比项</th>
-<th>RNN</th>
-<th>CNN</th>
+<th>模型</th>
+<th>路径长度</th>
+<th>序列维度并行</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>信息处理方式</td>
-<td>沿序列传递隐藏状态</td>
-<td>使用卷积核提取局部特征</td>
+<td>RNN</td>
+<td>$O(d)$</td>
+<td>否</td>
 </tr>
 <tr>
-<td>参数共享方式</td>
-<td>不同时刻共享同一组参数</td>
-<td>不同位置共享同一个卷积核</td>
+<td>普通 CNN</td>
+<td>$O(d)$</td>
+<td>是</td>
 </tr>
 <tr>
-<td>并行计算</td>
-<td>较困难</td>
-<td>同一层中的不同位置可以并行</td>
+<td>空洞 CNN</td>
+<td>$O(\log d)$</td>
+<td>是</td>
 </tr>
 <tr>
-<td>局部特征提取</td>
-<td>不直接强调局部窗口</td>
-<td>擅长提取局部模式</td>
-</tr>
-<tr>
-<td>长距离依赖</td>
-<td>信息需要经过多个时间步</td>
-<td>信息需要经过多层卷积</td>
-</tr>
-<tr>
-<td>典型应用</td>
-<td>文本、语音、时间序列</td>
-<td>图像、文本、语音、时间序列</td>
+<td>自注意力</td>
+<td>$O(1)$</td>
+<td>是</td>
 </tr>
 </tbody></table>
-<p>简单来说：</p>
-<blockquote>
-<p><strong>RNN 通过不断更新记忆来处理序列，而 CNN 通过在序列上滑动卷积核来提取局部特征。</strong></p>
-</blockquote>
+<p>路径越长，模型越难学到远距离依赖。自注意力让任意两个位置通过一次操作直接建立联系，路径长度是常数，同时又保持了层内的完全并行——这正是 Transformer 用自注意力取代循环与卷积的出发点。</p>
+<p>代价是长度为 $T$ 的序列需要构造 $T\times T$ 的注意力分数矩阵，计算与显存开销随序列长度二次增长，而 RNN 和固定核 CNN 通常是线性的。</p>
+<hr>
+<h2 id="一、Transformer-模型架构"><a href="#一、Transformer-模型架构" class="headerlink" title="一、Transformer 模型架构"></a>一、Transformer 模型架构</h2><h3 id="1-编码器-解码器与自回归生成"><a href="#1-编码器-解码器与自回归生成" class="headerlink" title="1. 编码器-解码器与自回归生成"></a>1. 编码器-解码器与自回归生成</h3><p>Transformer 沿用了当时序列转换模型通用的编码器-解码器结构。编码器把输入符号序列 $(x_1,\ldots,x_n)$ 映射为一串连续表示：</p>
+<p>$$<br>z&#x3D;(z_1,\ldots,z_n)<br>$$</p>
+<p>解码器再根据 $z$ 逐个生成输出符号 $(y_1,\ldots,y_m)$。生成过程是<strong>自回归</strong>的：每生成一个符号，都会把它作为下一步的额外输入。</p>
+<p>真正的变化在于内部：编码器和解码器都不再使用循环或卷积，而是由堆叠的自注意力层和逐位置前馈网络组成。</p>
+<p><img src="/image.png" alt="alt text"></p>
+<h3 id="2-编码器"><a href="#2-编码器" class="headerlink" title="2. 编码器"></a>2. 编码器</h3><p>编码器由 $N&#x3D;6$ 个结构相同的层堆叠而成。每一层包含两个子层：</p>
+<ol>
+<li>多头自注意力；</li>
+<li>逐位置全连接前馈网络。</li>
+</ol>
+<p>每个子层外面都套了一层<strong>残差连接</strong>加<strong>层归一化</strong>：</p>
+<p>$$<br>\operatorname{LayerNorm}(x+\operatorname{Sublayer}(x))<br>$$</p>
+<p>其中 $\operatorname{Sublayer}(x)$ 是子层本身实现的函数。残差连接要求输入输出维度一致，因此模型中所有子层和嵌入层的输出维度统一为：</p>
+<p>$$<br>d_{\text{model}}&#x3D;512<br>$$</p>
+<h3 id="3-解码器"><a href="#3-解码器" class="headerlink" title="3. 解码器"></a>3. 解码器</h3><p>解码器同样是 $N&#x3D;6$ 层，但每层有三个子层，比编码器多出中间一层：</p>
+<ol>
+<li><strong>带掩码的多头自注意力</strong>：只看已生成的位置；</li>
+<li><strong>编码器-解码器注意力</strong>：对编码器输出做注意力；</li>
+<li>逐位置前馈网络。</li>
+</ol>
+<p>同样每个子层都配有残差连接和层归一化。</p>
+<p>掩码是保证自回归性质的关键。解码器在训练时能一次拿到完整的目标序列，如果不加限制，位置 $i$ 就会“看到”它本该预测的后续内容。因此需要屏蔽指向未来位置的连接：位置 $i$ 的预测只能依赖小于 $i$ 的已知输出。这一点与“输出嵌入右移一位”配合，使训练和推理时的条件保持一致。</p>
+<hr>
+<h2 id="二、注意力机制"><a href="#二、注意力机制" class="headerlink" title="二、注意力机制"></a>二、注意力机制</h2><p><img src="/image-1.png" alt="alt text"></p>
+<h3 id="1-查询、键与值"><a href="#1-查询、键与值" class="headerlink" title="1. 查询、键与值"></a>1. 查询、键与值</h3><p>注意力函数把一个<strong>查询（Query）<strong>和一组</strong>键-值对（Key-Value）<strong>映射为一个输出，四者都是向量。输出是所有值的加权和，而每个值的权重由查询与对应键的</strong>兼容性函数</strong>算出。</p>
+<p>可以把它类比成一次“软查表”：普通字典用键做精确匹配，只返回一个值；注意力则计算查询与每个键的相似度，把所有值按相似度加权混合后返回。</p>
+<h3 id="2-缩放点积注意力"><a href="#2-缩放点积注意力" class="headerlink" title="2. 缩放点积注意力"></a>2. 缩放点积注意力</h3><p>论文采用的兼容性函数是点积，再加一个缩放因子，称为<strong>缩放点积注意力（Scaled Dot-Product Attention）</strong>。查询和键的维度为 $d_k$，值的维度为 $d_v$。实际计算时把一批查询堆成矩阵 $Q$，键和值堆成 $K$、$V$：</p>
+<p>$$<br>\operatorname{Attention}(Q,K,V)<br>&#x3D;\operatorname{softmax}\left(\frac{QK^{T}}{\sqrt{d_k}}\right)V<br>$$</p>
+<p>计算过程可以拆成几步：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    Q[&quot;Q&quot;] --&gt; MM1[&quot;MatMul&lt;br/&gt;QKᵀ&quot;]</span><br><span class="line">    K[&quot;K&quot;] --&gt; MM1</span><br><span class="line">    MM1 --&gt; SC[&quot;Scale&lt;br/&gt;÷ √dk&quot;] --&gt; MK[&quot;Mask&lt;br/&gt;可选&quot;] --&gt; SM[&quot;Softmax&quot;] --&gt; MM2[&quot;MatMul&quot;]</span><br><span class="line">    V[&quot;V&quot;] --&gt; MM2</span><br><span class="line">    MM2 --&gt; O[&quot;输出&quot;]</span><br><span class="line"></span><br><span class="line">    classDef op fill:#EEEDFE,stroke:#AFA9EC,color:#26215C</span><br><span class="line">    classDef io fill:#F1EFE8,stroke:#B4B2A9,color:#2C2C2A</span><br><span class="line">    class MM1,SC,MK,SM,MM2 op</span><br><span class="line">    class Q,K,V,O io</span><br></pre></td></tr></table></figure>
+
+<p>另一种常见做法是<strong>加性注意力</strong>，用一个带单隐藏层的前馈网络计算兼容性。两者的理论复杂度接近，但点积注意力可以直接用高度优化的矩阵乘法实现，在实践中更快、更省内存——这是选择点积的主要理由。</p>
+<h3 id="3-缩放因子的作用"><a href="#3-缩放因子的作用" class="headerlink" title="3. 缩放因子的作用"></a>3. 缩放因子的作用</h3><p>$\frac{1}{\sqrt{d_k}}$ 这个因子并非可有可无。当 $d_k$ 较小时，加性注意力和未缩放的点积注意力表现相近；但 $d_k$ 较大时，未缩放的点积注意力会明显变差。</p>
+<p>论文给出的解释很直观：假设 $q$ 和 $k$ 的各个分量是均值为 0、方差为 1 的独立随机变量，那么</p>
+<p>$$<br>q\cdot k&#x3D;\sum_{i&#x3D;1}^{d_k}q_ik_i<br>$$</p>
+<p>的均值为 0，方差为 $d_k$。也就是说，维度越高，点积的绝对值越容易变大。而 softmax 在输入尺度很大时会趋于饱和——输出几乎变成 one-hot，梯度趋近于 0，训练难以推进。除以 $\sqrt{d_k}$ 正好把方差拉回 1 附近，让 softmax 工作在梯度正常的区间。</p>
+<h3 id="4-多头注意力"><a href="#4-多头注意力" class="headerlink" title="4. 多头注意力"></a>4. 多头注意力</h3><p>与其用 $d_{\text{model}}$ 维的 $Q$、$K$、$V$ 做一次注意力，不如先用不同的、可学习的线性投影把它们投到较低维度，做 $h$ 次并行的注意力，再把结果拼接后投影回去：</p>
+<p>$$<br>\operatorname{MultiHead}(Q,K,V)<br>&#x3D;\operatorname{Concat}(\operatorname{head}_1,\ldots,\operatorname{head}_h)W^O<br>$$</p>
+<p>$$<br>\operatorname{head}_i<br>&#x3D;\operatorname{Attention}(QW_i^Q,KW_i^K,VW_i^V)<br>$$</p>
+<p>其中投影矩阵的形状为 $W_i^Q,W_i^K\in\mathbb{R}^{d_{\text{model}}\times d_k}$、$W_i^V\in\mathbb{R}^{d_{\text{model}}\times d_v}$、$W^O\in\mathbb{R}^{hd_v\times d_{\text{model}}}$。</p>
+<p>论文取 $h&#x3D;8$，并令：</p>
+<p>$$<br>d_k&#x3D;d_v&#x3D;d_{\text{model}}&#x2F;h&#x3D;64<br>$$</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    X[&quot;输入&lt;br/&gt;d_model = 512&quot;] --&gt; S1[&quot;投影 → 头 1&lt;br/&gt;dk = 64&quot;]</span><br><span class="line">    X --&gt; S2[&quot;投影 → 头 2&quot;]</span><br><span class="line">    X --&gt; SD[&quot;……&quot;]</span><br><span class="line">    X --&gt; S8[&quot;投影 → 头 8&quot;]</span><br><span class="line"></span><br><span class="line">    S1 --&gt; A1[&quot;缩放点积注意力&quot;]</span><br><span class="line">    S2 --&gt; A2[&quot;缩放点积注意力&quot;]</span><br><span class="line">    S8 --&gt; A8[&quot;缩放点积注意力&quot;]</span><br><span class="line"></span><br><span class="line">    A1 --&gt; C[&quot;拼接&lt;br/&gt;8 × 64 = 512&quot;]</span><br><span class="line">    A2 --&gt; C</span><br><span class="line">    A8 --&gt; C</span><br><span class="line">    C --&gt; WO[&quot;线性投影 Wᴼ&quot;] --&gt; Y[&quot;输出&lt;br/&gt;d_model = 512&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>这样做的动机是：单个注意力头本质上是在做加权平均，会把不同类型的关系混在一起、互相抵消；多个头则可以各自关注不同位置、不同表示子空间中的信息。由于每个头的维度降到了 $d_{\text{model}}&#x2F;h$，总计算量与一个全维度的单头注意力相当——多头几乎是“免费”的。</p>
+<h3 id="5-Transformer-中的三处注意力"><a href="#5-Transformer-中的三处注意力" class="headerlink" title="5. Transformer 中的三处注意力"></a>5. Transformer 中的三处注意力</h3><p>同一个多头注意力模块在模型里以三种方式使用，区别只在于 $Q$、$K$、$V$ 从哪里来：</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>$Q$ 来自</th>
+<th>$K$、$V$ 来自</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编码器自注意力</td>
+<td>编码器前一层</td>
+<td>编码器前一层</td>
+<td>每个位置可关注输入序列的所有位置</td>
+</tr>
+<tr>
+<td>解码器自注意力</td>
+<td>解码器前一层</td>
+<td>解码器前一层</td>
+<td>每个位置只能关注自身及之前的位置</td>
+</tr>
+<tr>
+<td>编码器-解码器注意力</td>
+<td>解码器前一层</td>
+<td>编码器输出</td>
+<td>解码器的每个位置可关注输入序列的所有位置</td>
+</tr>
+</tbody></table>
+<p>第三种对应传统序列到序列模型中的注意力机制，是解码器读取源句子信息的通道。</p>
+<p>解码器自注意力的掩码实现得很朴素：在缩放点积注意力内部，把 softmax 输入中所有非法连接对应的位置设为 $-\infty$。经过 softmax 后，这些位置的权重变为 0，信息就无法从右向左流动。</p>
+<hr>
+<h2 id="三、其他组件"><a href="#三、其他组件" class="headerlink" title="三、其他组件"></a>三、其他组件</h2><h3 id="1-逐位置前馈网络"><a href="#1-逐位置前馈网络" class="headerlink" title="1. 逐位置前馈网络"></a>1. 逐位置前馈网络</h3><p>除注意力子层外，编码器和解码器的每一层还有一个前馈网络，它对每个位置<strong>独立且相同</strong>地作用：</p>
+<p>$$<br>\operatorname{FFN}(x)&#x3D;\max(0,xW_1+b_1)W_2+b_2<br>$$</p>
+<p>即两个线性变换夹一个 ReLU。输入输出维度为 $d_{\text{model}}&#x3D;512$，中间层维度为 $d_{ff}&#x3D;2048$，先升维再降维。</p>
+<p>同一层内所有位置共享这组参数，不同层之间参数不同。换个角度看，它等价于两个卷积核大小为 1 的卷积。</p>
+<p>它与注意力的分工可以这样理解：<strong>注意力负责在位置之间搬运信息，前馈网络负责在单个位置内部做非线性变换</strong>。</p>
+<h3 id="2-嵌入与-Softmax"><a href="#2-嵌入与-Softmax" class="headerlink" title="2. 嵌入与 Softmax"></a>2. 嵌入与 Softmax</h3><p>输入 token 和输出 token 都通过可学习的嵌入转换为 $d_{\text{model}}$ 维向量；解码器输出则经过一个线性变换和 softmax，得到下一个 token 的概率分布。</p>
+<p>论文在这里做了两个细节处理：</p>
+<ul>
+<li><strong>权重共享</strong>：两个嵌入层与 softmax 前的线性变换共用同一个权重矩阵；</li>
+<li><strong>嵌入缩放</strong>：嵌入层的权重要乘以 $\sqrt{d_{\text{model}}}$，使嵌入的尺度与位置编码相当，相加时不会被淹没。</li>
+</ul>
+<h3 id="3-位置编码"><a href="#3-位置编码" class="headerlink" title="3. 位置编码"></a>3. 位置编码</h3><p>模型里既没有循环也没有卷积，如果不额外处理，打乱输入顺序不会改变输出——自注意力本身对位置是无感的。因此需要把位置信息注入进去。</p>
+<p>论文的做法是在编码器和解码器堆栈底部，把<strong>位置编码</strong>直接加到输入嵌入上。位置编码与嵌入同为 $d_{\text{model}}$ 维，使用不同频率的正弦和余弦函数：</p>
+<p>$$<br>PE_{(pos,2i)}&#x3D;\sin\left(pos&#x2F;10000^{2i&#x2F;d_{\text{model}}}\right)<br>$$</p>
+<p>$$<br>PE_{(pos,2i+1)}&#x3D;\cos\left(pos&#x2F;10000^{2i&#x2F;d_{\text{model}}}\right)<br>$$</p>
+<p>其中 $pos$ 是位置，$i$ 是维度下标。每个维度对应一个正弦波，波长构成从 $2\pi$ 到 $10000\cdot2\pi$ 的几何级数：低维变化快，负责区分相邻位置；高维变化慢，负责刻画长程的位置差异。</p>
+<p>选择这一形式的理由是：对任意固定偏移 $k$，$PE_{pos+k}$ 都可以表示为 $PE_{pos}$ 的线性函数，因此模型容易学会按<strong>相对位置</strong>去关注。论文也试过改用可学习的位置嵌入，结果几乎相同；最终选正弦版本，是因为它有可能外推到比训练时更长的序列。</p>
+<hr>
+<h2 id="四、为什么用自注意力"><a href="#四、为什么用自注意力" class="headerlink" title="四、为什么用自注意力"></a>四、为什么用自注意力</h2><p>论文用三个指标把自注意力层与循环层、卷积层放在一起比较：</p>
+<ol>
+<li><strong>每层的总计算复杂度</strong>；</li>
+<li><strong>可并行的计算量</strong>，用所需的最少顺序操作数衡量；</li>
+<li><strong>网络中长距离依赖的路径长度</strong>——前向和反向信号必须走过的距离越短，越容易学到远距离依赖。</li>
+</ol>
+<p>设 $n$ 为序列长度，$d$ 为表示维度，$k$ 为卷积核大小，$r$ 为受限自注意力的邻域大小：</p>
+<table>
+<thead>
+<tr>
+<th>层类型</th>
+<th>每层复杂度</th>
+<th>顺序操作</th>
+<th>最大路径长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自注意力</td>
+<td>$O(n^2\cdot d)$</td>
+<td>$O(1)$</td>
+<td>$O(1)$</td>
+</tr>
+<tr>
+<td>循环</td>
+<td>$O(n\cdot d^2)$</td>
+<td>$O(n)$</td>
+<td>$O(n)$</td>
+</tr>
+<tr>
+<td>卷积</td>
+<td>$O(k\cdot n\cdot d^2)$</td>
+<td>$O(1)$</td>
+<td>$O(\log_k n)$</td>
+</tr>
+<tr>
+<td>受限自注意力</td>
+<td>$O(r\cdot n\cdot d)$</td>
+<td>$O(1)$</td>
+<td>$O(n&#x2F;r)$</td>
+</tr>
+</tbody></table>
+<p>几点值得注意：</p>
+<ul>
+<li>自注意力用常数次顺序操作连接所有位置，循环层需要 $O(n)$ 次；</li>
+<li>在计算量上，当 $n&lt;d$ 时自注意力反而比循环层更快。而使用 WordPiece、字节对等子词表示时，句子长度通常确实小于表示维度，所以这个条件在机器翻译中一般成立；</li>
+<li>对超长序列，可以把注意力限制在以当前位置为中心、大小为 $r$ 的邻域内，代价是最大路径长度增加到 $O(n&#x2F;r)$；</li>
+<li>单个宽度 $k&lt;n$ 的卷积层无法连接所有位置对：连续卷积需要堆叠 $O(n&#x2F;k)$ 层，空洞卷积需要 $O(\log_k n)$ 层。</li>
+</ul>
+<p>此外还有一个附带好处：自注意力的权重分布是可以直接查看的，论文发现不同的头明显学到了不同的任务，其中不少表现出与句法、语义结构相关的行为，因此模型更具可解释性。</p>
+<hr>
+<h2 id="五、训练设置"><a href="#五、训练设置" class="headerlink" title="五、训练设置"></a>五、训练设置</h2><h3 id="1-数据与批处理"><a href="#1-数据与批处理" class="headerlink" title="1. 数据与批处理"></a>1. 数据与批处理</h3><ul>
+<li><strong>英译德</strong>：WMT 2014 英德数据集，约 450 万句对，使用字节对编码，源语言和目标语言共享约 37000 个 token 的词表；</li>
+<li><strong>英译法</strong>：WMT 2014 英法数据集，3600 万句，词表为 32000 个 WordPiece。</li>
+</ul>
+<p>句对按长度相近的原则组成批次，每个批次大约包含 25000 个源 token 和 25000 个目标 token。按 token 数而非句子数来组批，可以让每个批次的计算量更均衡。</p>
+<h3 id="2-硬件与训练时间"><a href="#2-硬件与训练时间" class="headerlink" title="2. 硬件与训练时间"></a>2. 硬件与训练时间</h3><p>训练在一台 8 卡 NVIDIA P100 的机器上完成：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>每步耗时</th>
+<th>训练步数</th>
+<th>总时长</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基础模型</td>
+<td>约 0.4 秒</td>
+<td>100K</td>
+<td>约 12 小时</td>
+</tr>
+<tr>
+<td>大模型</td>
+<td>约 1.0 秒</td>
+<td>300K</td>
+<td>3.5 天</td>
+</tr>
+</tbody></table>
+<p>对比当时动辄需要数天到数周的强基线，这个训练成本是相当低的。</p>
+<h3 id="3-优化器与学习率"><a href="#3-优化器与学习率" class="headerlink" title="3. 优化器与学习率"></a>3. 优化器与学习率</h3><p>优化器为 Adam，参数取 $\beta_1&#x3D;0.9$、$\beta_2&#x3D;0.98$、$\epsilon&#x3D;10^{-9}$。学习率不固定，按下式随训练步数变化：</p>
+<p>$$<br>\operatorname{lrate}<br>&#x3D;d_{\text{model}}^{-0.5}<br>\cdot\min\left(\operatorname{step_num}^{-0.5},<br>\operatorname{step_num}\cdot\operatorname{warmup_steps}^{-1.5}\right)<br>$$</p>
+<p>这个式子的行为分两段：</p>
+<ul>
+<li>前 $\operatorname{warmup_steps}$ 步，学习率随步数<strong>线性上升</strong>；</li>
+<li>之后按步数平方根的倒数<strong>衰减</strong>。</li>
+</ul>
+<p>论文取 $\operatorname{warmup_steps}&#x3D;4000$。预热阶段很关键：训练初期参数随机，直接用大学习率容易让残差和层归一化的组合发散。这套“warmup + 反平方根衰减”后来被大量 Transformer 实现沿用。</p>
+<h3 id="4-正则化"><a href="#4-正则化" class="headerlink" title="4. 正则化"></a>4. 正则化</h3><p>论文使用了三类正则化手段：</p>
+<ul>
+<li><strong>残差 Dropout</strong>：在每个子层的输出与输入相加并归一化之前，对子层输出做 dropout；同时也对嵌入与位置编码之和做 dropout。基础模型取 $P_{\text{drop}}&#x3D;0.1$；</li>
+<li><strong>标签平滑</strong>：取 $\epsilon_{ls}&#x3D;0.1$。它会让模型变得“不那么确定”，因而困惑度变差，但准确率和 BLEU 反而提升；</li>
+<li><strong>检查点平均</strong>：推理时对最后若干个检查点的参数求平均（基础模型 5 个，大模型 20 个）。</li>
+</ul>
+<hr>
+<h2 id="六、实验结果"><a href="#六、实验结果" class="headerlink" title="六、实验结果"></a>六、实验结果</h2><h3 id="1-机器翻译"><a href="#1-机器翻译" class="headerlink" title="1. 机器翻译"></a>1. 机器翻译</h3><p>在 newstest2014 测试集上的主要结果：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th align="right">BLEU（英译德）</th>
+<th align="right">BLEU（英译法）</th>
+<th align="right">训练成本（FLOPs，英译德）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GNMT + RL</td>
+<td align="right">24.6</td>
+<td align="right">39.92</td>
+<td align="right">$2.3\cdot10^{19}$</td>
+</tr>
+<tr>
+<td>ConvS2S</td>
+<td align="right">25.16</td>
+<td align="right">40.46</td>
+<td align="right">$9.6\cdot10^{18}$</td>
+</tr>
+<tr>
+<td>GNMT + RL 集成</td>
+<td align="right">26.30</td>
+<td align="right">41.16</td>
+<td align="right">$1.8\cdot10^{20}$</td>
+</tr>
+<tr>
+<td>ConvS2S 集成</td>
+<td align="right">26.36</td>
+<td align="right">41.29</td>
+<td align="right">$7.7\cdot10^{19}$</td>
+</tr>
+<tr>
+<td><strong>Transformer 基础</strong></td>
+<td align="right"><strong>27.3</strong></td>
+<td align="right">38.1</td>
+<td align="right"><strong>$3.3\cdot10^{18}$</strong></td>
+</tr>
+<tr>
+<td><strong>Transformer 大</strong></td>
+<td align="right"><strong>28.4</strong></td>
+<td align="right"><strong>41.0</strong></td>
+<td align="right">$2.3\cdot10^{19}$</td>
+</tr>
+</tbody></table>
+<p>要点：</p>
+<ul>
+<li>英译德任务上，大模型取得 28.4 BLEU，比此前最好的结果（包括集成模型）高出 2.0 以上；</li>
+<li>英译法任务上，大模型的 41.0 BLEU 超过了所有已发表的单模型，训练成本不到此前最佳模型的 $1&#x2F;4$；</li>
+<li>基础模型仅用其他模型一小部分的训练成本，就超过了此前发表的所有单模型和集成模型。</li>
+</ul>
+<p>解码使用束搜索，束大小为 4，长度惩罚 $\alpha&#x3D;0.6$；最大输出长度设为输入长度加 50，但允许提前终止。</p>
+<h3 id="2-消融实验"><a href="#2-消融实验" class="headerlink" title="2. 消融实验"></a>2. 消融实验</h3><p>论文在开发集 newstest2013 上改动基础模型的各个部分，几条结论比较有价值：</p>
+<ul>
+<li><strong>注意力头数存在最优区间</strong>。单头比最佳设置低 0.9 BLEU；但头数过多（如 32 头）时质量同样下降——每个头的维度被压得太小；</li>
+<li><strong>减小 $d_k$ 会损害质量</strong>。这说明判断查询与键是否兼容并不是一件简单的事，比点积更复杂的兼容性函数可能有价值；</li>
+<li><strong>模型越大越好，dropout 很有必要</strong>。增大 $N$、$d_{\text{model}}$、$d_{ff}$ 都能带来提升；关掉 dropout 则明显过拟合；</li>
+<li><strong>位置编码用正弦函数还是可学习嵌入，结果几乎一样</strong>。</li>
+</ul>
+<hr>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>Transformer 是第一个完全依赖注意力、不使用与序列对齐的循环或卷积结构的序列转换模型。它用多头自注意力替换了编码器-解码器架构中最常见的循环层，换来了两个直接收益：任意两个位置之间的路径长度变为常数，以及层内计算的完全并行。</p>
+<p>回头看，这篇论文的价值不只在于两个翻译任务上的 SOTA，更在于它给出的架构后来成为了几乎所有大规模语言模型的基础。文中提出的若干细节——缩放点积、多头、残差加层归一化、warmup 学习率、标签平滑——大多被原样沿用至今。</p>
+<p>论文结尾提到的几个方向也颇有预见性：把 Transformer 扩展到文本以外的模态，研究局部、受限的注意力以高效处理图像、音频和视频，以及降低生成过程的顺序性。这些在此后几年里都成了活跃的研究领域。</p>
+<p>官方实现开源在 <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor">tensor2tensor</a>。</p>
 
     </div>
 
@@ -454,6 +639,12 @@
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+              <a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/" rel="tag"># 注意力机制</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"># 自然语言处理</a>
+          </div>
 
         
 
