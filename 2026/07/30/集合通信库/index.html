@@ -27,17 +27,19 @@
 <meta property="og:description" content="集合通信库：从通信原语到 HCCL 与 xCCL 生态 一、为什么需要集合通信库 1.1 并行策略决定通信模式 1.2 集合通信库在软件栈中的位置   二、语义层：通信域与通信原语 2.1 通信域、rank 与一致性约束 2.2 通信原语的定义 2.3 并行策略到通信原语的映射   三、性能层：代价模型、下界与拓扑算法 3.1 代价模型 3.2 AllReduce 的通信量下界 3.3 主要拓扑">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-30T07:20:11.000Z">
-<meta property="article:modified_time" content="2026-07-30T05:22:31.941Z">
+<meta property="article:modified_time" content="2026-08-03T15:00:45.317Z">
 <meta property="article:author" content="Zhengzaishuru">
-<meta property="article:tag" content="AI Infra">
-<meta property="article:tag" content="Collective Communication">
 <meta property="article:tag" content="HCCL">
-<meta property="article:tag" content="HPC">
+<meta property="article:tag" content="MPI">
 <meta property="article:tag" content="MSCCL">
 <meta property="article:tag" content="NCCL">
 <meta property="article:tag" content="RCCL">
+<meta property="article:tag" content="RDMA">
 <meta property="article:tag" content="oneCCL">
-<meta property="article:tag" content="昇腾">
+<meta property="article:tag" content="分布式训练">
+<meta property="article:tag" content="拓扑感知通信">
+<meta property="article:tag" content="通信性能模型">
+<meta property="article:tag" content="集合通信">
 <meta name="twitter:card" content="summary">
 
 
@@ -307,12 +309,12 @@ mjx-container[display="true"] + br {
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">106</span>
+        <span class="site-state-item-count">280</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -367,9 +369,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-07-30 15:20:11 / 修改时间：13:22:31" itemprop="dateCreated datePublished" datetime="2026-07-30T15:20:11+08:00">2026-07-30</time>
+      <time title="创建时间：2026-07-30 15:20:11" itemprop="dateCreated datePublished" datetime="2026-07-30T15:20:11+08:00">2026-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-03 23:00:45" itemprop="dateModified" datetime="2026-08-03T23:00:45+08:00">2026-08-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -377,7 +385,11 @@ mjx-container[display="true"] + br {
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能互连网络</span></a>
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/" itemprop="url" rel="index"><span itemprop="name">集合通信</span></a>
         </span>
     </span>
 
@@ -1180,15 +1192,17 @@ mjx-container[display="true"] + br {
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/AI-Infra/" rel="tag"># AI Infra</a>
-              <a href="/tags/HPC/" rel="tag"># HPC</a>
-              <a href="/tags/Collective-Communication/" rel="tag"># Collective Communication</a>
+              <a href="/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/" rel="tag"># 集合通信</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/" rel="tag"># 分布式训练</a>
               <a href="/tags/NCCL/" rel="tag"># NCCL</a>
               <a href="/tags/HCCL/" rel="tag"># HCCL</a>
               <a href="/tags/RCCL/" rel="tag"># RCCL</a>
               <a href="/tags/oneCCL/" rel="tag"># oneCCL</a>
               <a href="/tags/MSCCL/" rel="tag"># MSCCL</a>
-              <a href="/tags/%E6%98%87%E8%85%BE/" rel="tag"># 昇腾</a>
+              <a href="/tags/MPI/" rel="tag"># MPI</a>
+              <a href="/tags/%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E9%80%9A%E4%BF%A1/" rel="tag"># 拓扑感知通信</a>
+              <a href="/tags/%E9%80%9A%E4%BF%A1%E6%80%A7%E8%83%BD%E6%A8%A1%E5%9E%8B/" rel="tag"># 通信性能模型</a>
           </div>
 
         
