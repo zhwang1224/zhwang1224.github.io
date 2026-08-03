@@ -36,13 +36,13 @@
       <rect x="50" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
     </g>
     <text class="text panel-title" x="80" y="176">规约散发前</text>
-    <text class="text muted small" x="180" y="175">每个 Rank 提供四个对应分片</text>
+    <text class="text muted small" x="218" y="175">每个 Rank 提供四个对应分片</text>
     
     <g filter="url(#shadow)">
       <rect x="820" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
     </g>
     <text class="text panel-title" x="850" y="176">规约散发后</text>
-    <text class="text muted small" x="950" y="175">每个 Rank 获得一个规约分片</text>
+    <text class="text muted small" x="988" y="175">每个 Rank 获得一个规约分片</text>
     
     <g>
       <text class="text" x="720" y="318" text-anchor="middle" font-size="22" font-weight="750">ReduceScatter</text>

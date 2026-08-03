@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+    <title id="title">ReduceScatterV（变长规约散发）集合通信示意图</title>
+    <desc id="desc">每个 Rank 提供相同的变长分块布局。规约后 Rank 0 到 Rank 3 分别获得长度为 1、2、3、4 的结果块。</desc>
+    
+    <defs>
+      <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+        <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+      </filter>
+      <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M 0 0 L 14 7 L 0 14 Z" fill="#2563eb"/>
+      </marker>
+      <marker id="lane-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2563eb"/>
+      </marker>
+      <style>
+        .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif; fill: #0f172a; }
+        .muted { fill: #64748b; }
+        .panel-title { font-size: 24px; font-weight: 700; }
+        .rank-label { font-size: 20px; font-weight: 650; }
+        .small { font-size: 16px; }
+        .data-label { font-size: 24px; font-weight: 750; fill: #1e3a8a; }
+      </style>
+    </defs>
+    <rect width="1440" height="760" fill="#f8fafc"/>
+    
+    <text class="text" x="50" y="58" font-size="32" font-weight="750">ReduceScatterV（变长规约散发）</text>
+    <text class="text muted" x="50" y="94" font-size="18">先规约完整向量，再按 recvcounts 指定的不同长度分配结果块</text>
+    <g transform="translate(1165 45)">
+      <rect width="225" height="44" rx="22" fill="#eff6ff" stroke="#bfdbfe"/>
+      <circle cx="24" cy="22" r="7" fill="#2563eb"/>
+      <text class="text" x="42" y="28" font-size="16" font-weight="650">逻辑语义示意图</text>
+    </g>
+    
+    
+    <g filter="url(#shadow)">
+      <rect x="50" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
+    </g>
+    <text class="text panel-title" x="80" y="176">变长规约散发前</text>
+    <text class="text muted small" x="266" y="175">每个 Rank 使用相同分块布局</text>
+    
+    <g filter="url(#shadow)">
+      <rect x="820" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
+    </g>
+    <text class="text panel-title" x="850" y="176">变长规约散发后</text>
+    <text class="text muted small" x="1036" y="175">各 Rank 的结果块长度不同</text>
+    
+    <g>
+      <text class="text" x="720" y="318" text-anchor="middle" font-size="22" font-weight="750">ReduceScatterV</text>
+      <text class="text muted" x="720" y="344" text-anchor="middle" font-size="14">无根集合操作</text>
+      <line x1="654" y1="380" x2="786" y2="380" stroke="#2563eb" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+    </g>
+    
+    <g>
+      <rect x="80" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="136" y="250" text-anchor="middle">Rank 0</text>
+      <line x1="96" y1="272" x2="176" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="96" y="300" width="80" height="17.1" rx="5" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1.8"/>
+      <text x="136" y="311.95" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="10" font-weight="700" fill="#15345b">A0 × 1</text>
+      <rect x="96" y="320.1" width="80" height="34.2" rx="5" fill="#a7f3d0" stroke="#34d399" stroke-width="1.8"/>
+      <text x="136" y="342.64000000000004" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">B0 × 2</text>
+      <rect x="96" y="357.3" width="80" height="51.300000000000004" rx="5" fill="#fde0a7" stroke="#f59e0b" stroke-width="1.8"/>
+      <text x="136" y="388.39" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">C0 × 3</text>
+      <rect x="96" y="411.6" width="80" height="68.4" rx="5" fill="#bae6fd" stroke="#38bdf8" stroke-width="1.8"/>
+      <text x="136" y="451.24" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">D0 × 4</text>
+      <text class="text muted" x="136" y="510" text-anchor="middle" font-size="14">input</text>
+    </g>
+    <g>
+      <rect x="212" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="268" y="250" text-anchor="middle">Rank 1</text>
+      <line x1="228" y1="272" x2="308" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="228" y="300" width="80" height="17.1" rx="5" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1.8"/>
+      <text x="268" y="311.95" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="10" font-weight="700" fill="#15345b">A1 × 1</text>
+      <rect x="228" y="320.1" width="80" height="34.2" rx="5" fill="#a7f3d0" stroke="#34d399" stroke-width="1.8"/>
+      <text x="268" y="342.64000000000004" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">B1 × 2</text>
+      <rect x="228" y="357.3" width="80" height="51.300000000000004" rx="5" fill="#fde0a7" stroke="#f59e0b" stroke-width="1.8"/>
+      <text x="268" y="388.39" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">C1 × 3</text>
+      <rect x="228" y="411.6" width="80" height="68.4" rx="5" fill="#bae6fd" stroke="#38bdf8" stroke-width="1.8"/>
+      <text x="268" y="451.24" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">D1 × 4</text>
+      <text class="text muted" x="268" y="510" text-anchor="middle" font-size="14">input</text>
+    </g>
+    <g>
+      <rect x="344" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="400" y="250" text-anchor="middle">Rank 2</text>
+      <line x1="360" y1="272" x2="440" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="360" y="300" width="80" height="17.1" rx="5" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1.8"/>
+      <text x="400" y="311.95" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="10" font-weight="700" fill="#15345b">A2 × 1</text>
+      <rect x="360" y="320.1" width="80" height="34.2" rx="5" fill="#a7f3d0" stroke="#34d399" stroke-width="1.8"/>
+      <text x="400" y="342.64000000000004" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">B2 × 2</text>
+      <rect x="360" y="357.3" width="80" height="51.300000000000004" rx="5" fill="#fde0a7" stroke="#f59e0b" stroke-width="1.8"/>
+      <text x="400" y="388.39" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">C2 × 3</text>
+      <rect x="360" y="411.6" width="80" height="68.4" rx="5" fill="#bae6fd" stroke="#38bdf8" stroke-width="1.8"/>
+      <text x="400" y="451.24" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">D2 × 4</text>
+      <text class="text muted" x="400" y="510" text-anchor="middle" font-size="14">input</text>
+    </g>
+    <g>
+      <rect x="476" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="532" y="250" text-anchor="middle">Rank 3</text>
+      <line x1="492" y1="272" x2="572" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="492" y="300" width="80" height="17.1" rx="5" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1.8"/>
+      <text x="532" y="311.95" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="10" font-weight="700" fill="#15345b">A3 × 1</text>
+      <rect x="492" y="320.1" width="80" height="34.2" rx="5" fill="#a7f3d0" stroke="#34d399" stroke-width="1.8"/>
+      <text x="532" y="342.64000000000004" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">B3 × 2</text>
+      <rect x="492" y="357.3" width="80" height="51.300000000000004" rx="5" fill="#fde0a7" stroke="#f59e0b" stroke-width="1.8"/>
+      <text x="532" y="388.39" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">C3 × 3</text>
+      <rect x="492" y="411.6" width="80" height="68.4" rx="5" fill="#bae6fd" stroke="#38bdf8" stroke-width="1.8"/>
+      <text x="532" y="451.24" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="16" font-weight="700" fill="#15345b">D3 × 4</text>
+      <text class="text muted" x="532" y="510" text-anchor="middle" font-size="14">input</text>
+    </g>
+    
+    <g>
+      <rect x="850" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="906" y="250" text-anchor="middle">Rank 0</text>
+      <line x1="866" y1="272" x2="946" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="866" y="357" width="80" height="66" rx="10" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1.8"/>
+      <text x="906" y="398.16" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="24" font-weight="700" fill="#15345b">ΣA × 1</text>
+      <text class="text muted" x="906" y="482" text-anchor="middle" font-size="14">count=1</text>
+    </g>
+    <g>
+      <rect x="982" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="1038" y="250" text-anchor="middle">Rank 1</text>
+      <line x1="998" y1="272" x2="1078" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="998" y="345" width="80" height="90" rx="10" fill="#a7f3d0" stroke="#34d399" stroke-width="1.8"/>
+      <text x="1038" y="398.16" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="24" font-weight="700" fill="#15345b">ΣB × 2</text>
+      <text class="text muted" x="1038" y="482" text-anchor="middle" font-size="14">count=2</text>
+    </g>
+    <g>
+      <rect x="1114" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="1170" y="250" text-anchor="middle">Rank 2</text>
+      <line x1="1130" y1="272" x2="1210" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="1130" y="333" width="80" height="114" rx="10" fill="#fde0a7" stroke="#f59e0b" stroke-width="1.8"/>
+      <text x="1170" y="398.16" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="24" font-weight="700" fill="#15345b">ΣC × 3</text>
+      <text class="text muted" x="1170" y="482" text-anchor="middle" font-size="14">count=3</text>
+    </g>
+    <g>
+      <rect x="1246" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <text class="text rank-label" x="1302" y="250" text-anchor="middle">Rank 3</text>
+      <line x1="1262" y1="272" x2="1342" y2="272" stroke="#e2e8f0"/>
+      
+      <rect x="1262" y="321" width="80" height="138" rx="10" fill="#bae6fd" stroke="#38bdf8" stroke-width="1.8"/>
+      <text x="1302" y="398.16" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="24" font-weight="700" fill="#15345b">ΣD × 4</text>
+      <text class="text muted" x="1302" y="482" text-anchor="middle" font-size="14">count=4</text>
+    </g>
+    
+    <g>
+      <circle cx="97" cy="592" r="6" fill="#2563eb"/>
+      <text class="text muted small" x="112" y="598">所有 Rank 使用相同 recvcounts = [1, 2, 3, 4]</text>
+    </g>
+    
+    <g>
+      <rect x="850" y="570" width="508" height="50" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+      <text class="text" x="1104" y="602" text-anchor="middle" font-size="18">输入长度 = Σᵢ recvcounts[i]；Rank i 接收 recvcounts[i] 个元素</text>
+    </g>
+    <text class="text muted" x="720" y="706" text-anchor="middle" font-size="15">MPI 将变长版本命名为 MPI_Reduce_scatter；等长版本则是 MPI_Reduce_scatter_block</text>
+  </svg>

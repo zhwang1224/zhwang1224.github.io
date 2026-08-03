@@ -36,13 +36,13 @@
       <rect x="50" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
     </g>
     <text class="text panel-title" x="80" y="176">全交换前</text>
-    <text class="text muted small" x="180" y="175">每列按目标 Rank 切分</text>
+    <text class="text muted small" x="194" y="175">每列按目标 Rank 切分</text>
     
     <g filter="url(#shadow)">
       <rect x="820" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
     </g>
     <text class="text panel-title" x="850" y="176">全交换后</text>
-    <text class="text muted small" x="950" y="175">每列汇集所有源 Rank 数据</text>
+    <text class="text muted small" x="964" y="175">每列汇集所有源 Rank 数据</text>
     
     <g>
       <text class="text" x="720" y="318" text-anchor="middle" font-size="22" font-weight="750">AllToAll</text>

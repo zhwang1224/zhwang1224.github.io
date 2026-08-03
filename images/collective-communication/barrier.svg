@@ -36,13 +36,13 @@
       <rect x="50" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
     </g>
     <text class="text panel-title" x="80" y="176">到达与等待</text>
-    <text class="text muted small" x="180" y="175">先到达的 Rank 必须等待</text>
+    <text class="text muted small" x="218" y="175">先到达的 Rank 必须等待</text>
       
     <g filter="url(#shadow)">
       <rect x="820" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
     </g>
     <text class="text panel-title" x="850" y="176">释放栅障</text>
-    <text class="text muted small" x="950" y="175">全部到达后才允许继续</text>
+    <text class="text muted small" x="964" y="175">全部到达后才允许继续</text>
       
     <g>
       <text class="text" x="720" y="318" text-anchor="middle" font-size="22" font-weight="750">Barrier</text>
