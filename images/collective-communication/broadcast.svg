@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Broadcast 集合通信示意图</title>
+  <desc id="desc">以 Rank 2 为根 Rank。广播前只有根 Rank 持有输入数据 X，广播后 Rank 0 到 Rank 3 均持有相同的数据 X。</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 0 0 L 14 7 L 0 14 Z" fill="#2563eb"/>
+    </marker>
+    <style>
+      .text { font-family: Inter, "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .panel-title { font-size: 24px; font-weight: 700; }
+      .rank-label { font-size: 20px; font-weight: 650; }
+      .small { font-size: 16px; }
+      .data-label { font-size: 28px; font-weight: 750; fill: #1e3a8a; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="760" fill="#f8fafc"/>
+
+  <text class="text" x="50" y="58" font-size="32" font-weight="750">Broadcast（广播）</text>
+  <text class="text muted" x="50" y="94" font-size="18">根 Rank 将同一份输入数据复制到通信域中的所有 Rank</text>
+  <g transform="translate(1165 45)">
+    <rect width="225" height="44" rx="22" fill="#eff6ff" stroke="#bfdbfe"/>
+    <circle cx="24" cy="22" r="7" fill="#2563eb"/>
+    <text class="text" x="42" y="28" font-size="16" font-weight="650">逻辑语义示意图</text>
+  </g>
+
+  <!-- 广播前 -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
+  </g>
+  <text class="text panel-title" x="80" y="176">广播前</text>
+  <text class="text muted small" x="180" y="175">仅根 Rank 持有输入数据</text>
+
+  <!-- Rank 0, before -->
+  <g>
+    <rect x="80" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text class="text rank-label" x="136" y="250" text-anchor="middle">Rank 0</text>
+    <line x1="96" y1="272" x2="176" y2="272" stroke="#e2e8f0"/>
+    <rect x="96" y="326" width="80" height="130" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="7 7"/>
+    <text class="text muted small" x="136" y="397" text-anchor="middle">空</text>
+  </g>
+
+  <!-- Rank 1, before -->
+  <g>
+    <rect x="212" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text class="text rank-label" x="268" y="250" text-anchor="middle">Rank 1</text>
+    <line x1="228" y1="272" x2="308" y2="272" stroke="#e2e8f0"/>
+    <rect x="228" y="326" width="80" height="130" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="7 7"/>
+    <text class="text muted small" x="268" y="397" text-anchor="middle">空</text>
+  </g>
+
+  <!-- Rank 2 root, before -->
+  <g>
+    <rect x="344" y="210" width="112" height="330" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <rect x="368" y="190" width="64" height="30" rx="15" fill="#2563eb"/>
+    <text x="400" y="211" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">ROOT</text>
+    <text class="text rank-label" x="400" y="250" text-anchor="middle">Rank 2</text>
+    <line x1="360" y1="272" x2="440" y2="272" stroke="#bfdbfe"/>
+    <rect x="360" y="326" width="80" height="130" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <text class="text data-label" x="400" y="400" text-anchor="middle">X</text>
+    <text class="text muted" x="400" y="482" text-anchor="middle" font-size="14">input</text>
+  </g>
+
+  <!-- Rank 3, before -->
+  <g>
+    <rect x="476" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text class="text rank-label" x="532" y="250" text-anchor="middle">Rank 3</text>
+    <line x1="492" y1="272" x2="572" y2="272" stroke="#e2e8f0"/>
+    <rect x="492" y="326" width="80" height="130" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="7 7"/>
+    <text class="text muted small" x="532" y="397" text-anchor="middle">空</text>
+  </g>
+
+  <g>
+    <circle cx="97" cy="592" r="6" fill="#2563eb"/>
+    <text class="text muted small" x="112" y="598">本例指定 Rank 2 为根 Rank</text>
+  </g>
+
+  <!-- 操作箭头 -->
+  <g>
+    <text class="text" x="720" y="318" text-anchor="middle" font-size="22" font-weight="750">Broadcast</text>
+    <text class="text muted" x="720" y="344" text-anchor="middle" font-size="14">同一通信域内</text>
+    <line x1="654" y1="380" x2="786" y2="380" stroke="#2563eb" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- 广播后 -->
+  <g filter="url(#shadow)">
+    <rect x="820" y="130" width="570" height="520" rx="22" fill="#ffffff" stroke="#dbe3ee"/>
+  </g>
+  <text class="text panel-title" x="850" y="176">广播后</text>
+  <text class="text muted small" x="950" y="175">所有 Rank 获得相同数据</text>
+
+  <!-- Rank 0, after -->
+  <g>
+    <rect x="850" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text class="text rank-label" x="906" y="250" text-anchor="middle">Rank 0</text>
+    <line x1="866" y1="272" x2="946" y2="272" stroke="#e2e8f0"/>
+    <rect x="866" y="326" width="80" height="130" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <text class="text data-label" x="906" y="400" text-anchor="middle">X</text>
+    <text class="text muted" x="906" y="482" text-anchor="middle" font-size="14">output</text>
+  </g>
+
+  <!-- Rank 1, after -->
+  <g>
+    <rect x="982" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text class="text rank-label" x="1038" y="250" text-anchor="middle">Rank 1</text>
+    <line x1="998" y1="272" x2="1078" y2="272" stroke="#e2e8f0"/>
+    <rect x="998" y="326" width="80" height="130" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <text class="text data-label" x="1038" y="400" text-anchor="middle">X</text>
+    <text class="text muted" x="1038" y="482" text-anchor="middle" font-size="14">output</text>
+  </g>
+
+  <!-- Rank 2 root, after -->
+  <g>
+    <rect x="1114" y="210" width="112" height="330" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <rect x="1138" y="190" width="64" height="30" rx="15" fill="#2563eb"/>
+    <text x="1170" y="211" text-anchor="middle" font-family="Inter, 'Noto Sans SC', 'Microsoft YaHei', Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">ROOT</text>
+    <text class="text rank-label" x="1170" y="250" text-anchor="middle">Rank 2</text>
+    <line x1="1130" y1="272" x2="1210" y2="272" stroke="#bfdbfe"/>
+    <rect x="1130" y="326" width="80" height="130" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <text class="text data-label" x="1170" y="400" text-anchor="middle">X</text>
+    <text class="text muted" x="1170" y="482" text-anchor="middle" font-size="14">output</text>
+  </g>
+
+  <!-- Rank 3, after -->
+  <g>
+    <rect x="1246" y="210" width="112" height="330" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text class="text rank-label" x="1302" y="250" text-anchor="middle">Rank 3</text>
+    <line x1="1262" y1="272" x2="1342" y2="272" stroke="#e2e8f0"/>
+    <rect x="1262" y="326" width="80" height="130" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <text class="text data-label" x="1302" y="400" text-anchor="middle">X</text>
+    <text class="text muted" x="1302" y="482" text-anchor="middle" font-size="14">output</text>
+  </g>
+
+  <g>
+    <rect x="850" y="570" width="508" height="50" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text class="text" x="1104" y="602" text-anchor="middle" font-size="18">
+      out<tspan baseline-shift="sub" font-size="13">i</tspan>
+      <tspan baseline-shift="baseline"> = in</tspan><tspan baseline-shift="sub" font-size="13">root</tspan>
+      <tspan baseline-shift="baseline">，i ∈ {0, 1, 2, 3}</tspan>
+    </text>
+  </g>
+
+  <text class="text muted" x="720" y="706" text-anchor="middle" font-size="15">图示描述 Broadcast 的接口语义，不限定底层采用树、环或其他物理传输算法</text>
+</svg>
