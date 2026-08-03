@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="InfiniBand 与以太网：从 RDMA、无损网络到 AI&#x2F;HPC 集群选型 IB 与以太网是什么 1. InfiniBand 是一套完整的交换式互连架构 2. Ethernet 首先是一套通用链路与帧交换标准 3. RoCEv2 是 RDMA 与 Ethernet 的结合   二、RDMA：InfiniBand 与 RoCE 的共同点和分界线 InfiniBand 的 RDMA">
 <meta property="og:type" content="article">
@@ -61,6 +61,8 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
@@ -195,7 +197,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -270,6 +272,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -349,7 +358,7 @@
 <li>RoCEv2 使用 UDP&#x2F;IP 封装，可以在三层网络中路由。</li>
 </ul>
 <p>RoCE 复用了 RDMA 的 QP、Memory Region、Completion Queue 和 Verbs 编程模型，但底层换成 Ethernet&#x2F;IP 网络。因此，InfiniBand 和 RoCE 可以向应用提供相近的通信语义，网络控制、转发与拥塞处理方式却并不相同。<a target="_blank" rel="noopener" href="https://www.infinibandta.org/ibta-specification/">IBTA 的 RoCE 说明</a>明确指出，RoCE 能让 RDMA 运行在普通二层或三层 Ethernet 网络之上。</p>
-<p><img src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/01-stack-comparison.png" alt="InfiniBand、RoCEv2 与传统 Ethernet 的协议栈比较"></p>
+<p><img data-src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/01-stack-comparison.png" alt="InfiniBand、RoCEv2 与传统 Ethernet 的协议栈比较"></p>
 <p><em>图 1：三者可以承载相同的 AI&#x2F;HPC 应用，但数据路径、传输语义和底层网络不同。</em></p>
 <h2 id="二、RDMA：InfiniBand-与-RoCE-的共同点和分界线"><a href="#二、RDMA：InfiniBand-与-RoCE-的共同点和分界线" class="headerlink" title="二、RDMA：InfiniBand 与 RoCE 的共同点和分界线"></a>二、RDMA：InfiniBand 与 RoCE 的共同点和分界线</h2><p>RDMA 允许网络适配器直接在本地与远端已注册内存之间搬运数据。连接建立、内存注册和权限交换完成后，稳定态数据传输不需要远端 CPU 逐包接收和复制，也不经过传统内核 TCP&#x2F;IP 数据路径。</p>
 <h3 id="InfiniBand-的-RDMA"><a href="#InfiniBand-的-RDMA" class="headerlink" title="InfiniBand 的 RDMA"></a>InfiniBand 的 RDMA</h3><p>在 InfiniBand 中，RDMA 从传输层到链路层都是架构的原生组成部分。HCA 生成 InfiniBand 报文，交换机依据 LID 转发，链路信用机制抑制因下游缓冲区不足造成的丢包，RC 传输负责端到端确认、排序和重传。</p>
@@ -371,7 +380,7 @@
 </ol>
 <p>NVIDIA 的<a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/winof2v310/ethernet%2Bnetwork">RoCEv2 Congestion Management 文档</a>将这一过程划分为 Congestion Point、Notification Point 和 Reaction Point。</p>
 <p>PFC（Priority-based Flow Control，基于优先级的流量控制）以优先级而不是单条流为粒度暂停链路。它能阻止队列溢出，却可能带来 Head-of-Line Blocking、暂停传播和潜在死锁。因此，现代 RoCE 设计通常把端到端速率控制作为主要手段，把 PFC 视为接近溢出时的保护机制，而不是让网络长期依赖 PAUSE 维持稳定。<a target="_blank" rel="noopener" href="https://1.ieee802.org/dcb/802-1qbb/">IEEE 802.1Qbb</a>定义了按流量类别运行的 Priority-based Flow Control。</p>
-<p><img src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/02-congestion-control.png" alt="InfiniBand Credit Flow Control 与 RoCEv2 ECN&#x2F;PFC 拥塞控制"></p>
+<p><img data-src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/02-congestion-control.png" alt="InfiniBand Credit Flow Control 与 RoCEv2 ECN&#x2F;PFC 拥塞控制"></p>
 <p><em>图 2：InfiniBand 用 credit 约束逐跳发送；RoCEv2 主要通过 ECN&#x2F;CNP 形成端到端减速闭环，并可使用 PFC 作为链路级保护。</em></p>
 <h2 id="四、控制平面与路由方式"><a href="#四、控制平面与路由方式" class="headerlink" title="四、控制平面与路由方式"></a>四、控制平面与路由方式</h2><h3 id="InfiniBand：Subnet-Manager-集中配置子网"><a href="#InfiniBand：Subnet-Manager-集中配置子网" class="headerlink" title="InfiniBand：Subnet Manager 集中配置子网"></a>InfiniBand：Subnet Manager 集中配置子网</h3><p>InfiniBand 子网中只有一个处于 Master 状态的 Subnet Manager，通常还会部署 Standby SM。SM 扫描 Fabric，分配 LID，计算路径并将线性转发表写入交换机，还负责分区、QoS 和部分管理策略。</p>
 <p>数据平面建立后，普通数据包由 HCA 和交换机硬件直接转发，不会逐包经过 SM。SM 的集中式设计使专用计算 Fabric 的拓扑和路由保持一致，但运维人员仍然需要配置路由算法、QoS、拥塞控制、固件和高可用，并非“安装 SM 后网络就自动运行”。</p>
@@ -522,7 +531,7 @@
 <li>Ethernet Management Network：登录、调度、监控、镜像和业务管理；</li>
 <li>BMC&#x2F;OOB Network：带外管理、开关机和故障恢复。</li>
 </ul>
-<p><img src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/03-hybrid-fabric.png" alt="AI&#x2F;HPC 集群中的 InfiniBand 与 Ethernet 混合部署"></p>
+<p><img data-src="/images/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/03-hybrid-fabric.png" alt="AI&#x2F;HPC 集群中的 InfiniBand 与 Ethernet 混合部署"></p>
 <p><em>图 3：高性能计算网络、存储网络、管理网络和带外网络可以分别选用最合适的技术。</em></p>
 <p>这种分离能够避免普通管理流量干扰集合通信，也允许计算和存储网络采用不同的带宽、拓扑与可靠性策略。是否让存储共享计算 Fabric，需要根据数据路径、故障域、端口预算和作业行为单独评估。</p>
 <h2 id="十一、总结"><a href="#十一、总结" class="headerlink" title="十一、总结"></a>十一、总结</h2><p>InfiniBand 与 Ethernet 的核心差异，不是“一个快、一个慢”，而是两种不同的系统设计哲学：</p>
@@ -553,12 +562,12 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/InfiniBand/" rel="tag"># InfiniBand</a>
-              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
-              <a href="/tags/HPC/" rel="tag"># HPC</a>
-              <a href="/tags/AI-Infra/" rel="tag"># AI Infra</a>
               <a href="/tags/Ethernet/" rel="tag"># Ethernet</a>
               <a href="/tags/RoCEv2/" rel="tag"># RoCEv2</a>
               <a href="/tags/Ultra-Ethernet/" rel="tag"># Ultra Ethernet</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/AI-Infra/" rel="tag"># AI Infra</a>
+              <a href="/tags/HPC/" rel="tag"># HPC</a>
           </div>
 
         
@@ -584,6 +593,7 @@
 
 
 
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -615,10 +625,13 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
 
 </body>
 </html>

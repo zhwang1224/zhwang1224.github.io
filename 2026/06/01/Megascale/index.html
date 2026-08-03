@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU 1. 算法优化 2. 3D 并行通信重叠 3. 高效算子 4. 网络性能调优 5. 容错 6. 实验与部署经验">
 <meta property="og:type" content="article">
@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhwang1224.github.io/images/Megascale/image.png">
 <meta property="article:published_time" content="2026-06-01T13:19:41.000Z">
-<meta property="article:modified_time" content="2026-06-03T14:08:28.491Z">
+<meta property="article:modified_time" content="2026-08-03T14:51:09.366Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="模型优化">
 <meta property="article:tag" content="算子优化">
@@ -55,6 +55,8 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
@@ -189,7 +191,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -257,7 +259,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-03 22:08:28" itemprop="dateModified" datetime="2026-06-03T22:08:28+08:00">2026-06-03</time>
+      <time title="修改时间：2026-08-03 22:51:09" itemprop="dateModified" datetime="2026-08-03T22:51:09+08:00">2026-08-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -267,9 +269,20 @@
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">系统方案</span></a>
         </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
     </span>
 
   
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -299,7 +312,7 @@
 <h2 id="1-算法优化"><a href="#1-算法优化" class="headerlink" title="1. 算法优化"></a>1. 算法优化</h2><p>在算法层面对模型做了一些修改，并纳入了近期优化，以提高训练效率，同时不损害准确性。采用 transformer block 的并行版本，而不是标准的串行形式。通过这种方法，attention block 和 MLP block 的计算可以并行执行，从而减少计算时间。</p>
 <p>滑动窗口注意力（SWA）。 滑动窗口注意力是一种稀疏注意力机制，它在输入序列中的每个 token 周围使用一个固定大小的窗口。其计算复杂度为 O(s × w)，其中 s 是输入序列长度，w 是固定窗口大小。在 w ≪ s 的情况下，滑动窗口注意力比完整自注意力更高效，后者的计算复杂度为 O(s × s)。这使得训练更快，同时不损害准确性。</p>
 <p>大规模高效训练通常会受到 batch size 约束的阻碍。特别是，增加 batch size 可能会对模型收敛产生不利影响。LAMB 优化器已被证明能够将 BERT 训练的 batch size 扩展到 64K，同时不损害准确性。在 LLM 场景下，我们的实验发现 LAMB 可以在不损失准确性的情况下将 batch size 扩展到 4×。MegaScale 也通过 LAMB 优化器减少了 87.5% 的流水线气泡。</p>
-<h2 id="2-3D-并行通信重叠"><a href="#2-3D-并行通信重叠" class="headerlink" title="2. 3D 并行通信重叠"></a>2. 3D 并行通信重叠</h2><p><img src="/images/Megascale/image.png" alt="在这里插入图片描述"></p>
+<h2 id="2-3D-并行通信重叠"><a href="#2-3D-并行通信重叠" class="headerlink" title="2. 3D 并行通信重叠"></a>2. 3D 并行通信重叠</h2><p><img data-src="/images/Megascale/image.png" alt="在这里插入图片描述"></p>
 <h2 id="3-高效算子"><a href="#3-高效算子" class="headerlink" title="3. 高效算子"></a>3. 高效算子</h2><p>把零碎的小 kernel(计算单元)融合成大的。比如 attention 用 FlashAttention-2,LayerNorm 和 GeLU 这些原来由很多小 kernel 拼成,融合后减少了启动开销、内存访问也更高效</p>
 <h2 id="4-网络性能调优"><a href="#4-网络性能调优" class="headerlink" title="4. 网络性能调优"></a>4. 网络性能调优</h2><p>数据中心网络由基于 Broadcom Tomahawk 4 芯片的高性能交换机构建。每个 Tomahawk 芯片的总带宽为 25.6Tbps，具有 64×400Gbps 端口。三层交换机以类似 CLOS 的拓扑连接，以连接超过 10,000 个 GPU。对于每一层的交换机，下行链路与上行链路之间的带宽比例为 1:1。也就是说，32 个端口用作下行链路，32 个端口用作上行链路。该网络以较小直径提供高带宽。每个节点都可以在有限跳数内与其他节点通信。</p>
 <p>首先，在 top-of-rack（ToR）交换机层面，一个 400G 下行端口通过特定 AOC 线缆拆分为两个 200G 下行端口。由于每条上行链路的带宽是下行链路带宽的两倍，冲突概率降低。其次，服务器上的八个 200G NIC 以 multi-rail 方式连接到八个不同交换机。由同一组 ToR 交换机连接的 GPU 服务器数量可以达到 64。并且我们策略性地调度训练任务中的数据密集型节点，使其在同一 Top of Rack（ToR）交换机下运行。这种方法显著减少了通信所需的交换机跳数，并进一步降低了 ECMP 哈希冲突概率。</p>
@@ -360,6 +373,7 @@
 
 
 
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -391,10 +405,13 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
 
 </body>
 </html>

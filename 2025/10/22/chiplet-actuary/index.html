@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="Chiplet Actuary 1. 模型验证与讨论 1.1 RE 成本的验证与比较 1.2 单一系统的总成本比较   2. 芯粒复用方案探索 2.1 单芯粒多系统 2.2 单中心多扩展 2.3 多插槽多协同   主要结论">
 <meta property="og:type" content="article">
@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-5.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/chiplet-actuary/image-6.png">
 <meta property="article:published_time" content="2025-10-22T10:03:53.000Z">
-<meta property="article:modified_time" content="2025-10-23T12:24:47.263Z">
+<meta property="article:modified_time" content="2026-08-03T14:52:12.011Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="Chiplet">
 <meta property="article:tag" content="MCM">
@@ -60,6 +60,8 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
@@ -306,7 +308,7 @@ mjx-container[display="true"] + br {
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -374,7 +376,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-10-23 20:24:47" itemprop="dateModified" datetime="2025-10-23T20:24:47+08:00">2025-10-23</time>
+      <time title="修改时间：2026-08-03 22:52:12" itemprop="dateModified" datetime="2026-08-03T22:52:12+08:00">2026-08-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -387,6 +389,13 @@ mjx-container[display="true"] + br {
     </span>
 
   
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -417,20 +426,20 @@ mjx-container[display="true"] + br {
 <h1 id="Chiplet-Actuary"><a href="#Chiplet-Actuary" class="headerlink" title="Chiplet Actuary"></a>Chiplet Actuary</h1><p>多芯片集成被广泛认为是摩尔定律的延伸。节约成本是人们经常提到的一个优势，但以往的研究很少在定量层面上展示多芯片集成相较于单片 SoC 的成本优势。这篇文章建立了一个定量成本模型（Chiplet Actuary），并基于三种典型的多芯片集成技术提出一种多芯片系统的分析方法，用于评估来自良率提升、芯粒与封装复用以及异构性带来的成本收益。从多个角度重新审视多芯片系统的实际成本，并展示如何通过合适的多芯片架构降低整个 VLSI 系统的总成本。</p>
 <p>以往的研究主要关注芯片和硅中介层（interposer）的制造成本，却忽略了其他重要部分，如基板成本、D2D 接口开销以及非经常性工程成本 NRE。</p>
 <p>为更好地指导 VLSI 系统设计并解释体系结构挑战如划分问题，提出了一个基于三种典型多芯片集成技术的定量模型——Chiplet Actuary，用于成本评估。基于该模型，从多种角度探讨不同集成方案的总体成本。模型结合了外部数据以及内部数据，以提供较为准确的总成本估计。</p>
-<h2 id="1-模型验证与讨论"><a href="#1-模型验证与讨论" class="headerlink" title="1. 模型验证与讨论"></a>1. 模型验证与讨论</h2><h3 id="1-1-RE-成本的验证与比较"><a href="#1-1-RE-成本的验证与比较" class="headerlink" title="1.1 RE 成本的验证与比较"></a>1.1 RE 成本的验证与比较</h3><p><img src="/images/chiplet-actuary/image.png" alt="alt text"> </p>
+<h2 id="1-模型验证与讨论"><a href="#1-模型验证与讨论" class="headerlink" title="1. 模型验证与讨论"></a>1. 模型验证与讨论</h2><h3 id="1-1-RE-成本的验证与比较"><a href="#1-1-RE-成本的验证与比较" class="headerlink" title="1.1 RE 成本的验证与比较"></a>1.1 RE 成本的验证与比较</h3><p><img data-src="/images/chiplet-actuary/image.png" alt="alt text"> </p>
 <p>如图 5 所示，文中的模型实验结果与AMD的数据进行了对比，大致吻合。AMD 声称其基于芯粒的产品相比单片 SoC 具有显著的成本优势。然而，AMD 的宣传中未包含**重新集成（reintegration）**的额外成本。当将封装开销纳入考虑后，多芯片的成本优势被削弱。</p>
-<p><img src="/images/chiplet-actuary/image-1.png" alt="alt text"></p>
+<p><img data-src="/images/chiplet-actuary/image-1.png" alt="alt text"></p>
 <p>图5得出两个重要的结论：</p>
 <ul>
 <li>对任何工艺节点而言，随着总芯片面积增大，成本优势逐渐提升；且先进制程的拐点出现得更早。但随着芯粒数量增加（例如从 3 个增加到 5 个），良率提升带来的收益呈现边际递减。</li>
 <li>此外，InFO 与 2.5D 集成由于使用了大型单片中介层（interposer），自身也受到复杂封装工艺带来的低良率影响；再加上键合缺陷会浪费 KGD，因此在 7nm、900 mm²、2.5D 条件下，封装成本已与芯片成本相当（约 50%）。<br>因此，先进封装技术只有在先进工艺下才具备经济性。</li>
 </ul>
-<h3 id="1-2-单一系统的总成本比较"><a href="#1-2-单一系统的总成本比较" class="headerlink" title="1.2 单一系统的总成本比较"></a>1.2 单一系统的总成本比较</h3><p><img src="/images/chiplet-actuary/image-2.png" alt="alt text"></p>
+<h3 id="1-2-单一系统的总成本比较"><a href="#1-2-单一系统的总成本比较" class="headerlink" title="1.2 单一系统的总成本比较"></a>1.2 单一系统的总成本比较</h3><p><img data-src="/images/chiplet-actuary/image-2.png" alt="alt text"></p>
 <p>尽管 RE 成本是主要考虑因素，但在缺乏大规模产量保障的系统中，NRE 成本往往是决定性因素。以一个模块总面积为 800 mm² 的系统为例，分别以单片 SoC 与由两个芯粒组成的 MCM 方案实现。假设 D2D 接口开销为 10%，并根据模块与芯片数量摊销 NRE 成本。所有成本均归一化到 SoC 的 RE 成本。</p>
 <p>对于 5nm 工艺，当产量达到 200 万 时，多芯片架构开始真正实现成本回收。对于更小的系统，盈亏平衡点（turning point）更高。即除非系统面积或生产数量足够大，单片 SoC 仍是单一系统的更佳选择。</p>
-<h2 id="2-芯粒复用方案探索"><a href="#2-芯粒复用方案探索" class="headerlink" title="2. 芯粒复用方案探索"></a>2. 芯粒复用方案探索</h2><p><img src="/images/chiplet-actuary/image-3.png" alt="alt text"></p>
+<h2 id="2-芯粒复用方案探索"><a href="#2-芯粒复用方案探索" class="headerlink" title="2. 芯粒复用方案探索"></a>2. 芯粒复用方案探索</h2><p><img data-src="/images/chiplet-actuary/image-3.png" alt="alt text"></p>
 <h3 id="2-1-单芯粒多系统"><a href="#2-1-单芯粒多系统" class="headerlink" title="2.1 单芯粒多系统"></a>2.1 单芯粒多系统</h3><p>如图 8 所示，由于芯粒复用，芯片 NRE 成本大幅降低——4X 系统的 NRE 成本节约接近 75%，相比单片 SoC 优势显著。</p>
-<p><img src="/images/chiplet-actuary/image-4.png" alt="alt text"></p>
+<p><img data-src="/images/chiplet-actuary/image-4.png" alt="alt text"></p>
 <p>SCMS 的优势在于：</p>
 <ul>
 <li>只需一种芯粒即可构建多个系统，因此可立即见效，无需重新设计多个芯片。</li>
@@ -442,10 +451,10 @@ mjx-container[display="true"] + br {
 <li>仅有一种芯粒，无法实现异构集成。</li>
 </ul>
 <p>是否复用封装取决于 RE 成本与摊销后 NRE 成本孰为主导。对于高成本封装（如 2.5D），若在 1X 系统中复用 4X 的中介层，封装成本将超过 50%，因此封装复用在高端封装中并不经济；但 2.5D 架构仍能从芯粒复用中获益。</p>
-<h3 id="2-2-单中心多扩展"><a href="#2-2-单中心多扩展" class="headerlink" title="2.2 单中心多扩展"></a>2.2 单中心多扩展</h3><p><img src="/images/chiplet-actuary/image-5.png" alt="alt text"></p>
+<h3 id="2-2-单中心多扩展"><a href="#2-2-单中心多扩展" class="headerlink" title="2.2 单中心多扩展"></a>2.2 单中心多扩展</h3><p><img data-src="/images/chiplet-actuary/image-5.png" alt="alt text"></p>
 <p>如图 9 所示，SoC、普通 MCM、封装复用 MCM 及异构封装复用 MCM的摊销总成本被比较。</p>
 <p>OCME 的复用收益不如 SCMS 明显（NRE 节省 &lt; 50%），因为系统中包含三个不同芯粒，平均复用次数较少，因此需要更多系统才能发挥效果。但支持异构集成。<br>如图 9 所示，在引入异构封装后，总成本进一步降低 10% 以上；尤其在单 C 系统中，成本节约几乎达到 50%。对于那些包含大量不需要先进工艺节点的模块的系统，采用 OCME 架构更具成本效益。</p>
-<h3 id="2-3-多插槽多协同"><a href="#2-3-多插槽多协同" class="headerlink" title="2.3 多插槽多协同"></a>2.3 多插槽多协同</h3><p><img src="/images/chiplet-actuary/image-6.png" alt="alt text"></p>
+<h3 id="2-3-多插槽多协同"><a href="#2-3-多插槽多协同" class="headerlink" title="2.3 多插槽多协同"></a>2.3 多插槽多协同</h3><p><img data-src="/images/chiplet-actuary/image-6.png" alt="alt text"></p>
 <p>只需 6 个芯粒 + 1 个四插槽封装，理论上即可构建多达 119 种不同系统。<br>我们假设所有复用可能性都被充分利用，每种系统产量为 50 万，并比较不同复用程度下的平均归一化成本。</p>
 <p>如图 10 所示，芯粒复用次数越多，NRE 成本摊销带来的收益越大。<br>当复用性被充分发挥时，摊销后的 NRE 成本几乎可以忽略，此时多芯片架构的巨大节省潜力显现。<br>其成本优势不仅来自 RE 成本降低，也来自 NRE 成本摊销。</p>
 <h2 id="主要结论"><a href="#主要结论" class="headerlink" title="主要结论"></a>主要结论</h2><ul>
@@ -490,6 +499,7 @@ mjx-container[display="true"] + br {
 
 
 
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -521,10 +531,13 @@ mjx-container[display="true"] + br {
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
 
 </body>
 </html>

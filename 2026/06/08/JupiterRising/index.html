@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="Jupiter Rising：Google 数据中心网络中 Clos 拓扑与集中式控制的十年 1. 背景以及主要解决问题 2. 网络演进 2.1  FireHose 1.0 2.2 FireHose 2.0 2.3 Watchtower 2.4 Saturn 2.5 jupiter   3. 外部连通性 4. 软件控制 1. 路由 2. 配置和管理   5. 经验 6. 结论">
 <meta property="og:type" content="article">
@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://zhwang1224.github.io/images/JupiterRising/image-11.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/JupiterRising/image-12.png">
 <meta property="article:published_time" content="2026-06-08T07:53:00.000Z">
-<meta property="article:modified_time" content="2026-06-15T09:24:24.493Z">
+<meta property="article:modified_time" content="2026-08-03T14:51:18.078Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="Clos">
 <meta property="article:tag" content="Fat-Tree">
@@ -71,6 +71,8 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
@@ -205,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -273,7 +275,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-06-15 17:24:24" itemprop="dateModified" datetime="2026-06-15T17:24:24+08:00">2026-06-15</time>
+      <time title="修改时间：2026-08-03 22:51:18" itemprop="dateModified" datetime="2026-08-03T22:51:18+08:00">2026-08-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,9 +285,20 @@
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">互连网络</span></a>
         </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+        </span>
     </span>
 
   
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>25 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -320,7 +333,7 @@
 
 
 <h1 id="Jupiter-Rising：Google-数据中心网络中-Clos-拓扑与集中式控制的十年"><a href="#Jupiter-Rising：Google-数据中心网络中-Clos-拓扑与集中式控制的十年" class="headerlink" title="Jupiter Rising：Google 数据中心网络中 Clos 拓扑与集中式控制的十年"></a>Jupiter Rising：Google 数据中心网络中 Clos 拓扑与集中式控制的十年</h1><h2 id="1-背景以及主要解决问题"><a href="#1-背景以及主要解决问题" class="headerlink" title="1. 背景以及主要解决问题"></a>1. 背景以及主要解决问题</h2><p>十年前，传统数据中心网络面临三个绕不开的难题：成本高、运维复杂、规模受限。当时网络的最大规模取决于市面上最高端交换机的能力，而这些交换机大多是从广域网产品改造而来——为支持各种互联网协议、超大路由表而堆砌了一堆数据中心其实用不上的功能，结果就是更贵、更复杂、上市更慢。与此同时，谷歌内部的带宽需求每 12 到 15 个月就翻一番，比互联网整体增长还快，驱动因素包括数据集爆炸式膨胀、Web 服务在单次请求中要访问越来越多数据，以及同一集群内关联应用之间的大量数据交换。<br>传统的”四柱式”集群架构（“four-post” cluster 2004 年，这个名字的由来在于四台集群路由器）虽然基本满足规模需求，但每台主机平均只有约 100 Mbps 带宽，还饱受丢包之苦。提升带宽又会大幅推高成本、缩减集群规模。谷歌由此得出结论：现成的商业方案无法同时满足他们在规模、管理和成本上的要求，必须自己造。</p>
-<p><img src="/images/JupiterRising/image.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image.png" alt="alt text"></p>
 <p>三个核心理念：<br>谷歌的解法借鉴了”用大量廉价服务器横向扩展计算”的思路，并把它搬到网络上，归纳为三条主线：</p>
 <p>一是<strong>Clos 拓扑</strong>。 用多级 Clos 结构来构建网络，可以通过增加层级近乎任意地扩展规模，同时具备天然的路径冗余——任何单点失效只造成很小的容量损失。代价是布线扇出和多路径路由变得更复杂。</p>
 <p>二是<strong>商用交换芯片</strong>。 不再采购功能繁多、小批量、高可靠的专用交换机，而是直接用通用、现货、按量计价的商用芯片，强调带宽密度和频繁的更新换代，从而以高性价比实现带宽的指数级增长。</p>
@@ -332,26 +345,26 @@
 <li>ToR 交换机：4 个 10G 端口（4×10G），放在机架顶部连接服务器。</li>
 </ul>
 <p><strong>ToR 交换机</strong>。每台 ToR 向上给 fabric 留 2×10GE 端口（朝上连网络），向下给 24×1GE 端口（朝南、面向服务器），其中实际接服务器的是 20×1GE——也就是每台 ToR 下面挂 20 台服务器，每台 1G。<br><strong>Fabric 交换机</strong>。每台 8 端口的 fabric 交换机 4×10G 向上，4×10G 向下。最顶层把全部 8×10G 端口均向下连接。<br><strong>聚合块（aggregation block）</strong>。 把若干 ToR 和 fabric 交换机组织成一个单元：每个聚合块装 16 台 ToR，也就是 16×20 &#x3D; 320 台机器。这个聚合块向上对外暴露 32×10G 端口，去连接 32 个 spine 块。<br><strong>Spine 块</strong>。 每个 spine 块提供 32×10G 端口，向下连接 32 个聚合块。32 个聚合块 × 每块 320 台机器 ≈ 1 万台机器，每台平均 1G 带宽。</p>
-<p><img src="/images/JupiterRising/image-1.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-1.png" alt="alt text"></p>
 <p>缺点 1 在于 ToR 基数太低，有 2 条 上行链路，文章举了个例子：如果在一个 MTTR（平均修复时间）窗口内，源 ToR 的左上行链路和目的 ToR 的右上行链路恰好都坏了，那这两台 ToR 下的机器就彼此通不了。其次谷歌团队当时没造过交换机、但很会造服务器，他们通过 PCI 板卡把交换 fabric 直接集成进服务器里（图 5 右上插图）。结果适得其反——服务器本身正常运行时间不理想，会崩溃、要频繁升级、重启又慢。更糟的是，有些服务器承载着连接多台其他服务器的 ToR，一旦这台服务器挂了，就不只是它自己掉线，而是带着一片机器一起断网。FH1.0 从未真正承载过生产流量。</p>
 <h3 id="2-2-FireHose-2-0"><a href="#2-2-FireHose-2-0" class="headerlink" title="2.2 FireHose 2.0"></a>2.2 FireHose 2.0</h3><p>FH1.1 是 FH1.0 架构的一个变体，最直接的教训就是不再让普通服务器去承载交换芯片。FH1.1 改用定制机箱，基于 Compact PCI 标准化设计，每个机箱装 6 块独立线卡，由一台专用的单板计算机(SBC)统一控制。但这些机箱内部没有背板，交换芯片之间不靠机箱内部互连，而是所有端口都引出到机箱外，用铺在数据中心地板上的铜缆连接。此外，谷歌还专门搭了一套独立的带外控制平面网络(CPN)来管理这些 SBC，把控制流量和数据流量彻底分开。</p>
 <p>拓扑上，FH1.1 的 spine 层和 FH1.0 一样。区别在于ToR 这次用两颗 4×10G+24×1G 的交换芯片在板上侧向拼成，对外呈现为一台有 4 条 10G 上行链路、48 条 1G 下行链路的 ToR 交换机，并做成独立的 1RU 设备、各自带 CPU 控制器。</p>
 <p>为了在 2:1 过度订阅下扩展到 2 万台机器，谷歌把两台 ToR 结对(buddy):每台 ToR 的 4 条上行里，2 条接 fabric、2 条横向接给配对的 ToR。这样一来，单台 ToR 下的机器在空闲时能借用全部 4 条上行链路向 fabric 突发，只是在争用时带宽会回落。</p>
 <p>配合聚合块内部布线方式的调整，FH1.1 相比 FH1.0 把可承载的机器数翻了一倍(单聚合块可达 640 台)，同时对链路故障更加鲁棒。</p>
-<p><img src="/images/JupiterRising/image-2.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-2.png" alt="alt text"></p>
 <p>不过，把布线搬到地板上的代价很快显现出来:铜缆互连成了最大的工程挑战。整个网络的搭建、测试、部署都极其费力且容易出错，尤其受制于 CX4 铜缆只有 14 米的长度上限——而 ToR 到下一级交换设备之间的距离往往最远，逼得团队必须精心规划每个组件的物理摆放。为此他们和厂商合作，专门为这一段开发了定制的电&#x2F;光&#x2F;电(EOE)电缆，把跨距从 14 米一举拉到 100 米，大幅缓解了布线压力。</p>
-<p><img src="/images/JupiterRising/image-3.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-3.png" alt="alt text"></p>
 <p>最后是上线策略上的谨慎。把一项未经验证的新网络技术直接用于关键业务，风险太大，于是谷歌让 FH1.1 与旧的四柱式集群并行部署，也就是所谓的”旁挂(bag-on-the-side)”模式:ToR 默认把流量转给四柱式集群(用于连外部数据中心等)，只有特定的集群内流量才走 FH1.1 的上行链路。由于旧集群是 1G 链路，这只需在每台 ToR 上保留 4 个 1GE 端口。更关键的是，他们还做了一个”大红按钮”故障安全开关——一旦 Firehose 出现灾难性故障，可以一键让所有 ToR 绕开它、退回老网络。正是这种”新旧并行 + 一键回退”的稳妥设计，让谷歌敢于把第一代定制 Clos 网络放进真实生产环境。</p>
 <h3 id="2-3-Watchtower"><a href="#2-3-Watchtower" class="headerlink" title="2.3 Watchtower"></a>2.3 Watchtower</h3><p>Firehose 1.1 的实战经验总体是正面的——它证明了用商用芯片搭的网络确实能给服务带来远超传统架构的带宽，而且单位带宽成本更低。但它留下了一个挥之不去的痛点:外部铜缆布线实在太折腾。于是第三代 fabric Watchtower 的核心思路，就是借助新一代更密的商用交换芯片(16×10G)，重新做回带背板的传统机箱——把 FH1.1 当初故意搬到地板上的互连，又收回了机箱内部。</p>
-<p><img src="/images/JupiterRising/image-4.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-4.png" alt="alt text"></p>
 <p>具体来说，一台 Watchtower 机箱由 8 块线卡组成，每块线卡上 3 颗交换芯片，对外提供 16×10GE 的 SFP+(Enhanced Small Form-factor Pluggable(增强型小型可插拔)) 端口，而三颗芯片同时都接到背板上实现内部端口互连。整台机箱对外是一个 128×10G 端口、内部无阻塞（Clos）的单元。图 9 所示的 Watchtower 部署显著比早期 Firehose 部署更容易。交换芯片更高的带宽密度还使我们能够构建更大且为单个服务器提供更多带宽的 fabric；随着服务器使用越来越多的核心，这是必要的。</p>
 <p>光纤成束进一步降低了 Watchtower 集群的布线复杂性。图 10 展示了没有任何电缆成束的 Watchtower fabric 部署。需要从每个机箱位置拉取不同长度的单根光纤，导致显著的部署开销。底部图显示成束如何显著降低复杂性。谷歌在每个机架中部署两个机箱，并将两个机架共同放置。然后，可以将电缆束拉到共同放置机架的中点，在那里每束电缆分到每个机架，然后进一步分到每个机箱。</p>
-<p><img src="/images/JupiterRising/image-5.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-5.png" alt="alt text"></p>
 <p>最后，以束形式制造光纤比单独光纤更具成本效益。电缆成束帮助将光纤成本（capex + opex，资本和运营支出）降低了近 40%，并将 Watchtower fabric 的启动提前了数周。表 3 总结了成束和成本节省，减少约43%。但绝对成本仍然很高。因此采用了填充部署。图 11 展示了两个选项（A）和（B），用于去填充交换机、光模块和光纤，图中以红色显示。（A）要求所有 spine S3 机箱预先部署，尽管边缘聚合块可能缓慢部署，因此会导致更高的初始成本。（B）的前期成本更渐进，因为不是所有 spine 机箱都在初始部署。（B）相对于（A）的另一个优点是每个 ToR 具有两倍突发带宽。Watchtower 和 Saturn 选了更省钱的 A;到了后来的 Jupiter，随着 fabric 走向建筑级、预先铺满整个 spine 的前期成本越来越高，加上更高 ToR 带宽的价值愈发凸显，谷歌才转向了 B。</p>
-<p><img src="/images/JupiterRising/image-6.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-6.png" alt="alt text"></p>
 <h3 id="2-4-Saturn"><a href="#2-4-Saturn" class="headerlink" title="2.4 Saturn"></a>2.4 Saturn</h3><p>Saturn 是我们集群架构的下一次迭代。主要目标是响应服务器带宽需求的持续增长，并进一步增加最大集群规模。Saturn 由 24x10G 商用芯片构建块构成。Saturn 机箱支持 12 块线卡，以提供 288 端口无阻塞交换机。这些机箱与新的 Pluto 单芯片 ToR 交换机配合使用。</p>
 <h3 id="2-5-jupiter"><a href="#2-5-jupiter" class="headerlink" title="2.5 jupiter"></a>2.5 jupiter</h3><p>在”构建块该做多大”这个问题上，谷歌选了条中间路线。两个极端分别是 Firehose 式的”每颗芯片都在地板上互连”和 Watchtower&#x2F;Saturn 式的”把单机箱做到尽可能大”，而 Jupiter 的部署单元是介于两者之间的 Centauri 机箱:4RU 机箱、两块线卡、每块两颗 16×40G 芯片，由独立的 CPU 线卡控制，每个端口可在 4×10G 和 40G 之间切换，芯片间不走背板、所有端口都引到前面板。当它用作 ToR 时，每颗芯片配成 48×10G 朝服务器、16×10G 朝 fabric，服务器首次能在生产中跑 40G 突发。</p>
-<p><img src="/images/JupiterRising/image-7.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-7.png" alt="alt text"></p>
 <p>往上看，4 个 Centauri 组成一个中间块(MB)——一个两级的阻塞网络，对下提供 256×10G 给 ToR、对上用 64×40G 接入 spine。每颗 ToR 芯片用双冗余 10G 链路接到 8 个 MB，这种双冗余让最常见的单链路故障或维护能就近快速收敛。每个聚合块向 spine 暴露 512×40G(满配)或 256×40G(去填充);spine 块则由 6 个 Centauri 组成，对外 128×40G。谷歌特意把 Jupiter 的规模卡在 64 个聚合块，目的也是为了在最大规模下，每对 spine 块和聚合块之间都能保有双冗余链路，从而在单链路故障时只需局部重新收敛。物理上，一个网络机架装 4 个 MB，一个 spine 机架装 2 个预布线的 spine 块，机架之间和到 ToR 之间用光纤束连接。最终，满配的 Jupiter 在服务器之间能提供 1.3 Pbps 的二分带宽。</p>
 <h2 id="3-外部连通性"><a href="#3-外部连通性" class="headerlink" title="3. 外部连通性"></a>3. 外部连通性</h2><ol>
 <li>WCC：退役集群路由器</li>
@@ -359,7 +372,7 @@
 <p>在前几个 Watchtower 部署中，所有集群 fabric 都作为旁挂网络部署，并与传统网络共存。为使用新的网络架构，谷歌通过使用集群边界路由器（CBR）将 fabric 直接连接到集群间网络层，从而退役集群路由器（CR）。图 15 展示了外部连通性的各种选择：i）从每个 ToR 保留一些链路，ii）在每个聚合块中保留端口，iii）在每个 spine 块中保留端口，iv）为外部连通性构建单独的聚合块。注意，i）类似于我们在 Firehose 1.1 中的方法。此外，假设最短路径路由，选项 i）和 ii）都无法提高外部突发带宽。</p>
 <p>谷歌选择选项 iv），因为我们希望有一个隔离的交换机层与外部路由器对等，而不是将对等功能分散到整个 spine 交换机集合。认为这种方法更安全，因为我们希望限制面向外部的配置更改的爆炸半径，并且它限制了需要将内部 IGP（第 5.2 节）与外部路由协议集成的位置。</p>
 <p>作为经验法则，他们用一到三个聚合块、拿出约 10% 的集群内带宽来做外部连通，CBR 之间用标准 eBGP 和外部对接，并通过自研的 Firepath 把默认路由分发进集群。WCC 的意义在于:fabric 从此真正独立，集群间的高吞吐批量传输被释放出来，而 CBR 这套模块化软硬件后来也在网络层级的多个场景里被反复复用。</p>
-<p><img src="/images/JupiterRising/image-8.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-8.png" alt="alt text"></p>
 <ol start="2">
 <li>集群间网络</li>
 </ol>
@@ -383,12 +396,12 @@
 <p>master 把全网汇总成一份链路状态数据库(LSD)，带一个单调递增的版本号，通过 CPN 上的 UDP&#x2F;IP 组播下发给所有 client。第一次发全量，之后只发增量(只发变化的部分)，所以效率很高——整张网的 LSD 压进 64KB 就够了。</p>
 <p>client 每收到一次 LSD 更新，就用它算出带 ECMP(等价多路径)的最短路径，并把结果写进本机的硬件转发表。为了避免变更太频繁把 client 压垮，master 还会对发给 client 的 LSD 变更数量做节流。</p>
 <p>master 和 client 之间维持 keepalive:master 周期性发心跳，里面带着自己的 master ID 和当前 LSD 版本号。如果某个 client 发现自己和 master 失了同步(比如漏收了一条 LSD 消息)，它就主动请求一次全量 LSD 更新，把状态补齐。</p>
-<p><img src="/images/JupiterRising/image-9.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-9.png" alt="alt text"></p>
 <ol start="3">
 <li>路径多样性与故障收敛</li>
 </ol>
 <p>为了在接口状态变化时快速收敛，每个 client 在收到 LSD 更新后独立计算新的路由解并更新转发表。表 4 展示了绕过组件故障的反应时间。由于高度路径多样性，大多数故障仅需要局部收敛，即故障相邻元素通常有多个其他可行的下一跳到最终目的地。交换机嵌入式栈可以快速从包含受影响链路的 ECMP 组中修剪失败链路&#x2F;下一跳。</p>
-<p><img src="/images/JupiterRising/image-10.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-10.png" alt="alt text"></p>
 <ol start="4">
 <li>Firepath Master 冗余协议</li>
 </ol>
@@ -415,14 +428,14 @@
 <ol start="3">
 <li>Fabric 运维和管理</li>
 </ol>
-<p><img src="/images/JupiterRising/image-11.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-11.png" alt="alt text"></p>
 <p>图 20 总结了 fabric 软件升级方法，利用 fabric 冗余进行升级。我们希望 fabric 容量的退化不超过 25%。该图展示了在 Clos 拓扑中分多步升级 fabric 机箱的两种方式。左图将所有机箱划分为四组。当升级红色组时，虚线红色链路被禁用。然而，该图说明 fabric 容量退化到 56.25%（75%*75%）。右图展示了一个更平滑但更耗时的升级过程，涉及八组。一次升级一台交换机会花费太长时间。</p>
 <h2 id="5-经验"><a href="#5-经验" class="headerlink" title="5. 经验"></a>5. 经验</h2><ol>
 <li>Fabric 拥塞</li>
 </ol>
 <p>尽管 fabric 具有容量，但当利用率接近 25% 时，网络经历了高拥塞丢包。有若干因素导致拥塞：i）流的固有突发性导致短时间间隔内的不可接纳流量，通常表现为 incast 或 outcast；ii）商用交换机缓冲有限，这对我们的服务器 TCP 栈不是最优；iii）为节省成本，网络某些部分被有意保持过度订阅，例如 ToR 的上行链路；iv）不完美的流哈希，尤其是在故障期间以及存在流量规模变化时。</p>
 <p>谷歌组合用了多种手段——按 QoS 优先丢低优先级流量;调主机 TCP 拥塞窗口别撑爆小缓冲;早期 fabric 在 ToR 上用链路级 pause;启用 ECN 并优化主机响应;按需部署 4&#x2F;8 上行的 Pluto ToR、或把去填充的链路补回来;调优芯片共享缓冲以吸收突发;仔细配哈希让 ECMP 负载更均衡。</p>
-<p><img src="/images/JupiterRising/image-12.png" alt="alt text"></p>
+<p><img data-src="/images/JupiterRising/image-12.png" alt="alt text"></p>
 <p>效果:在 25% 平均利用率下，典型 Clos fabric 的丢包率从 1% 降到 &lt;0.01%。剩下的丢包主要来自三处，按大小排:主机 fanin(流量扇入到某些主机)最大，其次是 ToR fanin(哈希不均+incast)，最后一小部分来自 ToR 上行的过度订阅。这块仍在持续改进。</p>
 <ol start="2">
 <li>故障中断</li>
@@ -471,6 +484,7 @@
 
 
 
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -502,10 +516,13 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
 
 </body>
 </html>

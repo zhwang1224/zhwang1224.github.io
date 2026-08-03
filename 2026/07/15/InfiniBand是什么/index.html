@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="InfiniBand 是什么？从交换式 Fabric、RDMA 到 AI&#x2F;HPC 集群 一、为什么需要 InfiniBand？ 二、InfiniBand 不是一根线，而是一张 Fabric 三、InfiniBand 的分层体系 1. 物理层：速率、通道与传输介质 2. 链路层：本地转发与基于信用的无损流控 3. 网络层：LID、GID 与子网 4. 传输层：QP 与可靠通信 5. 上层">
 <meta property="og:type" content="article">
@@ -58,6 +58,8 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
@@ -192,7 +194,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -267,6 +269,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -340,7 +349,7 @@
 </tr>
 </tbody></table>
 <p>HCA 不是一块只会收发以太帧的普通 NIC。它更像一个网络数据处理引擎：应用向它提交工作请求，HCA 使用 DMA 读取或写入主机内存，完成分段、排序、重传和完成通知等工作。支持 GPUDirect RDMA 时，数据还可以在 HCA 与 GPU 显存之间直接传输，避免绕行主机内存。</p>
-<p><img src="/images/Infiniband/01-fabric-architecture.png" alt="alt text"></p>
+<p><img data-src="/images/Infiniband/01-fabric-architecture.png" alt="alt text"></p>
 <h2 id="三、InfiniBand-的分层体系"><a href="#三、InfiniBand-的分层体系" class="headerlink" title="三、InfiniBand 的分层体系"></a>三、InfiniBand 的分层体系</h2><h3 id="1-物理层：速率、通道与传输介质"><a href="#1-物理层：速率、通道与传输介质" class="headerlink" title="1. 物理层：速率、通道与传输介质"></a>1. 物理层：速率、通道与传输介质</h3><p>物理层规定电气&#x2F;光学信号、编码、链路宽度、连接器和介质等内容。常见 InfiniBand 代际及 4X 端口的标称单向速率如下：</p>
 <table>
 <thead>
@@ -455,7 +464,7 @@
 <li>远端 HCA 校验 QP、地址、rkey 和权限后，通过 DMA 将数据写入目标内存；</li>
 <li>操作完成后，HCA 在 CQ 中生成 Completion Queue Entry（CQE）。</li>
 </ol>
-<p><img src="/images/Infiniband/03-rdma-write-path.png" alt="alt text"></p>
+<p><img data-src="/images/Infiniband/03-rdma-write-path.png" alt="alt text"></p>
 <p>因此，“绕过 CPU”应理解为：<strong>连接建立、内存注册和权限交换完成后，稳定态数据搬运不需要远端 CPU 逐包参与，也不必经过传统内核网络协议栈。</strong> 本地 CPU 或 GPU 仍要发起工作请求，应用也必须预先完成资源创建、内存注册和密钥交换。NVIDIA 的<a target="_blank" rel="noopener" href="https://networking-docs.nvidia.com/rdmaawareprogramming/infiniband">RDMA 编程文档</a>同样将 InfiniBand 概括为支持原生 RDMA、低延迟和低 CPU 开销的服务器与存储互连技术。</p>
 <h2 id="五、Subnet-Manager"><a href="#五、Subnet-Manager" class="headerlink" title="五、Subnet Manager"></a>五、Subnet Manager</h2><p>InfiniBand 把 Fabric 的控制平面与数据平面明确分离。</p>
 <p>Subnet Manager 会扫描子网中的 HCA、交换机和端口，发现物理拓扑，为端口分配 LID，计算路径，并把转发表、分区、QoS 等配置写入设备。Subnet Administrator（SA）则向节点提供路径、服务和多播等信息查询。</p>
@@ -542,8 +551,8 @@
           <div class="post-tags">
               <a href="/tags/InfiniBand/" rel="tag"># InfiniBand</a>
               <a href="/tags/RDMA/" rel="tag"># RDMA</a>
-              <a href="/tags/HPC/" rel="tag"># HPC</a>
               <a href="/tags/AI-Infra/" rel="tag"># AI Infra</a>
+              <a href="/tags/HPC/" rel="tag"># HPC</a>
               <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/" rel="tag"># 高性能互连</a>
           </div>
 
@@ -570,6 +579,7 @@
 
 
 
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -601,10 +611,13 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
 
 </body>
 </html>

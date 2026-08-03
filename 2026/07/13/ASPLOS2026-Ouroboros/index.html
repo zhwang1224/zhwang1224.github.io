@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构 1. 文章动机以及当前挑战 2. Ouroboros 的总体设计 3. 端到端推理框架 3.1 面向高 CIM 利用率的流水线并行 3.2 通信感知的权重映射   4. 实验部分 总结">
 <meta property="og:type" content="article">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://zhwang1224.github.io/images/ASPLOS2026-Ouroboros/image-7.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/ASPLOS2026-Ouroboros/image-8.png">
 <meta property="article:published_time" content="2026-07-13T05:37:42.000Z">
-<meta property="article:modified_time" content="2026-07-13T10:26:20.240Z">
+<meta property="article:modified_time" content="2026-08-03T14:52:19.558Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="CIM">
 <meta property="article:tag" content="Large Language Model Inference">
@@ -63,6 +63,8 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
@@ -197,7 +199,7 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -257,9 +259,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-07-13 13:37:42 / 修改时间：18:26:20" itemprop="dateCreated datePublished" datetime="2026-07-13T13:37:42+08:00">2026-07-13</time>
+      <time title="创建时间：2026-07-13 13:37:42" itemprop="dateCreated datePublished" datetime="2026-07-13T13:37:42+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-03 22:52:19" itemprop="dateModified" datetime="2026-08-03T22:52:19+08:00">2026-08-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -272,6 +280,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -298,7 +313,7 @@
 <h1 id="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级-SRAM-存内计算架构"><a href="#Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级-SRAM-存内计算架构" class="headerlink" title="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构"></a>Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构</h1><p>Ouroboros 的核心思想是：<strong>把大模型的权重、激活值和 KV Cache 全部放入晶圆级 SRAM，并直接在 SRAM 中完成计算，再通过 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射，让数千个存内计算核心真正高效地运转起来。</strong></p>
 <h2 id="1-文章动机以及当前挑战"><a href="#1-文章动机以及当前挑战" class="headerlink" title="1. 文章动机以及当前挑战"></a>1. 文章动机以及当前挑战</h2><p>LLM 规模的快速增长带来了一个根本性的部署挑战：LLM 推理越来越受到存储容量、存储带宽和数据移动开销的限制。随着 LLM 规模不断扩大，大量推理能量被浪费在模型参数、激活值和键值（Key-Value，KV）数据在不同存储层级之间的搬运上。</p>
 <p>而传统的 LLM 推理体系结构依赖深层存储层次结构，例如一级片上 SRAM 和二级片外 DRAM&#x2F;高带宽存储器。如图 1 所示，这条技术路线会产生“硬件扩展税”：深层存储层次之间的数据移动以及存储器之间的互连传输占据了主要能耗，其开销远远超过计算本身的成本。由于 LLM 推理属于存储密集型任务，这种过度的数据移动从根本上限制了能量效率和吞吐量。</p>
-<p><img src="/images/ASPLOS2026-Ouroboros/image.png" alt="alt text"></p>
+<p><img data-src="/images/ASPLOS2026-Ouroboros/image.png" alt="alt text"></p>
 <p>为了解决这一挑战，文章提出 Ouroboros——一种面向 LLM 推理的、基于 SRAM 的晶圆级存内计算体系结构。该体系结构在一级 SRAM 阵列内执行所有 LLM 操作，从而消除跨越深层存储层次的数据迁移。由于完全采用低密度 SRAM，Ouroboros 面临固有的容量约束，因此必须实现较高的 SRAM 利用率。在 CIM 体系结构中，SRAM 天然同时承担存储和计算两种功能，因此需要同时优化存储利用率和计算利用率。这带来了以下多个关键挑战。</p>
 <ul>
 <li>挑战 1：流水线气泡导致的低利用率。流水线并行通过立即消费中间激活值，提高了激活值存储效率。然而，由于 LLM 推理的计算强度会随着输入序列长度和批处理策略而显著变化，这种方法会导致 CIM 利用率不理想。传统的序列粒度流水线让不同阶段处理长度各异的序列，从而在阶段之间引入负载不均衡。</li>
@@ -313,18 +328,18 @@
 </ul>
 <p>解决方案：提出了经过优化的 CIM 核映射策略。</p>
 <h2 id="2-Ouroboros-的总体设计"><a href="#2-Ouroboros-的总体设计" class="headerlink" title="2. Ouroboros 的总体设计"></a>2. Ouroboros 的总体设计</h2><p>Ouroboros 构建了一套晶圆级 SRAM 存内计算系统。整片晶圆面积约为 (215,\mathrm{mm}\times215,\mathrm{mm})，由 (9\times7) 个同构 die 组成；每个 die 内又包含 (13\times17) 个 CIM 核。系统总共集成约 <strong>54 GB 片上 SRAM</strong>，用于保存模型权重、激活值和 KV Cache。</p>
-<p><img src="/images/ASPLOS2026-Ouroboros/image-2.png" alt="alt text"></p>
+<p><img data-src="/images/ASPLOS2026-Ouroboros/image-2.png" alt="alt text"></p>
 <p>裸片面积被设计得接近光罩尺寸上限，以最大化裸片内 SRAM 容量，同时最小化裸片间通信开销。每条核间链路在四个方向上均提供 256 位双向带宽，与核的缓冲区宽度相匹配，从而支持高吞吐量的裸片内数据传输；这对于层内归约和层间通信都至关重要。</p>
 <p>单个 CIM 核的结构（CIM 核微体系结构）如图 2(c) 所示。面积为 2.97 mm2 的核包含以下组件：1）输入缓冲区和输出缓冲区；2）包含 32 个交叉阵列的阵列、3）特殊功能单元（Special Function Unit，SFU），用于执行 softmax 等操作、4）控制单元，用于协调多个 CIM 核之间的同步，以支持模型并行和流水线并行，同时组织核内交叉阵列与 SFU 之间的流水线。</p>
-<h2 id="3-端到端推理框架"><a href="#3-端到端推理框架" class="headerlink" title="3. 端到端推理框架"></a>3. 端到端推理框架</h2><p><img src="/images/ASPLOS2026-Ouroboros/image-3.png" alt="alt text"></p>
+<h2 id="3-端到端推理框架"><a href="#3-端到端推理框架" class="headerlink" title="3. 端到端推理框架"></a>3. 端到端推理框架</h2><p><img data-src="/images/ASPLOS2026-Ouroboros/image-3.png" alt="alt text"></p>
 <p>该框架首先对模型进行流水线划分，随后进行细粒度流水线优化，以提高 CIM 资源利用率。接下来，文章设计了一种权重映射策略，其中包括硬件资源分配，以及用于最小化通信的分层映射方法。最后，为了提高片上 KV 缓存的利用率，我们设计了一种分布式动态 KV 缓存管理方案及相应的硬件支持。</p>
-<h3 id="3-1-面向高-CIM-利用率的流水线并行"><a href="#3-1-面向高-CIM-利用率的流水线并行" class="headerlink" title="3.1 面向高 CIM 利用率的流水线并行"></a>3.1 面向高 CIM 利用率的流水线并行</h3><p>如图 4 所示，每个 Transformer 块被划分为六个阶段，因此，对于包含 N 个 Transformer 块的模型，将形成统一的 6N 级流水线。<br><img src="/images/ASPLOS2026-Ouroboros/image-4.png" alt="alt text"></p>
+<h3 id="3-1-面向高-CIM-利用率的流水线并行"><a href="#3-1-面向高-CIM-利用率的流水线并行" class="headerlink" title="3.1 面向高 CIM 利用率的流水线并行"></a>3.1 面向高 CIM 利用率的流水线并行</h3><p>如图 4 所示，每个 Transformer 块被划分为六个阶段，因此，对于包含 N 个 Transformer 块的模型，将形成统一的 6N 级流水线。<br><img data-src="/images/ASPLOS2026-Ouroboros/image-4.png" alt="alt text"></p>
 <p>现有的流水线策略——无论是 mini-batch 粒度还是 head&#x2F;attention 粒度——都以”整条序列”作为调度的最小单位：不同序列被分配到不同的流水线阶段处理。但推理服务收到的请求长度是动态变化的，这种长度差异会在静态分配的流水线中引发负载不均衡，产生严重的流水线气泡（pipeline bubble）——部分 CIM 核心闲置等待，部分核心却超负荷运转，整体资源利用率被大幅拉低。由于 Ouroboros 受限于片上存储容量，无法像某些系统那样把 prefill 和 decode 两个阶段彻底拆分处理，当调度策略把不同长度、不同阶段的请求混合批处理时，这一问题会被进一步放大。</p>
 <p>Token-Grained Pipelining（TGP）：以词元为最小调度单位。</p>
 <p>针对这一问题，Ouroboros 提出了词元粒度流水线（TGP）。核心思路是：不再以”序列”而是以单个 token 作为流水线中最小的处理单位，让不同流水线阶段处理不同的 token，而非不同的 sequence。这样每个阶段每次只处理一个 token，计算负载在所有流水线阶段之间天然保持均衡，从根本上避免了因输入长度参差不齐而产生的资源闲置。<br>TGP 还带来一个额外收益：由于流水线粒度细化到单个 token，中间激活值缓冲区只需保存单个 token 的数据而非整条序列，这使激活值的存储需求降低了数个数量级——对于当今主流 LLM 动辄数千甚至数万的上下文窗口而言，这一优化直接决定了容量受限的晶圆级 SRAM 能否装得下这些中间数据。</p>
 <p>细粒度调度也带来了直接的挑战：Attention 机制本质上需要序列中所有 token 的 QKV 同时就位才能计算，而 TGP 是逐 token 顺序生成 QKV 的，这似乎会让流水线在整条序列生成完毕前一直阻塞。Ouroboros 利用了 decoder-only 架构因果掩码（causal mask）的特性来化解这一矛盾——每个 token 只需要与自身及之前的 token 做注意力计算，S 矩阵的有效值只分布在下三角区域。因此在 prefill 阶段，只要某个 token 的 QKV 生成完毕，就可以立即与之前所有 token 做注意力计算，无需等待整条序列的 KV 对全部就绪，计算结果与传统方式完全等价；而在 decode 阶段，自回归生成本身就是逐 token 进行的，这个问题自然不存在。</p>
 <p>对于包含编码器的双向注意力或 seq2seq 架构，情况有所不同：这类模型的掩码不再是完美的下三角矩阵，每个 token 的注意力计算需要等待其后的 token 一并生成完毕，因而必然引入停顿。Ouroboros 的应对策略是让 attention 相关阶段退化为序列粒度调度，其余阶段仍维持 token 级流水线。由于气泡只发生在序列级调度的边界上——只有当新调度进入的序列长度超过此前最长序列时才会产生相应长度的气泡——这种局部退化带来的吞吐损失十分有限。</p>
-<p><img src="/images/ASPLOS2026-Ouroboros/image-5.png" alt="alt text"></p>
+<p><img data-src="/images/ASPLOS2026-Ouroboros/image-5.png" alt="alt text"></p>
 <h3 id="3-2-通信感知的权重映射"><a href="#3-2-通信感知的权重映射" class="headerlink" title="3.2 通信感知的权重映射"></a>3.2 通信感知的权重映射</h3><p>在晶圆级 CIM 架构上，把神经网络各层拆分（tiling）到分布式的计算核心上执行，天然就会引入两类核心间通信：层间通信（传递中间激活值）和层内通信（做归约运算时的数据交换）。这两类通信的需求是相互冲突的——如果把处理同一层的核心紧密地聚在一起，层内的归约通信确实很省，但层与层之间的数据就得跨越很长的物理距离传输；反过来，如果把不同层的核心交错分布在晶圆上以缩短层间传输路径，层内归约又要付出巨大的通信代价。因此，如何在这两者之间找到平衡，是晶圆级 CIM 上高效执行 LLM 的关键问题之一。Ouroboros 为此设计了一套完整的映射方法学，分为核间映射（Inter-Core Mapping）和核内映射（Intra-Core Mapping）两个层次来分别解决。</p>
 <ul>
 <li>核间映射：用 MIQP 求解权重分布问题</li>
@@ -349,10 +364,10 @@
 </ul>
 <p>13B 规模模型：平均 5.4× 吞吐提升，且解码长度越长优势越明显——因为解码阶段本质是访存密集型的 GEMV 运算，恰好和 CIM、TGP 的设计高度契合<br>32B 规模模型：平均 2.8× 吞吐提升，提升相对温和，原因是单晶圆的 KV 缓存容量有限，导致存储的句子数量低于流水线深度，出现流水线欠载（这个问题可以通过多晶圆扩展缓解，见6.8）</p>
 <ul>
-<li>能效（图14）：相比 DGX A100、TPUv4、AttAcc、WSE2 分别降低能耗 84%、82%、78%、66%。主要归功于两点：全模型驻留片上省掉了DRAM访问；全CIM计算省掉了”权重从SRAM搬到计算单元”这一步的能耗。<br><img src="/images/ASPLOS2026-Ouroboros/image-6.png" alt="alt text"><br><img src="/images/ASPLOS2026-Ouroboros/image-7.png" alt="alt text"></li>
+<li>能效（图14）：相比 DGX A100、TPUv4、AttAcc、WSE2 分别降低能耗 84%、82%、78%、66%。主要归功于两点：全模型驻留片上省掉了DRAM访问；全CIM计算省掉了”权重从SRAM搬到计算单元”这一步的能耗。<br><img data-src="/images/ASPLOS2026-Ouroboros/image-6.png" alt="alt text"><br><img data-src="/images/ASPLOS2026-Ouroboros/image-7.png" alt="alt text"></li>
 </ul>
 <p>以 64 颗裸片经 NVLink 互联、张量并行8+流水线并行8、静态KV管理 为基线，逐步叠加各项设计（图15）。</p>
-<p><img src="/images/ASPLOS2026-Ouroboros/image-8.png" alt="alt text"></p>
+<p><img data-src="/images/ASPLOS2026-Ouroboros/image-8.png" alt="alt text"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>文章指出现有硬件体系结构产生显著“硬件扩展税”的主要原因是深层存储访问。</p>
 <p>基于此，提出了 Ouroboros，这是一种完全由 SRAM CIM 单元组成的晶圆级体系结构，通过消除数据移动来降低能耗。</p>
 <p>提出 TGP，以缓解动态输入造成的 CIM 核利用率低下问题；同时提出分布式动态 KV 缓存管理系统及相应的 CIM 硬件支持，以提高 KV 存储利用率。</p>
@@ -396,6 +411,7 @@
 
 
 
+    <div class="comments utterances-container"></div>
 </div>
   </main>
 
@@ -427,10 +443,13 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
 </noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
 
 </body>
 </html>
