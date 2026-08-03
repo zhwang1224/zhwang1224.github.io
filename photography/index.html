@@ -195,7 +195,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#photo-footprints-title"><span class="nav-number">1.</span> <span class="nav-text">摄影足迹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Jiujiang"><span class="nav-number">2.</span> <span class="nav-text">九江 Jiujiang</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Changsha"><span class="nav-number">3.</span> <span class="nav-text">长沙 Changsha</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Guilin"><span class="nav-number">4.</span> <span class="nav-text">桂林 Guilin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Kaifeng"><span class="nav-number">5.</span> <span class="nav-text">开封 Kaifeng</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Zhangjiajie"><span class="nav-number">6.</span> <span class="nav-text">张家界 Zhangjiajie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Beijing"><span class="nav-number">7.</span> <span class="nav-text">北京 Beijing</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#photo-map-title"><span class="nav-number">1.</span> <span class="nav-text">摄影足迹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Jiujiang"><span class="nav-number">2.</span> <span class="nav-text">九江 Jiujiang</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Changsha"><span class="nav-number">3.</span> <span class="nav-text">长沙 Changsha</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Guilin"><span class="nav-number">4.</span> <span class="nav-text">桂林 Guilin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Kaifeng"><span class="nav-number">5.</span> <span class="nav-text">开封 Kaifeng</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Zhangjiajie"><span class="nav-number">6.</span> <span class="nav-text">张家界 Zhangjiajie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#album-Beijing"><span class="nav-number">7.</span> <span class="nav-text">北京 Beijing</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -270,53 +270,119 @@
   color: var(--photo-text);
 }
 
-.post-body .photo-footprints {
-  margin: 0 0 32px;
+.post-body .photo-map-section {
+  margin: 0 0 42px;
 }
 
-.post-body .photo-footprints-header {
+.post-body .photo-map-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
   margin: 0 0 14px;
 }
 
-.post-body .photo-footprints-header h2 {
+.post-body .photo-map-copy h2 {
   margin: 0 0 6px;
   border: 0;
   color: var(--photo-text);
 }
 
-.post-body .photo-footprints-header p {
+.post-body .photo-map-copy p {
   margin: 0;
   color: var(--photo-muted);
 }
 
-.post-body .photo-footprint-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  column-gap: 24px;
-  border-top: 1px solid var(--photo-line);
-}
-
-.post-body .photo-footprint-link {
+.post-body .photo-location-jump {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 2px;
-  border-bottom: 1px solid var(--photo-line);
-  color: var(--photo-text);
-  text-decoration: none;
-  transition: color 0.2s ease, padding 0.2s ease;
-}
-
-.post-body .photo-footprint-link:hover {
-  padding-left: 6px;
-  color: var(--photo-accent);
-}
-
-.post-body .photo-footprint-count {
   flex: 0 0 auto;
+  gap: 8px;
+  margin: 0;
+}
+
+.post-body .photo-location-jump label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.post-body .photo-location-jump select,
+.post-body .photo-location-jump button {
+  min-height: 38px;
+  border: 1px solid var(--photo-line);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.post-body .photo-location-jump select {
+  min-width: 180px;
+  padding: 0 32px 0 11px;
+  color: var(--photo-text);
+  background: #fff;
+}
+
+.post-body .photo-location-jump button {
+  padding: 0 14px;
+  border-color: var(--photo-accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--photo-accent);
+}
+
+.post-body .photo-map {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: clamp(390px, 58vw, 560px);
+  border: 1px solid var(--photo-line);
+  border-radius: 10px;
+  background: var(--photo-bg);
+}
+
+.post-body .photo-map-status {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  color: var(--photo-muted);
+  text-align: center;
+}
+
+.post-body .photo-map-status code {
+  color: var(--photo-text);
+}
+
+.post-body .photo-map-attribution {
+  margin: 8px 2px 0;
   color: var(--photo-muted);
   font-size: 12px;
+  text-align: right;
+}
+
+.post-body .photo-map-attribution a {
+  color: inherit;
+}
+
+.photo-map-popup {
+  min-width: 150px;
+  color: #252525;
+  line-height: 1.7;
+}
+
+.photo-map-popup strong {
+  display: block;
+  font-size: 15px;
+}
+
+.photo-map-popup a {
+  color: #2f6f66;
+  font-weight: 700;
 }
 
 .post-body .photo-more-button,
@@ -430,6 +496,21 @@
 }
 
 @media (max-width: 767px) {
+  .post-body .photo-map-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .post-body .photo-location-jump select {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .post-body .photo-map {
+    height: 430px;
+  }
+
   .post-body .photo-album-header {
     grid-template-columns: 1fr;
     padding: 18px;
@@ -448,84 +529,62 @@
 </style>
     <div class="photography-page">
       
-    <section class="photo-footprints" aria-labelledby="photo-footprints-title">
-      <header class="photo-footprints-header">
-        <h2 id="photo-footprints-title">摄影足迹</h2>
-        <p>选择地点，打开对应的摄影相册。</p>
+    <section class="photo-map-section" aria-labelledby="photo-map-title">
+      <header class="photo-map-header">
+        <div class="photo-map-copy">
+          <h2 id="photo-map-title">摄影足迹</h2>
+          <p>点击地图标记，打开对应地点的摄影相册。</p>
+        </div>
+        <form class="photo-location-jump" onsubmit="window.location.href=this.elements.location.value; return false;">
+          <label for="photo-location-select">选择摄影地点</label>
+          <select id="photo-location-select" name="location" aria-label="选择摄影地点"><option value="/photography/Jiujiang/">九江 Jiujiang · 10 张</option><option value="/photography/Changsha/">长沙 Changsha · 18 张</option><option value="/photography/Guilin/">桂林 Guilin · 11 张</option><option value="/photography/Kaifeng/">开封 Kaifeng · 8 张</option><option value="/photography/Zhangjiajie/">张家界 Zhangjiajie · 6 张</option><option value="/photography/Beijing/">北京 Beijing · 6 张</option><option value="/photography/Nanjing/">南京 Nanjing · 7 张</option><option value="/photography/Shanghai/">上海 Shanghai · 5 张</option><option value="/photography/Qinghai/">青海 Qinghai · 8 张</option><option value="/photography/Pingxiang/">萍乡 Pingxiang · 10 张</option><option value="/photography/Xiangxi/">湘西 Xiangxi · 4 张</option><option value="/photography/Shenzhen/">深圳 Shenzhen · 2 张</option><option value="/photography/Guangzhou/">广州 Guangzhou · 4 张</option><option value="/photography/Wuxi/">无锡 Wuxi · 4 张</option><option value="/photography/Xuchang/">许昌 Xuchang · 1 张</option><option value="/photography/Yueyang/">岳阳 Yueyang · 12 张</option><option value="/photography/Zhengzhou/">郑州 Zhengzhou · 9 张</option><option value="/photography/Zhoukou/">周口 Zhoukou · 13 张</option><option value="/photography/Luoyang/">洛阳 Luoyang · 10 张</option><option value="/photography/Tianjin/">天津 Tianjin · 10 张</option><option value="/photography/Shiyan/">十堰 Shiyan · 6 张</option><option value="/photography/Jian/">吉安 Jian · 10 张</option><option value="/photography/Yanan/">延安 Yanan · 6 张</option></select>
+          <button type="submit">打开相册</button>
+        </form>
       </header>
-      <nav class="photo-footprint-list" aria-label="摄影地点">
-        <a class="photo-footprint-link" href="/photography/Jiujiang/">
-      <span class="photo-footprint-name">九江 Jiujiang</span>
-      <span class="photo-footprint-count">10 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Changsha/">
-      <span class="photo-footprint-name">长沙 Changsha</span>
-      <span class="photo-footprint-count">18 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Guilin/">
-      <span class="photo-footprint-name">桂林 Guilin</span>
-      <span class="photo-footprint-count">11 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Kaifeng/">
-      <span class="photo-footprint-name">开封 Kaifeng</span>
-      <span class="photo-footprint-count">8 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Zhangjiajie/">
-      <span class="photo-footprint-name">张家界 Zhangjiajie</span>
-      <span class="photo-footprint-count">6 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Beijing/">
-      <span class="photo-footprint-name">北京 Beijing</span>
-      <span class="photo-footprint-count">6 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Nanjing/">
-      <span class="photo-footprint-name">南京 Nanjing</span>
-      <span class="photo-footprint-count">7 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Shanghai/">
-      <span class="photo-footprint-name">上海 Shanghai</span>
-      <span class="photo-footprint-count">5 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Qinghai/">
-      <span class="photo-footprint-name">青海 Qinghai</span>
-      <span class="photo-footprint-count">8 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Pingxiang/">
-      <span class="photo-footprint-name">萍乡 Pingxiang</span>
-      <span class="photo-footprint-count">10 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Xiangxi/">
-      <span class="photo-footprint-name">湘西 Xiangxi</span>
-      <span class="photo-footprint-count">4 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Shenzhen/">
-      <span class="photo-footprint-name">深圳 Shenzhen</span>
-      <span class="photo-footprint-count">2 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Guangzhou/">
-      <span class="photo-footprint-name">广州 Guangzhou</span>
-      <span class="photo-footprint-count">4 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Wuxi/">
-      <span class="photo-footprint-name">无锡 Wuxi</span>
-      <span class="photo-footprint-count">4 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Xuchang/">
-      <span class="photo-footprint-name">许昌 Xuchang</span>
-      <span class="photo-footprint-count">1 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Yueyang/">
-      <span class="photo-footprint-name">岳阳 Yueyang</span>
-      <span class="photo-footprint-count">12 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Zhengzhou/">
-      <span class="photo-footprint-name">郑州 Zhengzhou</span>
-      <span class="photo-footprint-count">9 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Zhoukou/">
-      <span class="photo-footprint-name">周口 Zhoukou</span>
-      <span class="photo-footprint-count">13 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Luoyang/">
-      <span class="photo-footprint-name">洛阳 Luoyang</span>
-      <span class="photo-footprint-count">10 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Tianjin/">
-      <span class="photo-footprint-name">天津 Tianjin</span>
-      <span class="photo-footprint-count">10 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Shiyan/">
-      <span class="photo-footprint-name">十堰 Shiyan</span>
-      <span class="photo-footprint-count">6 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Jian/">
-      <span class="photo-footprint-name">吉安 Jian</span>
-      <span class="photo-footprint-count">10 张</span>
-    </a><a class="photo-footprint-link" href="/photography/Yanan/">
-      <span class="photo-footprint-name">延安 Yanan</span>
-      <span class="photo-footprint-count">6 张</span>
-    </a>
-      </nav>
+      <div id="photography-map" class="photo-map" role="region" aria-label="摄影地点地图">
+        <div class="photo-map-status">地图加载中…</div>
+      </div>
+      <p class="photo-map-attribution">底图来源：<a href="https://www.tianditu.gov.cn/" target="_blank" rel="noopener">天地图</a>　审图号：GS（2024）0568号</p>
     </section>
+    <script src="https://api.tianditu.gov.cn/api?v=4.0&tk=917f9947e04f3e97b558ee10f9342692"></script>
+    <script>
+      (function () {
+        var container = document.getElementById('photography-map');
+        if (!container || !window.T) return;
+
+        var locations = [{"title":"九江 Jiujiang","count":10,"url":"/photography/Jiujiang/","latitude":29.7051,"longitude":116.0019},{"title":"长沙 Changsha","count":18,"url":"/photography/Changsha/","latitude":28.2282,"longitude":112.9388},{"title":"桂林 Guilin","count":11,"url":"/photography/Guilin/","latitude":25.2736,"longitude":110.29},{"title":"开封 Kaifeng","count":8,"url":"/photography/Kaifeng/","latitude":34.7973,"longitude":114.3076},{"title":"张家界 Zhangjiajie","count":6,"url":"/photography/Zhangjiajie/","latitude":29.1171,"longitude":110.4792},{"title":"北京 Beijing","count":6,"url":"/photography/Beijing/","latitude":39.9042,"longitude":116.4074},{"title":"南京 Nanjing","count":7,"url":"/photography/Nanjing/","latitude":32.0603,"longitude":118.7969},{"title":"上海 Shanghai","count":5,"url":"/photography/Shanghai/","latitude":31.2304,"longitude":121.4737},{"title":"青海 Qinghai","count":8,"url":"/photography/Qinghai/","latitude":36.6171,"longitude":101.7782},{"title":"萍乡 Pingxiang","count":10,"url":"/photography/Pingxiang/","latitude":27.6229,"longitude":113.8547},{"title":"湘西 Xiangxi","count":4,"url":"/photography/Xiangxi/","latitude":28.3148,"longitude":109.7389},{"title":"深圳 Shenzhen","count":2,"url":"/photography/Shenzhen/","latitude":22.5431,"longitude":114.0579},{"title":"广州 Guangzhou","count":4,"url":"/photography/Guangzhou/","latitude":23.1291,"longitude":113.2644},{"title":"无锡 Wuxi","count":4,"url":"/photography/Wuxi/","latitude":31.4912,"longitude":120.3119},{"title":"许昌 Xuchang","count":1,"url":"/photography/Xuchang/","latitude":34.0357,"longitude":113.8526},{"title":"岳阳 Yueyang","count":12,"url":"/photography/Yueyang/","latitude":29.3571,"longitude":113.1292},{"title":"郑州 Zhengzhou","count":9,"url":"/photography/Zhengzhou/","latitude":34.72,"longitude":113.65},{"title":"周口 Zhoukou","count":13,"url":"/photography/Zhoukou/","latitude":33.6258,"longitude":114.6969},{"title":"洛阳 Luoyang","count":10,"url":"/photography/Luoyang/","latitude":34.6197,"longitude":112.454},{"title":"天津 Tianjin","count":10,"url":"/photography/Tianjin/","latitude":39.0851,"longitude":117.1994},{"title":"十堰 Shiyan","count":6,"url":"/photography/Shiyan/","latitude":32.65,"longitude":110.78},{"title":"吉安 Jian","count":10,"url":"/photography/Jian/","latitude":27.1117,"longitude":114.9864},{"title":"延安 Yanan","count":6,"url":"/photography/Yanan/","latitude":36.58,"longitude":109.45}];
+        var escapeText = function (value) {
+          return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        };
+
+        try {
+          container.innerHTML = '';
+          var map = new T.Map(container);
+          map.centerAndZoom(new T.LngLat(112.5, 32), 5);
+
+          locations.forEach(function (location) {
+            var point = new T.LngLat(location.longitude, location.latitude);
+            var marker = new T.Marker(point);
+            var content = '<div class="photo-map-popup"><strong>' + escapeText(location.title) +
+              '</strong><span>' + location.count + ' 张照片</span><br><a href="' +
+              escapeText(location.url) + '">打开相册</a></div>';
+            var infoWindow = new T.InfoWindow(content, { offset: new T.Point(0, -28) });
+
+            map.addOverLay(marker);
+            marker.addEventListener('click', function () {
+              marker.openInfoWindow(infoWindow);
+            });
+          });
+        } catch (error) {
+          container.innerHTML = '<div class="photo-map-status">地图暂时无法加载，请稍后重试或使用上方地点菜单。</div>';
+        }
+      }());
+    </script>
       
     <section class="photo-album" id="album-Jiujiang">
       <header class="photo-album-header">
