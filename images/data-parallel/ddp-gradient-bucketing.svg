@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title desc">
+  <title id="title">DDP 梯度分桶与通信重叠</title>
+  <desc id="desc">上半部分展示等待全部梯度计算完成后再执行一次整包 AllReduce，全部通信都暴露在反向传播之后。下半部分展示四个梯度 Bucket 依次就绪并异步发起 AllReduce，使前三个 Bucket 的通信与后续反向计算重叠，只留下最后一个 Bucket 的通信尾部。</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-12%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow-slate" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#2563eb"/>
+    </marker>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .panel-title { font-size: 23px; font-weight: 780; }
+      .lane { font-size: 17px; font-weight: 700; }
+      .block { font-size: 17px; font-weight: 730; }
+      .small { font-size: 14px; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1040" fill="#f8fafc"/>
+
+  <text class="text" x="58" y="58" font-size="36" font-weight="800">DDP 梯度分桶：把 AllReduce 藏进反向传播</text>
+  <text class="text muted" x="58" y="98" font-size="19">同一步内的计算—通信流水线；backward() 返回前仍会等待全部 Bucket 同步完成</text>
+
+  <g transform="translate(1090 42)">
+    <rect width="128" height="44" rx="22" fill="#dbeafe" stroke="#93c5fd"/>
+    <rect x="146" width="128" height="44" rx="22" fill="#ede9fe" stroke="#c4b5fd"/>
+    <rect x="292" width="180" height="44" rx="22" fill="#ffe4e6" stroke="#fda4af"/>
+    <circle cx="22" cy="22" r="7" fill="#2563eb"/>
+    <circle cx="168" cy="22" r="7" fill="#7c3aed"/>
+    <circle cx="314" cy="22" r="7" fill="#e11d48"/>
+    <text class="text" x="38" y="28" font-size="14" font-weight="650">反向计算</text>
+    <text class="text" x="184" y="28" font-size="14" font-weight="650">AllReduce</text>
+    <text class="text" x="330" y="28" font-size="14" font-weight="650">暴露通信时间</text>
+  </g>
+
+  <!-- Panel A: no overlap. -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="132" width="1504" height="324" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  </g>
+  <rect x="48" y="132" width="1504" height="62" rx="24" fill="#fff7ed"/>
+  <path d="M48 170 H1552 V194 H48 Z" fill="#fff7ed"/>
+  <circle cx="82" cy="163" r="16" fill="#f97316"/>
+  <text class="text" x="82" y="169" text-anchor="middle" font-size="17" font-weight="800" fill="#ffffff">A</text>
+  <text class="text panel-title" x="112" y="171">不分桶：反向传播结束后再整包同步</text>
+  <text class="text muted" x="1530" y="171" text-anchor="end" font-size="16">计算与通信完全串行</text>
+
+  <text class="text lane" x="82" y="272">计算流</text>
+  <text class="text lane" x="82" y="370">通信流</text>
+
+  <line x1="220" y1="221" x2="1490" y2="221" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-slate)"/>
+  <text class="text muted" x="1485" y="210" text-anchor="end" font-size="14">时间</text>
+
+  <g>
+    <rect x="250" y="242" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="470" y="242" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="690" y="242" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="910" y="242" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <text class="text block" x="360" y="277" text-anchor="middle">计算 Bucket 3 梯度</text>
+    <text class="text block" x="580" y="277" text-anchor="middle">计算 Bucket 2 梯度</text>
+    <text class="text block" x="800" y="277" text-anchor="middle">计算 Bucket 1 梯度</text>
+    <text class="text block" x="1020" y="277" text-anchor="middle">计算 Bucket 0 梯度</text>
+  </g>
+
+  <rect x="1130" y="330" width="330" height="66" rx="13" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <rect x="1130" y="319" width="330" height="88" rx="16" fill="#e11d48" opacity="0.09"/>
+  <text class="text block" x="1295" y="359" text-anchor="middle">全部梯度 AllReduce</text>
+  <text class="text" x="1295" y="383" text-anchor="middle" font-size="14" fill="#be123c">整段通信都暴露在关键路径上</text>
+
+  <line x1="1130" y1="212" x2="1130" y2="414" stroke="#e11d48" stroke-width="2" stroke-dasharray="7 7"/>
+  <rect x="1020" y="416" width="220" height="28" rx="14" fill="#ffe4e6" stroke="#fecdd3"/>
+  <text class="text" x="1130" y="436" text-anchor="middle" font-size="14" font-weight="700" fill="#be123c">反向传播在此结束</text>
+
+  <!-- Panel B: bucketed overlap. -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="484" width="1504" height="350" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  </g>
+  <rect x="48" y="484" width="1504" height="62" rx="24" fill="#eff6ff"/>
+  <path d="M48 522 H1552 V546 H48 Z" fill="#eff6ff"/>
+  <circle cx="82" cy="515" r="16" fill="#2563eb"/>
+  <text class="text" x="82" y="521" text-anchor="middle" font-size="17" font-weight="800" fill="#ffffff">B</text>
+  <text class="text panel-title" x="112" y="523">分桶：Bucket 就绪后立即进入 AllReduce 流水线</text>
+  <text class="text muted" x="1530" y="523" text-anchor="end" font-size="16">大部分通信被后续反向计算遮蔽</text>
+
+  <text class="text lane" x="82" y="624">计算流</text>
+  <text class="text lane" x="82" y="730">通信流</text>
+
+  <line x1="220" y1="573" x2="1490" y2="573" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow-slate)"/>
+  <text class="text muted" x="1485" y="562" text-anchor="end" font-size="14">时间</text>
+
+  <g>
+    <rect x="250" y="594" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="470" y="594" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="690" y="594" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="910" y="594" width="220" height="58" rx="11" fill="#dbeafe" stroke="#60a5fa"/>
+    <text class="text block" x="360" y="629" text-anchor="middle">计算 Bucket 3 梯度</text>
+    <text class="text block" x="580" y="629" text-anchor="middle">计算 Bucket 2 梯度</text>
+    <text class="text block" x="800" y="629" text-anchor="middle">计算 Bucket 1 梯度</text>
+    <text class="text block" x="1020" y="629" text-anchor="middle">计算 Bucket 0 梯度</text>
+  </g>
+
+  <g>
+    <rect x="470" y="690" width="170" height="60" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="690" y="690" width="170" height="60" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="910" y="690" width="170" height="60" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="1130" y="690" width="170" height="60" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <text class="text block" x="555" y="726" text-anchor="middle">AllReduce B3</text>
+    <text class="text block" x="775" y="726" text-anchor="middle">AllReduce B2</text>
+    <text class="text block" x="995" y="726" text-anchor="middle">AllReduce B1</text>
+    <text class="text block" x="1215" y="726" text-anchor="middle">AllReduce B0</text>
+  </g>
+
+  <g stroke="#2563eb" stroke-width="2.5" stroke-dasharray="5 5" marker-end="url(#arrow-blue)">
+    <path d="M470 652 L470 682"/>
+    <path d="M690 652 L690 682"/>
+    <path d="M910 652 L910 682"/>
+    <path d="M1130 652 L1130 682"/>
+  </g>
+  <g class="text" font-size="13" font-weight="650" fill="#1d4ed8">
+    <text x="480" y="675">就绪</text>
+    <text x="700" y="675">就绪</text>
+    <text x="920" y="675">就绪</text>
+    <text x="1140" y="675">就绪</text>
+  </g>
+
+  <rect x="470" y="675" width="660" height="91" rx="16" fill="#10b981" opacity="0.07"/>
+  <text class="text" x="800" y="786" text-anchor="middle" font-size="15" font-weight="700" fill="#047857">通信 B3、B2、B1 与后续反向计算重叠</text>
+
+  <rect x="1130" y="675" width="170" height="91" rx="16" fill="#e11d48" opacity="0.11"/>
+  <line x1="1130" y1="564" x2="1130" y2="774" stroke="#e11d48" stroke-width="2" stroke-dasharray="7 7"/>
+  <text class="text" x="1215" y="807" text-anchor="middle" font-size="14" font-weight="700" fill="#be123c">未被遮蔽的通信尾部</text>
+
+  <!-- Reducer state machine. -->
+  <text class="text" x="58" y="887" font-size="22" font-weight="780">一个 Bucket 的触发链路</text>
+  <text class="text muted" x="58" y="919" font-size="16">所有 Rank 使用相同 Bucket 顺序；最后一步完成后 backward() 才能返回</text>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="946" width="220" height="58" rx="16" fill="#ffffff" stroke="#93c5fd"/>
+    <rect x="320" y="946" width="220" height="58" rx="16" fill="#ffffff" stroke="#93c5fd"/>
+    <rect x="582" y="946" width="220" height="58" rx="16" fill="#ffffff" stroke="#fcd34d"/>
+    <rect x="844" y="946" width="220" height="58" rx="16" fill="#ffffff" stroke="#c4b5fd"/>
+    <rect x="1106" y="946" width="220" height="58" rx="16" fill="#ffffff" stroke="#86efac"/>
+    <rect x="1368" y="946" width="174" height="58" rx="16" fill="#ffffff" stroke="#86efac"/>
+  </g>
+  <g class="text" font-size="16" font-weight="700" text-anchor="middle">
+    <text x="168" y="981">参数梯度就绪</text>
+    <text x="430" y="981">Autograd Hook</text>
+    <text x="692" y="981">Bucket 全部就绪</text>
+    <text x="954" y="981">异步 AllReduce</text>
+    <text x="1216" y="981">等待全部完成</text>
+    <text x="1455" y="981">Optimizer</text>
+  </g>
+  <g stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow-slate)">
+    <line x1="278" y1="975" x2="308" y2="975"/>
+    <line x1="540" y1="975" x2="570" y2="975"/>
+    <line x1="802" y1="975" x2="832" y2="975"/>
+    <line x1="1064" y1="975" x2="1094" y2="975"/>
+    <line x1="1326" y1="975" x2="1356" y2="975"/>
+  </g>
+</svg>
