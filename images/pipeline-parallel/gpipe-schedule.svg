@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title desc">
+  <title id="title">GPipe Fill-Drain 调度时间线</title>
+  <desc id="desc">四个 Stage 和四个 Micro-batch 的 GPipe 调度。前半段依次填充和排空前向流水线，所有前向完成后开始反向，反向从最后一个 Stage 向第一个 Stage 传播。空白格表示流水线气泡。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .cell { font-size: 17px; font-weight: 780; text-anchor: middle; }
+      .tick { font-size: 14px; text-anchor: middle; fill: #64748b; }
+      .stage { font-size: 19px; font-weight: 760; text-anchor: end; }
+    </style>
+  </defs>
+  <rect width="1600" height="1040" fill="#f8fafc"/>
+
+  <text class="text" x="58" y="58" font-size="36" font-weight="800">GPipe：All-Forward-All-Backward（Fill-Drain）</text>
+  <text class="text muted" x="58" y="98" font-size="19">K = 4 个 Stage，M = 4 个 Micro-batch；每个格子表示一个逻辑计算时隙</text>
+
+  <g transform="translate(1120 42)">
+    <rect width="180" height="46" rx="23" fill="#dbeafe" stroke="#93c5fd"/>
+    <rect x="198" width="180" height="46" rx="23" fill="#fce7f3" stroke="#f9a8d4"/>
+    <circle cx="24" cy="23" r="7" fill="#2563eb"/>
+    <circle cx="222" cy="23" r="7" fill="#db2777"/>
+    <text class="text" x="43" y="29" font-size="15" font-weight="700">Fₘ：前向计算</text>
+    <text class="text" x="241" y="29" font-size="15" font-weight="700">Bₘ：反向计算</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="48" y="142" width="1504" height="590" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+
+  <text class="text" x="600" y="187" text-anchor="middle" font-size="22" font-weight="780" fill="#1d4ed8">Forward Phase：填充 → 稳态 → 排空</text>
+  <text class="text" x="1180" y="187" text-anchor="middle" font-size="22" font-weight="780" fill="#be185d">Backward Phase：反向填充 → 排空</text>
+
+  <!-- Time ticks and grid. -->
+  <g class="text tick">
+    <text x="316" y="228">t0</text><text x="396" y="228">t1</text><text x="476" y="228">t2</text>
+    <text x="556" y="228">t3</text><text x="636" y="228">t4</text><text x="716" y="228">t5</text>
+    <text x="796" y="228">t6</text><text x="876" y="228">Flush</text><text x="956" y="228">t8</text>
+    <text x="1036" y="228">t9</text><text x="1116" y="228">t10</text><text x="1196" y="228">t11</text>
+    <text x="1276" y="228">t12</text><text x="1356" y="228">t13</text><text x="1436" y="228">t14</text>
+  </g>
+
+  <g class="text stage">
+    <text x="250" y="292">Stage 0</text>
+    <text x="250" y="382">Stage 1</text>
+    <text x="250" y="472">Stage 2</text>
+    <text x="250" y="562">Stage 3</text>
+  </g>
+
+  <g fill="#f8fafc" stroke="#e2e8f0">
+    <rect x="280" y="250" width="1200" height="60" rx="10"/>
+    <rect x="280" y="340" width="1200" height="60" rx="10"/>
+    <rect x="280" y="430" width="1200" height="60" rx="10"/>
+    <rect x="280" y="520" width="1200" height="60" rx="10"/>
+  </g>
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="360" y1="250" x2="360" y2="580"/><line x1="440" y1="250" x2="440" y2="580"/>
+    <line x1="520" y1="250" x2="520" y2="580"/><line x1="600" y1="250" x2="600" y2="580"/>
+    <line x1="680" y1="250" x2="680" y2="580"/><line x1="760" y1="250" x2="760" y2="580"/>
+    <line x1="840" y1="250" x2="840" y2="580"/><line x1="920" y1="250" x2="920" y2="580"/>
+    <line x1="1000" y1="250" x2="1000" y2="580"/><line x1="1080" y1="250" x2="1080" y2="580"/>
+    <line x1="1160" y1="250" x2="1160" y2="580"/><line x1="1240" y1="250" x2="1240" y2="580"/>
+    <line x1="1320" y1="250" x2="1320" y2="580"/><line x1="1400" y1="250" x2="1400" y2="580"/>
+  </g>
+
+  <!-- Flush separator. -->
+  <rect x="840" y="238" width="80" height="354" fill="#fff7ed" opacity="0.92"/>
+  <line x1="880" y1="238" x2="880" y2="592" stroke="#f97316" stroke-width="2.5" stroke-dasharray="7 7"/>
+  <text class="text" x="880" y="620" text-anchor="middle" font-size="15" font-weight="750" fill="#c2410c">所有 Forward 完成后才进入 Backward</text>
+
+  <!-- Forward cells. -->
+  <g fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5">
+    <rect x="284" y="254" width="72" height="52" rx="9"/><rect x="364" y="254" width="72" height="52" rx="9"/>
+    <rect x="444" y="254" width="72" height="52" rx="9"/><rect x="524" y="254" width="72" height="52" rx="9"/>
+    <rect x="364" y="344" width="72" height="52" rx="9"/><rect x="444" y="344" width="72" height="52" rx="9"/>
+    <rect x="524" y="344" width="72" height="52" rx="9"/><rect x="604" y="344" width="72" height="52" rx="9"/>
+    <rect x="444" y="434" width="72" height="52" rx="9"/><rect x="524" y="434" width="72" height="52" rx="9"/>
+    <rect x="604" y="434" width="72" height="52" rx="9"/><rect x="684" y="434" width="72" height="52" rx="9"/>
+    <rect x="524" y="524" width="72" height="52" rx="9"/><rect x="604" y="524" width="72" height="52" rx="9"/>
+    <rect x="684" y="524" width="72" height="52" rx="9"/><rect x="764" y="524" width="72" height="52" rx="9"/>
+  </g>
+  <g class="text cell">
+    <text x="320" y="287">F₀</text><text x="400" y="287">F₁</text><text x="480" y="287">F₂</text><text x="560" y="287">F₃</text>
+    <text x="400" y="377">F₀</text><text x="480" y="377">F₁</text><text x="560" y="377">F₂</text><text x="640" y="377">F₃</text>
+    <text x="480" y="467">F₀</text><text x="560" y="467">F₁</text><text x="640" y="467">F₂</text><text x="720" y="467">F₃</text>
+    <text x="560" y="557">F₀</text><text x="640" y="557">F₁</text><text x="720" y="557">F₂</text><text x="800" y="557">F₃</text>
+  </g>
+
+  <!-- Backward cells. -->
+  <g fill="#fce7f3" stroke="#f472b6" stroke-width="1.5">
+    <rect x="1164" y="254" width="72" height="52" rx="9"/><rect x="1244" y="254" width="72" height="52" rx="9"/>
+    <rect x="1324" y="254" width="72" height="52" rx="9"/><rect x="1404" y="254" width="72" height="52" rx="9"/>
+    <rect x="1084" y="344" width="72" height="52" rx="9"/><rect x="1164" y="344" width="72" height="52" rx="9"/>
+    <rect x="1244" y="344" width="72" height="52" rx="9"/><rect x="1324" y="344" width="72" height="52" rx="9"/>
+    <rect x="1004" y="434" width="72" height="52" rx="9"/><rect x="1084" y="434" width="72" height="52" rx="9"/>
+    <rect x="1164" y="434" width="72" height="52" rx="9"/><rect x="1244" y="434" width="72" height="52" rx="9"/>
+    <rect x="924" y="524" width="72" height="52" rx="9"/><rect x="1004" y="524" width="72" height="52" rx="9"/>
+    <rect x="1084" y="524" width="72" height="52" rx="9"/><rect x="1164" y="524" width="72" height="52" rx="9"/>
+  </g>
+  <g class="text cell">
+    <text x="1200" y="287">B₃</text><text x="1280" y="287">B₂</text><text x="1360" y="287">B₁</text><text x="1440" y="287">B₀</text>
+    <text x="1120" y="377">B₃</text><text x="1200" y="377">B₂</text><text x="1280" y="377">B₁</text><text x="1360" y="377">B₀</text>
+    <text x="1040" y="467">B₃</text><text x="1120" y="467">B₂</text><text x="1200" y="467">B₁</text><text x="1280" y="467">B₀</text>
+    <text x="960" y="557">B₃</text><text x="1040" y="557">B₂</text><text x="1120" y="557">B₁</text><text x="1200" y="557">B₀</text>
+  </g>
+
+  <!-- Key phases. -->
+  <g filter="url(#shadow)">
+    <rect x="82" y="778" width="430" height="190" rx="22" fill="#ffffff" stroke="#bfdbfe"/>
+    <rect x="585" y="778" width="430" height="190" rx="22" fill="#ffffff" stroke="#fed7aa"/>
+    <rect x="1088" y="778" width="430" height="190" rx="22" fill="#ffffff" stroke="#fbcfe8"/>
+  </g>
+  <text class="text" x="122" y="825" font-size="21" font-weight="780">① Fill / Drain</text>
+  <text class="text muted" x="122" y="863" font-size="16">开始和结束时无法让所有 Stage 同时工作，</text>
+  <text class="text muted" x="122" y="891" font-size="16">空白格就是不可避免的 Pipeline Bubble。</text>
+  <text class="text muted" x="122" y="929" font-size="16">增加 Micro-batch 数可以摊薄固定气泡。</text>
+
+  <text class="text" x="625" y="825" font-size="21" font-weight="780">② 同一参数版本</text>
+  <text class="text muted" x="625" y="863" font-size="16">F₀～F₃ 和 B₀～B₃ 均使用同一版本参数。</text>
+  <text class="text muted" x="625" y="891" font-size="16">Flush 是同步语义的边界，不代表更新参数。</text>
+  <text class="text muted" x="625" y="929" font-size="16">所有反向完成后才执行 Optimizer Step。</text>
+
+  <text class="text" x="1128" y="825" font-size="21" font-weight="780">③ 梯度累积</text>
+  <text class="text muted" x="1128" y="863" font-size="16">每个 Stage 累积四个 Micro-batch 的本地</text>
+  <text class="text muted" x="1128" y="891" font-size="16">参数梯度，并按完整 Mini-batch 语义缩放。</text>
+  <text class="text muted" x="1128" y="929" font-size="16">这使 GPipe 保持同步梯度下降语义。</text>
+</svg>

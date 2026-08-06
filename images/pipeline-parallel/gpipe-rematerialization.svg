@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="960" viewBox="0 0 1600 960" role="img" aria-labelledby="title desc">
+  <title id="title">GPipe 激活重计算的显存与计算权衡</title>
+  <desc id="desc">左侧展示不使用重计算时，前向保存 Stage 内所有中间激活，反向直接读取。右侧展示 GPipe 只长期保存边界激活，释放内部激活，在反向前重新运行局部前向恢复中间结果，从而用额外计算换取显存。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-pink" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#db2777"/>
+    </marker>
+    <marker id="arrow-amber" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#d97706"/>
+    </marker>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .panel { font-size: 23px; font-weight: 780; }
+      .label { font-size: 17px; font-weight: 700; }
+      .small { font-size: 15px; }
+    </style>
+  </defs>
+  <rect width="1600" height="960" fill="#f8fafc"/>
+  <text class="text" x="58" y="58" font-size="36" font-weight="800">激活重计算：少存中间结果，反向前再算一次</text>
+  <text class="text muted" x="58" y="98" font-size="19">同一个 Stage、同一个 Micro-batch；参数始终常驻，只改变激活值的生命周期</text>
+
+  <!-- Panel A. -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="138" width="722" height="650" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="830" y="138" width="722" height="650" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <rect x="48" y="138" width="722" height="66" rx="26" fill="#fef2f2"/>
+  <path d="M48 178 H770 V204 H48 Z" fill="#fef2f2"/>
+  <rect x="830" y="138" width="722" height="66" rx="26" fill="#f0fdf4"/>
+  <path d="M830 178 H1552 V204 H830 Z" fill="#f0fdf4"/>
+
+  <text class="text panel" x="88" y="180">A. 不使用重计算</text>
+  <text class="text muted" x="742" y="180" text-anchor="end" font-size="16">显存高 · 计算少</text>
+  <text class="text panel" x="870" y="180">B. GPipe Re-materialization</text>
+  <text class="text muted" x="1524" y="180" text-anchor="end" font-size="16">显存低 · 计算增加</text>
+
+  <!-- Left forward chain. -->
+  <text class="text" x="90" y="250" font-size="19" font-weight="760" fill="#1d4ed8">Forward：保存每层输出</text>
+  <g filter="url(#shadow)">
+    <rect x="90" y="286" width="118" height="72" rx="14" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="258" y="286" width="118" height="72" rx="14" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="426" y="286" width="118" height="72" rx="14" fill="#dbeafe" stroke="#60a5fa"/>
+    <rect x="594" y="286" width="118" height="72" rx="14" fill="#dbeafe" stroke="#60a5fa"/>
+  </g>
+  <g class="text label" text-anchor="middle">
+    <text x="149" y="330">Layer 1</text><text x="317" y="330">Layer 2</text>
+    <text x="485" y="330">Layer 3</text><text x="653" y="330">Layer 4</text>
+  </g>
+  <g stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)">
+    <line x1="208" y1="322" x2="246" y2="322"/><line x1="376" y1="322" x2="414" y2="322"/>
+    <line x1="544" y1="322" x2="582" y2="322"/>
+  </g>
+
+  <text class="text" x="90" y="410" font-size="17" font-weight="720">显存中持续保留：</text>
+  <g>
+    <rect x="90" y="438" width="140" height="58" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <rect x="242" y="438" width="140" height="58" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <rect x="394" y="438" width="140" height="58" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <rect x="546" y="438" width="140" height="58" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <text class="text label" x="160" y="474" text-anchor="middle">a₁</text>
+    <text class="text label" x="312" y="474" text-anchor="middle">a₂</text>
+    <text class="text label" x="464" y="474" text-anchor="middle">a₃</text>
+    <text class="text label" x="616" y="474" text-anchor="middle">a₄</text>
+  </g>
+  <text class="text muted" x="90" y="526" font-size="15">四个中间激活一直存活，直到对应反向计算开始。</text>
+
+  <text class="text" x="90" y="584" font-size="19" font-weight="760" fill="#be185d">Backward：直接读取缓存激活</text>
+  <path d="M680 624 H116" fill="none" stroke="#db2777" stroke-width="4" marker-end="url(#arrow-pink)"/>
+  <g class="text label" text-anchor="middle">
+    <rect x="106" y="654" width="574" height="66" rx="18" fill="#fce7f3" stroke="#f9a8d4"/>
+    <text x="393" y="682">读取 a₁、a₂、a₃、a₄ → 计算梯度</text>
+    <text class="small muted" x="393" y="706">无需重复前向，但峰值激活显存较高</text>
+  </g>
+
+  <!-- Right rematerialization. -->
+  <text class="text" x="872" y="250" font-size="19" font-weight="760" fill="#1d4ed8">Forward：只保留 Stage 边界</text>
+  <g filter="url(#shadow)">
+    <rect x="872" y="286" width="128" height="72" rx="14" fill="#ccfbf1" stroke="#2dd4bf"/>
+    <rect x="1054" y="286" width="274" height="72" rx="14" fill="#eff6ff" stroke="#93c5fd"/>
+    <rect x="1382" y="286" width="128" height="72" rx="14" fill="#ccfbf1" stroke="#2dd4bf"/>
+  </g>
+  <text class="text label" x="936" y="317" text-anchor="middle">边界输入</text>
+  <text class="text" x="936" y="341" text-anchor="middle" font-size="15">hᵢₙ</text>
+  <text class="text label" x="1191" y="317" text-anchor="middle">Stage 内部 Layer 1～4</text>
+  <text class="text muted" x="1191" y="341" text-anchor="middle" font-size="14">中间激活使用后释放</text>
+  <text class="text label" x="1446" y="317" text-anchor="middle">边界输出</text>
+  <text class="text" x="1446" y="341" text-anchor="middle" font-size="15">hₒᵤₜ</text>
+  <g stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)">
+    <line x1="1000" y1="322" x2="1042" y2="322"/><line x1="1328" y1="322" x2="1370" y2="322"/>
+  </g>
+
+  <text class="text" x="872" y="410" font-size="17" font-weight="720">显存中持续保留：</text>
+  <rect x="872" y="438" width="270" height="58" rx="12" fill="#d1fae5" stroke="#6ee7b7"/>
+  <text class="text label" x="1007" y="474" text-anchor="middle">边界激活 hᵢₙ / hₒᵤₜ</text>
+  <rect x="1170" y="438" width="340" height="58" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="7 6"/>
+  <text class="text muted" x="1340" y="474" text-anchor="middle" font-size="16">a₁～a₄ 已释放</text>
+
+  <text class="text" x="872" y="558" font-size="19" font-weight="760" fill="#c2410c">Backward 前：重新执行局部 Forward</text>
+  <path d="M920 594 C990 530 1360 530 1450 594" fill="none" stroke="#d97706" stroke-width="3.5" stroke-dasharray="8 7" marker-end="url(#arrow-amber)"/>
+  <rect x="950" y="610" width="480" height="66" rx="18" fill="#fff7ed" stroke="#fdba74"/>
+  <text class="text label" x="1190" y="638" text-anchor="middle">hᵢₙ → 重算 Layer 1～4 → 恢复 a₁～a₄</text>
+  <text class="text small muted" x="1190" y="662" text-anchor="middle">随后立即执行反向并释放临时激活</text>
+  <path d="M1435 712 H910" fill="none" stroke="#db2777" stroke-width="4" marker-end="url(#arrow-pink)"/>
+  <text class="text" x="1172" y="746" text-anchor="middle" font-size="16" font-weight="700" fill="#be185d">Backward</text>
+
+  <!-- Tradeoff footer. -->
+  <g filter="url(#shadow)">
+    <rect x="90" y="834" width="1420" height="82" rx="24" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <circle cx="132" cy="875" r="13" fill="#059669"/>
+  <text class="text" x="157" y="882" font-size="18" font-weight="760">收益：</text>
+  <text class="text muted" x="218" y="882" font-size="17">显著降低 Stage 内部激活的长期驻留。</text>
+  <circle cx="650" cy="875" r="13" fill="#d97706"/>
+  <text class="text" x="675" y="882" font-size="18" font-weight="760">代价：</text>
+  <text class="text muted" x="736" y="882" font-size="17">额外前向计算、随机状态管理和更复杂的调度。</text>
+  <circle cx="1240" cy="875" r="13" fill="#e11d48"/>
+  <text class="text" x="1265" y="882" font-size="18" font-weight="760">注意：</text>
+  <text class="text muted" x="1326" y="882" font-size="17">边界激活仍需保存。</text>
+</svg>

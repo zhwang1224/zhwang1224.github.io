@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">流水线气泡与 Micro-batch 数量的关系</title>
+  <desc id="desc">固定四个 Stage 时，分别展示一、四、八、十六和三十二个 Micro-batch 的理想计算利用率与气泡比例。Micro-batch 越多，固定的填充和排空气泡占比越小，但收益逐渐递减。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .math { font-family: 'Cambria Math', 'STIX Two Math', serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .row { font-size: 19px; font-weight: 760; text-anchor: end; }
+      .value { font-size: 17px; font-weight: 720; }
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <text class="text" x="58" y="58" font-size="36" font-weight="800">Pipeline Bubble：增加 Micro-batch，只是在摊薄固定空闲</text>
+  <text class="text muted" x="58" y="98" font-size="19">理想化示例：K = 4，各 Stage 耗时相同，忽略通信与调度开销</text>
+
+  <g filter="url(#shadow)">
+    <rect x="48" y="140" width="1504" height="594" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+
+  <text class="text" x="280" y="190" text-anchor="middle" font-size="16" font-weight="700">Micro-batch 数</text>
+  <text class="text" x="755" y="190" text-anchor="middle" font-size="16" font-weight="700">一个 Stage 的时间占比</text>
+  <text class="text muted" x="1320" y="190" text-anchor="middle" font-size="15">0%</text>
+  <text class="text muted" x="1490" y="190" text-anchor="middle" font-size="15">100%</text>
+
+  <!-- Axis. -->
+  <line x1="430" y1="218" x2="1430" y2="218" stroke="#cbd5e1" stroke-width="1.5"/>
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="430" y1="218" x2="430" y2="674"/>
+    <line x1="680" y1="218" x2="680" y2="674"/>
+    <line x1="930" y1="218" x2="930" y2="674"/>
+    <line x1="1180" y1="218" x2="1180" y2="674"/>
+    <line x1="1430" y1="218" x2="1430" y2="674"/>
+  </g>
+  <g class="text muted" font-size="14" text-anchor="middle">
+    <text x="430" y="704">0%</text><text x="680" y="704">25%</text><text x="930" y="704">50%</text>
+    <text x="1180" y="704">75%</text><text x="1430" y="704">100%</text>
+  </g>
+
+  <!-- Row labels. -->
+  <g class="text row">
+    <text x="360" y="284">M = 1</text>
+    <text x="360" y="374">M = 4</text>
+    <text x="360" y="464">M = 8</text>
+    <text x="360" y="554">M = 16</text>
+    <text x="360" y="644">M = 32</text>
+  </g>
+
+  <!-- Bars: 1000 px = 100%. -->
+  <g>
+    <rect x="430" y="248" width="250" height="52" rx="10" fill="#bfdbfe"/>
+    <path d="M680 248 H1430 V300 H680 Z" fill="#ffe4e6"/>
+    <rect x="430" y="338" width="571" height="52" rx="10" fill="#bfdbfe"/>
+    <path d="M1001 338 H1430 V390 H1001 Z" fill="#ffe4e6"/>
+    <rect x="430" y="428" width="727" height="52" rx="10" fill="#bfdbfe"/>
+    <path d="M1157 428 H1430 V480 H1157 Z" fill="#ffe4e6"/>
+    <rect x="430" y="518" width="842" height="52" rx="10" fill="#bfdbfe"/>
+    <path d="M1272 518 H1430 V570 H1272 Z" fill="#ffe4e6"/>
+    <rect x="430" y="608" width="914" height="52" rx="10" fill="#bfdbfe"/>
+    <path d="M1344 608 H1430 V660 H1344 Z" fill="#ffe4e6"/>
+  </g>
+  <g class="text value">
+    <text x="448" y="281">有效计算 25.0%</text><text x="700" y="281" fill="#be123c">气泡 75.0%</text>
+    <text x="448" y="371">有效计算 57.1%</text><text x="1021" y="371" fill="#be123c">42.9%</text>
+    <text x="448" y="461">有效计算 72.7%</text><text x="1177" y="461" fill="#be123c">27.3%</text>
+    <text x="448" y="551">有效计算 84.2%</text><text x="1292" y="551" fill="#be123c">15.8%</text>
+    <text x="448" y="641">有效计算 91.4%</text><text x="1360" y="641" fill="#be123c">8.6%</text>
+  </g>
+
+  <g transform="translate(1015 156)">
+    <rect width="160" height="38" rx="19" fill="#dbeafe" stroke="#93c5fd"/>
+    <rect x="178" width="160" height="38" rx="19" fill="#ffe4e6" stroke="#fda4af"/>
+    <circle cx="20" cy="19" r="6" fill="#2563eb"/>
+    <circle cx="198" cy="19" r="6" fill="#e11d48"/>
+    <text class="text" x="36" y="25" font-size="14" font-weight="700">有效计算</text>
+    <text class="text" x="214" y="25" font-size="14" font-weight="700">Pipeline Bubble</text>
+  </g>
+
+  <!-- Formula and caveat. -->
+  <g filter="url(#shadow)">
+    <rect x="72" y="778" width="500" height="78" rx="22" fill="#ffffff" stroke="#bfdbfe"/>
+    <rect x="610" y="778" width="918" height="78" rx="22" fill="#ffffff" stroke="#fed7aa"/>
+  </g>
+  <text class="math" x="322" y="828" text-anchor="middle" font-size="27">U = M / (M + K − 1)</text>
+  <text class="text" x="650" y="811" font-size="16" font-weight="720">收益递减：</text>
+  <text class="text muted" x="742" y="811" font-size="16">M 从 1 增加到 4 收益明显；从 16 增加到 32，只再提高约 7.2 个百分点。</text>
+  <text class="text muted" x="650" y="839" font-size="16">真实系统还要支付更小 Micro-batch 的算子效率损失、更多 Send/Recv 与调度开销。</text>
+</svg>
