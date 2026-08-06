@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1800" viewBox="0 0 1600 1800" role="img" aria-labelledby="title desc">
+  <title id="title">GPipe、同步 1F1B 与 PipeDream 异步 1F1B 调度对比</title>
+  <desc id="desc">在四个流水线阶段的统一时间轴上，对比 GPipe 先完成全部前向再反向、同步 1F1B 在预热后交替前向和反向并最终排空、以及 PipeDream 异步 1F1B 不设置批次排空边界而持续执行的区别。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .title { font-size: 25px; font-weight: 800; }
+      .stage { font-size: 16px; font-weight: 760; text-anchor: end; }
+      .tick { font-size: 13px; text-anchor: middle; fill: #64748b; }
+      .cell { font-size: 15px; font-weight: 800; text-anchor: middle; }
+      .note { font-size: 16px; }
+    </style>
+  </defs>
+  <rect width="1600" height="1800" fill="#f8fafc"/>
+
+  <text class="text" x="58" y="58" font-size="36" font-weight="800">同样是流水线，差别在 Forward / Backward 何时交替</text>
+  <text class="text muted" x="58" y="100" font-size="19">简化假设：K = 4，各 Stage 计算时间相同，忽略通信与优化器耗时；空白格表示设备等待</text>
+  <g transform="translate(1050 42)">
+    <rect width="154" height="42" rx="21" fill="#dbeafe" stroke="#93c5fd"/>
+    <rect x="170" width="154" height="42" rx="21" fill="#fce7f3" stroke="#f9a8d4"/>
+    <rect x="340" width="180" height="42" rx="21" fill="#dcfce7" stroke="#86efac"/>
+    <text class="text" x="77" y="27" text-anchor="middle" font-size="14" font-weight="750">Fₘ：前向</text>
+    <text class="text" x="247" y="27" text-anchor="middle" font-size="14" font-weight="750">Bₘ：反向</text>
+    <circle cx="364" cy="21" r="6" fill="#16a34a"/>
+    <text class="text" x="380" y="27" font-size="14" font-weight="750">局部参数更新</text>
+  </g>
+
+  <!-- Panel A: GPipe. -->
+  <g filter="url(#shadow)"><rect x="48" y="145" width="1504" height="445" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text title" x="82" y="192">A. GPipe / Fill-Drain：全部 Forward → 全部 Backward</text>
+  <text class="text muted" x="82" y="222" font-size="16">M = 4；同一 Pipeline Batch 的所有计算使用同一参数版本，最后统一执行一次 Optimizer Step</text>
+  <g class="text tick">
+    <text x="323" y="260">t0</text><text x="409" y="260">t1</text><text x="495" y="260">t2</text><text x="581" y="260">t3</text>
+    <text x="667" y="260">t4</text><text x="753" y="260">t5</text><text x="839" y="260">t6</text><text x="925" y="260">t7</text>
+    <text x="1011" y="260">t8</text><text x="1097" y="260">t9</text><text x="1183" y="260">t10</text><text x="1269" y="260">t11</text>
+    <text x="1355" y="260">t12</text><text x="1441" y="260">t13</text>
+  </g>
+  <g class="text stage">
+    <text x="250" y="309">Stage 0</text><text x="250" y="374">Stage 1</text><text x="250" y="439">Stage 2</text><text x="250" y="504">Stage 3</text>
+  </g>
+  <g fill="#f1f5f9" stroke="#e2e8f0">
+    <rect x="280" y="275" width="1204" height="50" rx="8"/><rect x="280" y="340" width="1204" height="50" rx="8"/>
+    <rect x="280" y="405" width="1204" height="50" rx="8"/><rect x="280" y="470" width="1204" height="50" rx="8"/>
+  </g>
+  <line x1="882" y1="266" x2="882" y2="527" stroke="#f97316" stroke-width="2" stroke-dasharray="6 6"/>
+  <text class="text" x="882" y="548" text-anchor="middle" font-size="14" font-weight="750" fill="#c2410c">Forward / Backward 分界</text>
+  <g fill="#dbeafe" stroke="#60a5fa">
+    <rect x="284" y="279" width="78" height="42" rx="8"/><rect x="370" y="279" width="78" height="42" rx="8"/><rect x="456" y="279" width="78" height="42" rx="8"/><rect x="542" y="279" width="78" height="42" rx="8"/>
+    <rect x="370" y="344" width="78" height="42" rx="8"/><rect x="456" y="344" width="78" height="42" rx="8"/><rect x="542" y="344" width="78" height="42" rx="8"/><rect x="628" y="344" width="78" height="42" rx="8"/>
+    <rect x="456" y="409" width="78" height="42" rx="8"/><rect x="542" y="409" width="78" height="42" rx="8"/><rect x="628" y="409" width="78" height="42" rx="8"/><rect x="714" y="409" width="78" height="42" rx="8"/>
+    <rect x="542" y="474" width="78" height="42" rx="8"/><rect x="628" y="474" width="78" height="42" rx="8"/><rect x="714" y="474" width="78" height="42" rx="8"/><rect x="800" y="474" width="78" height="42" rx="8"/>
+  </g>
+  <g fill="#fce7f3" stroke="#f472b6">
+    <rect x="1144" y="279" width="78" height="42" rx="8"/><rect x="1230" y="279" width="78" height="42" rx="8"/><rect x="1316" y="279" width="78" height="42" rx="8"/><rect x="1402" y="279" width="78" height="42" rx="8"/>
+    <rect x="1058" y="344" width="78" height="42" rx="8"/><rect x="1144" y="344" width="78" height="42" rx="8"/><rect x="1230" y="344" width="78" height="42" rx="8"/><rect x="1316" y="344" width="78" height="42" rx="8"/>
+    <rect x="972" y="409" width="78" height="42" rx="8"/><rect x="1058" y="409" width="78" height="42" rx="8"/><rect x="1144" y="409" width="78" height="42" rx="8"/><rect x="1230" y="409" width="78" height="42" rx="8"/>
+    <rect x="886" y="474" width="78" height="42" rx="8"/><rect x="972" y="474" width="78" height="42" rx="8"/><rect x="1058" y="474" width="78" height="42" rx="8"/><rect x="1144" y="474" width="78" height="42" rx="8"/>
+  </g>
+  <g class="text cell">
+    <text x="323" y="306">F₀</text><text x="409" y="306">F₁</text><text x="495" y="306">F₂</text><text x="581" y="306">F₃</text>
+    <text x="409" y="371">F₀</text><text x="495" y="371">F₁</text><text x="581" y="371">F₂</text><text x="667" y="371">F₃</text>
+    <text x="495" y="436">F₀</text><text x="581" y="436">F₁</text><text x="667" y="436">F₂</text><text x="753" y="436">F₃</text>
+    <text x="581" y="501">F₀</text><text x="667" y="501">F₁</text><text x="753" y="501">F₂</text><text x="839" y="501">F₃</text>
+    <text x="1183" y="306">B₃</text><text x="1269" y="306">B₂</text><text x="1355" y="306">B₁</text><text x="1441" y="306">B₀</text>
+    <text x="1097" y="371">B₃</text><text x="1183" y="371">B₂</text><text x="1269" y="371">B₁</text><text x="1355" y="371">B₀</text>
+    <text x="1011" y="436">B₃</text><text x="1097" y="436">B₂</text><text x="1183" y="436">B₁</text><text x="1269" y="436">B₀</text>
+    <text x="925" y="501">B₃</text><text x="1011" y="501">B₂</text><text x="1097" y="501">B₁</text><text x="1183" y="501">B₀</text>
+  </g>
+  <text class="text note" x="82" y="570"><tspan font-weight="800">重点：</tspan>反向开始得晚；Stage 需要同时保留多个尚未反向的 Micro-batch 激活。</text>
+
+  <!-- Panel B: synchronous 1F1B. -->
+  <g filter="url(#shadow)"><rect x="48" y="620" width="1504" height="445" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text title" x="82" y="667">B. 同步 1F1B / 1F1B-Flush：预热后交替 Forward 与 Backward</text>
+  <text class="text muted" x="82" y="697" font-size="16">M = 4；允许更早反向并释放激活，但仍在 Pipeline Batch 末尾排空，之后才统一更新参数</text>
+  <g class="text tick">
+    <text x="323" y="735">t0</text><text x="409" y="735">t1</text><text x="495" y="735">t2</text><text x="581" y="735">t3</text>
+    <text x="667" y="735">t4</text><text x="753" y="735">t5</text><text x="839" y="735">t6</text><text x="925" y="735">t7</text>
+    <text x="1011" y="735">t8</text><text x="1097" y="735">t9</text><text x="1183" y="735">t10</text><text x="1269" y="735">t11</text>
+    <text x="1355" y="735">t12</text><text x="1441" y="735">t13</text>
+  </g>
+  <g class="text stage">
+    <text x="250" y="784">Stage 0</text><text x="250" y="849">Stage 1</text><text x="250" y="914">Stage 2</text><text x="250" y="979">Stage 3</text>
+  </g>
+  <g fill="#f1f5f9" stroke="#e2e8f0">
+    <rect x="280" y="750" width="1204" height="50" rx="8"/><rect x="280" y="815" width="1204" height="50" rx="8"/>
+    <rect x="280" y="880" width="1204" height="50" rx="8"/><rect x="280" y="945" width="1204" height="50" rx="8"/>
+  </g>
+  <g fill="#dbeafe" stroke="#60a5fa">
+    <rect x="284" y="754" width="78" height="42" rx="8"/><rect x="370" y="754" width="78" height="42" rx="8"/><rect x="456" y="754" width="78" height="42" rx="8"/><rect x="542" y="754" width="78" height="42" rx="8"/>
+    <rect x="370" y="819" width="78" height="42" rx="8"/><rect x="456" y="819" width="78" height="42" rx="8"/><rect x="542" y="819" width="78" height="42" rx="8"/><rect x="886" y="819" width="78" height="42" rx="8"/>
+    <rect x="456" y="884" width="78" height="42" rx="8"/><rect x="542" y="884" width="78" height="42" rx="8"/><rect x="800" y="884" width="78" height="42" rx="8"/><rect x="972" y="884" width="78" height="42" rx="8"/>
+    <rect x="542" y="949" width="78" height="42" rx="8"/><rect x="714" y="949" width="78" height="42" rx="8"/><rect x="886" y="949" width="78" height="42" rx="8"/><rect x="1058" y="949" width="78" height="42" rx="8"/>
+  </g>
+  <g fill="#fce7f3" stroke="#f472b6">
+    <rect x="886" y="754" width="78" height="42" rx="8"/><rect x="1058" y="754" width="78" height="42" rx="8"/><rect x="1230" y="754" width="78" height="42" rx="8"/><rect x="1402" y="754" width="78" height="42" rx="8"/>
+    <rect x="800" y="819" width="78" height="42" rx="8"/><rect x="972" y="819" width="78" height="42" rx="8"/><rect x="1144" y="819" width="78" height="42" rx="8"/><rect x="1316" y="819" width="78" height="42" rx="8"/>
+    <rect x="714" y="884" width="78" height="42" rx="8"/><rect x="886" y="884" width="78" height="42" rx="8"/><rect x="1058" y="884" width="78" height="42" rx="8"/><rect x="1230" y="884" width="78" height="42" rx="8"/>
+    <rect x="628" y="949" width="78" height="42" rx="8"/><rect x="800" y="949" width="78" height="42" rx="8"/><rect x="972" y="949" width="78" height="42" rx="8"/><rect x="1144" y="949" width="78" height="42" rx="8"/>
+  </g>
+  <g class="text cell">
+    <text x="323" y="781">F₀</text><text x="409" y="781">F₁</text><text x="495" y="781">F₂</text><text x="581" y="781">F₃</text>
+    <text x="409" y="846">F₀</text><text x="495" y="846">F₁</text><text x="581" y="846">F₂</text><text x="925" y="846">F₃</text>
+    <text x="495" y="911">F₀</text><text x="581" y="911">F₁</text><text x="839" y="911">F₂</text><text x="1011" y="911">F₃</text>
+    <text x="581" y="976">F₀</text><text x="753" y="976">F₁</text><text x="925" y="976">F₂</text><text x="1097" y="976">F₃</text>
+    <text x="925" y="781">B₀</text><text x="1097" y="781">B₁</text><text x="1269" y="781">B₂</text><text x="1441" y="781">B₃</text>
+    <text x="839" y="846">B₀</text><text x="1011" y="846">B₁</text><text x="1183" y="846">B₂</text><text x="1355" y="846">B₃</text>
+    <text x="753" y="911">B₀</text><text x="925" y="911">B₁</text><text x="1097" y="911">B₂</text><text x="1269" y="911">B₃</text>
+    <text x="667" y="976">B₀</text><text x="839" y="976">B₁</text><text x="1011" y="976">B₂</text><text x="1183" y="976">B₃</text>
+  </g>
+  <text class="text note" x="82" y="1045"><tspan font-weight="800">重点：</tspan>与 GPipe 的理想气泡总量相近，主要收益是 B₀ 更早开始、同时存活的激活更少；同步语义不变。</text>
+
+  <!-- Panel C: asynchronous PipeDream. -->
+  <g filter="url(#shadow)"><rect x="48" y="1095" width="1504" height="620" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text title" x="82" y="1142">C. PipeDream 异步 1F1B：不做周期性 Flush，Micro-batch 连续流入</text>
+  <text class="text muted" x="82" y="1172" font-size="16">图中 0～3 与 4～6 只是连续编号，不代表两个同步 Pipeline Batch；稳态下不会在编号边界等待全部反向完成</text>
+  <g class="text tick">
+    <text x="323" y="1210">t0</text><text x="409" y="1210">t1</text><text x="495" y="1210">t2</text><text x="581" y="1210">t3</text>
+    <text x="667" y="1210">t4</text><text x="753" y="1210">t5</text><text x="839" y="1210">t6</text><text x="925" y="1210">t7</text>
+    <text x="1011" y="1210">t8</text><text x="1097" y="1210">t9</text><text x="1183" y="1210">t10</text><text x="1269" y="1210">t11</text>
+    <text x="1355" y="1210">t12</text><text x="1441" y="1210">t13</text>
+  </g>
+  <g class="text stage">
+    <text x="250" y="1259">Stage 0</text><text x="250" y="1324">Stage 1</text><text x="250" y="1389">Stage 2</text><text x="250" y="1454">Stage 3</text>
+  </g>
+  <g fill="#f1f5f9" stroke="#e2e8f0">
+    <rect x="280" y="1225" width="1204" height="50" rx="8"/><rect x="280" y="1290" width="1204" height="50" rx="8"/>
+    <rect x="280" y="1355" width="1204" height="50" rx="8"/><rect x="280" y="1420" width="1204" height="50" rx="8"/>
+  </g>
+  <line x1="968" y1="1200" x2="968" y2="1478" stroke="#f97316" stroke-width="2" stroke-dasharray="6 6"/>
+  <text class="text" x="968" y="1498" text-anchor="middle" font-size="14" font-weight="750" fill="#c2410c">没有 Flush：F₄ 已进入，B₁/B₂ 仍在传播</text>
+  <g fill="#dbeafe" stroke="#60a5fa">
+    <rect x="284" y="1229" width="78" height="42" rx="8"/><rect x="370" y="1229" width="78" height="42" rx="8"/><rect x="456" y="1229" width="78" height="42" rx="8"/><rect x="542" y="1229" width="78" height="42" rx="8"/><rect x="972" y="1229" width="78" height="42" rx="8"/><rect x="1144" y="1229" width="78" height="42" rx="8"/><rect x="1316" y="1229" width="78" height="42" rx="8"/>
+    <rect x="370" y="1294" width="78" height="42" rx="8"/><rect x="456" y="1294" width="78" height="42" rx="8"/><rect x="542" y="1294" width="78" height="42" rx="8"/><rect x="886" y="1294" width="78" height="42" rx="8"/><rect x="1058" y="1294" width="78" height="42" rx="8"/><rect x="1230" y="1294" width="78" height="42" rx="8"/><rect x="1402" y="1294" width="78" height="42" rx="8"/>
+    <rect x="456" y="1359" width="78" height="42" rx="8"/><rect x="542" y="1359" width="78" height="42" rx="8"/><rect x="800" y="1359" width="78" height="42" rx="8"/><rect x="972" y="1359" width="78" height="42" rx="8"/><rect x="1144" y="1359" width="78" height="42" rx="8"/><rect x="1316" y="1359" width="78" height="42" rx="8"/>
+    <rect x="542" y="1424" width="78" height="42" rx="8"/><rect x="714" y="1424" width="78" height="42" rx="8"/><rect x="886" y="1424" width="78" height="42" rx="8"/><rect x="1058" y="1424" width="78" height="42" rx="8"/><rect x="1230" y="1424" width="78" height="42" rx="8"/><rect x="1402" y="1424" width="78" height="42" rx="8"/>
+  </g>
+  <g fill="#fce7f3" stroke="#f472b6">
+    <rect x="886" y="1229" width="78" height="42" rx="8"/><rect x="1058" y="1229" width="78" height="42" rx="8"/><rect x="1230" y="1229" width="78" height="42" rx="8"/><rect x="1402" y="1229" width="78" height="42" rx="8"/>
+    <rect x="800" y="1294" width="78" height="42" rx="8"/><rect x="972" y="1294" width="78" height="42" rx="8"/><rect x="1144" y="1294" width="78" height="42" rx="8"/><rect x="1316" y="1294" width="78" height="42" rx="8"/>
+    <rect x="714" y="1359" width="78" height="42" rx="8"/><rect x="886" y="1359" width="78" height="42" rx="8"/><rect x="1058" y="1359" width="78" height="42" rx="8"/><rect x="1230" y="1359" width="78" height="42" rx="8"/><rect x="1402" y="1359" width="78" height="42" rx="8"/>
+    <rect x="628" y="1424" width="78" height="42" rx="8"/><rect x="800" y="1424" width="78" height="42" rx="8"/><rect x="972" y="1424" width="78" height="42" rx="8"/><rect x="1144" y="1424" width="78" height="42" rx="8"/><rect x="1316" y="1424" width="78" height="42" rx="8"/>
+  </g>
+  <g class="text cell">
+    <text x="323" y="1256">F₀</text><text x="409" y="1256">F₁</text><text x="495" y="1256">F₂</text><text x="581" y="1256">F₃</text><text x="1011" y="1256">F₄</text><text x="1183" y="1256">F₅</text><text x="1355" y="1256">F₆</text>
+    <text x="409" y="1321">F₀</text><text x="495" y="1321">F₁</text><text x="581" y="1321">F₂</text><text x="925" y="1321">F₃</text><text x="1097" y="1321">F₄</text><text x="1269" y="1321">F₅</text><text x="1441" y="1321">F₆</text>
+    <text x="495" y="1386">F₀</text><text x="581" y="1386">F₁</text><text x="839" y="1386">F₂</text><text x="1011" y="1386">F₃</text><text x="1183" y="1386">F₄</text><text x="1355" y="1386">F₅</text>
+    <text x="581" y="1451">F₀</text><text x="753" y="1451">F₁</text><text x="925" y="1451">F₂</text><text x="1097" y="1451">F₃</text><text x="1269" y="1451">F₄</text><text x="1441" y="1451">F₅</text>
+    <text x="925" y="1256">B₀</text><text x="1097" y="1256">B₁</text><text x="1269" y="1256">B₂</text><text x="1441" y="1256">B₃</text>
+    <text x="839" y="1321">B₀</text><text x="1011" y="1321">B₁</text><text x="1183" y="1321">B₂</text><text x="1355" y="1321">B₃</text>
+    <text x="753" y="1386">B₀</text><text x="925" y="1386">B₁</text><text x="1097" y="1386">B₂</text><text x="1269" y="1386">B₃</text><text x="1441" y="1386">B₄</text>
+    <text x="667" y="1451">B₀</text><text x="839" y="1451">B₁</text><text x="1011" y="1451">B₂</text><text x="1183" y="1451">B₃</text><text x="1355" y="1451">B₄</text>
+  </g>
+  <g fill="#16a34a">
+    <circle cx="952" cy="1263" r="5"/><circle cx="1124" cy="1263" r="5"/><circle cx="1296" cy="1263" r="5"/><circle cx="1468" cy="1263" r="5"/>
+    <circle cx="866" cy="1328" r="5"/><circle cx="1038" cy="1328" r="5"/><circle cx="1210" cy="1328" r="5"/><circle cx="1382" cy="1328" r="5"/>
+    <circle cx="780" cy="1393" r="5"/><circle cx="952" cy="1393" r="5"/><circle cx="1124" cy="1393" r="5"/><circle cx="1296" cy="1393" r="5"/><circle cx="1468" cy="1393" r="5"/>
+    <circle cx="694" cy="1458" r="5"/><circle cx="866" cy="1458" r="5"/><circle cx="1038" cy="1458" r="5"/><circle cx="1210" cy="1458" r="5"/><circle cx="1382" cy="1458" r="5"/>
+  </g>
+
+  <g transform="translate(82 1540)">
+    <rect width="458" height="126" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+    <rect x="488" width="458" height="126" rx="18" fill="#fdf2f8" stroke="#fbcfe8"/>
+    <rect x="976" width="458" height="126" rx="18" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text class="text" x="24" y="36" font-size="18" font-weight="800">不再周期性排空</text>
+    <text class="text muted" x="24" y="68" font-size="15">预热结束后，新 Forward 与旧 Backward</text>
+    <text class="text muted" x="24" y="94" font-size="15">持续交错，固定气泡被长期摊薄。</text>
+    <text class="text" x="512" y="36" font-size="18" font-weight="800">Weight Stashing</text>
+    <text class="text muted" x="512" y="68" font-size="15">Bₘ 使用该 Stage 执行 Fₘ 时保存的</text>
+    <text class="text muted" x="512" y="94" font-size="15">权重版本，保证局部前反向匹配。</text>
+    <text class="text" x="1000" y="36" font-size="18" font-weight="800">代价：权重陈旧</text>
+    <text class="text muted" x="1000" y="68" font-size="15">不同 Stage / Micro-batch 可能看到不同</text>
+    <text class="text muted" x="1000" y="94" font-size="15">版本，不再等价于同步 Mini-batch SGD。</text>
+  </g>
+
+  <text class="text muted" x="800" y="1762" text-anchor="middle" font-size="15">同步 1F1B 的“1F1B”描述执行顺序；是否异步取决于参数更新和 Flush 语义，不能仅凭名称判断。</text>
+</svg>
