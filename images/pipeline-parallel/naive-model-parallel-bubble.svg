@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="930" viewBox="0 0 1600 930" role="img" aria-labelledby="title desc">
+  <title id="title">朴素模型并行的流水线气泡面积</title>
+  <desc id="desc">四个 Stage 和一个批次的资源时间矩形共有三十二个单元，其中八个单元进行有效前向或反向计算，二十四个灰色单元为空闲气泡，利用率为百分之二十五。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .stage { font-size: 17px; font-weight: 760; text-anchor: end; }
+      .cell { font-size: 17px; font-weight: 800; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1600" height="930" fill="#f8fafc"/>
+
+  <text class="text" x="58" y="60" font-size="36" font-weight="800">Pipeline Bubble：空闲设备时间占了多少？</text>
+  <text class="text muted" x="58" y="101" font-size="19">示例：K = 4、M = 1，并假设每个 Stage 的前向与反向都耗时 t</text>
+
+  <g filter="url(#shadow)">
+    <rect x="48" y="145" width="1012" height="520" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+    <rect x="1090" y="145" width="462" height="520" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+
+  <text class="text" x="554" y="190" text-anchor="middle" font-size="21" font-weight="780">GPU 数量 × 墙钟时间 = 4 × 8t = 32t</text>
+  <g class="text muted" font-size="14" text-anchor="middle">
+    <text x="298" y="232">t0</text><text x="398" y="232">t1</text><text x="498" y="232">t2</text><text x="598" y="232">t3</text>
+    <text x="698" y="232">t4</text><text x="798" y="232">t5</text><text x="898" y="232">t6</text><text x="998" y="232">t7</text>
+  </g>
+  <g class="text stage">
+    <text x="220" y="296">Stage 0</text><text x="220" y="386">Stage 1</text>
+    <text x="220" y="476">Stage 2</text><text x="220" y="566">Stage 3</text>
+  </g>
+
+  <g fill="#e2e8f0" stroke="#cbd5e1">
+    <rect x="248" y="250" width="800" height="64" rx="10"/>
+    <rect x="248" y="340" width="800" height="64" rx="10"/>
+    <rect x="248" y="430" width="800" height="64" rx="10"/>
+    <rect x="248" y="520" width="800" height="64" rx="10"/>
+  </g>
+  <g stroke="#cbd5e1">
+    <line x1="348" y1="244" x2="348" y2="590"/><line x1="448" y1="244" x2="448" y2="590"/>
+    <line x1="548" y1="244" x2="548" y2="590"/><line x1="648" y1="244" x2="648" y2="590"/>
+    <line x1="748" y1="244" x2="748" y2="590"/><line x1="848" y1="244" x2="848" y2="590"/>
+    <line x1="948" y1="244" x2="948" y2="590"/>
+  </g>
+  <g fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5">
+    <rect x="254" y="256" width="88" height="52" rx="8"/>
+    <rect x="354" y="346" width="88" height="52" rx="8"/>
+    <rect x="454" y="436" width="88" height="52" rx="8"/>
+    <rect x="554" y="526" width="88" height="52" rx="8"/>
+  </g>
+  <g fill="#fce7f3" stroke="#f472b6" stroke-width="1.5">
+    <rect x="654" y="526" width="88" height="52" rx="8"/>
+    <rect x="754" y="436" width="88" height="52" rx="8"/>
+    <rect x="854" y="346" width="88" height="52" rx="8"/>
+    <rect x="954" y="256" width="88" height="52" rx="8"/>
+  </g>
+  <g class="text cell">
+    <text x="298" y="290">F₀</text><text x="398" y="380">F₀</text><text x="498" y="470">F₀</text><text x="598" y="560">F₀</text>
+    <text x="698" y="560">B₀</text><text x="798" y="470">B₀</text><text x="898" y="380">B₀</text><text x="998" y="290">B₀</text>
+  </g>
+  <text class="text muted" x="648" y="626" text-anchor="middle" font-size="16">灰色格：设备处于等待状态，即 Pipeline Bubble</text>
+
+  <g transform="translate(1124 190)">
+    <text class="text" x="0" y="0" font-size="21" font-weight="780">面积统计</text>
+    <rect x="0" y="32" width="394" height="94" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text class="text muted" x="24" y="66" font-size="15">有效计算面积</text>
+    <text class="text" x="24" y="105" font-size="28" font-weight="800">8t · 25%</text>
+
+    <rect x="0" y="144" width="394" height="94" rx="16" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text class="text muted" x="24" y="178" font-size="15">空闲气泡面积</text>
+    <text class="text" x="24" y="217" font-size="28" font-weight="800">24t · 75%</text>
+
+    <rect x="0" y="256" width="394" height="94" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
+    <text class="text muted" x="24" y="290" font-size="15">总资源时间</text>
+    <text class="text" x="24" y="329" font-size="28" font-weight="800">32t · 100%</text>
+
+    <text class="text" x="0" y="397" font-size="19" font-weight="760">结论</text>
+    <text class="text" x="0" y="431" font-size="17">U = 1/K = 25%</text>
+    <text class="text" x="0" y="463" font-size="17">β = (K − 1)/K = 75%</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="48" y="715" width="1504" height="150" rx="24" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <text class="text" x="88" y="760" font-size="20" font-weight="780">一般形式（M = 1）</text>
+  <text class="text" x="88" y="808" font-size="18">总面积：K²(t_f + t_b)</text>
+  <text class="text" x="405" y="808" font-size="18">有效面积：K(t_f + t_b)</text>
+  <text class="text" x="770" y="808" font-size="18">气泡面积：K(K − 1)(t_f + t_b)</text>
+  <text class="text" x="1228" y="808" font-size="18">β → 1（K → ∞）</text>
+  <text class="text muted" x="88" y="842" font-size="15">这只是单批次朴素串行调度的结果；切分多个 Micro-batch 后，不同 Stage 可以重叠计算。</text>
+</svg>

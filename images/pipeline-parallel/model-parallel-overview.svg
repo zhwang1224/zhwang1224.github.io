@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="920" viewBox="0 0 1600 920" role="img" aria-labelledby="title desc">
+  <title id="title">模型并行的基本含义</title>
+  <desc id="desc">一个无法完整放入单张 GPU 的模型，按照连续的模型层切分到四张 GPU。四个设备分别保存一部分参数，前向传播激活值，反向传播激活梯度，共同完成同一批数据的训练。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#db2777"/>
+    </marker>
+    <style>
+      .text { font-family: Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .muted { fill: #64748b; }
+      .gpu { font-size: 20px; font-weight: 780; text-anchor: middle; }
+      .layer { font-size: 16px; font-weight: 680; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1600" height="920" fill="#f8fafc"/>
+
+  <text class="text" x="58" y="60" font-size="36" font-weight="800">模型并行：一个模型由多张 GPU 共同持有和计算</text>
+  <text class="text muted" x="58" y="101" font-size="19">切分对象是模型参数与计算，而不是为每张 GPU 复制一份完整模型</text>
+
+  <g filter="url(#shadow)">
+    <rect x="50" y="150" width="1500" height="606" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+
+  <g transform="translate(86 205)">
+    <text class="text" x="140" y="0" text-anchor="middle" font-size="21" font-weight="780">完整模型</text>
+    <text class="text" x="140" y="30" text-anchor="middle" font-size="15" fill="#be123c">参数与状态超过单卡容量</text>
+    <rect x="20" y="60" width="240" height="420" rx="20" fill="#fff1f2" stroke="#fda4af" stroke-width="2"/>
+    <g class="text layer">
+      <rect x="50" y="92" width="180" height="40" rx="9" fill="#fee2e2" stroke="#fca5a5"/>
+      <text x="140" y="118">Embedding</text>
+      <rect x="50" y="146" width="180" height="52" rx="9" fill="#dbeafe" stroke="#93c5fd"/>
+      <text x="140" y="178">Block 0～5</text>
+      <rect x="50" y="212" width="180" height="52" rx="9" fill="#dbeafe" stroke="#93c5fd"/>
+      <text x="140" y="244">Block 6～11</text>
+      <rect x="50" y="278" width="180" height="52" rx="9" fill="#dbeafe" stroke="#93c5fd"/>
+      <text x="140" y="310">Block 12～17</text>
+      <rect x="50" y="344" width="180" height="52" rx="9" fill="#dbeafe" stroke="#93c5fd"/>
+      <text x="140" y="376">Block 18～23</text>
+      <rect x="50" y="410" width="180" height="40" rx="9" fill="#ede9fe" stroke="#c4b5fd"/>
+      <text x="140" y="436">Final Norm + LM Head</text>
+    </g>
+  </g>
+
+  <path d="M375 445 H468" stroke="#475569" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <text class="text" x="421" y="421" text-anchor="middle" font-size="18" font-weight="760">按层切分</text>
+
+  <g transform="translate(495 210)">
+    <text class="text" x="510" y="0" text-anchor="middle" font-size="21" font-weight="780">四个设备分别保存一个参数子集</text>
+
+    <g filter="url(#shadow)">
+      <rect x="0" y="50" width="230" height="324" rx="20" fill="#eff6ff" stroke="#93c5fd"/>
+      <rect x="256" y="50" width="230" height="324" rx="20" fill="#ecfdf5" stroke="#6ee7b7"/>
+      <rect x="512" y="50" width="230" height="324" rx="20" fill="#fff7ed" stroke="#fdba74"/>
+      <rect x="768" y="50" width="230" height="324" rx="20" fill="#f5f3ff" stroke="#c4b5fd"/>
+    </g>
+
+    <g class="text gpu">
+      <text x="115" y="92">GPU 0 · Stage 0</text>
+      <text x="371" y="92">GPU 1 · Stage 1</text>
+      <text x="627" y="92">GPU 2 · Stage 2</text>
+      <text x="883" y="92">GPU 3 · Stage 3</text>
+    </g>
+
+    <g class="text layer">
+      <rect x="28" y="126" width="174" height="54" rx="10" fill="#dbeafe" stroke="#60a5fa"/>
+      <text x="115" y="158">Embedding</text>
+      <rect x="28" y="196" width="174" height="88" rx="10" fill="#bfdbfe" stroke="#60a5fa"/>
+      <text x="115" y="247">Block 0～5</text>
+
+      <rect x="284" y="161" width="174" height="123" rx="10" fill="#bbf7d0" stroke="#34d399"/>
+      <text x="371" y="229">Block 6～11</text>
+
+      <rect x="540" y="161" width="174" height="123" rx="10" fill="#fed7aa" stroke="#fb923c"/>
+      <text x="627" y="229">Block 12～17</text>
+
+      <rect x="796" y="126" width="174" height="88" rx="10" fill="#ddd6fe" stroke="#a78bfa"/>
+      <text x="883" y="177">Block 18～23</text>
+      <rect x="796" y="230" width="174" height="54" rx="10" fill="#ede9fe" stroke="#a78bfa"/>
+      <text x="883" y="262">Norm + LM Head</text>
+    </g>
+
+    <path d="M204 317 H278" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <path d="M460 317 H534" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <path d="M716 317 H790" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <text class="text" x="499" y="354" text-anchor="middle" font-size="15" fill="#1d4ed8">前向：传递 Stage 边界激活</text>
+
+    <path d="M790 408 H716" stroke="#db2777" stroke-width="3" marker-end="url(#arrow-pink)"/>
+    <path d="M534 408 H460" stroke="#db2777" stroke-width="3" marker-end="url(#arrow-pink)"/>
+    <path d="M278 408 H204" stroke="#db2777" stroke-width="3" marker-end="url(#arrow-pink)"/>
+    <text class="text" x="499" y="450" text-anchor="middle" font-size="15" fill="#be185d">反向：传递边界激活梯度</text>
+  </g>
+
+  <g transform="translate(84 796)">
+    <circle cx="10" cy="10" r="8" fill="#2563eb"/>
+    <text class="text" x="30" y="17" font-size="18"><tspan font-weight="760">同一个模型：</tspan>各设备保存的参数子集互补，而不是四份模型副本</text>
+    <circle cx="570" cy="10" r="8" fill="#16a34a"/>
+    <text class="text" x="590" y="17" font-size="18"><tspan font-weight="760">同一批数据：</tspan>一次前向与反向需要多个设备协作</text>
+    <circle cx="1110" cy="10" r="8" fill="#db2777"/>
+    <text class="text" x="1130" y="17" font-size="18"><tspan font-weight="760">通信依赖：</tspan>切分边界产生设备间数据传输</text>
+  </g>
+</svg>
