@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Self-Attention 张量并行</title>
+  <desc id="desc">输入在四个 Rank 上复制，QKV 投影沿输出维度切分为不同注意力头。每个 Rank 对自己的完整头集合独立执行缩放点积注意力。输出投影沿输入维度切分，局部部分输出通过 AllReduce 求和。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="138%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"/></marker>
+    <style>.text{font-family:Inter,'Noto Sans SC','Microsoft YaHei','Segoe UI',Arial,sans-serif;fill:#0f172a}.muted{fill:#64748b}.center{text-anchor:middle}.gpu{font-size:19px;font-weight:800;text-anchor:middle}.box{font-size:15px;font-weight:750;text-anchor:middle}</style>
+  </defs>
+  <rect width="1600" height="1080" fill="#f8fafc"/>
+  <text class="text" x="58" y="62" font-size="36" font-weight="800">Self-Attention：按完整 Head 切分，Head 内计算保持本地</text>
+  <text class="text muted" x="58" y="104" font-size="19">示例：MHA 有 16 个 Query / Key / Value Head，TP = 4，每个 Rank 负责 4 个完整 Head</text>
+
+  <g filter="url(#shadow)"><rect x="48" y="150" width="1504" height="720" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <rect x="82" y="405" width="150" height="110" rx="18" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text class="text center" x="157" y="449" font-size="20" font-weight="800">输入 X</text><text class="text center muted" x="157" y="478" font-size="14">[B, S, h]</text><text class="text center muted" x="157" y="501" font-size="14">Replicated</text>
+  <path d="M232 460 H300" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="320" y="210" width="246" height="500" rx="20" fill="#eff6ff" stroke="#93c5fd"/><rect x="582" y="210" width="246" height="500" rx="20" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <rect x="844" y="210" width="246" height="500" rx="20" fill="#fff7ed" stroke="#fdba74"/><rect x="1106" y="210" width="246" height="500" rx="20" fill="#f5f3ff" stroke="#c4b5fd"/>
+  </g>
+  <g class="text gpu"><text x="443" y="251">GPU 0</text><text x="705" y="251">GPU 1</text><text x="967" y="251">GPU 2</text><text x="1229" y="251">GPU 3</text></g>
+  <g class="text box">
+    <rect x="350" y="282" width="186" height="88" rx="12" fill="#bfdbfe"/><text x="443" y="314">Q₀ K₀ V₀</text><text x="443" y="341">Heads 0～3</text>
+    <rect x="612" y="282" width="186" height="88" rx="12" fill="#bbf7d0"/><text x="705" y="314">Q₁ K₁ V₁</text><text x="705" y="341">Heads 4～7</text>
+    <rect x="874" y="282" width="186" height="88" rx="12" fill="#fed7aa"/><text x="967" y="314">Q₂ K₂ V₂</text><text x="967" y="341">Heads 8～11</text>
+    <rect x="1136" y="282" width="186" height="88" rx="12" fill="#ddd6fe"/><text x="1229" y="314">Q₃ K₃ V₃</text><text x="1229" y="341">Heads 12～15</text>
+  </g>
+  <g class="text center muted" font-size="13"><text x="443" y="392">WQ/WK/WV：Column Shard</text><text x="705" y="392">WQ/WK/WV：Column Shard</text><text x="967" y="392">WQ/WK/WV：Column Shard</text><text x="1229" y="392">WQ/WK/WV：Column Shard</text></g>
+
+  <g class="text box">
+    <rect x="350" y="420" width="186" height="102" rx="14" fill="#dbeafe" stroke="#60a5fa"/><text x="443" y="454">Local Attention</text><text x="443" y="480">softmax(Q₀K₀ᵀ)V₀</text><text x="443" y="504">无需 TP 通信</text>
+    <rect x="612" y="420" width="186" height="102" rx="14" fill="#dcfce7" stroke="#4ade80"/><text x="705" y="454">Local Attention</text><text x="705" y="480">softmax(Q₁K₁ᵀ)V₁</text><text x="705" y="504">无需 TP 通信</text>
+    <rect x="874" y="420" width="186" height="102" rx="14" fill="#ffedd5" stroke="#fb923c"/><text x="967" y="454">Local Attention</text><text x="967" y="480">softmax(Q₂K₂ᵀ)V₂</text><text x="967" y="504">无需 TP 通信</text>
+    <rect x="1136" y="420" width="186" height="102" rx="14" fill="#ede9fe" stroke="#a78bfa"/><text x="1229" y="454">Local Attention</text><text x="1229" y="480">softmax(Q₃K₃ᵀ)V₃</text><text x="1229" y="504">无需 TP 通信</text>
+  </g>
+  <g class="text box">
+    <rect x="350" y="565" width="186" height="82" rx="12" fill="#bfdbfe"/><text x="443" y="598">Row WO,₀</text><text x="443" y="624">Partial Z₀</text>
+    <rect x="612" y="565" width="186" height="82" rx="12" fill="#bbf7d0"/><text x="705" y="598">Row WO,₁</text><text x="705" y="624">Partial Z₁</text>
+    <rect x="874" y="565" width="186" height="82" rx="12" fill="#fed7aa"/><text x="967" y="598">Row WO,₂</text><text x="967" y="624">Partial Z₂</text>
+    <rect x="1136" y="565" width="186" height="82" rx="12" fill="#ddd6fe"/><text x="1229" y="598">Row WO,₃</text><text x="1229" y="624">Partial Z₃</text>
+  </g>
+  <g stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"><path d="M443 370 V408"/><path d="M705 370 V408"/><path d="M967 370 V408"/><path d="M1229 370 V408"/><path d="M443 522 V553"/><path d="M705 522 V553"/><path d="M967 522 V553"/><path d="M1229 522 V553"/></g>
+
+  <path d="M443 647 V755 H1380" stroke="#475569" stroke-width="2.5" fill="none"/><path d="M705 647 V735 H1380" stroke="#475569" stroke-width="2.5" fill="none"/><path d="M967 647 V715 H1380" stroke="#475569" stroke-width="2.5" fill="none"/><path d="M1229 647 V695 H1380" stroke="#475569" stroke-width="2.5" fill="none"/>
+  <rect x="1380" y="675" width="128" height="100" rx="18" fill="#fee2e2" stroke="#fca5a5"/>
+  <text class="text center" x="1444" y="713" font-size="16" font-weight="800">AllReduce</text><text class="text center" x="1444" y="739" font-size="16" font-weight="800">SUM</text><text class="text center muted" x="1444" y="762" font-size="13">Y = ΣZᵢ</text>
+  <rect x="1008" y="796" width="500" height="50" rx="25" fill="#e2e8f0" stroke="#94a3b8"/><text class="text center" x="1258" y="827" font-size="16" font-weight="750">输出 Y：[B, S, h] · Replicated</text>
+
+  <g filter="url(#shadow)"><rect x="82" y="915" width="700" height="112" rx="20" fill="#ffffff" stroke="#bfdbfe"/><rect x="818" y="915" width="700" height="112" rx="20" fill="#ffffff" stroke="#fed7aa"/></g>
+  <text class="text" x="118" y="955" font-size="19" font-weight="800">为什么 Attention 主体没有 TP AllReduce？</text>
+  <text class="text muted" x="118" y="987" font-size="15">每个 Rank 拥有若干完整 Head；不同 Head 的 Softmax 和加权求和彼此独立。</text>
+  <text class="text" x="854" y="955" font-size="19" font-weight="800">GQA / MQA 不能机械平均切 Head</text>
+  <text class="text muted" x="854" y="987" font-size="15">必须检查 KV Head 数与 TP 的整除关系；必要时复制 KV 或使用专用映射。</text>
+</svg>

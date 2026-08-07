@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
+  <title id="title">基础张量并行与 Sequence Parallel 对比</title>
+  <desc id="desc">上半部分展示基础张量并行在 Transformer 子模块外复制完整序列激活，四个 Rank 重复执行归一化与残差。下半部分展示 Sequence Parallel 沿序列维切分激活，本地执行归一化，通过 AllGather 进入张量并行区域，再通过 ReduceScatter 返回序列分片。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="138%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"/></marker>
+    <style>.text{font-family:Inter,'Noto Sans SC','Microsoft YaHei','Segoe UI',Arial,sans-serif;fill:#0f172a}.muted{fill:#64748b}.center{text-anchor:middle}.gpu{font-size:17px;font-weight:800;text-anchor:end}.box{font-size:15px;font-weight:750;text-anchor:middle}</style>
+  </defs>
+  <rect width="1600" height="1080" fill="#f8fafc"/>
+  <text class="text" x="82" y="62" font-size="36" font-weight="800">Sequence Parallel：让 Block 边界激活也保持分片</text>
+  <text class="text muted" x="58" y="104" font-size="19">示例 TP = 4；基础 TP 切隐藏通道，SP 进一步在非 TP 区域沿 Sequence 维切 Token</text>
+
+  <!-- Basic TP panel. -->
+  <g filter="url(#shadow)"><rect x="48" y="145" width="1504" height="395" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text" x="82" y="190" font-size="24" font-weight="800">A. 基础 Tensor Parallel：子模块外的 X 在每个 Rank 上完整复制</text>
+  <text class="text muted" x="82" y="222" font-size="15">Norm / Dropout / Residual 的参数很小，但 [B, S, h] 激活会在 TP Group 中保存 p 份</text>
+  <g class="text gpu"><text x="150" y="299">GPU 0</text><text x="150" y="359">GPU 1</text><text x="150" y="419">GPU 2</text><text x="150" y="479">GPU 3</text></g>
+  <g fill="#e2e8f0" stroke="#94a3b8"><rect x="180" y="266" width="210" height="46" rx="10"/><rect x="180" y="326" width="210" height="46" rx="10"/><rect x="180" y="386" width="210" height="46" rx="10"/><rect x="180" y="446" width="210" height="46" rx="10"/></g>
+  <g class="text box"><text x="285" y="295">完整 X：[B, S, h]</text><text x="285" y="355">完整 X：[B, S, h]</text><text x="285" y="415">完整 X：[B, S, h]</text><text x="285" y="475">完整 X：[B, S, h]</text></g>
+  <g fill="#f1f5f9" stroke="#cbd5e1"><rect x="448" y="266" width="190" height="46" rx="10"/><rect x="448" y="326" width="190" height="46" rx="10"/><rect x="448" y="386" width="190" height="46" rx="10"/><rect x="448" y="446" width="190" height="46" rx="10"/></g>
+  <g class="text box"><text x="543" y="295">Norm · 全序列</text><text x="543" y="355">Norm · 全序列</text><text x="543" y="415">Norm · 全序列</text><text x="543" y="475">Norm · 全序列</text></g>
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="704" y="266" width="212" height="46" rx="10"/><rect x="704" y="326" width="212" height="46" rx="10"/><rect x="704" y="386" width="212" height="46" rx="10"/><rect x="704" y="446" width="212" height="46" rx="10"/></g>
+  <g class="text box"><text x="810" y="295">Column / Row Shard 0</text><text x="810" y="355">Column / Row Shard 1</text><text x="810" y="415">Column / Row Shard 2</text><text x="810" y="475">Column / Row Shard 3</text></g>
+  <rect x="980" y="266" width="130" height="226" rx="16" fill="#fee2e2" stroke="#fca5a5"/><text class="text center" x="1045" y="363" font-size="16" font-weight="800" transform="rotate(-90 1045 363)">AllReduce(SUM)</text>
+  <g fill="#e2e8f0" stroke="#94a3b8"><rect x="1174" y="266" width="286" height="46" rx="10"/><rect x="1174" y="326" width="286" height="46" rx="10"/><rect x="1174" y="386" width="286" height="46" rx="10"/><rect x="1174" y="446" width="286" height="46" rx="10"/></g>
+  <g class="text box"><text x="1317" y="295">完整 Y：[B, S, h]</text><text x="1317" y="355">完整 Y：[B, S, h]</text><text x="1317" y="415">完整 Y：[B, S, h]</text><text x="1317" y="475">完整 Y：[B, S, h]</text></g>
+  <g stroke="#475569" stroke-width="2" marker-end="url(#arrow)"><path d="M390 289 H436"/><path d="M638 289 H692"/><path d="M916 289 H968"/><path d="M1110 289 H1162"/><path d="M390 349 H436"/><path d="M638 349 H692"/><path d="M916 349 H968"/><path d="M1110 349 H1162"/><path d="M390 409 H436"/><path d="M638 409 H692"/><path d="M916 409 H968"/><path d="M1110 409 H1162"/><path d="M390 469 H436"/><path d="M638 469 H692"/><path d="M916 469 H968"/><path d="M1110 469 H1162"/></g>
+
+  <!-- Sequence parallel panel. -->
+  <g filter="url(#shadow)"><rect x="48" y="575" width="1504" height="415" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text" x="82" y="620" font-size="24" font-weight="800">B. Sequence Parallel：Norm 与 Residual 只处理本地 Token 分片</text>
+  <text class="text muted" x="82" y="652" font-size="15">Block 边界布局为 Shard(sequence)；进入 TP GEMM 前 AllGather，Row-Parallel 输出用 ReduceScatter 返回 Sequence 分片</text>
+  <g class="text gpu"><text x="150" y="729">GPU 0</text><text x="150" y="789">GPU 1</text><text x="150" y="849">GPU 2</text><text x="150" y="909">GPU 3</text></g>
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="180" y="696" width="190" height="46" rx="10"/></g><g fill="#dcfce7" stroke="#4ade80"><rect x="180" y="756" width="190" height="46" rx="10"/></g><g fill="#ffedd5" stroke="#fb923c"><rect x="180" y="816" width="190" height="46" rx="10"/></g><g fill="#ede9fe" stroke="#a78bfa"><rect x="180" y="876" width="190" height="46" rx="10"/></g>
+  <g class="text box"><text x="275" y="725">X₀：Tokens 0～¼S</text><text x="275" y="785">X₁：Tokens ¼S～½S</text><text x="275" y="845">X₂：Tokens ½S～¾S</text><text x="275" y="905">X₃：Tokens ¾S～S</text></g>
+  <g fill="#f1f5f9" stroke="#cbd5e1"><rect x="420" y="696" width="162" height="46" rx="10"/><rect x="420" y="756" width="162" height="46" rx="10"/><rect x="420" y="816" width="162" height="46" rx="10"/><rect x="420" y="876" width="162" height="46" rx="10"/></g>
+  <g class="text box"><text x="501" y="725">Local Norm</text><text x="501" y="785">Local Norm</text><text x="501" y="845">Local Norm</text><text x="501" y="905">Local Norm</text></g>
+  <rect x="634" y="696" width="126" height="226" rx="16" fill="#dbeafe" stroke="#60a5fa"/><text class="text center" x="697" y="797" font-size="16" font-weight="800" transform="rotate(-90 697 797)">AllGather(sequence)</text>
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="818" y="696" width="212" height="46" rx="10"/><rect x="818" y="756" width="212" height="46" rx="10"/><rect x="818" y="816" width="212" height="46" rx="10"/><rect x="818" y="876" width="212" height="46" rx="10"/></g>
+  <g class="text box"><text x="924" y="725">TP Shard 0 · Full S</text><text x="924" y="785">TP Shard 1 · Full S</text><text x="924" y="845">TP Shard 2 · Full S</text><text x="924" y="905">TP Shard 3 · Full S</text></g>
+  <rect x="1082" y="696" width="140" height="226" rx="16" fill="#dcfce7" stroke="#4ade80"/><text class="text center" x="1152" y="797" font-size="16" font-weight="800" transform="rotate(-90 1152 797)">ReduceScatter(sequence)</text>
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="1280" y="696" width="190" height="46" rx="10"/></g><g fill="#dcfce7" stroke="#4ade80"><rect x="1280" y="756" width="190" height="46" rx="10"/></g><g fill="#ffedd5" stroke="#fb923c"><rect x="1280" y="816" width="190" height="46" rx="10"/></g><g fill="#ede9fe" stroke="#a78bfa"><rect x="1280" y="876" width="190" height="46" rx="10"/></g>
+  <g class="text box"><text x="1375" y="725">Y₀：[B, S/4, h]</text><text x="1375" y="785">Y₁：[B, S/4, h]</text><text x="1375" y="845">Y₂：[B, S/4, h]</text><text x="1375" y="905">Y₃：[B, S/4, h]</text></g>
+  <g stroke="#475569" stroke-width="2" marker-end="url(#arrow)"><path d="M370 719 H408"/><path d="M582 719 H622"/><path d="M760 719 H806"/><path d="M1030 719 H1070"/><path d="M1222 719 H1268"/><path d="M370 779 H408"/><path d="M582 779 H622"/><path d="M760 779 H806"/><path d="M1030 779 H1070"/><path d="M1222 779 H1268"/><path d="M370 839 H408"/><path d="M582 839 H622"/><path d="M760 839 H806"/><path d="M1030 839 H1070"/><path d="M1222 839 H1268"/><path d="M370 899 H408"/><path d="M582 899 H622"/><path d="M760 899 H806"/><path d="M1030 899 H1070"/><path d="M1222 899 H1268"/></g>
+  <text class="text center muted" x="800" y="1035" font-size="15">Backward 使用对应逆向布局转换；SP 主要减少非 Attention 区域的激活复制，不等同于 Context Parallel。</text>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">Megatron 风格 MLP 张量并行</title>
+  <desc id="desc">输入在四个 Rank 上复制，第一层权重按输出维度列切分，每个 Rank 得到中间激活分片并本地执行激活函数；第二层权重按输入维度行切分，各 Rank 产生部分输出，经过 AllReduce 求和得到复制输出。反向在入口处执行一次 AllReduce。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="138%"><feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#475569"/></marker>
+    <style>.text{font-family:Inter,'Noto Sans SC','Microsoft YaHei','Segoe UI',Arial,sans-serif;fill:#0f172a}.muted{fill:#64748b}.center{text-anchor:middle}.lane{font-size:18px;font-weight:800;text-anchor:end}.box{font-size:16px;font-weight:750;text-anchor:middle}.small{font-size:14px;text-anchor:middle}</style>
+  </defs>
+  <rect width="1600" height="980" fill="#f8fafc"/>
+  <text class="text" x="58" y="62" font-size="36" font-weight="800">MLP：Column → 本地激活 → Row，只在边界归约</text>
+  <text class="text muted" x="58" y="104" font-size="19">W₁：[h, h_ffn] 按输出切分；W₂：[h_ffn, h] 按输入切分；中间大激活始终保持分片</text>
+
+  <g filter="url(#shadow)"><rect x="48" y="150" width="1504" height="620" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <g class="text lane"><text x="154" y="273">GPU 0</text><text x="154" y="393">GPU 1</text><text x="154" y="513">GPU 2</text><text x="154" y="633">GPU 3</text></g>
+  <g fill="#f8fafc" stroke="#e2e8f0"><rect x="184" y="220" width="1300" height="82" rx="14"/><rect x="184" y="340" width="1300" height="82" rx="14"/><rect x="184" y="460" width="1300" height="82" rx="14"/><rect x="184" y="580" width="1300" height="82" rx="14"/></g>
+
+  <g fill="#e2e8f0" stroke="#94a3b8"><rect x="208" y="232" width="142" height="58" rx="12"/><rect x="208" y="352" width="142" height="58" rx="12"/><rect x="208" y="472" width="142" height="58" rx="12"/><rect x="208" y="592" width="142" height="58" rx="12"/></g>
+  <g class="text box"><text x="279" y="267">X · Replicated</text><text x="279" y="387">X · Replicated</text><text x="279" y="507">X · Replicated</text><text x="279" y="627">X · Replicated</text></g>
+
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="405" y="232" width="170" height="58" rx="12"/></g><g fill="#dcfce7" stroke="#4ade80"><rect x="405" y="352" width="170" height="58" rx="12"/></g><g fill="#ffedd5" stroke="#fb923c"><rect x="405" y="472" width="170" height="58" rx="12"/></g><g fill="#ede9fe" stroke="#a78bfa"><rect x="405" y="592" width="170" height="58" rx="12"/></g>
+  <g class="text box"><text x="490" y="258">Column W₁,₀</text><text x="490" y="278">XW₁,₀</text><text x="490" y="378">Column W₁,₁</text><text x="490" y="398">XW₁,₁</text><text x="490" y="498">Column W₁,₂</text><text x="490" y="518">XW₁,₂</text><text x="490" y="618">Column W₁,₃</text><text x="490" y="638">XW₁,₃</text></g>
+
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="650" y="232" width="176" height="58" rx="12"/></g><g fill="#dcfce7" stroke="#4ade80"><rect x="650" y="352" width="176" height="58" rx="12"/></g><g fill="#ffedd5" stroke="#fb923c"><rect x="650" y="472" width="176" height="58" rx="12"/></g><g fill="#ede9fe" stroke="#a78bfa"><rect x="650" y="592" width="176" height="58" rx="12"/></g>
+  <g class="text box"><text x="738" y="258">H₀ = φ(XW₁,₀)</text><text x="738" y="279">[N, h_ffn / 4]</text><text x="738" y="378">H₁ = φ(XW₁,₁)</text><text x="738" y="399">[N, h_ffn / 4]</text><text x="738" y="498">H₂ = φ(XW₁,₂)</text><text x="738" y="519">[N, h_ffn / 4]</text><text x="738" y="618">H₃ = φ(XW₁,₃)</text><text x="738" y="639">[N, h_ffn / 4]</text></g>
+
+  <g fill="#dbeafe" stroke="#60a5fa"><rect x="902" y="232" width="182" height="58" rx="12"/></g><g fill="#dcfce7" stroke="#4ade80"><rect x="902" y="352" width="182" height="58" rx="12"/></g><g fill="#ffedd5" stroke="#fb923c"><rect x="902" y="472" width="182" height="58" rx="12"/></g><g fill="#ede9fe" stroke="#a78bfa"><rect x="902" y="592" width="182" height="58" rx="12"/></g>
+  <g class="text box"><text x="993" y="258">Row W₂,₀</text><text x="993" y="279">Z₀ = H₀W₂,₀</text><text x="993" y="378">Row W₂,₁</text><text x="993" y="399">Z₁ = H₁W₂,₁</text><text x="993" y="498">Row W₂,₂</text><text x="993" y="519">Z₂ = H₂W₂,₂</text><text x="993" y="618">Row W₂,₃</text><text x="993" y="639">Z₃ = H₃W₂,₃</text></g>
+
+  <g fill="#fee2e2" stroke="#fca5a5"><rect x="1170" y="232" width="174" height="58" rx="12"/><rect x="1170" y="352" width="174" height="58" rx="12"/><rect x="1170" y="472" width="174" height="58" rx="12"/><rect x="1170" y="592" width="174" height="58" rx="12"/></g>
+  <g class="text box"><text x="1257" y="267">Partial Z₀</text><text x="1257" y="387">Partial Z₁</text><text x="1257" y="507">Partial Z₂</text><text x="1257" y="627">Partial Z₃</text></g>
+  <rect x="1380" y="232" width="76" height="418" rx="18" fill="#fecaca" stroke="#f87171"/>
+  <text class="text center" x="1418" y="405" font-size="17" font-weight="800" transform="rotate(-90 1418 405)">AllReduce(SUM)</text>
+  <text class="text center" x="1418" y="530" font-size="15" font-weight="750" transform="rotate(-90 1418 530)">Y = Σ Zᵢ</text>
+
+  <g stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)">
+    <path d="M350 261 H393"/><path d="M575 261 H638"/><path d="M826 261 H890"/><path d="M1084 261 H1158"/><path d="M1344 261 H1368"/>
+    <path d="M350 381 H393"/><path d="M575 381 H638"/><path d="M826 381 H890"/><path d="M1084 381 H1158"/><path d="M1344 381 H1368"/>
+    <path d="M350 501 H393"/><path d="M575 501 H638"/><path d="M826 501 H890"/><path d="M1084 501 H1158"/><path d="M1344 501 H1368"/>
+    <path d="M350 621 H393"/><path d="M575 621 H638"/><path d="M826 621 H890"/><path d="M1084 621 H1158"/><path d="M1344 621 H1368"/>
+  </g>
+  <text class="text center muted" x="738" y="710" font-size="15">φ 为 GeLU / SiLU；SwiGLU 的 Gate 与 Up 使用相同分片，逐元素运算仍在本地完成</text>
+  <text class="text center" x="800" y="747" font-size="17" font-weight="800">中间 H 不 AllGather：这是 Column + Row 配对减少通信的关键</text>
+
+  <g filter="url(#shadow)"><rect x="82" y="815" width="690" height="112" rx="20" fill="#ffffff" stroke="#bfdbfe"/><rect x="828" y="815" width="690" height="112" rx="20" fill="#ffffff" stroke="#fbcfe8"/></g>
+  <text class="text" x="118" y="855" font-size="19" font-weight="800">Forward</text><text class="text muted" x="118" y="888" font-size="16">W₂ 行并行结束后：1 次 AllReduce，恢复复制输出 Y。</text>
+  <text class="text" x="864" y="855" font-size="19" font-weight="800">Backward</text><text class="text muted" x="864" y="888" font-size="16">W₁ 列并行入口：1 次 AllReduce，求和各分片对 dX 的贡献。</text>
+</svg>

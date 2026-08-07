@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="940" viewBox="0 0 1600 940" role="img" aria-labelledby="title desc">
+  <title id="title">张量并行概览</title>
+  <desc id="desc">一个无法在单卡高效执行的 Transformer Block 被沿注意力头和 MLP 中间通道切分到四张 GPU。四张 GPU 处理同一批 Token，分别持有权重分片，通过集合通信合并部分结果。</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="138%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/></marker>
+    <style>
+      .text{font-family:Inter,'Noto Sans SC','Microsoft YaHei','Segoe UI',Arial,sans-serif;fill:#0f172a}.muted{fill:#64748b}.center{text-anchor:middle}.gpu{font-size:20px;font-weight:800;text-anchor:middle}.label{font-size:16px;font-weight:700;text-anchor:middle}
+    </style>
+  </defs>
+  <rect width="1600" height="940" fill="#f8fafc"/>
+  <text class="text" x="58" y="62" font-size="36" font-weight="800">张量并行：把同一个 Transformer Block 的内部张量切开</text>
+  <text class="text muted" x="58" y="104" font-size="19">四个 Rank 处理同一批 Token；每个 Rank 持有不同权重分片，而不是完整 Block 副本</text>
+
+  <g filter="url(#shadow)"><rect x="52" y="150" width="370" height="590" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text center" x="237" y="198" font-size="22" font-weight="800">完整 Transformer Block</text>
+  <text class="text center" x="237" y="229" font-size="15" fill="#be123c">单层参数或计算超过单卡能力</text>
+  <rect x="94" y="270" width="286" height="64" rx="14" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text class="text center" x="237" y="309" font-size="18" font-weight="750">RMSNorm + Residual</text>
+  <rect x="94" y="356" width="286" height="132" rx="18" fill="#dbeafe" stroke="#60a5fa"/>
+  <text class="text center" x="237" y="401" font-size="20" font-weight="800">Self-Attention</text>
+  <text class="text center muted" x="237" y="435" font-size="15">QKV Projection · Heads</text>
+  <text class="text center muted" x="237" y="462" font-size="15">Output Projection</text>
+  <rect x="94" y="510" width="286" height="64" rx="14" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text class="text center" x="237" y="549" font-size="18" font-weight="750">RMSNorm + Residual</text>
+  <rect x="94" y="596" width="286" height="112" rx="18" fill="#fce7f3" stroke="#f472b6"/>
+  <text class="text center" x="237" y="638" font-size="20" font-weight="800">MLP / SwiGLU</text>
+  <text class="text center muted" x="237" y="674" font-size="15">Gate · Up · Down Projection</text>
+
+  <path d="M438 445 H520" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow)"/>
+  <text class="text center" x="479" y="413" font-size="18" font-weight="800">层内切分</text>
+  <text class="text center muted" x="479" y="474" font-size="14">TP = 4</text>
+
+  <g filter="url(#shadow)"><rect x="548" y="150" width="1000" height="590" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text center" x="1048" y="198" font-size="22" font-weight="800">一个 Tensor Parallel Group</text>
+  <text class="text center muted" x="1048" y="229" font-size="15">同一次前向 / 反向由四个 Rank 协作完成</text>
+
+  <g filter="url(#shadow)">
+    <rect x="584" y="270" width="220" height="350" rx="20" fill="#eff6ff" stroke="#93c5fd"/>
+    <rect x="820" y="270" width="220" height="350" rx="20" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <rect x="1056" y="270" width="220" height="350" rx="20" fill="#fff7ed" stroke="#fdba74"/>
+    <rect x="1292" y="270" width="220" height="350" rx="20" fill="#f5f3ff" stroke="#c4b5fd"/>
+  </g>
+  <g class="text gpu"><text x="694" y="310">GPU 0</text><text x="930" y="310">GPU 1</text><text x="1166" y="310">GPU 2</text><text x="1402" y="310">GPU 3</text></g>
+  <g class="text label">
+    <rect x="610" y="340" width="168" height="80" rx="12" fill="#bfdbfe"/><text x="694" y="372">Attention Heads</text><text x="694" y="399">0～3</text>
+    <rect x="846" y="340" width="168" height="80" rx="12" fill="#a7f3d0"/><text x="930" y="372">Attention Heads</text><text x="930" y="399">4～7</text>
+    <rect x="1082" y="340" width="168" height="80" rx="12" fill="#fed7aa"/><text x="1166" y="372">Attention Heads</text><text x="1166" y="399">8～11</text>
+    <rect x="1318" y="340" width="168" height="80" rx="12" fill="#ddd6fe"/><text x="1402" y="372">Attention Heads</text><text x="1402" y="399">12～15</text>
+    <rect x="610" y="452" width="168" height="100" rx="12" fill="#dbeafe"/><text x="694" y="489">MLP Channels</text><text x="694" y="518">0～¼</text>
+    <rect x="846" y="452" width="168" height="100" rx="12" fill="#bbf7d0"/><text x="930" y="489">MLP Channels</text><text x="930" y="518">¼～½</text>
+    <rect x="1082" y="452" width="168" height="100" rx="12" fill="#ffedd5"/><text x="1166" y="489">MLP Channels</text><text x="1166" y="518">½～¾</text>
+    <rect x="1318" y="452" width="168" height="100" rx="12" fill="#ede9fe"/><text x="1402" y="489">MLP Channels</text><text x="1402" y="518">¾～1</text>
+  </g>
+  <g class="text center muted" font-size="14"><text x="694" y="590">权重分片 θ₀</text><text x="930" y="590">权重分片 θ₁</text><text x="1166" y="590">权重分片 θ₂</text><text x="1402" y="590">权重分片 θ₃</text></g>
+
+  <rect x="634" y="654" width="828" height="54" rx="27" fill="#fee2e2" stroke="#fca5a5"/>
+  <text class="text center" x="1048" y="687" font-size="17" font-weight="800">AllReduce / AllGather / ReduceScatter：在层内边界转换张量布局</text>
+
+  <g filter="url(#shadow)">
+    <rect x="92" y="795" width="438" height="96" rx="20" fill="#ffffff" stroke="#bfdbfe"/>
+    <rect x="580" y="795" width="438" height="96" rx="20" fill="#ffffff" stroke="#a7f3d0"/>
+    <rect x="1068" y="795" width="438" height="96" rx="20" fill="#ffffff" stroke="#fed7aa"/>
+  </g>
+  <text class="text" x="122" y="832" font-size="18" font-weight="800">切分的是同一层</text><text class="text muted" x="122" y="863" font-size="15">不同于 PP 按 Block / Stage 切深度。</text>
+  <text class="text" x="610" y="832" font-size="18" font-weight="800">处理的是同一批 Token</text><text class="text muted" x="610" y="863" font-size="15">不同于 DP 给每个副本不同数据。</text>
+  <text class="text" x="1098" y="832" font-size="18" font-weight="800">代价是高频同步</text><text class="text muted" x="1098" y="863" font-size="15">TP 通常应部署在高速互联域内。</text>
+</svg>
