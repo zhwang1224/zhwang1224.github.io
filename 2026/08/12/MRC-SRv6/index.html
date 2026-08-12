@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. 问题：规模放大了尾延迟与故障 2. 核心思路：拓扑、传输与路由协同设计 3. 多平面两层 Clos 拓扑 4. MRC：面向多路径的可靠 RDMA 传输 5. SRv6：以静态源路由取代动态路由 6. 故障处理与运维 7. 实验结果 8. 适用边界与局限 9. 总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/08/12/MRC-SRv6/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="1. 问题：规模放大了尾延迟与故障 2. 核心思路：拓扑、传输与路由协同设计 3. 多平面两层 Clos 拓扑 4. MRC：面向多路径的可靠 RDMA 传输 5. SRv6：以静态源路由取代动态路由 6. 故障处理与运维 7. 实验结果 8. 适用边界与局限 9. 总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/MRC-SRv6/figure-1.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/MRC-SRv6/figure-3.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/MRC-SRv6/figure-8.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/MRC-SRv6/figure-16-17.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/MRC-SRv6/figure-18.png">
+<meta property="article:published_time" content="2026-08-12T14:16:20.000Z">
+<meta property="article:modified_time" content="2026-08-12T14:20:59.704Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Clos 网络">
+<meta property="article:tag" content="MRC">
+<meta property="article:tag" content="OpenAI">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="RoCE">
+<meta property="article:tag" content="SRv6">
+<meta property="article:tag" content="多平面网络">
+<meta property="article:tag" content="容错网络">
+<meta property="article:tag" content="论文阅读">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/MRC-SRv6/figure-1.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/08/12/MRC-SRv6/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/08/12/MRC-SRv6/","path":"2026/08/12/MRC-SRv6/","title":"使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script src="/js/visitor-map.js"></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-摄影"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-MRC-%E4%B8%8E-SRv6-%E6%9E%84%E5%BB%BA%E5%85%B7%E5%A4%87%E9%9F%A7%E6%80%A7%E7%9A%84-AI-%E8%B6%85%E7%BA%A7%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%97%AE%E9%A2%98%EF%BC%9A%E8%A7%84%E6%A8%A1%E6%94%BE%E5%A4%A7%E4%BA%86%E5%B0%BE%E5%BB%B6%E8%BF%9F%E4%B8%8E%E6%95%85%E9%9A%9C"><span class="nav-number">1.1.</span> <span class="nav-text">1. 问题：规模放大了尾延迟与故障</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%8B%93%E6%89%91%E3%80%81%E4%BC%A0%E8%BE%93%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E5%90%8C%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2. 核心思路：拓扑、传输与路由协同设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%A4%9A%E5%B9%B3%E9%9D%A2%E4%B8%A4%E5%B1%82-Clos-%E6%8B%93%E6%89%91"><span class="nav-number">1.3.</span> <span class="nav-text">3. 多平面两层 Clos 拓扑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-MRC%EF%BC%9A%E9%9D%A2%E5%90%91%E5%A4%9A%E8%B7%AF%E5%BE%84%E7%9A%84%E5%8F%AF%E9%9D%A0-RDMA-%E4%BC%A0%E8%BE%93"><span class="nav-number">1.4.</span> <span class="nav-text">4. MRC：面向多路径的可靠 RDMA 传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E9%80%90%E5%8C%85%E5%96%B7%E6%B4%92%E4%B8%8E%E4%B9%B1%E5%BA%8F%E6%94%BE%E7%BD%AE"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 逐包喷洒与乱序放置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%8B%A5%E5%A1%9E%E3%80%81%E4%B8%A2%E5%8C%85%E4%B8%8E%E8%B7%AF%E5%BE%84%E7%8A%B6%E6%80%81"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 拥塞、丢包与路径状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E4%BF%9D%E6%8C%81%E5%B9%B3%E9%9D%A2%E9%97%B4%E8%B4%9F%E8%BD%BD%E7%9B%B8%E7%AD%89"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 保持平面间负载相等</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-SRv6%EF%BC%9A%E4%BB%A5%E9%9D%99%E6%80%81%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%96%E4%BB%A3%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">1.5.</span> <span class="nav-text">5. SRv6：以静态源路由取代动态路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E9%97%AD%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 为什么关闭动态路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E4%BB%8E-EV-%E7%94%9F%E6%88%90-SRv6-%E8%B7%AF%E5%BE%84"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 从 EV 生成 SRv6 路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%8F%8D%E5%90%91%E8%B7%AF%E5%BE%84"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 反向路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E4%B8%8E%E8%BF%90%E7%BB%B4"><span class="nav-number">1.6.</span> <span class="nav-text">6. 故障处理与运维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.7.</span> <span class="nav-text">7. 实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%9F%BA%E7%A1%80%E6%80%A7%E8%83%BD"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 基础性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E7%94%9F%E4%BA%A7%E8%AE%AD%E7%BB%83%E4%B8%AD%E7%9A%84%E6%95%85%E9%9A%9C"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 生产训练中的故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E4%B8%8E-RoCE-%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 与 RoCE 的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E9%80%82%E7%94%A8%E8%BE%B9%E7%95%8C%E4%B8%8E%E5%B1%80%E9%99%90"><span class="nav-number">1.8.</span> <span class="nav-text">8. 适用边界与局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%80%BB%E7%BB%93"><span class="nav-number">1.9.</span> <span class="nav-text">9. 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">306</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/08/12/MRC-SRv6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络 | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-12 22:16:20 / 修改时间：22:20:59" itemprop="dateCreated datePublished" datetime="2026-08-12T22:16:20+08:00">2026-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">分布式训练网络</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>22 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#1-%E9%97%AE%E9%A2%98%EF%BC%9A%E8%A7%84%E6%A8%A1%E6%94%BE%E5%A4%A7%E4%BA%86%E5%B0%BE%E5%BB%B6%E8%BF%9F%E4%B8%8E%E6%95%85%E9%9A%9C">1. 问题：规模放大了尾延迟与故障</a></li>
+<li><a href="#2-%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%8B%93%E6%89%91%E3%80%81%E4%BC%A0%E8%BE%93%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E5%90%8C%E8%AE%BE%E8%AE%A1">2. 核心思路：拓扑、传输与路由协同设计</a></li>
+<li><a href="#3-%E5%A4%9A%E5%B9%B3%E9%9D%A2%E4%B8%A4%E5%B1%82-Clos-%E6%8B%93%E6%89%91">3. 多平面两层 Clos 拓扑</a></li>
+<li><a href="#4-MRC%EF%BC%9A%E9%9D%A2%E5%90%91%E5%A4%9A%E8%B7%AF%E5%BE%84%E7%9A%84%E5%8F%AF%E9%9D%A0-RDMA-%E4%BC%A0%E8%BE%93">4. MRC：面向多路径的可靠 RDMA 传输</a></li>
+<li><a href="#5-SRv6%EF%BC%9A%E4%BB%A5%E9%9D%99%E6%80%81%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%96%E4%BB%A3%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1">5. SRv6：以静态源路由取代动态路由</a></li>
+<li><a href="#6-%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E4%B8%8E%E8%BF%90%E7%BB%B4">6. 故障处理与运维</a></li>
+<li><a href="#7-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C">7. 实验结果</a></li>
+<li><a href="#8-%E9%80%82%E7%94%A8%E8%BE%B9%E7%95%8C%E4%B8%8E%E5%B1%80%E9%99%90">8. 适用边界与局限</a></li>
+<li><a href="#9-%E6%80%BB%E7%BB%93">9. 总结</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="使用-MRC-与-SRv6-构建具备韧性的-AI-超级计算机网络"><a href="#使用-MRC-与-SRv6-构建具备韧性的-AI-超级计算机网络" class="headerlink" title="使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络"></a>使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络</h1><blockquote>
+<p>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.04333v1"><em>Resilient AI Supercomputer Networking using MRC and SRv6</em></a>，arXiv:2605.04333v1。作者来自 OpenAI、Microsoft、AMD、Broadcom 与 NVIDIA。</p>
+</blockquote>
+<p>大规模同步预训练对网络提出的首要要求，并不只是较高的平均吞吐量，而是稳定的尾部性能。在一次 collective 中，只要有一个传输因流碰撞、incast 或链路故障而显著变慢，所有同步 GPU 都可能等待这一离群值。随着训练规模扩展到数万乃至十万块 GPU，低概率事件会转化为持续发生的系统事件，依赖作业重启或路由协议收敛来恢复已经难以接受。</p>
+<p>本文的核心贡献是一套由三个部分构成的协同设计：将一张 800 Gb&#x2F;s 物理端口拆分成多个较低速 lane，构成高基数的多平面两层 Clos；在端侧使用 Multipath Reliable Connection（MRC）对每个 Queue Pair（QP）执行逐包多路径传输；再通过静态 SRv6 源路由，使每个 MRC 熵值精确对应一条物理路径。其关键并非单独提出一种负载均衡算法，而是重新划分了网络职责：交换机只执行简单、静态的转发，端系统同时负责负载均衡、拥塞反馈和故障绕行。</p>
+<p>论文报告称，这套系统已经部署于 OpenAI 和 Microsoft 的多个大规模训练集群，并用于前沿模型训练。其生产结果表明，过去足以终止训练的部分链路和交换机故障，在 MRC 网络中通常只表现为短暂吞吐波动或与剩余容量相匹配的性能下降。</p>
+<h2 id="1-问题：规模放大了尾延迟与故障"><a href="#1-问题：规模放大了尾延迟与故障" class="headerlink" title="1. 问题：规模放大了尾延迟与故障"></a>1. 问题：规模放大了尾延迟与故障</h2><p>同步预训练会组合数据并行、张量并行、流水线并行和专家并行等策略。每个训练 step 中，计算与通信交替执行；系统希望尽可能重叠二者，并让关键路径以计算为主。然而，一轮通信的完成时间由最慢的传输决定。当参与者数量增加时，即使单条路径发生异常的概率很低，某个参与者遭遇异常的概率也会迅速上升。</p>
+<p>论文将网络必须解决的问题归纳为三项：</p>
+<ol>
+<li>在大量等价路径间均匀分配流量，避免低熵大流造成 ECMP 哈希碰撞；</li>
+<li>处理同步 collective 常见的 incast，同时避免产生新的尾延迟离群值；</li>
+<li>在链路、端口或交换机发生故障时继续推进训练，而不是使整个作业失败。</li>
+</ol>
+<p>还有一个容易被忽略的约束：数千台交换机组成的多座 AI 超级计算机，需要由规模相对较小的团队运维。系统不能要求操作人员实时诊断每次链路抖动，也不应依赖复杂控制面在每次故障后重算全网路径。因此，论文把“低运维负担”与性能、韧性并列为设计目标。</p>
+<h2 id="2-核心思路：拓扑、传输与路由协同设计"><a href="#2-核心思路：拓扑、传输与路由协同设计" class="headerlink" title="2. 核心思路：拓扑、传输与路由协同设计"></a>2. 核心思路：拓扑、传输与路由协同设计</h2><p>三部分机制的分工如下。</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>机制</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>物理拓扑</td>
+<td>多平面两层 Clos</td>
+<td>以高端口基数缩短路径，并把单次故障细化为较小的容量损失</td>
+</tr>
+<tr>
+<td>端到端传输</td>
+<td>MRC</td>
+<td>逐包喷洒、主动负载均衡、乱序放置、选择性重传与故障路径淘汰</td>
+</tr>
+<tr>
+<td>网络转发</td>
+<td>静态 SRv6 源路由</td>
+<td>建立 EV 到物理路径的确定性映射，避免动态路由与端侧自适应相互干扰</td>
+</tr>
+</tbody></table>
+<p>这三者存在明确的依赖关系。多平面网络提供大量独立路径，但传统单路径 RoCE 无法稳定利用这些路径；MRC 能够使用路径多样性，但若底层 ECMP 映射和动态路由持续变化，端侧观察到的路径状态便难以解释；SRv6 固定了 EV 与物理路径之间的关系，使 MRC 可以对单条路径维护状态，并让监控系统精确定位故障。</p>
+<p>因此，论文所谓的“韧性”不是依靠某一个冗余组件实现，而是让拓扑提供冗余、传输层快速选择冗余、静态路由保持路径身份稳定。</p>
+<h2 id="3-多平面两层-Clos-拓扑"><a href="#3-多平面两层-Clos-拓扑" class="headerlink" title="3. 多平面两层 Clos 拓扑"></a>3. 多平面两层 Clos 拓扑</h2><p>论文以 100,000 块 GPU、每块 GPU 配备一张 800 Gb&#x2F;s NIC 为例。51.2 Tb&#x2F;s 交换芯片可提供 64 个 800 Gb&#x2F;s 端口。若构造传统无超售 Clos，每台 T0 使用 32 个端口连接 NIC、32 个端口连接 T1，一个 pod 只能容纳 1024 张 NIC；再增加 T2 后，网络规模约为 64K NIC。要达到 100K GPU，需要继续增加层级、引入超售，或构造多个独立 rail。</p>
+<p>论文采用的方案是把 800 Gb&#x2F;s NIC 按 lane 拆分为 8×100 Gb&#x2F;s，并用同一类 51.2 Tb&#x2F;s 芯片构造八个相互独立的 Clos 平面。此时一台交换机可提供 512 个 100 Gb&#x2F;s 端口：T0 向下连接 256 个 NIC 端口、向上连接 256 台 T1；T1 再连接 512 台 T0。最终只需两层交换机便可连接 131,072 块 GPU，并保持全二分带宽。</p>
+<p><img data-src="/images/MRC-SRv6/figure-1.png" alt="三层单平面与两层多平面 Clos 拓扑对比"></p>
+<p>多平面拓扑带来四项直接收益：</p>
+<ul>
+<li>最长路径只经过三台交换机，而三层单平面网络需要经过五台或七台交换机；</li>
+<li>T0 一跳范围从 32 个节点扩大到 256 个节点，更容易利用作业放置的局部性；</li>
+<li>在相同全二分带宽目标下，光模块数量约为三层网络的 2&#x2F;3，交换机数量约为 3&#x2F;5；</li>
+<li>故障粒度显著减小。论文估算，一条 T0–T1 链路故障在 800 Gb&#x2F;s 单平面中会使相关节点损失约 3% 容量，在 100 Gb&#x2F;s 平面中则约为 0.4%。NIC–T0 链路故障也只损失一个平面的 1&#x2F;8 带宽。</li>
+</ul>
+<p>需要强调的是，lane 拆分不会增加 NIC 的总带宽。它用较低的单链路速率换取更高的交换端口基数、更短的拓扑和更细的故障粒度。代价在于每条 100 Gb&#x2F;s 链路更容易被单个大流压满，而且系统必须同时均匀使用所有平面。MRC 正是为这一约束设计的传输层。</p>
+<h2 id="4-MRC：面向多路径的可靠-RDMA-传输"><a href="#4-MRC：面向多路径的可靠-RDMA-传输" class="headerlink" title="4. MRC：面向多路径的可靠 RDMA 传输"></a>4. MRC：面向多路径的可靠 RDMA 传输</h2><p>MRC 是对 RoCEv2 Reliable Connection（RC）的最小化扩展。它保留普通 RoCE verbs 接口和 QP 抽象，但在本文实现中只支持训练负载所需的 <code>write</code> 与 <code>write-with-immediate</code> 操作。MRC 借鉴了 Ultra Ethernet Transport（UET）的若干设计，包括逐包喷洒、乱序内存放置、选择性重传和数据包裁剪。</p>
+<h3 id="4-1-逐包喷洒与乱序放置"><a href="#4-1-逐包喷洒与乱序放置" class="headerlink" title="4.1 逐包喷洒与乱序放置"></a>4.1 逐包喷洒与乱序放置</h3><p>每个 MRC 数据包都携带 RDMA 虚拟地址与 remote key。因此，即使同一 QP 的数据包经不同路径乱序到达，接收 NIC 仍可立即把数据写入正确位置，无需先恢复按序数据流。</p>
+<p>每个数据包还携带一个 32 位 Entropy Value（EV）。EV 分布编码在 UDP 源端口与 IPv6 flow label 中。在传统 ECMP 网络中，不同 EV 会被哈希到不同路径；在本文的 SRv6 网络中，EV 则通过确定性算法映射到一条明确的源路由路径。</p>
+<p>QP 建立时，发送端通常生成包含 128～256 个条目的 EV 集合，并在所有网络平面之间均匀分配这些 EV。此后，每发送一个数据包便轮换选择新的 EV。于是，一个 QP 无需应用感知，即可把数据包条带化地分布到所有平面及每个平面中的多条路径上。传统 RoCE 的多 QP 扩展仍以流为基本单位，而 MRC 把负载均衡粒度下沉到了数据包。</p>
+<h3 id="4-2-拥塞、丢包与路径状态"><a href="#4-2-拥塞、丢包与路径状态" class="headerlink" title="4.2 拥塞、丢包与路径状态"></a>4.2 拥塞、丢包与路径状态</h3><p>逐包喷洒很难与 Priority Flow Control（PFC）共存：同一个 QP 的数据包可能沿数百条路径汇聚到最后一跳，PFC 还会在不同 collective 之间造成队头阻塞。MRC 因此关闭 PFC，在尽力而为的有损以太网上运行，并通过更快、更精确的丢包恢复来维持 RC 语义。</p>
+<p>MRC 为每个 EV 保存少量路径健康状态，并针对不同信号采取不同动作：</p>
+<ul>
+<li>**内部拥塞：**交换机正常执行随机 ECN 标记，但通往接收端的最后一跳关闭 ECN。在全二分网络中，除最后一跳 incast 外，网络内部原则上不应持续拥塞。因此，内部 ECN 可被解释为路径负载不均。接收端回显 ECN 后，发送端临时避开对应 EV，使不同发送端未经协调产生的轻微不均得到平滑。</li>
+<li>**拥塞丢包：**交换机可对本应丢弃的数据包执行 packet trimming，移除 payload，并以高优先级把头部送到目的端。接收 NIC 随即返回 NACK，触发快速重传。裁剪包还使发送端能够区分拥塞丢包与路径故障。</li>
+<li>**普通丢包：**若数据包未被裁剪却直接丢失，MRC 假定路径已经失效，立即停止使用对应 EV，并在其他路径上选择性重传。SACK 会精确报告已到达的数据包，避免传统 RC 从丢失点开始进行粗粒度恢复。</li>
+<li>**路径恢复：**一次丢包也可能源于比特错误，而非永久故障。MRC 会在后台探测被移除的路径；当足够多的探测成功后，对应 EV 会重新进入活动集合。</li>
+</ul>
+<p>论文称，MRC 能在数十微秒内发现并绕过路径故障。这里的“路径故障”应与 NIC 端口失效区分：若一个 NIC 端口整体掉线，CX-8 实现还需要重映射大量活跃 QP 的 EV，并通过 SACK 中的端口状态位图通知远端；这一过程通常需要数秒，但 QP 本身仍可在剩余平面上继续工作。</p>
+<h3 id="4-3-保持平面间负载相等"><a href="#4-3-保持平面间负载相等" class="headerlink" title="4.3 保持平面间负载相等"></a>4.3 保持平面间负载相等</h3><p>当一个 EV 被移出活动集合时，MRC 使用同一平面中的另一个 EV 替换它。这个不变量保证所有 NIC 端口正常时，各平面上的负载严格相等，从而避免多个流在目的端形成“伪 incast”。它也使运维判断更简单：当 MRC 已经绕过坏路径后，健康平面的统计特征通常应当近似一致，异常平面会较为醒目。</p>
+<p>这一选择同时构成了系统边界。如果后端网络中混入单路径流量，MRC 会受最拥塞平面限制；如果某一平面损失了过多 T0–T1 链路，该平面也可能成为全局瓶颈。论文称生产环境中尚未观察到后一种情况。</p>
+<h2 id="5-SRv6：以静态源路由取代动态路由"><a href="#5-SRv6：以静态源路由取代动态路由" class="headerlink" title="5. SRv6：以静态源路由取代动态路由"></a>5. SRv6：以静态源路由取代动态路由</h2><h3 id="5-1-为什么关闭动态路由"><a href="#5-1-为什么关闭动态路由" class="headerlink" title="5.1 为什么关闭动态路由"></a>5.1 为什么关闭动态路由</h3><p>在 512 端口的高基数 T0 上，一个目的端最多对应 256 个 ECMP 下一跳。故障发生后，经部分 T1 可能无法到达特定目的端，交换机不得不维护大量因目的端而异的 ECMP 集合，其数量可能接近 T0 交换机总数。这不仅增加转发表与控制面的压力，也使大规模路由问题难以诊断。</p>
+<p>更重要的是，MRC 和动态路由都是自适应机制，但二者反应时间不同。MRC 首先检测丢包并移除故障路径；随后动态路由收敛又会改变 ECMP 映射，使原有 EV 的物理含义发生变化，并扰乱刚刚稳定的负载分配。论文由此作出一个看似反直觉的选择：既然 MRC 已能在冗余拓扑上快速绕过故障，就关闭交换机动态路由，让路径保持静态。</p>
+<h3 id="5-2-从-EV-生成-SRv6-路径"><a href="#5-2-从-EV-生成-SRv6-路径" class="headerlink" title="5.2 从 EV 生成 SRv6 路径"></a>5.2 从 EV 生成 SRv6 路径</h3><p>系统采用 SRv6 micro-segment ID（uSID）格式。外层 IPv6 目的地址由 32 位 locator 和一系列 16 位 uSID 组成，每个 uSID 显式指定路径上的一台交换机。交换机匹配地址前 48 位中的 locator 与自身 uSID，随后把 uSID 序列左移 16 位，再依据静态 <code>/48</code> 路由表转发。论文所使用的交换机均可在线速下完成这种 uN 风格转发。</p>
+<p>MRC 数据包使用 IPv6-in-IPv6 封装：外层目的地址表达 SRv6 路径，内层目的地址保留目标 NIC 地址，供接收 NIC 解封装后送入 RDMA 流水线。</p>
+<p><img data-src="/images/MRC-SRv6/figure-3.png" alt="由配置模板、目的地址与 EV 生成 SRv6 地址"></p>
+<p>为避免同时保存 EV 状态和完整 SRv6 地址，系统在二者之间建立算法映射。QP 启动时，NIC 根据目的端所在 T0 group 读取一个通用 SRv6 地址模板，再从目的 IP 填入最后一跳下行链路编号。实际发送数据包时，NIC 从活动 EV 集合中选择一个 EV，将其中的平面编号复制到各 uSID，并把 T0 上行链路编号写入 T1 uSID，生成该数据包的最终外层地址。</p>
+<p>EV 本身仍保留在 UDP 源端口和 IPv6 flow label 中。原因是 SRv6 地址会在逐跳移位过程中消失，而接收端必须在 SACK 或 NACK 中回显 EV，发送端才能更新对应路径的拥塞与健康状态。</p>
+<h3 id="5-3-反向路径"><a href="#5-3-反向路径" class="headerlink" title="5.3 反向路径"></a>5.3 反向路径</h3><p>MRC 的累积 ACK、SACK 与 NACK 也需要一条可用反向路径。双向通信可以直接从对端的活动 EV 集合中选路，但许多 collective QP 在某一时刻是单向的，而且前向 SRv6 路径未必能够简单反转。</p>
+<p>论文为控制包维护一个较小的反向 EV 集合，并保证每个平面至少有一个 EV。当 QP 只有入站活动时，接收端每个 RTT 使用随机 EV 发出探测；得到确认后，该 EV 被设为对应平面的反向路径。如果同时存在出站数据，则直接利用数据 SACK 更新反向 EV。由此，控制包始终从近期验证可用的路径集合中选路。</p>
+<h2 id="6-故障处理与运维"><a href="#6-故障处理与运维" class="headerlink" title="6. 故障处理与运维"></a>6. 故障处理与运维</h2><p>静态源路由把每个 EV 固定到唯一物理路径后，故障遥测也变得确定。论文实现的 Clustermapper 由所有节点上的 agent 组成，它们共同以每毫秒覆盖一次全网链路的频率执行源路由探测：节点探测直接连接的 T0，并让数据包返回自身；同时各节点分担对 T1 的探测，使所有 T0–T1 链路都被高频覆盖。</p>
+<p>这种探测得到的是数据面的真实状态，而不是控制面宣告的链路状态。如果 T0 自探测正常、经过 T1 的探测失败，系统便可把问题定位到 T0–T1 链路。对于“控制面和链路均显示在线，但交换机已经停止转发”这类灰色故障，Clustermapper 仍能直接发现问题。SRv6 还保证探测包与对应 MRC 数据包经过相同路径，不存在 ECMP 哈希带来的路径歧义。</p>
+<p>MRC 支持 denylist，因而可以在 QP 建立时避开已知故障路径。不过，对于长生命周期的预训练 QP，论文发现无需预先屏蔽失效的 T0–T1 链路：QP 可以先从 100 多个 EV 和备用 EV 集合开始运行，再由 MRC 很快淘汰不可用路径。在一个 75K GPU 作业的启动过程中，即使没有预填 denylist，第一分钟内每个 QP 丢失的数据包仍少于 5 个，数分钟后总体丢包率便降至很低水平。</p>
+<p>这也改变了维修策略。T0–T1 链路抖动通常不再需要紧急处理，甚至维修过程中也可以保持链路在线：链路不可用时 MRC 自动排除路径，探测持续成功后再恢复使用。T1 交换机异常时，运维系统可以直接重启交换机，而无需等待路由收敛或与运行中的训练作业协调。相比之下，NIC–T0 链路与 T0 交换机故障会直接减少节点可用平面，仍会造成可测量的容量下降，因而需要更谨慎处理。</p>
+<h2 id="7-实验结果"><a href="#7-实验结果" class="headerlink" title="7. 实验结果"></a>7. 实验结果</h2><p>论文给出了四种平台。Cluster A、B、C 是两层多平面网络，Cluster D 是用于对照实验的两层单平面小型测试床。</p>
+<table>
+<thead>
+<tr>
+<th>集群</th>
+<th>GPU &#x2F; NIC</th>
+<th>交换机</th>
+<th>拓扑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>NVIDIA GB200 + CX-8，800 Gb&#x2F;s</td>
+<td>NVIDIA Spectrum-4、Broadcom TH5</td>
+<td>4×200 Gb&#x2F;s 多平面</td>
+</tr>
+<tr>
+<td>B</td>
+<td>NVIDIA GB200 + CX-8，800 Gb&#x2F;s</td>
+<td>NVIDIA Spectrum-5</td>
+<td>8×100 Gb&#x2F;s 多平面</td>
+</tr>
+<tr>
+<td>C</td>
+<td>AMD MI355 + Pollara，400 Gb&#x2F;s</td>
+<td>Broadcom TH5</td>
+<td>4×100 Gb&#x2F;s 多平面</td>
+</tr>
+<tr>
+<td>D</td>
+<td>NVIDIA RTX 6000 + Broadcom Thor Ultra</td>
+<td>Broadcom TH5</td>
+<td>400 Gb&#x2F;s 单平面</td>
+</tr>
+</tbody></table>
+<h3 id="7-1-基础性能"><a href="#7-1-基础性能" class="headerlink" title="7.1 基础性能"></a>7.1 基础性能</h3><p>在 Cluster B 上，MRC 的 T0-local 与 cross-T1 32 KB RDMA write 均达到约 770 Gb&#x2F;s，即 800 Gb&#x2F;s 理论峰值的 96%。2 字节 write 的近似单向延迟分别为 5.09 μs 和 6.54 μs；跨 T1 的额外交换机跳数增加了小消息延迟，但没有限制大消息稳态吞吐量。</p>
+<p>在 42K GPU 的 NCCL <code>sendrecv</code> 微基准中，大消息的每 NIC 吞吐量最高达到 92 GBytes&#x2F;s。这个结果说明逐包喷洒和 SRv6 封装没有阻止 MRC 在数万 GPU 范围内接近 NIC 线速，但该微基准并不等价于完整训练 step 的端到端效率。</p>
+<h3 id="7-2-生产训练中的故障"><a href="#7-2-生产训练中的故障" class="headerlink" title="7.2 生产训练中的故障"></a>7.2 生产训练中的故障</h3><p>在 Cluster A 的一个 50K GPU 生产预训练作业中，一台 T0 的光收发器异常导致四条 200 Gb&#x2F;s 链路快速连续抖动，其中三条连接到作业中的活跃节点。由于同步训练由最慢节点决定，作业吞吐量在持续约一分钟的抖动期间下降约 25%，之后立即恢复全速。作业没有崩溃，没有 QP 失败，也无需移除受影响节点。</p>
+<p>在另一个 75K GPU 预训练作业中，论文记录了四次 T1 交换机必须重启的事件。图中所示的一次故障里，交换机虽然仍在线，却停止了数据包转发；约四分之一 QP 受到影响，共丢失约 580K 个数据包。吞吐量在故障发生时短暂下降，但 QP 很快排除了坏路径。自动化系统在 <code>t=0</code> 重启交换机、约两分钟后恢复转发，而重启动作本身没有进一步影响作业吞吐量。</p>
+<p><img data-src="/images/MRC-SRv6/figure-8.png" alt="75K GPU 作业中 T1 交换机故障与重启的影响"></p>
+<h3 id="7-3-与-RoCE-的比较"><a href="#7-3-与-RoCE-的比较" class="headerlink" title="7.3 与 RoCE 的比较"></a>7.3 与 RoCE 的比较</h3><p>论文在包含 64 块 GPU 的 Cluster C 上进行主要对比。RoCE 使用 400 Gb&#x2F;s 单平面、ECMP、PFC 与 DCQCN；MRC 使用 4×100 Gb&#x2F;s 多平面、SRv6，并关闭 PFC。两种配置使用相同的 GPU、NIC、交换机与聚合带宽，但各自运行在其偏好的网络环境中。因此，这一结果比较的是两套完整系统设计，而不是只隔离传输协议变量。</p>
+<p>在 64 路 ring all-reduce 中，单 QP RoCE 在大消息下受 ECMP 碰撞影响，通常只能达到可用吞吐量的一半。把 RoCE 扩展到 16 个 QP 可以改善结果，但超过 8 个 QP 后收益已经很小；一个把数据包喷洒到 256 条路径的 MRC QP 仍然更快。在 0.1% 随机丢包下，MRC 对大消息的吞吐影响很小；在 1% 持续随机丢包下，RoCE 基本不可用，MRC 也只剩约三分之一目标吞吐量，说明 MRC 面向的是瞬态故障而非长期严重丢包。</p>
+<p>在 all-to-all 中，同时活动的 QP 更多，RoCE 的负载均衡问题相对减弱，增加 QP 反而没有收益。MRC 在所有消息大小下仍优于 RoCE，带宽受限区间的差距更明显。</p>
+<p><img data-src="/images/MRC-SRv6/figure-16-17.png" alt="MRC 与 RoCE 的 64 路 all-reduce 和 all-to-all 对比"></p>
+<p>论文还构造了 7-to-1 incast，并在同一机架中运行一条目的端不同的“受害者”流。RoCEv2 即使使用 DCQCN，单 QP 下受害者流平均吞吐量仍下降约 25%；多 QP 下还出现持续 1 秒、吞吐量降至约 100 Gb&#x2F;s 的区间。MRC 则近似均匀地共享 incast 瓶颈，同时让受害者流保持接近 400 Gb&#x2F;s。这一结果体现了关闭 PFC、使用端到端恢复的重要性：拥塞不再通过暂停帧扩散到无关 collective。</p>
+<p><img data-src="/images/MRC-SRv6/figure-18.png" alt="7-to-1 incast 对无关受害者流的影响"></p>
+<h2 id="8-适用边界与局限"><a href="#8-适用边界与局限" class="headerlink" title="8. 适用边界与局限"></a>8. 适用边界与局限</h2><p>论文的结果表明 MRC 能显著提高训练网络的韧性，但它并不消除故障，也不是无需约束的通用 RoCE 替代方案。</p>
+<p>首先，本文 MRC 只实现 <code>write</code> 与 <code>write-with-immediate</code>，覆盖的是 AI collective 所需的 RC 子集。系统还要求 NIC 实现新的逐包路径状态、乱序放置和选择性重传机制，交换机支持所需的 SRv6 转发；数据包裁剪则进一步依赖网络设备能力。虽然论文已经在 NVIDIA、AMD 与 Broadcom NIC，以及多种交换芯片和网络操作系统上完成实现，但部署仍属于软硬件协同升级。</p>
+<p>其次，多平面设计缩小了故障影响，却没有消除全部单点。论文使用一个 800 Gb&#x2F;s NIC 光模块承载 4×200 Gb&#x2F;s 链路；若单条 lane 抖动，MRC 可以绕过它，若整个 NIC 收发器抖动，则所有平面同时丢失，QP 仍会失败。部分失效但未完全掉线的 NIC–T0 链路也不能仅由 MRC 可靠判断故障位于本端还是远端，需要 Clustermapper 检测后通过 denylist 避开该平面。</p>
+<p>最后，大规模生产数据主要证明了 MRC 系统在真实故障下能够继续训练；MRC 与 RoCE 的直接、可控对比则来自 64 GPU 等小型测试床。论文没有在同一座数万 GPU 集群上给出两种协议的完整训练效率对照。因而，实验有力支持“故障韧性与负载均衡得到改善”，但不应被解读为对所有模型、collective 和网络配置都给出了统一加速比例。</p>
+<h2 id="9-总结"><a href="#9-总结" class="headerlink" title="9. 总结"></a>9. 总结</h2><p>这项工作的核心判断是：在超大规模同步训练中，依靠交换机控制面收敛来恢复故障已经太慢，也过于复杂；端系统既然能够以逐包粒度观察路径，就应当同时承担负载均衡和故障绕行职责。</p>
+<p>多平面 Clos 把 100K+ GPU 网络压缩为两层，并提供细粒度物理冗余；MRC 将每个 QP 喷洒到全部平面和大量路径上，利用 ECN、SACK&#x2F;NACK、packet trimming 与探测维护路径状态；静态 SRv6 则赋予每个 EV 稳定、可解释的物理路径身份。三者结合后，链路抖动和 T1 交换机故障不再必然触发作业失败，交换机重启也不再要求路由收敛或训练侧协调。</p>
+<p>因此，论文真正提供的不是一个孤立的 RDMA 优化，而是一种面向 AI 超级计算机的职责重构：用简单、确定的网络核心暴露路径多样性，用具有快速反馈的端侧传输消费这些路径，并把故障从“必须立即修复的作业事件”转化为“可以在剩余容量上继续运行的运维事件”。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
+              <a href="/tags/%E5%AE%B9%E9%94%99%E7%BD%91%E7%BB%9C/" rel="tag"># 容错网络</a>
+              <a href="/tags/Clos-%E7%BD%91%E7%BB%9C/" rel="tag"># Clos 网络</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/OpenAI/" rel="tag"># OpenAI</a>
+              <a href="/tags/MRC/" rel="tag"># MRC</a>
+              <a href="/tags/SRv6/" rel="tag"># SRv6</a>
+              <a href="/tags/RoCE/" rel="tag"># RoCE</a>
+              <a href="/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/" rel="tag"># 多平面网络</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/07/Extreme-Scale-Interconnection-Networks/" rel="prev" title="Extreme-Scale Interconnection Networks：面向超大规模系统的多程随机叶脊网络">
+                  <i class="fa fa-angle-left"></i> Extreme-Scale Interconnection Networks：面向超大规模系统的多程随机叶脊网络
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
