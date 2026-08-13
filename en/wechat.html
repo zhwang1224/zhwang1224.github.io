@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="Zhenghao Wang's WeChat contact">
+  <title>Add My WeChat</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #697386;
+      --line: #e8ebf1;
+      --accent: #576dde;
+      --wechat: #07c160;
+      --surface: rgba(255, 255, 255, 0.94);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(87, 109, 222, 0.13), transparent 34rem),
+        radial-gradient(circle at 85% 85%, rgba(7, 193, 96, 0.10), transparent 30rem),
+        #f5f7fb;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    }
+
+    .card {
+      position: relative;
+      width: min(100%, 460px);
+      padding: 36px;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      box-shadow:
+        0 24px 70px rgba(38, 47, 77, 0.12),
+        0 3px 12px rgba(38, 47, 77, 0.05);
+      backdrop-filter: blur(16px);
+    }
+
+    .wechat-mark {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--wechat);
+      border-radius: 17px;
+      box-shadow: 0 10px 24px rgba(7, 193, 96, 0.24);
+    }
+
+    .wechat-mark::before {
+      content: "WeChat";
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(25px, 6vw, 31px);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 9px 0 24px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .qr-frame {
+      width: min(100%, 330px);
+      margin: 0 auto 24px;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 10px 32px rgba(38, 47, 77, 0.08);
+    }
+
+    .qr-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+    }
+
+    .account-label {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .account {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .account code {
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    button {
+      min-height: 38px;
+      padding: 0 14px;
+      color: #fff;
+      background: var(--accent);
+      border: 0;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 16px rgba(87, 109, 222, 0.24);
+    }
+
+    button:focus-visible {
+      outline: 3px solid rgba(87, 109, 222, 0.28);
+      outline-offset: 3px;
+    }
+
+    button[data-copied="true"] {
+      background: var(--wechat);
+    }
+
+    .status {
+      min-height: 20px;
+      margin: 12px 0 0;
+      color: var(--wechat);
+      font-size: 13px;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 18px 14px;
+      }
+
+      .card {
+        padding: 28px 20px 24px;
+        border-radius: 24px;
+      }
+
+      .lead {
+        margin-bottom: 20px;
+      }
+
+      .qr-frame {
+        margin-bottom: 20px;
+        padding: 9px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="wechat-mark" aria-hidden="true"></div>
+    <h1>Add My WeChat</h1>
+    <p class="lead">Scan with WeChat to add me</p>
+
+    <div class="qr-frame">
+      <img src="/assets/wechat-qr.png" width="700" height="700" alt="WeChat QR code">
+    </div>
+
+    <p class="account-label">WeChat ID</p>
+    <div class="account">
+      <code id="wechat-id">w17814684368</code>
+      <button id="copy-button" type="button" aria-describedby="copy-status">Copy</button>
+    </div>
+    <p class="status" id="copy-status" role="status" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const button = document.getElementById("copy-button");
+    const account = document.getElementById("wechat-id").textContent;
+    const status = document.getElementById("copy-status");
+
+    async function copyAccount() {
+      try {
+        await navigator.clipboard.writeText(account);
+      } catch {
+        const input = document.createElement("textarea");
+        input.value = account;
+        input.setAttribute("readonly", "");
+        input.style.position = "fixed";
+        input.style.opacity = "0";
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        input.remove();
+      }
+
+      button.textContent = "Copied";
+      button.dataset.copied = "true";
+      status.textContent = "WeChat ID copied";
+
+      window.setTimeout(() => {
+        button.textContent = "Copy";
+        button.dataset.copied = "false";
+        status.textContent = "";
+      }, 1800);
+    }
+
+    button.addEventListener("click", copyAccount);
+  </script>
+</body>
+</html>

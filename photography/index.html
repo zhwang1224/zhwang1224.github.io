@@ -111,16 +111,6 @@
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
   html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
   html[lang="en"] .menu-item-lang-en { display: none; }
-
-  /* 英文站为轻量引导站，隐藏指向中文内容的菜单项，仅保留语言切换入口 */
-  html[lang="en"] .menu-item-home,
-  html[lang="en"] .menu-item-about,
-  html[lang="en"] .menu-item-tags,
-  html[lang="en"] .menu-item-categories,
-  html[lang="en"] .menu-item-archives,
-  html[lang="en"] .menu-item-statistics,
-  html[lang="en"] .menu-item-photography,
-  html[lang="en"] .menu-item-wechat { display: none; }
 </style>
 
   <noscript>
@@ -587,8 +577,9 @@
           locations.forEach(function (location) {
             var point = new T.LngLat(location.longitude, location.latitude);
             var marker = new T.Marker(point);
+            var photoLabel = location.count + (false ? (location.count === 1 ? ' photo' : ' photos') : ' 张照片');
             var content = '<div class="photo-map-popup"><strong>' + escapeText(location.title) +
-              '</strong><span>' + location.count + ' 张照片</span><br><a href="' +
+              '</strong><span>' + photoLabel + '</span><br><a href="' +
               escapeText(location.url) + '">打开相册</a></div>';
             var infoWindow = new T.InfoWindow(content, { offset: new T.Point(0, -28) });
 
