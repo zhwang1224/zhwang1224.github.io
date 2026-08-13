@@ -100,6 +100,21 @@
 
 
 <script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+
+  /* 英文站为轻量引导站，隐藏指向中文内容的菜单项，仅保留语言切换入口 */
+  html[lang="en"] .menu-item-home,
+  html[lang="en"] .menu-item-about,
+  html[lang="en"] .menu-item-tags,
+  html[lang="en"] .menu-item-categories,
+  html[lang="en"] .menu-item-archives,
+  html[lang="en"] .menu-item-statistics,
+  html[lang="en"] .menu-item-photography,
+  html[lang="en"] .menu-item-wechat { display: none; }
+</style>
 
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
@@ -251,7 +266,7 @@ mjx-container[display="true"] + br {
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-摄影"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-朋友圈"><a href="/moments/" rel="section"><i class="fa fa-users fa-fw"></i>朋友圈</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -672,6 +687,7 @@ mjx-container[display="true"] + br {
               <a href="/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/" rel="tag"># 集合通信</a>
               <a href="/tags/AllReduce/" rel="tag"># AllReduce</a>
               <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/" rel="tag"># 分布式训练</a>
+              <a href="/tags/NCCL/" rel="tag"># NCCL</a>
               <a href="/tags/Broadcast/" rel="tag"># Broadcast</a>
               <a href="/tags/Gather/" rel="tag"># Gather</a>
               <a href="/tags/AllGather/" rel="tag"># AllGather</a>
@@ -680,7 +696,6 @@ mjx-container[display="true"] + br {
               <a href="/tags/ReduceScatter/" rel="tag"># ReduceScatter</a>
               <a href="/tags/AllToAll/" rel="tag"># AllToAll</a>
               <a href="/tags/Barrier/" rel="tag"># Barrier</a>
-              <a href="/tags/NCCL/" rel="tag"># NCCL</a>
           </div>
 
         
