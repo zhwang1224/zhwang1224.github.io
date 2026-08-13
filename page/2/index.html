@@ -287,18 +287,18 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">306</span>
+        <span class="site-state-item-count">313</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -315,6 +315,153 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/07/27/NIPS2017-AttentionIsAllyouNeed/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 正在输入">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/07/27/NIPS2017-AttentionIsAllyouNeed/" class="post-title-link" itemprop="url">NIPS2017-AttentionIsAllyouNeed</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-27 19:55:31" itemprop="dateCreated datePublished" datetime="2026-07-27T19:55:31+08:00">2026-07-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-03 23:02:00" itemprop="dateModified" datetime="2026-08-03T23:02:00+08:00">2026-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>18 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <ul>
+<li><a href="#nips2017-attentionisallyouneed">NIPS2017-AttentionIsAllyouNeed</a><ul>
+<li><a href="#%E8%83%8C%E6%99%AFrnn-%E4%B8%8E-cnn-%E7%9A%84%E5%B1%80%E9%99%90">背景：RNN 与 CNN 的局限</a><ul>
+<li><a href="#1-rnn%E6%B2%BF%E5%BA%8F%E5%88%97%E4%BC%A0%E9%80%92%E7%8A%B6%E6%80%81">1. RNN：沿序列传递状态</a></li>
+<li><a href="#2-cnn%E5%9C%A8%E5%B1%80%E9%83%A8%E7%AA%97%E5%8F%A3%E4%B8%8A%E5%B9%B6%E8%A1%8C%E5%8D%B7%E7%A7%AF">2. CNN：在局部窗口上并行卷积</a></li>
+<li><a href="#3-%E5%85%B1%E5%90%8C%E7%9A%84%E7%93%B6%E9%A2%88%E8%B7%AF%E5%BE%84%E9%95%BF%E5%BA%A6%E4%B8%8E%E5%B9%B6%E8%A1%8C%E5%BA%A6">3. 共同的瓶颈：路径长度与并行度</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80transformer-%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84">一、Transformer 模型架构</a><ul>
+<li><a href="#1-%E7%BC%96%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B8%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90">1. 编码器-解码器与自回归生成</a></li>
+<li><a href="#2-%E7%BC%96%E7%A0%81%E5%99%A8">2. 编码器</a></li>
+<li><a href="#3-%E8%A7%A3%E7%A0%81%E5%99%A8">3. 解码器</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6">二、注意力机制</a><ul>
+<li><a href="#1-%E6%9F%A5%E8%AF%A2%E9%94%AE%E4%B8%8E%E5%80%BC">1. 查询、键与值</a></li>
+<li><a href="#2-%E7%BC%A9%E6%94%BE%E7%82%B9%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B">2. 缩放点积注意力</a></li>
+<li><a href="#3-%E7%BC%A9%E6%94%BE%E5%9B%A0%E5%AD%90%E7%9A%84%E4%BD%9C%E7%94%A8">3. 缩放因子的作用</a></li>
+<li><a href="#4-%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B">4. 多头注意力</a></li>
+<li><a href="#5-transformer-%E4%B8%AD%E7%9A%84%E4%B8%89%E5%A4%84%E6%B3%A8%E6%84%8F%E5%8A%9B">5. Transformer 中的三处注意力</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89%E5%85%B6%E4%BB%96%E7%BB%84%E4%BB%B6">三、其他组件</a><ul>
+<li><a href="#1-%E9%80%90%E4%BD%8D%E7%BD%AE%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C">1. 逐位置前馈网络</a></li>
+<li><a href="#2-%E5%B5%8C%E5%85%A5%E4%B8%8E-softmax">2. 嵌入与 Softmax</a></li>
+<li><a href="#3-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81">3. 位置编码</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B">四、为什么用自注意力</a></li>
+<li><a href="#%E4%BA%94%E8%AE%AD%E7%BB%83%E8%AE%BE%E7%BD%AE">五、训练设置</a><ul>
+<li><a href="#1-%E6%95%B0%E6%8D%AE%E4%B8%8E%E6%89%B9%E5%A4%84%E7%90%86">1. 数据与批处理</a></li>
+<li><a href="#2-%E7%A1%AC%E4%BB%B6%E4%B8%8E%E8%AE%AD%E7%BB%83%E6%97%B6%E9%97%B4">2. 硬件与训练时间</a></li>
+<li><a href="#3-%E4%BC%98%E5%8C%96%E5%99%A8%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%8E%87">3. 优化器与学习率</a></li>
+<li><a href="#4-%E6%AD%A3%E5%88%99%E5%8C%96">4. 正则化</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C">六、实验结果</a><ul>
+<li><a href="#1-%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91">1. 机器翻译</a></li>
+<li><a href="#2-%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C">2. 消融实验</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%83%E6%80%BB%E7%BB%93">七、总结</a></li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/07/27/NIPS2017-AttentionIsAllyouNeed/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1421,101 +1568,6 @@ mjx-container[display="true"] + br {
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/06/18/ISCA2025-CrammingaDataCenter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Zhengzaishuru">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 正在输入">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/06/18/ISCA2025-CrammingaDataCenter/" class="post-title-link" itemprop="url">ISCA2025-CrammingaDataCenter</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-06-18 11:03:39" itemprop="dateCreated datePublished" datetime="2026-06-18T11:03:39+08:00">2026-06-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:02:05" itemprop="dateModified" datetime="2026-08-03T23:02:05+08:00">2026-08-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E6%99%B6%E5%9C%86%E7%BA%A7%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">晶圆级系统</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          
       
     </div>
 
