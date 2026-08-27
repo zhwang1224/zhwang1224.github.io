@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -17,19 +18,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="NIPS2017-AttentionIsAllyouNeed 背景：RNN 与 CNN 的局限 1. RNN：沿序列传递状态 2. CNN：在局部窗口上并行卷积 3. 共同的瓶颈：路径长度与并行度   一、Transformer 模型架构 1. 编码器-解码器与自回归生成 2. 编码器 3. 解码器   二、注意力机制 1. 查询、键与值 2. 缩放点积注意力 3. 缩放因子的作用 4. 多头注">
+    <meta name="description" content="Transformer 论文精读：自注意力如何同时摆脱 RNN 的顺序依赖与 CNN 的局部窗口限制，以及多头注意力、位置编码与编码器—解码器整体架构。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NIPS2017-AttentionIsAllyouNeed">
 <meta property="og:url" content="https://zhwang1224.github.io/2026/07/27/NIPS2017-AttentionIsAllyouNeed/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="NIPS2017-AttentionIsAllyouNeed 背景：RNN 与 CNN 的局限 1. RNN：沿序列传递状态 2. CNN：在局部窗口上并行卷积 3. 共同的瓶颈：路径长度与并行度   一、Transformer 模型架构 1. 编码器-解码器与自回归生成 2. 编码器 3. 解码器   二、注意力机制 1. 查询、键与值 2. 缩放点积注意力 3. 缩放因子的作用 4. 多头注">
+<meta property="og:description" content="Transformer 论文精读：自注意力如何同时摆脱 RNN 的顺序依赖与 CNN 的局部窗口限制，以及多头注意力、位置编码与编码器—解码器整体架构。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhwang1224.github.io/images/NIPS2017-AttentionIsAllyouNeed/image.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/NIPS2017-AttentionIsAllyouNeed/image-1.png">
 <meta property="article:published_time" content="2026-07-27T11:55:31.000Z">
-<meta property="article:modified_time" content="2026-08-03T15:02:00.789Z">
+<meta property="article:modified_time" content="2026-08-27T14:51:34.848Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="NeurIPS 2017">
 <meta property="article:tag" content="Transformer">
@@ -64,12 +65,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
 <script src="/js/third-party/search/local-search.js" defer></script>
 
 
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
 
 
 
@@ -80,22 +84,19 @@
 
 
 
-  
-
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
-<script src="/js/third-party/math/mathjax.js" defer></script>
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/07/27/NIPS2017-AttentionIsAllyouNeed/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
 <script src="/js/visitor-map.js"></script>
 <style>
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
   html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
   html[lang="en"] .menu-item-lang-en { display: none; }
 </style>
-
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -191,7 +192,7 @@
     <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
@@ -219,6 +220,51 @@
     </div>
 
     
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-28</time>
+        <br>
+      Transformer计算流程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/27/RNN-CNN/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-27</time>
+        <br>
+      RNN 与 CNN：序列建模的两条经典路线
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/05/22/Agentic-AI-Andrew-Ng/" rel="bookmark">
+        <time class="popular-posts-time">2026-05-22</time>
+        <br>
+      Agentic AI - Andrew Ng
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-16</time>
+        <br>
+      大模型推理基础
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
   </aside>
 
 
@@ -244,12 +290,12 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="NIPS2017-AttentionIsAllyouNeed | 正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Transformer 论文精读：自注意力如何同时摆脱 RNN 的顺序依赖与 CNN 的局部窗口限制，以及多头注意力、位置编码与编码器—解码器整体架构。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -271,7 +317,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:02:00" itemprop="dateModified" datetime="2026-08-03T23:02:00+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,6 +343,7 @@
     </span>
 </div>
 
+            <div class="post-description">Transformer 论文精读：自注意力如何同时摆脱 RNN 的顺序依赖与 CNN 的局部窗口限制，以及多头注意力、位置编码与编码器—解码器整体架构。</div>
         </div>
       </header>
 
@@ -424,7 +471,17 @@
 <h3 id="2-缩放点积注意力"><a href="#2-缩放点积注意力" class="headerlink" title="2. 缩放点积注意力"></a>2. 缩放点积注意力</h3><p>论文采用的兼容性函数是点积，再加一个缩放因子，称为<strong>缩放点积注意力（Scaled Dot-Product Attention）</strong>。查询和键的维度为 $d_k$，值的维度为 $d_v$。实际计算时把一批查询堆成矩阵 $Q$，键和值堆成 $K$、$V$：</p>
 <p>$$<br>\operatorname{Attention}(Q,K,V)<br>&#x3D;\operatorname{softmax}\left(\frac{QK^{T}}{\sqrt{d_k}}\right)V<br>$$</p>
 <p>计算过程可以拆成几步：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    Q[&quot;Q&quot;] --&gt; MM1[&quot;MatMul&lt;br/&gt;QKᵀ&quot;]</span><br><span class="line">    K[&quot;K&quot;] --&gt; MM1</span><br><span class="line">    MM1 --&gt; SC[&quot;Scale&lt;br/&gt;÷ √dk&quot;] --&gt; MK[&quot;Mask&lt;br/&gt;可选&quot;] --&gt; SM[&quot;Softmax&quot;] --&gt; MM2[&quot;MatMul&quot;]</span><br><span class="line">    V[&quot;V&quot;] --&gt; MM2</span><br><span class="line">    MM2 --&gt; O[&quot;输出&quot;]</span><br><span class="line"></span><br><span class="line">    classDef op fill:#EEEDFE,stroke:#AFA9EC,color:#26215C</span><br><span class="line">    classDef io fill:#F1EFE8,stroke:#B4B2A9,color:#2C2C2A</span><br><span class="line">    class MM1,SC,MK,SM,MM2 op</span><br><span class="line">    class Q,K,V,O io</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight mermaid">flowchart LR
+    Q[&quot;Q&quot;] --&gt; MM1[&quot;MatMul&lt;br/&gt;QKᵀ&quot;]
+    K[&quot;K&quot;] --&gt; MM1
+    MM1 --&gt; SC[&quot;Scale&lt;br/&gt;÷ √dk&quot;] --&gt; MK[&quot;Mask&lt;br/&gt;可选&quot;] --&gt; SM[&quot;Softmax&quot;] --&gt; MM2[&quot;MatMul&quot;]
+    V[&quot;V&quot;] --&gt; MM2
+    MM2 --&gt; O[&quot;输出&quot;]
+
+    classDef op fill:#EEEDFE,stroke:#AFA9EC,color:#26215C
+    classDef io fill:#F1EFE8,stroke:#B4B2A9,color:#2C2C2A
+    class MM1,SC,MK,SM,MM2 op
+    class Q,K,V,O io</code></pre>
 
 <p>另一种常见做法是<strong>加性注意力</strong>，用一个带单隐藏层的前馈网络计算兼容性。两者的理论复杂度接近，但点积注意力可以直接用高度优化的矩阵乘法实现，在实践中更快、更省内存——这是选择点积的主要理由。</p>
 <h3 id="3-缩放因子的作用"><a href="#3-缩放因子的作用" class="headerlink" title="3. 缩放因子的作用"></a>3. 缩放因子的作用</h3><p>$\frac{1}{\sqrt{d_k}}$ 这个因子并非可有可无。当 $d_k$ 较小时，加性注意力和未缩放的点积注意力表现相近；但 $d_k$ 较大时，未缩放的点积注意力会明显变差。</p>
@@ -437,7 +494,20 @@
 <p>其中投影矩阵的形状为 $W_i^Q,W_i^K\in\mathbb{R}^{d_{\text{model}}\times d_k}$、$W_i^V\in\mathbb{R}^{d_{\text{model}}\times d_v}$、$W^O\in\mathbb{R}^{hd_v\times d_{\text{model}}}$。</p>
 <p>论文取 $h&#x3D;8$，并令：</p>
 <p>$$<br>d_k&#x3D;d_v&#x3D;d_{\text{model}}&#x2F;h&#x3D;64<br>$$</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">    X[&quot;输入&lt;br/&gt;d_model = 512&quot;] --&gt; S1[&quot;投影 → 头 1&lt;br/&gt;dk = 64&quot;]</span><br><span class="line">    X --&gt; S2[&quot;投影 → 头 2&quot;]</span><br><span class="line">    X --&gt; SD[&quot;……&quot;]</span><br><span class="line">    X --&gt; S8[&quot;投影 → 头 8&quot;]</span><br><span class="line"></span><br><span class="line">    S1 --&gt; A1[&quot;缩放点积注意力&quot;]</span><br><span class="line">    S2 --&gt; A2[&quot;缩放点积注意力&quot;]</span><br><span class="line">    S8 --&gt; A8[&quot;缩放点积注意力&quot;]</span><br><span class="line"></span><br><span class="line">    A1 --&gt; C[&quot;拼接&lt;br/&gt;8 × 64 = 512&quot;]</span><br><span class="line">    A2 --&gt; C</span><br><span class="line">    A8 --&gt; C</span><br><span class="line">    C --&gt; WO[&quot;线性投影 Wᴼ&quot;] --&gt; Y[&quot;输出&lt;br/&gt;d_model = 512&quot;]</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight mermaid">flowchart LR
+    X[&quot;输入&lt;br/&gt;d_model = 512&quot;] --&gt; S1[&quot;投影 → 头 1&lt;br/&gt;dk = 64&quot;]
+    X --&gt; S2[&quot;投影 → 头 2&quot;]
+    X --&gt; SD[&quot;……&quot;]
+    X --&gt; S8[&quot;投影 → 头 8&quot;]
+
+    S1 --&gt; A1[&quot;缩放点积注意力&quot;]
+    S2 --&gt; A2[&quot;缩放点积注意力&quot;]
+    S8 --&gt; A8[&quot;缩放点积注意力&quot;]
+
+    A1 --&gt; C[&quot;拼接&lt;br/&gt;8 × 64 = 512&quot;]
+    A2 --&gt; C
+    A8 --&gt; C
+    C --&gt; WO[&quot;线性投影 Wᴼ&quot;] --&gt; Y[&quot;输出&lt;br/&gt;d_model = 512&quot;]</code></pre>
 
 <p>这样做的动机是：单个注意力头本质上是在做加权平均，会把不同类型的关系混在一起、互相抵消；多个头则可以各自关注不同位置、不同表示子空间中的信息。由于每个头的维度降到了 $d_{\text{model}}&#x2F;h$，总计算量与一个全维度的单头注意力相当——多头几乎是“免费”的。</p>
 <h3 id="5-Transformer-中的三处注意力"><a href="#5-Transformer-中的三处注意力" class="headerlink" title="5. Transformer 中的三处注意力"></a>5. Transformer 中的三处注意力</h3><p>同一个多头注意力模块在模型里以三种方式使用，区别只在于 $Q$、$K$、$V$ 从哪里来：</p>
@@ -658,6 +728,23 @@
     
 
     <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
               <a href="/tags/NeurIPS-2017/" rel="tag"># NeurIPS 2017</a>

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -17,14 +18,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta property="og:type" content="website">
+    <meta name="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
+<meta property="og:type" content="website">
 <meta property="og:title" content="正在输入">
 <meta property="og:url" content="https://zhwang1224.github.io/page/3/index.html">
 <meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="高性能互连网络,片上网络,计算机体系结构,数据中心网络,Chiplet,自适应路由,拥塞控制,分布式训练,集合通信,算法题解">
 <meta name="twitter:card" content="summary">
 
 
@@ -48,12 +52,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
 <script src="/js/third-party/search/local-search.js" defer></script>
 
 
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
 
 
 
@@ -64,22 +71,19 @@
 
 
 
-  
-
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
-<script src="/js/third-party/math/mathjax.js" defer></script>
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":false,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/page/3/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
 <script src="/js/visitor-map.js"></script>
 <style>
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
   html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
   html[lang="en"] .menu-item-lang-en { display: none; }
 </style>
-
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -174,7 +178,7 @@
     <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
@@ -226,7 +230,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -253,7 +257,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:02:05" itemprop="dateModified" datetime="2026-08-03T23:02:05+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -286,7 +290,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <p>论文笔记（ISCA 2025）：把一个数据中心塞进晶圆级芯片——晶圆级计算的软硬件协同设计与系统扩展思路。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/06/18/ISCA2025-CrammingaDataCenter/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -321,7 +333,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -348,7 +360,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:29" itemprop="dateModified" datetime="2026-08-03T23:00:29+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -381,31 +393,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#jupiter-risinggoogle-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C%E4%B8%AD-clos-%E6%8B%93%E6%89%91%E4%B8%8E%E9%9B%86%E4%B8%AD%E5%BC%8F%E6%8E%A7%E5%88%B6%E7%9A%84%E5%8D%81%E5%B9%B4">Jupiter Rising：Google 数据中心网络中 Clos 拓扑与集中式控制的十年</a><ul>
-<li><a href="#1-%E8%83%8C%E6%99%AF%E4%BB%A5%E5%8F%8A%E4%B8%BB%E8%A6%81%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98">1. 背景以及主要解决问题</a></li>
-<li><a href="#2-%E7%BD%91%E7%BB%9C%E6%BC%94%E8%BF%9B">2. 网络演进</a><ul>
-<li><a href="#21--firehose-10">2.1  FireHose 1.0</a></li>
-<li><a href="#22-firehose-20">2.2 FireHose 2.0</a></li>
-<li><a href="#23-watchtower">2.3 Watchtower</a></li>
-<li><a href="#24-saturn">2.4 Saturn</a></li>
-<li><a href="#25-jupiter">2.5 jupiter</a></li>
-</ul>
-</li>
-<li><a href="#3-%E5%A4%96%E9%83%A8%E8%BF%9E%E9%80%9A%E6%80%A7">3. 外部连通性</a></li>
-<li><a href="#4-%E8%BD%AF%E4%BB%B6%E6%8E%A7%E5%88%B6">4. 软件控制</a><ul>
-<li><a href="#1-%E8%B7%AF%E7%94%B1">1. 路由</a></li>
-<li><a href="#2-%E9%85%8D%E7%BD%AE%E5%92%8C%E7%AE%A1%E7%90%86">2. 配置和管理</a></li>
-</ul>
-</li>
-<li><a href="#5-%E7%BB%8F%E9%AA%8C">5. 经验</a></li>
-<li><a href="#6-%E7%BB%93%E8%AE%BA">6. 结论</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记：谷歌 Jupiter 数据中心网络的十年演进。带宽需求每 12 到 15 个月翻一番，逼着谷歌从「四柱式」集群架构走向自研 Clos 与集中式控制。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/06/08/JupiterRising/#more" rel="contents">
+              <a class="btn" href="/2026/06/08/JupiterRising/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -445,7 +436,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -472,7 +463,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:36" itemprop="dateModified" datetime="2026-08-03T23:00:36+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -505,25 +496,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#rng%E5%A4%A7%E8%A7%84%E6%A8%A1%E6%89%81%E5%B9%B3%E5%8C%96%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C">RNG：大规模扁平化数据中心网络</a><ul>
-<li><a href="#1-%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C">1. 主要工作</a></li>
-<li><a href="#2-%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA">2. 背景与动机</a></li>
-<li><a href="#3-%E6%89%81%E5%B9%B3%E5%8C%96%E6%89%A9%E5%B1%95%E5%9B%BE%E7%9A%84%E6%BD%9C%E5%8A%9B">3. 扁平化扩展图的潜力</a></li>
-<li><a href="#4-%E9%9C%80%E6%B1%82%E4%B8%8E%E6%8C%91%E6%88%98">4. 需求与挑战</a></li>
-<li><a href="#5rng">5.RNG</a><ul>
-<li><a href="#51-spraypoint-%E8%B7%AF%E7%94%B1">5.1 Spraypoint 路由</a></li>
-</ul>
-</li>
-<li><a href="#6-rng-%E7%9A%84%E5%B8%83%E7%BA%BF">6. RNG 的布线</a></li>
-<li><a href="#7%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90">7.理论分析</a></li>
-<li><a href="#8-%E7%94%9F%E4%BA%A7%E7%BD%91%E7%BB%9C">8. 生产网络</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记：Amazon 在生产环境部署的首个扁平化数据中心网络 RNG。基于准随机图，配合分布式路由协议与无源光学洗牌布线，性能匹敌胖树而成本最多降低 45%。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/06/05/RNG/#more" rel="contents">
+              <a class="btn" href="/2026/06/05/RNG/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -563,7 +539,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -590,7 +566,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:57:52" itemprop="dateModified" datetime="2026-08-03T22:57:52+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -623,12 +599,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E5%AD%90%E4%B8%B2%E6%95%B0%E7%BB%84">Hot100 算法题思路汇总-滑动窗口\子串\数组</a></li>
-</ul>
+          <p>LeetCode Hot 100 滑动窗口、子串与数组专题：无重复字符最长子串等题目，用滑动窗口把 O(n²) 的朴素遍历降到 O(n)。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/06/03/Algorithm-Hot100-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3-%E5%AD%90%E4%B8%B2-%E6%95%B0%E7%BB%84/#more" rel="contents">
+              <a class="btn" href="/2026/06/03/Algorithm-Hot100-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3-%E5%AD%90%E4%B8%B2-%E6%95%B0%E7%BB%84/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -668,7 +642,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -695,7 +669,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:57:50" itemprop="dateModified" datetime="2026-08-03T22:57:50+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -728,16 +702,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB">Hot100 算法题思路汇总</a><ul>
-<li><a href="#%E6%95%B0%E7%BB%84%E4%B8%8E%E5%93%88%E5%B8%8C">数组与哈希</a></li>
-<li><a href="#%E5%8F%8C%E6%8C%87%E9%92%88%E6%96%B9%E6%B3%95">双指针方法</a></li>
-</ul>
-</li>
-</ul>
+          <p>LeetCode Hot 100 哈希专题：两数之和等题目的哈希表解法，借助 unordered_map 的均摊 O(1) 查找把复杂度降到 O(n)，附时空复杂度权衡。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/06/02/Algorithm-Hot100/#more" rel="contents">
+              <a class="btn" href="/2026/06/02/Algorithm-Hot100/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -777,7 +745,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -804,7 +772,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:31" itemprop="dateModified" datetime="2026-08-03T23:00:31+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -837,20 +805,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#megascale%E5%B0%86%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E6%89%A9%E5%B1%95%E5%88%B0%E8%B6%85%E8%BF%87-10000-%E4%B8%AA-gpu">MegaScale：将大语言模型训练扩展到超过 10,000 个 GPU</a><ul>
-<li><a href="#1-%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96">1. 算法优化</a></li>
-<li><a href="#2-3d-%E5%B9%B6%E8%A1%8C%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0">2. 3D 并行通信重叠</a></li>
-<li><a href="#3-%E9%AB%98%E6%95%88%E7%AE%97%E5%AD%90">3. 高效算子</a></li>
-<li><a href="#4-%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98">4. 网络性能调优</a></li>
-<li><a href="#5-%E5%AE%B9%E9%94%99">5. 容错</a></li>
-<li><a href="#6-%E5%AE%9E%E9%AA%8C%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%BB%8F%E9%AA%8C">6. 实验与部署经验</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记：MegaScale 用算法—系统协同设计与深入可观测性两条原则，解决万卡级 LLM 训练中的模型利用率（MFU）与训练稳定性两大挑战。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/06/01/Megascale/#more" rel="contents">
+              <a class="btn" href="/2026/06/01/Megascale/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -890,7 +848,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -917,7 +875,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:58:06" itemprop="dateModified" datetime="2026-08-03T22:58:06+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -950,38 +908,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E5%8F%8C%E6%8C%87%E9%92%88">双指针</a><ul>
-<li><a href="#1-p3311-%E4%BF%A1%E5%8F%B7%E5%BC%BA%E5%BA%A6%E5%8F%98%E5%8C%96%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E5%B7%AE%E5%80%BC%E5%8C%BA%E9%97%B4">1. P3311-信号强度变化中的最大差值区间</a><ul>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#2p3296-%E6%9C%80%E5%A4%A7%E8%90%A5%E4%B8%9A%E9%A2%9D">2.P3296-最大营业额</a><ul>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-1">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#3p4479-%E6%9F%A5%E6%89%BE%E6%9C%80%E7%9F%AD%E5%8F%AF%E5%AF%B9%E7%A7%B0%E5%88%86%E5%89%B2%E5%AD%90%E6%95%B0%E7%BB%84">3.P4479-查找最短可对称分割子数组</a><ul>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-2">示例代码</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h1><h2 id="1-P3311-信号强度变化中的最大差值区间"><a href="#1-P3311-信号强度变化中的最大差值区间" class="headerlink" title="1. P3311-信号强度变化中的最大差值区间"></a>1. P3311-信号强度变化中的最大差值区间</h2><p>给定一个整数数组 array ，代表在一系列连续时间点上检测到的信号强度值。我们需要在这一系列时间点中找出一个区间，满足以下条件：</p>
-<p>1.区间内的信号强度值先呈现单调非递減趋势(即对于 i&lt;&#x3D;k&lt; s&lt;&#x3D;m，有 array[k]&lt;&#x3D;array[s]);<br>2.紧接着呈现单调非递增趋势(即对于 m&lt;&#x3D;n&lt;o&lt;&#x3D;j，有 array[n]&gt;&#x3D;aray[o]);<br>3.这里的单调非递减和非递增趋势允许存在相等的相邻值。</p>
-<p>在满足上述条件的区间叫做“波峰区间”，在所有的“波峰区间“中，找到信号强度最大值与最小值差值最大的那个区间，并返回这个最大差值。</p>
-<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> m; <span class="comment">// 数字数量</span></span><br><span class="line">    cin &gt;&gt; m;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">array</span><span class="params">(m)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; m; i++)&#123;</span><br><span class="line">        cin&gt;&gt; array[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> diff = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> top = <span class="number">0</span>, low = INT_MAX;<span class="comment">//最大最小值</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="type">bool</span> plus = <span class="literal">false</span>;</span><br><span class="line">    <span class="type">bool</span> ok = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> right = <span class="number">0</span>; right &lt; m ; right++)&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> next_index = right<span class="number">+1</span>;</span><br><span class="line">        <span class="keyword">if</span>(next_index &gt;= m) <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">if</span>(!plus)&#123;</span><br><span class="line">            <span class="keyword">if</span>(array[next_index] &gt;= array[right])&#123;</span><br><span class="line">                low = <span class="built_in">min</span>(low, array[right]);</span><br><span class="line">                plus = <span class="literal">true</span>;</span><br><span class="line">                top = array[next_index];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!ok)&#123;</span><br><span class="line">                <span class="keyword">if</span>(array[next_index] &gt;= array[right])&#123;</span><br><span class="line">                    top = array[next_index];</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    ok = <span class="literal">true</span>;</span><br><span class="line">                    low = <span class="built_in">min</span>(low, array[next_index]);</span><br><span class="line">                    diff = <span class="built_in">max</span>(diff, top - low);<span class="comment">//</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(array[next_index] &lt;= array[right])&#123;</span><br><span class="line">                    low = <span class="built_in">min</span>(low, array[next_index]);</span><br><span class="line">                    diff = <span class="built_in">max</span>(diff, top - low);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    top = array[next_index];</span><br><span class="line">                    low = array[right];</span><br><span class="line">                    ok = <span class="literal">false</span>;</span><br><span class="line">                    plus= <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; diff &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-P3296-最大营业额"><a href="#2-P3296-最大营业额" class="headerlink" title="2.P3296-最大营业额"></a>2.P3296-最大营业额</h2><p>某市场举办小吃节，小吃节持续n天，每天都会有不同的小吃摊位入驻，每个摊位每天在投入一定的人力之后产生一定的营业额。</p>
-<p>管理方希望在小吃节期间选择连续的若干天，使得这些天的总营业额最大。但是由于人力限制，选择这些天中总的人力不超K人天。</p>
-<p>请你计算出满足条件的最大营业额。</p>
-<h3 id="示例代码-1"><a href="#示例代码-1" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> n, K;<span class="comment">// 持续天数n 总人力K人天</span></span><br><span class="line">    cin &gt;&gt; n &gt;&gt; K;</span><br><span class="line"></span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">edu</span><span class="params">(n)</span>, <span class="title">people</span><span class="params">(n)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; n ; i++)&#123;</span><br><span class="line">        cin &gt;&gt; edu[i] &gt;&gt; people[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> temp = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> money = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> maxValue = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> right = <span class="number">0</span>; right &lt; n; right++)&#123;</span><br><span class="line">        temp += people[right];</span><br><span class="line">        money += edu[right];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(left &lt;= right &amp;&amp; temp &gt; K)&#123;</span><br><span class="line">            temp -= people[left];</span><br><span class="line">            money -= edu[left];</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        maxValue = <span class="built_in">max</span>(maxValue, money);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; maxValue &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-P4479-查找最短可对称分割子数组"><a href="#3-P4479-查找最短可对称分割子数组" class="headerlink" title="3.P4479-查找最短可对称分割子数组"></a>3.P4479-查找最短可对称分割子数组</h2><p>已知数组 A，数组 A 内元素为带符号整数，希望在该数组内找到满足如下条件的子数组：</p>
-<p>子数组可分为两个连续的子子数组，这两个子子数组长度可互不相同，但他们的元素和都为零</p>
-<p>即满足对于子数组区间 [i,j), 存在中同元素 k(i&lt; k&lt; j), 使得 ∑[i,k)&#x3D;&#x3D;∑[k,j)&#x3D;&#x3D;0；</p>
-<p>希望你找出所有满足上述条件数组中的长度最短的子数组。</p>
-<h3 id="示例代码-2"><a href="#示例代码-2" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">long</span> <span class="type">long</span>&gt; <span class="title">prefix</span><span class="params">(n<span class="number">+1</span>)</span></span>;</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>,<span class="type">int</span>&gt; array_num;</span><br><span class="line">    unordered_map&lt;<span class="type">long</span> <span class="type">long</span>, pair&lt;<span class="type">int</span>,<span class="type">int</span>&gt;&gt; same_prefix_map;<span class="comment">// pair&lt;int,int&gt; 代表上一次和倒数第二次的 prefix 序号</span></span><br><span class="line">    prefix[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    same_prefix_map[<span class="number">0</span>] = &#123;<span class="number">0</span>,<span class="number">-1</span>&#125;;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">array_list</span><span class="params">(n)</span></span>;</span><br><span class="line">    <span class="type">int</span> min_length = INT_MAX;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;n; i++)&#123;</span><br><span class="line">        cin &gt;&gt; array_list[i];</span><br><span class="line">        prefix[i<span class="number">+1</span>] = prefix[i] + array_list[i];</span><br><span class="line">        <span class="type">long</span> <span class="type">long</span> value = prefix[i<span class="number">+1</span>];</span><br><span class="line">        <span class="keyword">if</span>(same_prefix_map.<span class="built_in">count</span>(value))&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(same_prefix_map[value].first != <span class="number">-1</span> &amp;&amp; same_prefix_map[value].second != <span class="number">-1</span>)&#123;</span><br><span class="line">                <span class="type">int</span> right = i<span class="number">+1</span>;</span><br><span class="line">                <span class="type">int</span> left = same_prefix_map[value].second;</span><br><span class="line">                <span class="type">int</span> length = right - left;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span>(array_num.<span class="built_in">count</span>(length))&#123;</span><br><span class="line">                    array_num[length]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    array_num[length] = <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                min_length = <span class="built_in">min</span>(min_length, length);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> temp = same_prefix_map[value].first;</span><br><span class="line">            same_prefix_map[value].second = temp;</span><br><span class="line">            same_prefix_map[value].first = i<span class="number">+1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            same_prefix_map[prefix[i<span class="number">+1</span>]] = &#123;i<span class="number">+1</span>,<span class="number">-1</span>&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(min_length == INT_MAX ) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="number">-1</span> &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; <span class="number">-1</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; min_length &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; array_num[min_length] &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+          <p>双指针题解：在信号强度序列中找出先单调非递减、再单调非递增的最长「山形」区间，并处理相邻值相等的边界情况。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/05/29/Algorithm-%E5%8F%8C%E6%8C%87%E9%92%88-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1016,7 +951,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1043,7 +978,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:58:04" itemprop="dateModified" datetime="2026-08-03T22:58:04+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1076,22 +1011,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E4%BA%8C%E5%88%86%E6%B3%95">二分法</a><ul>
-<li><a href="#1-p3715-%E6%9C%80%E5%A4%A7%E5%8C%96%E5%9F%8E%E5%B8%82cdn%E8%8A%82%E7%82%B9%E5%BB%BA%E8%AE%BE%E7%9A%84%E6%9C%80%E5%B0%8F%E6%9C%8D%E5%8A%A1%E8%B4%A8%E9%87%8F">1. P3715 最大化城市CDN节点建设的最小服务质量</a><ul>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#2-p2298-%E9%98%B2%E6%8A%A4%E8%AE%BE%E5%A4%87">2. P2298 防护设备</a><ul>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-1">示例代码</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <p>二分答案题解：在全国范围内新建 k 个 CDN 机房，使所有城市中最小的服务质量最大化，属于典型的「最小值最大化」二分模型。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/05/28/Algorithm-%E4%BA%8C%E5%88%86%E6%B3%95/#more" rel="contents">
+              <a class="btn" href="/2026/05/28/Algorithm-%E4%BA%8C%E5%88%86%E6%B3%95/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1131,7 +1054,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1158,7 +1081,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:58:07" itemprop="dateModified" datetime="2026-08-03T22:58:07+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1191,30 +1114,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E5%9B%BE%E8%AE%BA">图论</a><ul>
-<li><a href="#1-p3844-%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F">1. P3844 组织架构管理系统</a><ul>
-<li><a href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0">题目描述</a></li>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
-</ul>
-</li>
-<li><a href="#2-p2285-%E7%BB%A9%E6%95%88%E4%BA%92%E8%AF%84%E4%BA%BA%E5%91%98%E5%88%86%E9%85%8D">2. P2285 绩效互评人员分配</a><ul>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF-1">核心思路</a></li>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#3-p4521-%E6%A0%88%E5%A4%A7%E5%B0%8F%E5%B3%B0%E5%80%BC%E8%AE%A1%E7%AE%97">3. P4521 栈大小峰值计算</a><ul>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-1">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#4-dijkstra">4. Dijkstra</a></li>
-</ul>
-</li>
-</ul>
+          <p>二叉树 LCA 题解：在公司组织架构树中求两名员工级别最低的共同主管，并统计该主管所管辖的员工总数（不含本人）。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/05/27/Algorithm-%E5%9B%BE%E8%AE%BA/#more" rel="contents">
+              <a class="btn" href="/2026/05/27/Algorithm-%E5%9B%BE%E8%AE%BA/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1254,7 +1157,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1281,7 +1184,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:58:03" itemprop="dateModified" datetime="2026-08-03T22:58:03+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1314,31 +1217,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E5%B9%B6%E6%9F%A5%E9%9B%86">并查集</a><ul>
-<li><a href="#1-%E9%80%9A%E4%BF%A1%E5%BD%95%E5%90%88%E5%B9%B6">1. 通信录合并</a><ul>
-<li><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF">具体思路</a></li>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#2-%E9%80%9A%E4%BF%A1%E5%BD%95%E5%90%88%E5%B9%B6">2. 通信录合并</a><ul>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF-1">具体思路</a></li>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-1">示例代码</a></li>
-</ul>
-</li>
-<li><a href="#3-%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E6%8B%92%E7%BB%9D%E6%89%A7%E8%A1%8C%E6%95%B0">3. 网络连接拒绝执行数</a><ul>
-<li><a href="#%E9%A2%98%E7%9B%AE%E5%86%85%E5%AE%B9">题目内容</a></li>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81-2">示例代码</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <p>并查集题解：通讯录联系人合并，按共享电话号码判定是否为同一人，合并各自的号码列表并按 ASCII 码升序输出结果。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/05/26/Algorithm-%E5%B9%B6%E6%9F%A5%E9%9B%86/#more" rel="contents">
+              <a class="btn" href="/2026/05/26/Algorithm-%E5%B9%B6%E6%9F%A5%E9%9B%86/">
                 阅读全文 &raquo;
               </a>
             </div>

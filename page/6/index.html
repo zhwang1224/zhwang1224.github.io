@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -17,14 +18,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta property="og:type" content="website">
+    <meta name="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
+<meta property="og:type" content="website">
 <meta property="og:title" content="正在输入">
 <meta property="og:url" content="https://zhwang1224.github.io/page/6/index.html">
 <meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="高性能互连网络,片上网络,计算机体系结构,数据中心网络,Chiplet,自适应路由,拥塞控制,分布式训练,集合通信,算法题解">
 <meta name="twitter:card" content="summary">
 
 
@@ -48,12 +52,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
 <script src="/js/third-party/search/local-search.js" defer></script>
 
 
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
 
 
 
@@ -64,19 +71,15 @@
 
 
 
-  
-
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
-<script src="/js/third-party/math/mathjax.js" defer></script>
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":false,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/page/6/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
 <script src="/js/visitor-map.js"></script>
 <style>
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
   html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
   html[lang="en"] .menu-item-lang-en { display: none; }
 </style>
-
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -192,7 +195,8 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style></head>
+</style><link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -286,7 +290,7 @@ mjx-container[display="true"] + br {
     <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
@@ -338,7 +342,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -365,7 +369,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:58:01" itemprop="dateModified" datetime="2026-08-03T22:58:01+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -398,21 +402,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-p3878-%E6%97%A0%E7%BA%BF%E7%BD%91%E7%BB%9C%E9%A2%91%E6%AE%B5%E6%9C%80%E4%BC%98%E5%88%A9%E7%94%A8%E7%8E%87%E8%AF%84%E4%BC%B0">1. P3878 无线网络频段最优利用率评估</a><ul>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">核心思路</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
-</ul>
-</li>
-<li><a href="#2-p2849-%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86">2. P2849 仓库管理</a><ul>
-<li><a href="#%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF">具体思路</a></li>
-<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">示例代码</a></li>
-</ul>
-</li>
-</ul>
+          <p>单调栈题解：把每个元素视为某段区间的最小值并向左右扩展到第一个更小的位置，求「区间最小值 × 可扩展长度」的最大值，O(n) 解法。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/06/26/Algorithm-Stack/#more" rel="contents">
+              <a class="btn" href="/2025/06/26/Algorithm-Stack/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -452,7 +445,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -479,7 +472,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:22" itemprop="dateModified" datetime="2026-08-03T23:00:22+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -512,15 +505,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#ecmp-%E6%98%AF%E4%BB%80%E4%B9%88">ECMP 是什么</a></li>
-<li><a href="#ecmp-%E7%9A%84%E9%9A%90%E5%90%AB%E5%81%87%E8%AE%BE">ECMP 的隐含假设</a></li>
-<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF-hashing-conflict%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81">什么是 Hashing Conflict(哈希冲突)</a></li>
-<li><a href="#hpn">HPN</a></li>
-</ul>
+          <p>ECMP 为什么会出现哈希冲突：交换机对五元组做哈希再取模选路的机制、流粒度负载均衡的固有局限，以及大流场景下的哈希极化问题。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/05/03/ECMP-hashing-conflicts/#more" rel="contents">
+              <a class="btn" href="/2025/05/03/ECMP-hashing-conflicts/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -560,7 +548,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -587,7 +575,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:59:17" itemprop="dateModified" datetime="2026-08-03T22:59:17+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -620,17 +608,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E8%9C%BB%E8%9C%93%E6%8B%93%E6%89%91-dragonfly-topology">蜻蜓拓扑 Dragonfly Topology</a><ul>
-<li><a href="#1-%E6%8B%93%E6%89%91%E5%8F%82%E6%95%B0">1. 拓扑参数</a></li>
-<li><a href="#2-topology-description-%E6%8B%93%E6%89%91%E6%8F%8F%E8%BF%B0">2. Topology Description 拓扑描述</a></li>
-<li><a href="#3-topology-variations-%E6%8B%93%E6%89%91%E5%8F%98%E4%BD%93">3. Topology Variations 拓扑变体</a></li>
-</ul>
-</li>
-</ul>
+          <p>Dragonfly 蜻蜓拓扑笔记：路由器—组—系统的三层分层结构，终端数 p、组内路由器数 a、全局通道数 h 与路由器基数 k = p + a + h − 1 的关系。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/04/20/Dragonfly%E6%8B%93%E6%89%91/#more" rel="contents">
+              <a class="btn" href="/2024/04/20/Dragonfly%E6%8B%93%E6%89%91/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -670,7 +651,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -697,7 +678,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:02:02" itemprop="dateModified" datetime="2026-08-03T23:02:02+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -730,17 +711,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#booksim20%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">Booksim2.0安装编译</a><ul>
-<li><a href="#1-%E4%BB%8Egithub%E4%B8%8A%E5%85%8B%E9%9A%86%E6%BA%90%E4%BB%A3%E7%A0%81">1. 从github上克隆源代码</a></li>
-<li><a href="#2-%E5%AE%89%E8%A3%85-flex-bison">2. 安装 flex bison</a></li>
-<li><a href="#3-%E7%BC%96%E8%AF%91boosim">3. 编译Boosim</a></li>
-</ul>
-</li>
-</ul>
+          <p>BookSim 2.0 互连网络模拟器的安装与编译记录：flex 与 bison 这类词法/语法分析器生成工具各自的作用，以及构建过程中的常见问题。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/#more" rel="contents">
+              <a class="btn" href="/2024/04/15/Booksim2.0%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -780,7 +754,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -807,7 +781,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:57:49" itemprop="dateModified" datetime="2026-08-03T22:57:49+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -840,13 +814,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95gradient-descent">梯度下降算法(Gradient Descent)</a></li>
-<li><a href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%AE%97%E6%B3%95%E5%87%A0%E7%A7%8D%E5%8F%98%E4%BD%93">梯度下降算法几种变体</a></li>
-</ul>
+          <p>梯度下降算法笔记：为什么沿负梯度方向函数值下降最快，迭代求局部极小值的过程与学习率的作用，以及它在模型训练中最小化损失函数的角色。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/04/09/Algorithm-GradientDescent/#more" rel="contents">
+              <a class="btn" href="/2024/04/09/Algorithm-GradientDescent/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -886,7 +857,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -913,7 +884,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:57:47" itemprop="dateModified" datetime="2026-08-03T22:57:47+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -946,17 +917,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#dijkstra%E7%AE%97%E6%B3%95">Dijkstra算法</a><ul>
-<li><a href="#%E7%9B%B8%E5%85%B3%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86">相关背景知识</a></li>
-<li><a href="#%E5%8E%86%E5%8F%B2%E6%9D%A5%E6%BA%90">历史来源</a></li>
-<li><a href="#example">example</a></li>
-</ul>
-</li>
-</ul>
+          <p>Dijkstra 单源最短路径算法笔记：从源点出发用优先队列按路径长度递增扩展的基本思想，以及实现细节与时间复杂度分析。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/04/08/Algorithm-Dijkstra/#more" rel="contents">
+              <a class="btn" href="/2024/04/08/Algorithm-Dijkstra/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -996,7 +960,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1023,7 +987,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:59:19" itemprop="dateModified" datetime="2026-08-03T22:59:19+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1056,22 +1020,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#boomgate-deadlock-avoidandce-in-non-minimal-routing-for-high-radix-networks">BoomGate: Deadlock Avoidandce in Non-Minimal Routing for High-Radix Networks</a><ul>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#introduction">INTRODUCTION</a></li>
-<li><a href="#background">BACKGROUND</a></li>
-<li><a href="#motivation">MOTIVATION</a></li>
-<li><a href="#rinr-%E5%8F%97%E9%99%90%E4%B8%AD%E9%97%B4%E8%8A%82%E7%82%B9%E9%9D%9E%E6%9C%80%E5%B0%8F%E8%B7%AF%E7%94%B1">RINR 受限中间节点非最小路由</a></li>
-<li><a href="#b-rinr">B RINR</a></li>
-<li><a href="#%E6%9C%BA%E4%BC%9A%E6%80%A7%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-oppotunistic-flow-control">机会性流量控制 OPPOTUNISTIC FLOW CONTROL</a></li>
-<li><a href="#%E8%AF%84%E4%BC%B0">评估</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记（HPCA 2021）：BoomGate 与 RINR 路由算法——不依赖非最小路径即可把良性流量的性能损失降到最低，以及对抗性流量下路径多样性受限的代价。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/04/07/HPCA2021-BoomGate/#more" rel="contents">
+              <a class="btn" href="/2024/04/07/HPCA2021-BoomGate/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1111,7 +1063,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1138,7 +1090,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:59:14" itemprop="dateModified" datetime="2026-08-03T22:59:14+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1171,40 +1123,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#the-next-era-for-chiplet-innovation">The Next Era for Chiplet Innovation</a><ul>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#keywords---chiplets-integration-stacking">Keywords—chiplets, integration, stacking</a></li>
-<li><a href="#i-introduction">I. INTRODUCTION</a></li>
-<li><a href="#ii-current-approaches">II. CURRENT APPROACHES</a><ul>
-<li><a href="#21-2d-mcm">2.1 2D MCM</a></li>
-<li><a href="#22-2d-chiplets">2.2 2D Chiplets</a></li>
-<li><a href="#23-25d-silicon-interposer">2.3 2.5D Silicon Interposer</a></li>
-<li><a href="#24-25-silicon-bridges">2.4 2.5 Silicon Bridges</a></li>
-<li><a href="#25-3d-stacking-microbumps-%E5%BE%AE%E5%87%B8%E5%9D%97">2.5 3D Stacking: Microbumps 微凸块</a></li>
-<li><a href="#26-3d-stacking-hybrid-bonding-%E6%B7%B7%E5%90%88%E9%94%AE%E5%90%88">2.6 3D stacking: Hybrid Bonding 混合键合</a></li>
-</ul>
-</li>
-<li><a href="#iii-future-silicon-cityscapes">III. FUTURE SILICON CITYSCAPES</a><ul>
-<li><a href="#31-combination-approaches">3.1 Combination Approaches</a></li>
-<li><a href="#32-design-space---why-silicon-cityscapes">3.2 Design Space - Why Silicon Cityscapes?</a></li>
-</ul>
-</li>
-<li><a href="#iv-silicon-cityscape-research-topics">IV. SILICON CITYSCAPE RESEARCH TOPICS</a><ul>
-<li><a href="#41-chiplet-decomposition-and-technology-selectionchiplet%E5%88%86%E8%A7%A3%E5%92%8C%E6%8A%80%E6%9C%AF%E9%80%89%E6%8B%A9">4.1 Chiplet Decomposition and Technology Selection&#x2F;Chiplet分解和技术选择</a></li>
-<li><a href="#42-interconnect-infrastructure-%E4%BA%92%E8%BF%9E%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD">4.2 Interconnect Infrastructure 互连基础设施</a></li>
-<li><a href="#43-power-delivery-and-thermals-%E7%94%B5%E6%BA%90%E8%BE%93%E9%80%81%E5%92%8C%E7%83%AD%E9%87%8F">4.3 Power Delivery and Thermals 电源输送和热量</a></li>
-<li><a href="#44-reliability-%E5%8F%AF%E9%9D%A0%E6%80%A7">4.4 Reliability 可靠性</a></li>
-<li><a href="#45-software-%E8%BD%AF%E4%BB%B6">4.5 Software 软件</a></li>
-</ul>
-</li>
-<li><a href="#v-conclusions">V. CONCLUSIONS</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记（DATE 2023）：AMD 视角下芯粒与先进封装的下一个时代，聚焦已在服务器与消费级产品中大批量落地的封装技术。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/04/02/DATE2023-TheNextEra/#more" rel="contents">
+              <a class="btn" href="/2024/04/02/DATE2023-TheNextEra/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1244,7 +1166,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1271,7 +1193,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:59:03" itemprop="dateModified" datetime="2026-08-03T22:59:03+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1304,18 +1226,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#an-efficient-thermal-model-of-chiplet-heterogeneous-integration-system-for-steady-state-temperature-prediction">An efficient thermal model of chiplet heterogeneous integration system for steady-state temperature prediction</a><ul>
-<li><a href="#%E8%83%8C%E6%99%AF%E5%92%8C%E5%8A%A8%E6%9C%BA">背景和动机</a></li>
-<li><a href="#%E5%88%9B%E6%96%B0%E7%82%B9%E5%8F%8A%E5%8F%91%E7%8E%B0">创新点及发现</a></li>
-<li><a href="#%E5%AE%9E%E9%AA%8C%E5%92%8C%E8%AF%84%E4%BC%B0%E7%BB%93%E6%9E%9C">实验和评估结果</a></li>
-<li><a href="#%E7%BB%93%E8%AE%BA">结论</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记：面向芯粒异构集成（CHI）系统的稳态温度预测热模型，在晶圆级 CHI 系统场景下兼顾建模效率与预测精度。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/03/31/An-efficient-thermal-model/#more" rel="contents">
+              <a class="btn" href="/2024/03/31/An-efficient-thermal-model/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1355,7 +1269,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1382,7 +1296,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:59:28" itemprop="dateModified" datetime="2026-08-03T22:59:28+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1415,17 +1329,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#regional-congestion-awareness-for-load-balance-in-networks-on-chip">Regional Congestion Awareness for Load Balance in Networks-on-Chip</a><ul>
-<li><a href="#%E8%83%8C%E6%99%AF%E5%92%8C%E5%8A%A8%E6%9C%BA">背景和动机</a></li>
-<li><a href="#%E5%88%9B%E6%96%B0%E7%82%B9">创新点</a></li>
-<li><a href="#%E5%AE%9E%E9%AA%8C%E8%AF%84%E4%BC%B0%E5%8F%8A%E7%BB%93%E8%AE%BA">实验评估及结论</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记（HPCA 2008）：片上网络的区域拥塞感知（RCA）自适应路由，利用邻域拥塞信息改善不均匀与突发流量下的负载均衡与网络吞吐。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024/03/16/RCA/#more" rel="contents">
+              <a class="btn" href="/2024/03/16/RCA/">
                 阅读全文 &raquo;
               </a>
             </div>

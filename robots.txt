@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /lib/
+Disallow: /search.xml
+
+Sitemap: https://zhwang1224.github.io/sitemap.xml

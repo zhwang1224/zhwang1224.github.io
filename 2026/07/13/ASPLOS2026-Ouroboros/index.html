@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -17,14 +18,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构 1. 文章动机以及当前挑战 2. Ouroboros 的总体设计 3. 端到端推理框架 3.1 面向高 CIM 利用率的流水线并行 3.2 通信感知的权重映射   4. 实验部分 总结">
+    <meta name="description" content="论文笔记：Ouroboros 把大模型的权重、激活值与 KV Cache 全部放进晶圆级 SRAM 并就地计算，再用 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射消除存储层级间的数据搬运开销。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ASPLOS2026-Ouroboros">
 <meta property="og:url" content="https://zhwang1224.github.io/2026/07/13/ASPLOS2026-Ouroboros/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="Ouroboros：采用词元粒度流水线的大语言模型推理晶圆级 SRAM 存内计算架构 1. 文章动机以及当前挑战 2. Ouroboros 的总体设计 3. 端到端推理框架 3.1 面向高 CIM 利用率的流水线并行 3.2 通信感知的权重映射   4. 实验部分 总结">
+<meta property="og:description" content="论文笔记：Ouroboros 把大模型的权重、激活值与 KV Cache 全部放进晶圆级 SRAM 并就地计算，再用 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射消除存储层级间的数据搬运开销。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhwang1224.github.io/images/ASPLOS2026-Ouroboros/image.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/ASPLOS2026-Ouroboros/image-2.png">
@@ -35,7 +36,7 @@
 <meta property="og:image" content="https://zhwang1224.github.io/images/ASPLOS2026-Ouroboros/image-7.png">
 <meta property="og:image" content="https://zhwang1224.github.io/images/ASPLOS2026-Ouroboros/image-8.png">
 <meta property="article:published_time" content="2026-07-13T05:37:42.000Z">
-<meta property="article:modified_time" content="2026-08-03T15:02:03.863Z">
+<meta property="article:modified_time" content="2026-08-27T14:51:34.829Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="ASPLOS 2026">
 <meta property="article:tag" content="CIM">
@@ -70,12 +71,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
 <script src="/js/third-party/search/local-search.js" defer></script>
 
 
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
 
 
 
@@ -86,22 +90,19 @@
 
 
 
-  
-
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
-<script src="/js/third-party/math/mathjax.js" defer></script>
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/07/13/ASPLOS2026-Ouroboros/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
 <script src="/js/visitor-map.js"></script>
 <style>
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
   html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
   html[lang="en"] .menu-item-lang-en { display: none; }
 </style>
-
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -197,7 +198,7 @@
     <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
@@ -225,6 +226,51 @@
     </div>
 
     
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-16</time>
+        <br>
+      大模型推理基础
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/11/10/CambriconLLM/" rel="bookmark">
+        <time class="popular-posts-time">2025-11-10</time>
+        <br>
+      CambriconLLM
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/06/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-06</time>
+        <br>
+      流水线并行：从模型切分、微批次到 GPipe 调度
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/18/ISCA2025-CrammingaDataCenter/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-18</time>
+        <br>
+      ISCA2025-CrammingaDataCenter
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
   </aside>
 
 
@@ -250,12 +296,12 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="ASPLOS2026-Ouroboros | 正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="论文笔记：Ouroboros 把大模型的权重、激活值与 KV Cache 全部放进晶圆级 SRAM 并就地计算，再用 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射消除存储层级间的数据搬运开销。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -277,7 +323,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:02:03" itemprop="dateModified" datetime="2026-08-03T23:02:03+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -303,6 +349,7 @@
     </span>
 </div>
 
+            <div class="post-description">论文笔记：Ouroboros 把大模型的权重、激活值与 KV Cache 全部放进晶圆级 SRAM 并就地计算，再用 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射消除存储层级间的数据搬运开销。</div>
         </div>
       </header>
 
@@ -395,6 +442,23 @@
     
 
     <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
               <a href="/tags/ASPLOS-2026/" rel="tag"># ASPLOS 2026</a>

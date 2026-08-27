@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -17,14 +18,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta property="og:type" content="website">
+    <meta name="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
+<meta property="og:type" content="website">
 <meta property="og:title" content="正在输入">
 <meta property="og:url" content="https://zhwang1224.github.io/index.html">
 <meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="高性能互连网络,片上网络,计算机体系结构,数据中心网络,Chiplet,自适应路由,拥塞控制,分布式训练,集合通信,算法题解">
 <meta name="twitter:card" content="summary">
 
 
@@ -48,12 +52,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
 <script src="/js/third-party/search/local-search.js" defer></script>
 
 
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
 
 
 
@@ -64,19 +71,18 @@
 
 
 
-  
-
-  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","mhchem":false,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
-<script src="/js/third-party/math/mathjax.js" defer></script>
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":false,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
 <script src="/js/visitor-map.js"></script>
 <style>
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
   html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
   html[lang="en"] .menu-item-lang-en { display: none; }
 </style>
-
+<link rel="alternate" hreflang="zh-CN" href="https://zhwang1224.github.io/">
+<link rel="alternate" hreflang="en" href="https://zhwang1224.github.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://zhwang1224.github.io/">
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -192,7 +198,8 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style></head>
+</style><link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -286,7 +293,7 @@ mjx-container[display="true"] + br {
     <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
@@ -338,7 +345,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -357,9 +364,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-13 12:00:00 / 修改时间：17:51:52" itemprop="dateCreated datePublished" datetime="2026-08-13T12:00:00+08:00">2026-08-13</time>
+      <time title="创建时间：2026-08-13 12:00:00" itemprop="dateCreated datePublished" datetime="2026-08-13T12:00:00+08:00">2026-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -392,24 +405,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#mtia-300meta-%E9%A6%96%E6%AC%BE%E8%AE%AD%E7%BB%83%E8%8A%AF%E7%89%87%E7%9A%84%E5%86%85%E7%BD%AE-nic-%E4%B8%8E%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%8D%B8%E8%BD%BD%E8%AE%BE%E8%AE%A1">MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计</a><ul>
-<li><a href="#1-%E8%83%8C%E6%99%AFdlrm-%E8%AE%AD%E7%BB%83%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%B8%80%E9%A2%97%E4%B8%8D%E4%B8%80%E6%A0%B7%E7%9A%84%E8%8A%AF%E7%89%87">1. 背景：DLRM 训练为什么需要一颗不一样的芯片</a></li>
-<li><a href="#2-%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E4%B8%8E%E4%B8%89%E5%A4%A7%E8%AE%BE%E8%AE%A1%E5%88%9B%E6%96%B0">2. 总体架构与三大设计创新</a></li>
-<li><a href="#3-%E8%AE%A1%E7%AE%97%E8%8A%AF%E7%B2%9212%C3%976-pe-%E7%BD%91%E6%A0%BC--16-%E4%B8%AA%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E">3. 计算芯粒：12×6 PE 网格 + 16 个消息引擎</a></li>
-<li><a href="#4-%E6%B6%88%E6%81%AF%E5%BC%95%E6%93%8E%E4%B8%8E%E8%BF%91%E5%AD%98%E8%AE%A1%E7%AE%97%E6%8A%8A%E5%BD%92%E7%BA%A6%E5%81%9A%E5%88%B0%E5%86%85%E5%AD%98%E8%BE%B9%E4%B8%8A">4. 消息引擎与近存计算：把归约做到内存边上</a></li>
-<li><a href="#5-%E7%BD%91%E7%BB%9C%E8%8A%AF%E7%B2%92%E4%B8%8E%E6%9C%BA%E6%9E%B6%E7%B3%BB%E7%BB%9F%E6%8C%89%E9%9C%80%E5%88%87%E5%88%86%E7%BA%B5%E5%90%91%E6%A8%AA%E5%90%91%E6%89%A9%E5%B1%95%E5%B8%A6%E5%AE%BD">5. 网络芯粒与机架系统：按需切分纵向&#x2F;横向扩展带宽</a></li>
-<li><a href="#6-%E8%BD%AF%E4%BB%B6%E6%A0%88%E4%B8%8E-hccl%E6%8A%8A%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E7%BC%96%E8%BF%9B%E8%AE%A1%E7%AE%97%E5%9B%BE">6. 软件栈与 HCCL：把集合通信”编”进计算图</a></li>
-<li><a href="#7-%E8%AF%84%E4%BC%B0%E5%B5%8C%E5%85%A5%E5%B8%A6%E5%AE%BD%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E4%B8%8E%E7%AB%AF%E5%88%B0%E7%AB%AF%E8%AE%AD%E7%BB%83">7. 评估：嵌入、带宽、集合通信与端到端训练</a></li>
-<li><a href="#8-%E6%8C%91%E6%88%98%E4%B8%8E%E5%B1%80%E9%99%90">8. 挑战与局限</a></li>
-<li><a href="#9-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%90%AF%E5%8F%91">9. 总结与启发</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记（ISCA 2026）：Meta 首款训练芯片 MTIA 300 的内置 NIC 与集合通信卸载引擎设计，以及 GenAI 训练吃 FLOPS、DLRM 训练吃内存和网络这两类迥异的硬件诉求。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/13/MTIA300/#more" rel="contents">
+              <a class="btn" href="/2026/08/13/MTIA300/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -449,7 +448,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -468,9 +467,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-12 22:16:20 / 修改时间：22:20:59" itemprop="dateCreated datePublished" datetime="2026-08-12T22:16:20+08:00">2026-08-12</time>
+      <time title="创建时间：2026-08-12 22:16:20" itemprop="dateCreated datePublished" datetime="2026-08-12T22:16:20+08:00">2026-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -503,20 +508,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#1-%E9%97%AE%E9%A2%98%EF%BC%9A%E8%A7%84%E6%A8%A1%E6%94%BE%E5%A4%A7%E4%BA%86%E5%B0%BE%E5%BB%B6%E8%BF%9F%E4%B8%8E%E6%95%85%E9%9A%9C">1. 问题：规模放大了尾延迟与故障</a></li>
-<li><a href="#2-%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%8B%93%E6%89%91%E3%80%81%E4%BC%A0%E8%BE%93%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E5%90%8C%E8%AE%BE%E8%AE%A1">2. 核心思路：拓扑、传输与路由协同设计</a></li>
-<li><a href="#3-%E5%A4%9A%E5%B9%B3%E9%9D%A2%E4%B8%A4%E5%B1%82-Clos-%E6%8B%93%E6%89%91">3. 多平面两层 Clos 拓扑</a></li>
-<li><a href="#4-MRC%EF%BC%9A%E9%9D%A2%E5%90%91%E5%A4%9A%E8%B7%AF%E5%BE%84%E7%9A%84%E5%8F%AF%E9%9D%A0-RDMA-%E4%BC%A0%E8%BE%93">4. MRC：面向多路径的可靠 RDMA 传输</a></li>
-<li><a href="#5-SRv6%EF%BC%9A%E4%BB%A5%E9%9D%99%E6%80%81%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%96%E4%BB%A3%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1">5. SRv6：以静态源路由取代动态路由</a></li>
-<li><a href="#6-%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86%E4%B8%8E%E8%BF%90%E7%BB%B4">6. 故障处理与运维</a></li>
-<li><a href="#7-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C">7. 实验结果</a></li>
-<li><a href="#8-%E9%80%82%E7%94%A8%E8%BE%B9%E7%95%8C%E4%B8%8E%E5%B1%80%E9%99%90">8. 适用边界与局限</a></li>
-<li><a href="#9-%E6%80%BB%E7%BB%93">9. 总结</a></li>
-</ul>
+          <p>论文笔记：用 MRC 逐包多路径传输配合 SRv6 静态路由构建高韧性 AI 超算网络。把 800 Gb/s 端口拆成多条低速 lane 组成高基数多平面两层 Clos，稳住 collective 的尾部性能。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/12/MRC-SRv6/#more" rel="contents">
+              <a class="btn" href="/2026/08/12/MRC-SRv6/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -556,7 +551,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -575,9 +570,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-07 15:30:00 / 修改时间：15:05:54" itemprop="dateCreated datePublished" datetime="2026-08-07T15:30:00+08:00">2026-08-07</time>
+      <time title="创建时间：2026-08-07 15:30:00" itemprop="dateCreated datePublished" datetime="2026-08-07T15:30:00+08:00">2026-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -610,45 +611,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#extreme-scale-interconnection-networks">Extreme-Scale Interconnection Networks</a><ul>
-<li><a href="#1-%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF%E6%9E%81%E7%AB%AF%E8%A7%84%E6%A8%A1%E4%B8%8Bfat-tree-%E7%9A%84%E4%BB%A3%E4%BB%B7%E9%9A%BE%E4%BB%A5%E6%8C%81%E7%BB%AD">1. 问题背景：极端规模下，Fat-Tree 的代价难以持续</a></li>
-<li><a href="#2-%E7%BB%9F%E4%B8%80%E6%80%A7%E8%83%BD%E8%A7%84%E6%A8%A1%E4%B8%8E%E6%88%90%E6%9C%AC%E7%9A%84%E5%88%86%E6%9E%90%E6%A1%86%E6%9E%B6">2. 统一性能、规模与成本的分析框架</a><ul>
-<li><a href="#21-%E5%AE%B9%E9%87%8F%E4%B8%8A%E7%95%8C">2.1 容量上界</a></li>
-<li><a href="#22-%E8%B7%9D%E7%A6%BB%E4%B8%BA%E4%BD%95%E5%90%8C%E6%97%B6%E5%86%B3%E5%AE%9A%E6%80%A7%E8%83%BD%E4%B8%8E%E6%88%90%E6%9C%AC">2.2 距离为何同时决定性能与成本</a></li>
-</ul>
-</li>
-<li><a href="#3-mrls%E5%85%81%E8%AE%B8%E5%A4%9A%E6%AC%A1%E7%A9%BF%E8%B6%8A%E7%9A%84%E9%9A%8F%E6%9C%BA%E4%B8%A4%E5%B1%82%E7%BD%91%E7%BB%9C">3. MRLS：允许多次穿越的随机两层网络</a><ul>
-<li><a href="#31-%E6%8B%93%E6%89%91%E5%AE%9A%E4%B9%89">3.1 拓扑定义</a></li>
-<li><a href="#32-%E7%BB%86%E7%B2%92%E5%BA%A6%E6%89%A9%E5%B1%95">3.2 细粒度扩展</a></li>
-<li><a href="#33-%E4%BB%A5%E5%8E%9A%E5%BA%A6%E5%9B%A0%E5%AD%90%E8%B0%83%E8%8A%82%E6%88%90%E6%9C%AC%E4%B8%8E%E6%80%A7%E8%83%BD">3.3 以厚度因子调节成本与性能</a></li>
-</ul>
-</li>
-<li><a href="#4-multipass-routing%E9%87%8A%E6%94%BE%E9%9A%8F%E6%9C%BA%E6%8B%93%E6%89%91%E7%9A%84%E8%B7%AF%E5%BE%84%E5%A4%9A%E6%A0%B7%E6%80%A7">4. Multipass Routing：释放随机拓扑的路径多样性</a><ul>
-<li><a href="#41-k-shortest-paths">4.1 K-Shortest Paths</a></li>
-<li><a href="#42-polarized-routing">4.2 Polarized Routing</a></li>
-<li><a href="#43-%E8%B7%AF%E5%BE%84%E9%95%BF%E5%BA%A6%E4%B8%8E%E6%AD%BB%E9%94%81%E8%A7%84%E9%81%BF">4.3 路径长度与死锁规避</a></li>
-</ul>
-</li>
-<li><a href="#5-%E5%AE%9E%E9%AA%8C%E6%96%B9%E6%B3%95">5. 实验方法</a><ul>
-<li><a href="#51-%E4%BB%BF%E7%9C%9F%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%AF%B9%E6%AF%94%E7%BD%91%E7%BB%9C">5.1 仿真环境与对比网络</a></li>
-<li><a href="#52-%E6%B5%81%E9%87%8F%E6%A8%A1%E5%9E%8B">5.2 流量模型</a></li>
-</ul>
-</li>
-<li><a href="#6-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C">6. 实验结果</a><ul>
-<li><a href="#61-%E7%BA%A6-11k-%E7%AB%AF%E7%82%B9mrls-%E5%90%8C%E6%97%B6%E9%80%BC%E8%BF%91-oft-%E7%9A%84%E6%88%90%E6%9C%AC%E4%B8%8E-fat-tree-%E7%9A%84%E6%80%A7%E8%83%BD">6.1 约 11K 端点：MRLS 同时逼近 OFT 的成本与 Fat-Tree 的性能</a></li>
-<li><a href="#62-%E7%BA%A6-100k-%E7%AB%AF%E7%82%B9all2all-%E7%9A%84%E4%BC%98%E5%8A%BF%E9%9A%8F%E8%A7%84%E6%A8%A1%E6%89%A9%E5%A4%A7">6.2 约 100K 端点：All2All 的优势随规模扩大</a></li>
-<li><a href="#63-%E7%BA%A6-16k-%E7%AB%AF%E7%82%B9%E4%B8%8E-dragonfly-%E5%92%8C-dragonfly-%E5%AF%B9%E6%AF%94">6.3 约 16K 端点：与 Dragonfly 和 Dragonfly+ 对比</a></li>
-</ul>
-</li>
-<li><a href="#7-%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E8%BF%99%E7%AF%87%E8%AE%BA%E6%96%87%E7%9A%84%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE">7. 如何理解这篇论文的核心贡献</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
-</ul>
-</li>
-</ul>
+          <p>论文笔记：面向十万乃至百万级端点的多程随机叶脊网络，在吞吐、成本与可扩展性之间给出一条可连续调节的折中路径。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/07/Extreme-Scale-Interconnection-Networks/#more" rel="contents">
+              <a class="btn" href="/2026/08/07/Extreme-Scale-Interconnection-Networks/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -688,7 +654,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -715,7 +681,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-07 14:16:27" itemprop="dateModified" datetime="2026-08-07T14:16:27+08:00">2026-08-07</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -748,54 +714,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C">张量并行</a><ul>
-<li><a href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C">1. 为什么需要张量并行</a></li>
-<li><a href="#2-%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%BA%BF%E6%80%A7%E5%B1%82%E7%90%86%E8%A7%A3%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C">2. 从一个线性层理解张量并行</a><ul>
-<li><a href="#21-%E8%AE%B0%E5%8F%B7%E4%B8%8E%E5%BC%A0%E9%87%8F%E5%B8%83%E5%B1%80">2.1 记号与张量布局</a></li>
-<li><a href="#22-%E5%88%97%E5%B9%B6%E8%A1%8C%E7%BA%BF%E6%80%A7%E5%B1%82">2.2 列并行线性层</a></li>
-<li><a href="#23-%E8%A1%8C%E5%B9%B6%E8%A1%8C%E7%BA%BF%E6%80%A7%E5%B1%82">2.3 行并行线性层</a></li>
-<li><a href="#24-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8A%8A%E5%88%97%E5%B9%B6%E8%A1%8C%E5%92%8C%E8%A1%8C%E5%B9%B6%E8%A1%8C%E9%85%8D%E5%AF%B9">2.4 为什么要把列并行和行并行配对</a></li>
-</ul>
-</li>
-<li><a href="#3-mlp-%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C">3. MLP 如何进行张量并行</a><ul>
-<li><a href="#31-%E7%BB%8F%E5%85%B8%E4%B8%A4%E5%B1%82-mlp">3.1 经典两层 MLP</a></li>
-<li><a href="#32-swiglu-mlp">3.2 SwiGLU MLP</a></li>
-<li><a href="#33-%E5%89%8D%E5%90%91%E5%92%8C%E5%8F%8D%E5%90%91%E5%90%84%E9%80%9A%E4%BF%A1%E4%BB%80%E4%B9%88">3.3 前向和反向各通信什么</a></li>
-</ul>
-</li>
-<li><a href="#4-self-attention-%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C">4. Self-Attention 如何进行张量并行</a><ul>
-<li><a href="#41-qkv-%E6%8A%95%E5%BD%B1%E6%8C%89%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%A4%B4%E5%88%87%E5%88%86">4.1 QKV 投影按注意力头切分</a></li>
-<li><a href="#42-%E6%AF%8F%E4%B8%AA-rank-%E7%8B%AC%E7%AB%8B%E5%AE%8C%E6%88%90%E6%9C%AC%E5%9C%B0-attention">4.2 每个 Rank 独立完成本地 Attention</a></li>
-<li><a href="#43-%E8%BE%93%E5%87%BA%E6%8A%95%E5%BD%B1%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81">4.3 输出投影恢复完整隐藏状态</a></li>
-<li><a href="#44-mhagqa-%E4%B8%8E-mqa-%E7%9A%84%E5%88%87%E5%88%86%E7%BA%A6%E6%9D%9F">4.4 MHA、GQA 与 MQA 的切分约束</a></li>
-</ul>
-</li>
-<li><a href="#5-%E4%B8%80%E4%B8%AA-transformer-block-%E7%9A%84%E9%80%9A%E4%BF%A1%E8%BE%B9%E7%95%8C">5. 一个 Transformer Block 的通信边界</a><ul>
-<li><a href="#51-megatron-lm-%E7%9A%84-f-%E4%B8%8E-g-%E7%AE%97%E5%AD%90">5.1 Megatron-LM 的 f 与 g 算子</a></li>
-<li><a href="#52-%E7%BB%8F%E5%85%B8-tp-%E7%9A%84%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E6%AC%A1%E6%95%B0">5.2 经典 TP 的集合通信次数</a></li>
-<li><a href="#53-%E9%80%9A%E4%BF%A1%E9%87%8F%E4%B8%8E%E5%BB%B6%E8%BF%9F%E6%A8%A1%E5%9E%8B">5.3 通信量与延迟模型</a></li>
-</ul>
-</li>
-<li><a href="#6-sequence-parallel%E4%B8%BA%E4%BB%80%E4%B9%88-tp-%E8%BF%98%E9%9C%80%E8%A6%81-sp">6. Sequence Parallel：为什么 TP 还需要 SP</a><ul>
-<li><a href="#61-%E5%9F%BA%E7%A1%80-tp-%E6%B2%A1%E6%9C%89%E5%88%87%E5%88%86%E6%89%80%E6%9C%89%E6%BF%80%E6%B4%BB">6.1 基础 TP 没有切分所有激活</a></li>
-<li><a href="#62-sp-%E7%9A%84-allgather-%E4%B8%8E-reducescatter">6.2 SP 的 AllGather 与 ReduceScatter</a></li>
-<li><a href="#63-sequence-parallel-%E4%B8%8E-context-parallel">6.3 Sequence Parallel 与 Context Parallel</a></li>
-</ul>
-</li>
-<li><a href="#7-embeddinglm-head-%E4%B8%8E%E5%B9%B6%E8%A1%8C%E4%BA%A4%E5%8F%89%E7%86%B5">7. Embedding、LM Head 与并行交叉熵</a></li>
-<li><a href="#8-%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C%E8%8A%82%E7%9C%81%E4%BA%86%E4%BB%80%E4%B9%88">8. 张量并行节省了什么</a></li>
-<li><a href="#9-tpdppp-%E4%B8%8E-fsdp-%E7%9A%84%E5%85%B3%E7%B3%BB">9. TP、DP、PP 与 FSDP 的关系</a></li>
-<li><a href="#10-tp-degree-%E4%B8%8E%E7%A1%AC%E4%BB%B6%E6%8B%93%E6%89%91">10. TP Degree 与硬件拓扑</a></li>
-<li><a href="#11-pytorch-%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C%E7%A4%BA%E4%BE%8B">11. PyTorch 张量并行示例</a></li>
-<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-</li>
-</ul>
+          <p>张量并行详解：如何沿张量维度切分权重矩阵与注意力头完成层内并行，以及 Megatron-LM 为什么要组合列并行与行并行，把通信集中到 Transformer 子模块的少数边界上。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/#more" rel="contents">
+              <a class="btn" href="/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -835,7 +757,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -854,9 +776,15 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-06 10:00:00 / 修改时间：15:58:11" itemprop="dateCreated datePublished" datetime="2026-08-06T10:00:00+08:00">2026-08-06</time>
+      <time title="创建时间：2026-08-06 10:00:00" itemprop="dateCreated datePublished" datetime="2026-08-06T10:00:00+08:00">2026-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -889,53 +817,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C">流水线并行</a><ul>
-<li><a href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C">1. 为什么需要流水线并行</a><ul>
-<li><a href="#11-%E4%BB%80%E4%B9%88%E6%98%AF%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C">1.1 什么是模型并行</a></li>
-<li><a href="#12-%E6%9C%B4%E7%B4%A0%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C%E5%A6%82%E4%BD%95%E5%AE%8C%E6%88%90%E4%B8%80%E6%AC%A1%E8%AE%AD%E7%BB%83">1.2 朴素模型并行如何完成一次训练</a></li>
-<li><a href="#13-%E9%97%AE%E9%A2%98%E4%B8%80gpu-%E5%88%A9%E7%94%A8%E7%8E%87%E4%BD%8E%E4%B8%8E-pipeline-bubble">1.3 问题一：GPU 利用率低与 Pipeline Bubble</a></li>
-<li><a href="#14-%E9%97%AE%E9%A2%98%E4%BA%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%89%80%E9%9C%80%E7%9A%84%E6%BF%80%E6%B4%BB%E4%BB%8D%E4%BC%9A%E5%8D%A0%E7%94%A8%E6%98%BE%E5%AD%98">1.4 问题二：反向传播所需的激活仍会占用显存</a></li>
-</ul>
-</li>
-<li><a href="#2-%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95%E5%88%87%E5%88%86%E4%B8%BA%E5%A4%9A%E4%B8%AA-stage">2. 模型如何切分为多个 Stage</a></li>
-<li><a href="#3-%E5%BE%AE%E6%89%B9%E6%AC%A1%E8%AE%A9%E5%A4%9A%E4%B8%AA-stage-%E5%90%8C%E6%97%B6%E5%B7%A5%E4%BD%9C">3. 微批次：让多个 Stage 同时工作</a><ul>
-<li><a href="#31-%E5%BE%AE%E6%89%B9%E6%AC%A1%E4%B8%8E%E5%85%A8%E5%B1%80%E6%89%B9%E6%AC%A1">3.1 微批次与全局批次</a></li>
-<li><a href="#32-%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF%E8%AF%AD%E4%B9%89">3.2 梯度累积语义</a></li>
-</ul>
-</li>
-<li><a href="#4-gpipe-%E7%9A%84-fill-drain-%E8%B0%83%E5%BA%A6">4. GPipe 的 Fill-Drain 调度</a><ul>
-<li><a href="#41-forward-phase">4.1 Forward Phase</a></li>
-<li><a href="#42-backward-phase">4.2 Backward Phase</a></li>
-<li><a href="#43-%E5%90%8C%E6%AD%A5%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0">4.3 同步参数更新</a></li>
-</ul>
-</li>
-<li><a href="#5-pipeline-bubble-%E4%B8%8E%E5%88%A9%E7%94%A8%E7%8E%87">5. Pipeline Bubble 与利用率</a><ul>
-<li><a href="#51-%E7%90%86%E6%83%B3%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%B0%94%E6%B3%A1%E6%AF%94%E4%BE%8B">5.1 理想情况下的气泡比例</a></li>
-<li><a href="#52-%E9%9D%9E%E5%9D%87%E8%A1%A1-stage">5.2 非均衡 Stage</a></li>
-</ul>
-</li>
-<li><a href="#6-%E6%BF%80%E6%B4%BB%E5%80%BC%E6%98%BE%E5%AD%98%E4%B8%8E%E9%87%8D%E8%AE%A1%E7%AE%97">6. 激活值、显存与重计算</a></li>
-<li><a href="#7-stage-%E4%B9%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E4%BB%80%E4%B9%88">7. Stage 之间通信什么</a></li>
-<li><a href="#8-%E6%A8%A1%E5%9E%8B%E5%88%87%E5%88%86%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1">8. 模型切分与负载均衡</a></li>
-<li><a href="#9-gpipe1f1b-%E4%B8%8E%E5%BC%82%E6%AD%A5%E6%B5%81%E6%B0%B4%E7%BA%BF">9. GPipe、1F1B 与异步流水线</a><ul>
-<li><a href="#91-%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E8%BF%99%E5%BC%A0%E6%97%B6%E9%97%B4%E7%BA%BF">9.1 如何阅读这张时间线</a></li>
-<li><a href="#92-gpipefill-drain">9.2 GPipe：Fill-Drain</a></li>
-<li><a href="#93-%E5%90%8C%E6%AD%A5-1f1b1f1b-flush">9.3 同步 1F1B：1F1B-Flush</a></li>
-<li><a href="#94-pipedream%E5%BC%82%E6%AD%A5-1f1b">9.4 PipeDream：异步 1F1B</a></li>
-</ul>
-</li>
-<li><a href="#10-pytorch-gpipe-%E5%AE%9E%E8%B7%B5">10. PyTorch GPipe 实践</a></li>
-<li><a href="#11-%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C%E7%BB%84%E5%90%88">11. 与数据并行、张量并行组合</a></li>
-<li><a href="#12-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%B5%81%E6%B0%B4%E7%BA%BF%E9%85%8D%E7%BD%AE">12. 如何选择流水线配置</a></li>
-<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-</li>
-</ul>
+          <p>流水线并行详解：沿层方向把模型切成多个 Stage、把 Mini-batch 拆成 Micro-batch，以及 GPipe 的 Fill-Drain（All-Forward-All-Backward）调度与气泡开销。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/06/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/#more" rel="contents">
+              <a class="btn" href="/2026/08/06/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -975,7 +860,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1002,7 +887,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-06 00:01:12" itemprop="dateModified" datetime="2026-08-06T00:01:12+08:00">2026-08-06</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1035,56 +920,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C">数据并行</a><ul>
-<li><a href="#1-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E4%B8%8E%E6%95%B0%E5%AD%A6%E8%AF%AD%E4%B9%89">1. 核心思想与数学语义</a><ul>
-<li><a href="#11-%E5%85%A8%E5%B1%80%E6%89%B9%E6%AC%A1%E5%A4%A7%E5%B0%8F">1.1 全局批次大小</a></li>
-<li><a href="#12-%E4%B8%80%E6%AC%A1%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E8%BF%AD%E4%BB%A3">1.2 一次同步数据并行迭代</a></li>
-</ul>
-</li>
-<li><a href="#2-%E4%BB%8E%E5%8D%95%E5%8D%A1%E8%AE%AD%E7%BB%83%E5%88%B0%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C">2. 从单卡训练到数据并行</a></li>
-<li><a href="#3-%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E5%8F%82%E6%95%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8E-pytorch-dp-%E5%92%8C-ddp">3. 数据并行、参数服务器与 PyTorch DP 和 DDP</a><ul>
-<li><a href="#31-%E5%9B%9B%E4%B8%AA%E6%A6%82%E5%BF%B5%E7%9A%84%E5%B1%82%E6%AC%A1">3.1 四个概念的层次</a></li>
-<li><a href="#32-%E5%8F%82%E6%95%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">3.2 参数服务器</a></li>
-<li><a href="#33-pytorch-dataparallel">3.3 PyTorch DataParallel</a></li>
-<li><a href="#34-pytorch-distributeddataparallel">3.4 PyTorch DistributedDataParallel</a></li>
-<li><a href="#35-dataparallel-%E4%B8%8E-ddp-%E5%AF%B9%E6%AF%94">3.5 DataParallel 与 DDP 对比</a></li>
-</ul>
-</li>
-<li><a href="#4-%E6%A2%AF%E5%BA%A6%E5%90%8C%E6%AD%A5%E4%B8%8E-ring-allreduce">4. 梯度同步与 Ring AllReduce</a><ul>
-<li><a href="#41-ring-allreduce">4.1 Ring AllReduce</a></li>
-<li><a href="#42-%E6%A2%AF%E5%BA%A6%E5%88%86%E6%A1%B6%E4%B8%8E%E9%80%9A%E4%BF%A1%E9%87%8D%E5%8F%A0">4.2 梯度分桶与通信重叠</a></li>
-</ul>
-</li>
-<li><a href="#5-%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E7%9A%84%E6%98%BE%E5%AD%98%E5%86%97%E4%BD%99">5. 标准数据并行的显存冗余</a></li>
-<li><a href="#6-deepspeed-zero%E9%9B%B6%E5%86%97%E4%BD%99%E4%BC%98%E5%8C%96">6. DeepSpeed ZeRO：零冗余优化</a><ul>
-<li><a href="#61-zero-1%E5%88%86%E7%89%87%E4%BC%98%E5%8C%96%E5%99%A8%E7%8A%B6%E6%80%81">6.1 ZeRO-1：分片优化器状态</a></li>
-<li><a href="#62-zero-2%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E7%89%87%E6%A2%AF%E5%BA%A6">6.2 ZeRO-2：进一步分片梯度</a></li>
-<li><a href="#63-zero-3%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E7%89%87%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0">6.3 ZeRO-3：进一步分片模型参数</a></li>
-<li><a href="#64-zero-offload-%E4%B8%8E-zero-infinity">6.4 ZeRO-Offload 与 ZeRO-Infinity</a></li>
-</ul>
-</li>
-<li><a href="#7-zerofsdp-%E4%B8%8E%E5%85%B6%E4%BB%96%E5%B9%B6%E8%A1%8C%E7%AD%96%E7%95%A5">7. ZeRO、FSDP 与其他并行策略</a><ul>
-<li><a href="#71-zero-%E4%BB%8D%E5%B1%9E%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E4%BD%93%E7%B3%BB">7.1 ZeRO 仍属于数据并行体系</a></li>
-<li><a href="#72-zero-3-%E4%B8%8E-fsdp">7.2 ZeRO-3 与 FSDP</a></li>
-<li><a href="#73-%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C%E4%B8%8D%E6%98%AF%E4%B8%87%E8%83%BD%E6%96%B9%E6%A1%88">7.3 数据并行不是万能方案</a></li>
-</ul>
-</li>
-<li><a href="#8-pytorch-ddp-%E5%AE%9E%E8%B7%B5">8. PyTorch DDP 实践</a><ul>
-<li><a href="#81-%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF%E4%B8%8E-no_sync">8.1 梯度累积与 <code>no_sync()</code></a></li>
-</ul>
-</li>
-<li><a href="#9-deepspeed-zero-%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B">9. DeepSpeed ZeRO 配置示例</a></li>
-<li><a href="#10-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96">10. 性能分析与优化</a></li>
-<li><a href="#11-%E6%96%B9%E6%A1%88%E9%80%89%E6%8B%A9">11. 方案选择</a></li>
-<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-</li>
-</ul>
+          <p>数据并行全景：从 DP、DDP、Ring AllReduce 到 DeepSpeed ZeRO，如何从「每个 Rank 完整复制参数、梯度与优化器状态」一步步推进到状态分片。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/04/%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C/#more" rel="contents">
+              <a class="btn" href="/2026/08/04/%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1124,7 +963,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1151,7 +990,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:46" itemprop="dateModified" datetime="2026-08-03T23:00:46+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1184,37 +1023,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1">集合通信</a><ul>
-<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">1. 基本概念</a></li>
-<li><a href="#2-%E5%B8%B8%E8%A7%81%E9%80%9A%E4%BF%A1%E5%8E%9F%E8%AF%AD">2. 常见通信原语</a><ul>
-<li><a href="#broadcast">Broadcast</a></li>
-<li><a href="#scatter">Scatter</a></li>
-<li><a href="#gather">Gather</a></li>
-<li><a href="#allgather">AllGather</a></li>
-<li><a href="#reduce">Reduce</a></li>
-<li><a href="#reducescatter">ReduceScatter</a></li>
-<li><a href="#allreduce">AllReduce</a></li>
-<li><a href="#alltoall">AllToAll</a></li>
-<li><a href="#barrier">Barrier</a></li>
-</ul>
-</li>
-<li><a href="#3-%E7%82%B9%E5%AF%B9%E7%82%B9%E9%80%9A%E4%BF%A1%E4%B8%8E%E5%BA%95%E5%B1%82%E5%90%8C%E6%AD%A5">3. 点对点通信与底层同步</a><ul>
-<li><a href="#send-%E4%B8%8E-receive">Send 与 Receive</a></li>
-<li><a href="#signal-%E4%B8%8E-wait">Signal 与 Wait</a></li>
-</ul>
-</li>
-<li><a href="#4-%E5%B8%B8%E8%A7%81%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E7%AE%97%E6%B3%95">4. 常见集合通信算法</a></li>
-<li><a href="#5-%E6%80%A7%E8%83%BD%E6%A8%A1%E5%9E%8B%E4%B8%8E%E4%BC%98%E5%8C%96%E8%A6%81%E7%82%B9">5. 性能模型与优化要点</a></li>
-<li><a href="#6-%E9%80%9A%E4%BF%A1%E5%BA%93%E4%B8%8E%E8%BD%AF%E4%BB%B6%E6%A0%88">6. 通信库与软件栈</a></li>
-<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-</li>
-</ul>
+          <p>集合通信入门：通信域、Rank 与 Root Rank 的基本概念，各类集合操作的语义，以及调用顺序或数据类型不一致时可能造成阻塞、数据错误甚至崩溃的常见坑。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%85%A5%E9%97%A8/#more" rel="contents">
+              <a class="btn" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%85%A5%E9%97%A8/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1254,7 +1066,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1281,7 +1093,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:45" itemprop="dateModified" datetime="2026-08-03T23:00:45+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1314,82 +1126,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93%EF%BC%9A%E4%BB%8E%E9%80%9A%E4%BF%A1%E5%8E%9F%E8%AF%AD%E5%88%B0-HCCL-%E4%B8%8E-xCCL-%E7%94%9F%E6%80%81">集合通信库：从通信原语到 HCCL 与 xCCL 生态</a><ul>
-<li><a href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93">一、为什么需要集合通信库</a><ul>
-<li><a href="#1-1-%E5%B9%B6%E8%A1%8C%E7%AD%96%E7%95%A5%E5%86%B3%E5%AE%9A%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%BC%8F">1.1 并行策略决定通信模式</a></li>
-<li><a href="#1-2-%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93%E5%9C%A8%E8%BD%AF%E4%BB%B6%E6%A0%88%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE">1.2 集合通信库在软件栈中的位置</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BA%8C%E3%80%81%E8%AF%AD%E4%B9%89%E5%B1%82%EF%BC%9A%E9%80%9A%E4%BF%A1%E5%9F%9F%E4%B8%8E%E9%80%9A%E4%BF%A1%E5%8E%9F%E8%AF%AD">二、语义层：通信域与通信原语</a><ul>
-<li><a href="#2-1-%E9%80%9A%E4%BF%A1%E5%9F%9F%E3%80%81rank-%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%BA%A6%E6%9D%9F">2.1 通信域、rank 与一致性约束</a></li>
-<li><a href="#2-2-%E9%80%9A%E4%BF%A1%E5%8E%9F%E8%AF%AD%E7%9A%84%E5%AE%9A%E4%B9%89">2.2 通信原语的定义</a></li>
-<li><a href="#2-3-%E5%B9%B6%E8%A1%8C%E7%AD%96%E7%95%A5%E5%88%B0%E9%80%9A%E4%BF%A1%E5%8E%9F%E8%AF%AD%E7%9A%84%E6%98%A0%E5%B0%84">2.3 并行策略到通信原语的映射</a></li>
-</ul>
-</li>
-<li><a href="#%E4%B8%89%E3%80%81%E6%80%A7%E8%83%BD%E5%B1%82%EF%BC%9A%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E3%80%81%E4%B8%8B%E7%95%8C%E4%B8%8E%E6%8B%93%E6%89%91%E7%AE%97%E6%B3%95">三、性能层：代价模型、下界与拓扑算法</a><ul>
-<li><a href="#3-1-%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B">3.1 代价模型</a></li>
-<li><a href="#3-2-AllReduce-%E7%9A%84%E9%80%9A%E4%BF%A1%E9%87%8F%E4%B8%8B%E7%95%8C">3.2 AllReduce 的通信量下界</a></li>
-<li><a href="#3-3-%E4%B8%BB%E8%A6%81%E6%8B%93%E6%89%91%E7%AE%97%E6%B3%95">3.3 主要拓扑算法</a><ul>
-<li><a href="#3-3-1-Mesh">3.3.1 Mesh</a></li>
-<li><a href="#3-3-2-Ring">3.3.2 Ring</a></li>
-<li><a href="#3-3-3-Recursive-Halving-Doubling">3.3.3 Recursive Halving-Doubling</a></li>
-<li><a href="#3-3-4-Bruck-%E4%B8%8E-Nonuniform-Bruck">3.3.4 Bruck 与 Nonuniform Bruck</a></li>
-<li><a href="#3-3-5-%E4%BA%8C%E9%A1%B9%E6%A0%91%E4%B8%8E%E5%8F%8C%E4%BA%8C%E5%8F%89%E6%A0%91">3.3.5 二项树与双二叉树</a></li>
-<li><a href="#3-3-6-Pairwise-%E4%B8%8E-AllToAll">3.3.6 Pairwise 与 AllToAll</a></li>
-</ul>
-</li>
-<li><a href="#3-4-%E5%88%86%E5%B1%82%E7%AE%97%E6%B3%95%E4%B8%8E%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5">3.4 分层算法与拓扑感知</a></li>
-<li><a href="#3-5-%E7%BD%91%E5%86%85%E8%AE%A1%E7%AE%97">3.5 网内计算</a></li>
-</ul>
-</li>
-<li><a href="#%E5%9B%9B%E3%80%81HCCL%EF%BC%9A%E6%98%87%E8%85%BE%E5%B9%B3%E5%8F%B0%E7%9A%84%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93">四、HCCL：昇腾平台的集合通信库</a><ul>
-<li><a href="#4-1-%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">4.1 定位与软件架构</a></li>
-<li><a href="#4-2-%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">4.2 执行流程</a></li>
-<li><a href="#4-3-%E9%80%9A%E4%BF%A1%E5%9F%9F%E7%AE%A1%E7%90%86">4.3 通信域管理</a></li>
-<li><a href="#4-4-%E9%80%9A%E4%BF%A1%E5%8E%9F%E8%AF%AD%E4%B8%8E%E6%8E%A5%E5%8F%A3">4.4 通信原语与接口</a></li>
-<li><a href="#4-5-%E7%82%B9%E5%AF%B9%E7%82%B9%E9%80%9A%E4%BF%A1%EF%BC%9AHcclSend-%E4%B8%8E-HcclBatchSendRecv">4.5 点对点通信：HcclSend 与 HcclBatchSendRecv</a></li>
-<li><a href="#4-6-%E6%8B%93%E6%89%91%E7%AE%97%E6%B3%95%E4%B8%8E%E8%87%AA%E9%80%82%E5%BA%94%E9%80%89%E6%8B%A9">4.6 拓扑算法与自适应选择</a></li>
-<li><a href="#4-7-%E9%93%BE%E8%B7%AF%E5%B1%82%E6%AC%A1%E4%B8%8E%E5%88%86%E7%BA%A7%E9%80%9A%E4%BF%A1">4.7 链路层次与分级通信</a></li>
-<li><a href="#4-8-%E5%BC%80%E6%BA%90%E4%B8%8E%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7">4.8 开源与可扩展性</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BA%94%E3%80%81%E5%85%B6%E4%BB%96%E4%B8%BB%E6%B5%81%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93">五、其他主流集合通信库</a><ul>
-<li><a href="#5-1-NCCL">5.1 NCCL</a><ul>
-<li><a href="#5-1-1-%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9E%8B">5.1.1 执行模型</a></li>
-<li><a href="#5-1-2-%E4%BC%A0%E8%BE%93%E5%B1%82">5.1.2 传输层</a></li>
-<li><a href="#5-1-3-%E6%95%B0%E6%8D%AE%E9%9D%A2%E5%8D%8F%E8%AE%AE">5.1.3 数据面协议</a></li>
-<li><a href="#5-1-4-%E7%AE%97%E6%B3%95%E9%9B%86%E5%90%88%E4%B8%8E%E8%B0%83%E4%BC%98%E6%A8%A1%E5%9E%8B">5.1.4 算法集合与调优模型</a></li>
-<li><a href="#5-1-5-%E8%BF%91%E6%9C%9F%E6%BC%94%E8%BF%9B">5.1.5 近期演进</a></li>
-</ul>
-</li>
-<li><a href="#5-2-RCCL">5.2 RCCL</a></li>
-<li><a href="#5-3-oneCCL">5.3 oneCCL</a></li>
-<li><a href="#5-4-MSCCL-%E4%B8%8E%E9%80%9A%E4%BF%A1%E7%AE%97%E6%B3%95%E7%BB%BC%E5%90%88">5.4 MSCCL 与通信算法综合</a></li>
-<li><a href="#5-5-Gloo">5.5 Gloo</a></li>
-<li><a href="#5-6-MPI%E3%80%81UCC-%E4%B8%8E-UCX">5.6 MPI、UCC 与 UCX</a></li>
-<li><a href="#5-7-NVSHMEM-%E4%B8%8E%E8%AE%BE%E5%A4%87%E5%8F%91%E8%B5%B7%E9%80%9A%E4%BF%A1">5.7 NVSHMEM 与设备发起通信</a></li>
-<li><a href="#5-8-%E5%85%B6%E4%BB%96%E5%8E%82%E5%95%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%91%BD%E5%90%8D%E6%AD%A7%E4%B9%89">5.8 其他厂商实现与命名歧义</a></li>
-<li><a href="#5-9-%E8%B6%85%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%9C%BA%E6%99%AF%E7%9A%84%E8%87%AA%E7%A0%94%E5%88%86%E6%94%AF">5.9 超大规模场景的自研分支</a></li>
-<li><a href="#5-10-%E6%A8%AA%E5%90%91%E5%AF%B9%E6%AF%94">5.10 横向对比</a></li>
-</ul>
-</li>
-<li><a href="#%E5%85%AD%E3%80%81%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5%EF%BC%9A%E9%9B%86%E6%88%90%E3%80%81%E8%B0%83%E4%BC%98%E4%B8%8E%E8%A7%82%E6%B5%8B">六、工程实践：集成、调优与观测</a><ul>
-<li><a href="#6-1-%E4%B8%8E%E8%AE%AD%E7%BB%83%E6%A1%86%E6%9E%B6%E7%9A%84%E9%9B%86%E6%88%90">6.1 与训练框架的集成</a></li>
-<li><a href="#6-2-%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6%E4%B8%8E%E4%BC%A0%E8%BE%93%E5%90%8E%E7%AB%AF">6.2 网络插件与传输后端</a></li>
-<li><a href="#6-3-%E8%B0%83%E4%BC%98%E8%A6%81%E7%82%B9">6.3 调优要点</a></li>
-<li><a href="#6-4-%E8%A7%82%E6%B5%8B%E4%B8%8E%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D">6.4 观测与故障定位</a></li>
-</ul>
-</li>
-<li><a href="#%E4%B8%83%E3%80%81%E5%BC%80%E6%94%BE%E9%97%AE%E9%A2%98%E4%B8%8E%E8%B6%8B%E5%8A%BF">七、开放问题与趋势</a></li>
-<li><a href="#%E5%85%AB%E3%80%81%E6%80%BB%E7%BB%93">八、总结</a></li>
-<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
-</ul>
-</li>
-</ul>
+          <p>集合通信库为什么无法被点对点收发替代：DP、TP、PP、EP、SP/CP 与 ZeRO 分片各自对应的固定数据交换模式，以及这类通信区别于普通收发的三个共同特征。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93/#more" rel="contents">
+              <a class="btn" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1429,7 +1169,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1456,7 +1196,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 23:00:39" itemprop="dateModified" datetime="2026-08-03T23:00:39+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1489,10 +1229,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Transformer-前向计算流程详解"><a href="#Transformer-前向计算流程详解" class="headerlink" title="Transformer 前向计算流程详解"></a>Transformer 前向计算流程详解</h1><p><strong>摘要</strong>　本节以单条源—目标句对为例，逐步骤刻画 Transformer 的完整前向计算过程。对每一步骤，给出其形式化定义、张量形状变化及其在整体架构中承担的功能。除特别说明外，全部超参数取自 Vaswani 等人 (2017) 所述的 base 配置。本节的组织顺序遵循数据流方向：输入表示的构建（步骤 1–5）、编码器堆栈（步骤 6–15）、解码器堆栈（步骤 16–19）、输出层与解码（步骤 20–23）。</p>
+          <p>Transformer 前向计算逐步拆解：以 the cat sat down → 猫 坐 下 了 为贯穿示例，走完编码器与解码器每一步的张量形状与具体运算。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/#more" rel="contents">
+              <a class="btn" href="/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1532,7 +1272,7 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="正在输入">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="记录高性能互连网络、片上网络、计算机体系结构与 AI 基础设施方向的论文阅读与学习笔记，兼有算法题解与摄影。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -1559,7 +1299,7 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-03 22:58:09" itemprop="dateModified" datetime="2026-08-03T22:58:09+08:00">2026-08-03</time>
+      <time title="修改时间：2026-08-27 22:51:34" itemprop="dateModified" datetime="2026-08-27T22:51:34+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1592,38 +1332,10 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-          <ul>
-<li><a href="#rnn-%E4%B8%8E-cnn%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1%E7%9A%84%E4%B8%A4%E6%9D%A1%E7%BB%8F%E5%85%B8%E8%B7%AF%E7%BA%BF">RNN 与 CNN：序列建模的两条经典路线</a><ul>
-<li><a href="#%E4%B8%80%E6%99%AE%E9%80%9A-mlp-%E4%B8%8D%E9%80%82%E5%90%88%E7%9B%B4%E6%8E%A5%E5%A4%84%E7%90%86%E5%8F%98%E9%95%BF%E5%BA%8F%E5%88%97">一、普通 MLP 不适合直接处理变长序列</a></li>
-<li><a href="#%E4%BA%8C%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-rnn">二、循环神经网络 RNN</a><ul>
-<li><a href="#1-rnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">1. RNN 如何工作</a></li>
-<li><a href="#2-%E4%B8%80%E4%B8%AA%E7%9B%B4%E8%A7%82%E4%BE%8B%E5%AD%90">2. 一个直观例子</a></li>
-<li><a href="#3-rnn-%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA%E5%BD%A2%E5%BC%8F">3. RNN 的输入与输出形式</a></li>
-<li><a href="#4-rnn-%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83">4. RNN 如何训练</a></li>
-<li><a href="#5-rnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">5. RNN 的主要问题</a></li>
-<li><a href="#6-lstm-%E5%92%8C-gru">6. LSTM 和 GRU</a></li>
-</ul>
-</li>
-<li><a href="#%E4%B8%89%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-cnn">三、卷积神经网络 CNN</a><ul>
-<li><a href="#1-%E4%BB%8E%E5%9B%BE%E5%83%8F%E5%8D%B7%E7%A7%AF%E5%88%B0%E5%BA%8F%E5%88%97%E5%8D%B7%E7%A7%AF">1. 从图像卷积到序列卷积</a></li>
-<li><a href="#2-%E4%B8%80%E7%BB%B4-cnn-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">2. 一维 CNN 如何工作</a></li>
-<li><a href="#3-%E5%8D%B7%E7%A7%AF%E6%A0%B8%E6%98%AF%E4%B8%80%E7%A7%8D%E5%B1%80%E9%83%A8%E7%89%B9%E5%BE%81%E6%A3%80%E6%B5%8B%E5%99%A8">3. 卷积核是一种局部特征检测器</a></li>
-<li><a href="#4-%E5%8D%B7%E7%A7%AF%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5">4. 卷积中的几个重要概念</a></li>
-<li><a href="#5-%E5%A4%9A%E5%B1%82-cnn-%E4%B8%8E%E6%84%9F%E5%8F%97%E9%87%8E">5. 多层 CNN 与感受野</a></li>
-<li><a href="#6-%E7%A9%BA%E6%B4%9E%E5%8D%B7%E7%A7%AF%E5%A6%82%E4%BD%95%E6%89%A9%E5%A4%A7%E6%84%9F%E5%8F%97%E9%87%8E">6. 空洞卷积如何扩大感受野</a></li>
-<li><a href="#7-cnn-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">7. CNN 为什么可以并行计算</a></li>
-<li><a href="#8-cnn-%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">8. CNN 的主要问题</a></li>
-</ul>
-</li>
-<li><a href="#%E5%9B%9Brnn-%E4%B8%8E-cnn-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB">四、RNN 与 CNN 的核心区别</a></li>
-<li><a href="#%E4%BA%94%E4%BB%8E-rnncnn-%E5%88%B0-transformer">五、从 RNN、CNN 到 Transformer</a></li>
-<li><a href="#%E5%85%AD%E6%80%BB%E7%BB%93">六、总结</a></li>
-</ul>
-</li>
-</ul>
+          <p>RNN 与 CNN 两条经典序列建模路线的对比：循环结构如何沿时间顺序传递隐藏状态、卷积如何提取局部模式并支持并行计算，以及它们为 Transformer 埋下的伏笔。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/07/27/RNN-CNN/#more" rel="contents">
+              <a class="btn" href="/2026/07/27/RNN-CNN/">
                 阅读全文 &raquo;
               </a>
             </div>
