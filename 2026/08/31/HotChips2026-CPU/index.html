@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="整理 Intel 在 Hot Chips 2026 公布的 Core Series 3（Wildcat Lake）与下一代 Xeon（Diamond Rapids）：前者聚焦主流客户端的计算、I&#x2F;O、封装与 UCIe，后者介绍 Fan-out Fabric、CBB、Fabric Hub、内存、I&#x2F;O、先进封装与 APX。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="整理 Intel 在 Hot Chips 2026 公布的 Core Series 3（Wildcat Lake）与下一代 Xeon（Diamond Rapids）：前者聚焦主流客户端的计算、I&#x2F;O、封装与 UCIe，后者介绍 Fan-out Fabric、CBB、Fabric Hub、内存、I&#x2F;O、先进封装与 APX。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/wildcat-right-size-compute.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/wildcat-organic-mcp.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/wildcat-ucie-area.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/wildcat-yield-recovery.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/diamond-fanout-fabric.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/diamond-compute-building-block.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/diamond-fabric-hub.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/diamond-construction.png">
+<meta property="article:published_time" content="2026-08-30T17:24:58.000Z">
+<meta property="article:modified_time" content="2026-08-30T18:00:04.993Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Diamond Rapids">
+<meta property="article:tag" content="Foveros">
+<meta property="article:tag" content="Hot Chips 2026">
+<meta property="article:tag" content="Intel">
+<meta property="article:tag" content="UCIe">
+<meta property="article:tag" content="Wildcat Lake">
+<meta property="article:tag" content="Xeon">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/IntelCPUHotChips2026/wildcat-right-size-compute.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/","path":"2026/08/31/HotChips2026-CPU/","title":"Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hot-Chips-2026-Intel-CPU-%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93%EF%BC%9AWildcat-Lake-%E4%B8%8E-Diamond-Rapids"><span class="nav-number">1.</span> <span class="nav-text">Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Intel-Core-Series-3%EF%BC%88Wildcat-Lake%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">一、Intel Core Series 3（Wildcat Lake）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BA%A7%E5%93%81%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 产品定位与设计目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E8%AE%A1%E7%AE%97%E8%A7%84%E6%A8%A1%E8%B0%83%E6%95%B4"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 计算规模调整</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-I-O-%E4%B8%8E%E5%B9%B3%E5%8F%B0%E8%B0%83%E6%95%B4"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 I&#x2F;O 与平台调整</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%AE%A2%E6%88%B7%E7%AB%AF-UCIe"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 客户端 UCIe</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UCIe-%E9%9D%A2%E7%A7%AF%E4%B8%8E%E5%B8%A6%E5%AE%BD"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">UCIe 面积与带宽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E5%8F%98%E5%8C%96"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">协议变化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%9F%E8%80%97%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">功耗管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">1.1.4.4.</span> <span class="nav-text">信号完整性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E8%A3%B8%E7%89%87%E8%89%AF%E7%8E%87%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%BA%A7%E5%93%81%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 裸片良率恢复与产品配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-Wildcat-Lake-%E5%B0%8F%E7%BB%93"><span class="nav-number">1.1.6.</span> <span class="nav-text">1.6 Wildcat Lake 小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Diamond-Rapids%EF%BC%9A%E4%B8%8B%E4%B8%80%E4%BB%A3-Intel-Xeon"><span class="nav-number">1.2.</span> <span class="nav-text">二、Diamond Rapids：下一代 Intel Xeon</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E8%B4%9F%E8%BD%BD%E4%B8%8E%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 数据中心负载与架构演进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Fan-out-Fabric-Architecture"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 Fan-out Fabric Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Compute-Building-Block"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 Compute Building Block</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Fabric-Hub-%E4%B8%8E%E5%86%85%E5%AD%98%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 Fabric Hub 与内存子系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Flexible-I-O-%E4%B8%8E%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD%E5%8A%A0%E9%80%9F%E5%99%A8"><span class="nav-number">1.2.5.</span> <span class="nav-text">2.5 Flexible I&#x2F;O 与固定功能加速器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%8A%9F%E8%80%97%E4%B8%8E%E7%83%AD%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.6.</span> <span class="nav-text">2.6 功耗与热管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-SoC-%E8%A7%84%E6%A0%BC%E4%B8%8E%E7%89%A9%E7%90%86%E6%9E%84%E9%80%A0"><span class="nav-number">1.2.7.</span> <span class="nav-text">2.7 SoC 规格与物理构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-Intel-18A-P"><span class="nav-number">1.2.8.</span> <span class="nav-text">2.8 Intel 18A-P</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-9-Intel-APX"><span class="nav-number">1.2.9.</span> <span class="nav-text">2.9 Intel APX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-10-%E5%AE%89%E5%85%A8%E4%B8%8E-RAS"><span class="nav-number">1.2.10.</span> <span class="nav-text">2.10 安全与 RAS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-11-%E9%9D%A2%E5%90%91-Agentic-AI-%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.11.</span> <span class="nav-text">2.11 面向 Agentic AI 基础设施的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-12-Diamond-Rapids-%E5%B0%8F%E7%BB%93"><span class="nav-number">1.2.12.</span> <span class="nav-text">2.12 Diamond Rapids 小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%B8%A4%E5%9C%BA%E6%BC%94%E8%AE%B2%E7%9A%84%E6%80%BB%E4%BD%93%E6%80%BB%E7%BB%93"><span class="nav-number">1.3.</span> <span class="nav-text">三、两场演讲的总体总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.4.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">320</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/22/chiplet-actuary/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-22</time>
+        <br>
+      Chiplet Actuary
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/02/DATE2023-TheNextEra/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-02</time>
+        <br>
+      DATE2023-TheNextEra
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/03/31/An-efficient-thermal-model/" rel="bookmark">
+        <time class="popular-posts-time">2024-03-31</time>
+        <br>
+      An-efficient-thermal-model
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/22/DATE2021-DeFT/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-22</time>
+        <br>
+      DATE2021-DeFT
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids | 正在输入">
+      <meta itemprop="description" content="整理 Intel 在 Hot Chips 2026 公布的 Core Series 3（Wildcat Lake）与下一代 Xeon（Diamond Rapids）：前者聚焦主流客户端的计算、I&#x2F;O、封装与 UCIe，后者介绍 Fan-out Fabric、CBB、Fabric Hub、内存、I&#x2F;O、先进封装与 APX。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-31 01:24:58 / 修改时间：02:00:04" itemprop="dateCreated datePublished" datetime="2026-08-31T01:24:58+08:00">2026-08-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E8%8A%AF%E7%B2%92%E4%B8%8E%E5%85%88%E8%BF%9B%E5%B0%81%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">芯粒与先进封装</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">整理 Intel 在 Hot Chips 2026 公布的 Core Series 3（Wildcat Lake）与下一代 Xeon（Diamond Rapids）：前者聚焦主流客户端的计算、I/O、封装与 UCIe，后者介绍 Fan-out Fabric、CBB、Fabric Hub、内存、I/O、先进封装与 APX。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文整理 Intel 在 Hot Chips 2026 介绍的两款 CPU：面向主流客户端与边缘设备的 Intel Core Series 3（代号 Wildcat Lake），以及面向数据中心的下一代 Intel Xeon（代号 Diamond Rapids）。文章按照两场演讲的内容分别总结产品目标、SoC 构造、互连、内存、I&#x2F;O、功耗管理、安全与 RAS，并在最后给出简要归纳。</p>
+<ul>
+<li><a href="#%E4%B8%80intel-core-series-3wildcat-lake">一、Intel Core Series 3（Wildcat Lake）</a></li>
+<li><a href="#%E4%BA%8Cdiamond-rapids%E4%B8%8B%E4%B8%80%E4%BB%A3-intel-xeon">二、Diamond Rapids：下一代 Intel Xeon</a></li>
+<li><a href="#%E4%B8%89%E4%B8%A4%E5%9C%BA%E6%BC%94%E8%AE%B2%E7%9A%84%E6%80%BB%E4%BD%93%E6%80%BB%E7%BB%93">三、两场演讲的总体总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Hot-Chips-2026-Intel-CPU-技术总结：Wildcat-Lake-与-Diamond-Rapids"><a href="#Hot-Chips-2026-Intel-CPU-技术总结：Wildcat-Lake-与-Diamond-Rapids" class="headerlink" title="Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids"></a>Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids</h1><h2 id="一、Intel-Core-Series-3（Wildcat-Lake）"><a href="#一、Intel-Core-Series-3（Wildcat-Lake）" class="headerlink" title="一、Intel Core Series 3（Wildcat Lake）"></a>一、Intel Core Series 3（Wildcat Lake）</h2><h3 id="1-1-产品定位与设计目标"><a href="#1-1-产品定位与设计目标" class="headerlink" title="1.1 产品定位与设计目标"></a>1.1 产品定位与设计目标</h3><p>Intel Core Series 3 源自 Core Ultra Series 3（代号 Panther Lake），目标是将较新的客户端 IP 和平台能力扩展到更广泛的主流价位。产品保留 Thunderbolt 4、Wi-Fi 7、Bluetooth 6、安全与 SoC 功能，并覆盖轻薄笔记本以及机器人、智能建筑、销售点终端和智能计量等边缘设备。</p>
+<p>演讲给出的平台 AI 算力最高为 40 TOPS，该数字是 CPU、GPU 和 NPU 的合计。相对 Intel Core 7 150U，材料还列出最高 2.7× AI 性能、2.1× 创作与生产力性能，以及最高 64% 的处理器功耗降低。这些结果依赖具体工作负载、配置、电池容量和 OEM 设计，Intel 将详细测试条件列在其 Performance Index 中，因此这些倍数不能脱离原测试环境使用。</p>
+<p>Wildcat Lake 的设计路线可以概括为：</p>
+<ul>
+<li>维持与 Core Ultra Series 3 相同的制程节点和裸片划分；</li>
+<li>通过缩减计算与 I&#x2F;O IP 的规模降低裸片成本；</li>
+<li>从 Foveros 转向有机 MCP，降低封装成本；</li>
+<li>调整主板、内存和供电设计，进一步降低平台 BOM；</li>
+<li>复用已有验证与研发成果，把主要新增工作集中在客户端 UCIe。</li>
+</ul>
+<h3 id="1-2-计算规模调整"><a href="#1-2-计算规模调整" class="headerlink" title="1.2 计算规模调整"></a>1.2 计算规模调整</h3><p>Core Series 3 对 Core Ultra Series 3 “U”的计算配置进行了如下调整：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>Core Ultra Series 3 “U”</th>
+<th>Core Series 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GPU</td>
+<td>4 Xe、40 TOPS、支持光线追踪</td>
+<td>集成式 2 Xe、20 TOPS</td>
+</tr>
+<tr>
+<td>NPU</td>
+<td>3 个 Tile、53 TOPS</td>
+<td>1 个 Tile、17 TOPS</td>
+</tr>
+<tr>
+<td>P-core 与 L3</td>
+<td>4 个 P-core、12 MB L3</td>
+<td>2 个 P-core、6 MB L3</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>最高 96 GB、128-bit、8 MB Cache</td>
+<td>最高 64 GB、64-bit、4 MB Cache</td>
+</tr>
+<tr>
+<td>摄像头</td>
+<td>保留</td>
+<td>移除</td>
+</tr>
+<tr>
+<td>媒体</td>
+<td>8K60、VVC 解码与完整特效</td>
+<td>4K60、HDR 特效</td>
+</tr>
+<tr>
+<td>显示</td>
+<td>4×UHBR20</td>
+<td>3×HBR3（4K60）</td>
+</tr>
+</tbody></table>
+<p>上述调整使计算裸片面积减少 38%。</p>
+<p><img data-src="/images/IntelCPUHotChips2026/wildcat-right-size-compute.png" alt="Wildcat Lake 的计算规模调整"></p>
+<p>图 1：Core Series 3 相对 Core Ultra Series 3 “U”缩减 GPU、NPU、P-core、内存、媒体与显示配置。</p>
+<h3 id="1-3-I-O-与平台调整"><a href="#1-3-I-O-与平台调整" class="headerlink" title="1.3 I&#x2F;O 与平台调整"></a>1.3 I&#x2F;O 与平台调整</h3><p>I&#x2F;O 裸片也按照主流平台需求进行缩减：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>Core Ultra Series 3</th>
+<th>Core Series 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Thunderbolt&#x2F;USB4</td>
+<td>3 个带 eDP 复用的接口，共 4 个物理接口</td>
+<td>2 个</td>
+</tr>
+<tr>
+<td>PCIe</td>
+<td>4 条 Gen5、8 条 Gen4</td>
+<td>6 条 Gen4</td>
+</tr>
+<tr>
+<td>USB</td>
+<td>2×USB 3.2、8×USB 2</td>
+<td>2×USB 3.2、8×USB 2</td>
+</tr>
+<tr>
+<td>摄像头 PHY</td>
+<td>CSI</td>
+<td>移除</td>
+</tr>
+<tr>
+<td>音频</td>
+<td>4 组扬声器与麦克风、5 个 DSP、4.6 MB</td>
+<td>2 组扬声器与麦克风、3 个 DSP、3.0 MB</td>
+</tr>
+</tbody></table>
+<p>I&#x2F;O 裸片面积由此减少 15%。USB 配置保持不变，全局设计也只做少量修改，以减少新增验证问题。</p>
+<p>封装方面，Core Ultra Series 3 使用尺寸为 50×25×1.5 mm 的 Foveros 封装；Core Series 3 改用 35×25×1.23 mm 的有机 MCP。Foveros 通过无源 Base Die 连接多个裸片，Core Series 3 移除 Base Die，以降低组装成本和相关良率损失。更少的 I&#x2F;O 也使封装尺寸可以进一步缩小。</p>
+<p><img data-src="/images/IntelCPUHotChips2026/wildcat-organic-mcp.png" alt="Wildcat Lake 的有机 MCP 与 Foveros 封装对比"></p>
+<p>图 2：Core Series 3 采用尺寸更小的有机 MCP，并相应调整平台供电和主板布局。</p>
+<p>相对 Intel Core 7 150U，平台级调整还包括：</p>
+<ul>
+<li>DRAM 总线由 128-bit 调整为 64-bit；</li>
+<li>Type-3 PCB 由 8 层调整为 6 层；</li>
+<li>减少 DRAM 占板面积或 SODIMM 连接器；</li>
+<li>增加 LP E-core 电源轨，以支持电池续航；</li>
+<li>集成 Wi-Fi 7，并可进一步集成位于 USB Retimer 中的供电控制器。</li>
+</ul>
+<h3 id="1-4-客户端-UCIe"><a href="#1-4-客户端-UCIe" class="headerlink" title="1.4 客户端 UCIe"></a>1.4 客户端 UCIe</h3><p>从 Foveros 转向有机 MCP 后，原有裸片间连接方式需要调整。Intel 选择 UCIe 连接 Core Series 3 的裸片。材料指出，这套 UCIe 实现的面积比 Core Ultra Series 3 的裸片间连接大 70%，但其目的是获得 MCP 带来的整体成本节省。</p>
+<h4 id="UCIe-面积与带宽"><a href="#UCIe-面积与带宽" class="headerlink" title="UCIe 面积与带宽"></a>UCIe 面积与带宽</h4><p>移除 Base Die 后，凸点间距从 Foveros 的 36 μm 增加到 UCIe 的 110 μm。面向 PCIe 4 SSD 的数据路径采用 16R16W、8 GT&#x2F;s 配置，目标带宽为 12 GB&#x2F;s；显示路径按 4K60 配置为 16W、8 GT&#x2F;s。更大的凸点间距和数据包化控制带来了更大的 I&#x2F;O 与控制器面积。</p>
+<p><img data-src="/images/IntelCPUHotChips2026/wildcat-ucie-area.png" alt="Wildcat Lake 的 UCIe 面积和带宽配置"></p>
+<p>图 3：Wildcat Lake 根据 PCIe 4 SSD 与 4K60 显示需求配置 UCIe 带宽。</p>
+<h4 id="协议变化"><a href="#协议变化" class="headerlink" title="协议变化"></a>协议变化</h4><p>UCIe 使数据与控制信号的时序发生变化，部分原本独立的边带信号改为数据包传输，并产生额外延迟。该链路同时参与启动、调试、熔丝、安全、显示协议和故障恢复，因此 UCIe Bring-up 成为验证工作的重点。</p>
+<h4 id="功耗管理"><a href="#功耗管理" class="headerlink" title="功耗管理"></a>功耗管理</h4><p>数据包化与持续运行的时钟会增加链路功耗。Core Series 3 引入多个链路状态，在控制延迟影响的同时降低空闲功耗，材料给出的链路空闲功耗改善最高为 8×。由于空闲系统仍可能有显示流量跨越 UCIe，设计还使用显示流量 QoS 调度，使链路在显示工作期间能够进入更低功耗状态。</p>
+<h4 id="信号完整性"><a href="#信号完整性" class="headerlink" title="信号完整性"></a>信号完整性</h4><p>链路最初考虑过板上 LDO 和复用现有 VCCAON 电源轨两种 I&#x2F;O 供电方式。验证结果表明不需要额外 LDO。UCIe 物理链路最高运行在 8 GT&#x2F;s，不提供 Retry 或 Forward Error Correction；系统监测误码率，并支持降低频率的回退方案。</p>
+<h3 id="1-5-裸片良率恢复与产品配置"><a href="#1-5-裸片良率恢复与产品配置" class="headerlink" title="1.5 裸片良率恢复与产品配置"></a>1.5 裸片良率恢复与产品配置</h3><p>Core Series 3 对 CPU、GPU 和 NPU 进行频率分档，并允许通过不同核心与加速器配置恢复部分裸片。演讲列出三种配置：</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th align="right">P-core</th>
+<th align="right">LP E-core</th>
+<th align="right">GPU</th>
+<th>NPU</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Configuration 1</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">2 Xe</td>
+<td>有</td>
+</tr>
+<tr>
+<td>Configuration 2</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">1 Xe</td>
+<td>有</td>
+</tr>
+<tr>
+<td>Embedded</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">1 Xe</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<p>任一 P-core、任一 Xe Core 和 NPU 都可以参与配置恢复，可恢复部分占计算裸片面积的 29%。LP E-core、显示管线和 I&#x2F;O 不参与裁剪，材料给出的原因分别是维持电池续航和平台一致性。</p>
+<p><img data-src="/images/IntelCPUHotChips2026/wildcat-yield-recovery.png" alt="Wildcat Lake 的裸片良率恢复配置"></p>
+<p>图 4：Core Series 3 通过频率分档和 P-core、GPU、NPU 配置形成不同 SKU。</p>
+<h3 id="1-6-Wildcat-Lake-小结"><a href="#1-6-Wildcat-Lake-小结" class="headerlink" title="1.6 Wildcat Lake 小结"></a>1.6 Wildcat Lake 小结</h3><p>Wildcat Lake 的主要内容是面向主流客户端重新确定 SoC 与平台规模。计算裸片减少 GPU、NPU、P-core、内存和媒体配置，I&#x2F;O 裸片减少高速接口与摄像头 PHY；封装从 Foveros 改为有机 MCP，并同步调整内存总线、PCB 和供电。UCIe 是这一 MCP 方案中的关键新增技术，演讲重点介绍了其面积、协议、功耗和信号完整性取舍。最后，CPU、GPU 与 NPU 的分档和裁剪用于形成不同产品配置，并恢复部分计算裸片。</p>
+<h2 id="二、Diamond-Rapids：下一代-Intel-Xeon"><a href="#二、Diamond-Rapids：下一代-Intel-Xeon" class="headerlink" title="二、Diamond Rapids：下一代 Intel Xeon"></a>二、Diamond Rapids：下一代 Intel Xeon</h2><h3 id="2-1-数据中心负载与架构演进"><a href="#2-1-数据中心负载与架构演进" class="headerlink" title="2.1 数据中心负载与架构演进"></a>2.1 数据中心负载与架构演进</h3><p>Diamond Rapids 是 Intel 下一代采用性能核心的 Xeon CPU。演讲首先将数据中心 CPU 的要求分为五个方面：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Performance</td>
+<td>提高每线程性能，并进行系统级优化</td>
+</tr>
+<tr>
+<td>Efficiency</td>
+<td>提高每瓦性能</td>
+</tr>
+<tr>
+<td>Acceleration</td>
+<td>支持 AI、密码学、压缩和网络等加速</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>提供模块化架构、一致性与 Scale-up 能力</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>支持内存加密、隔离、信任根和 RAS</td>
+</tr>
+</tbody></table>
+<p>Intel 将 Xeon 的互连和集成方式概括为从 Ring、Mesh、Tiled Mesh、Modular Mesh 发展到 3D Mesh；物理集成则从单片设计扩展到 2.5D 分解和 2.5D&#x2F;3D 组合。Diamond Rapids 的设计重点是处理器在大规模系统中移动、处理和保护数据的能力。</p>
+<h3 id="2-2-Fan-out-Fabric-Architecture"><a href="#2-2-Fan-out-Fabric-Architecture" class="headerlink" title="2.2 Fan-out Fabric Architecture"></a>2.2 Fan-out Fabric Architecture</h3><p>Diamond Rapids 采用 Fan-out Fabric Architecture，整体由以下部分组成：</p>
+<ul>
+<li>可扩展的 Compute Building Block（CBB）；</li>
+<li>集中承载内存、I&#x2F;O 和固定功能加速器的 Fabric Hub；</li>
+<li>连接计算与内存的 Unified Memory Fabric；</li>
+<li>提供外部连接的 Flexible I&#x2F;O Fabric。</li>
+</ul>
+<p><img data-src="/images/IntelCPUHotChips2026/diamond-fanout-fabric.png" alt="Diamond Rapids 的 Fan-out Fabric Architecture"></p>
+<p>图 5：四个 Compute Building Block 与两个 Fabric Hub 通过内存和 I&#x2F;O Fabric 连接。</p>
+<h3 id="2-3-Compute-Building-Block"><a href="#2-3-Compute-Building-Block" class="headerlink" title="2.3 Compute Building Block"></a>2.3 Compute Building Block</h3><p>每个 Core Chiplet 最多包含 16 个核心及其 L2 Cache。核心通过 3DXbar 连接到 Base Tile 上的 LLC，LLC 由整个 CBB 共享。Base Tile 还包含 Caching Agent、Snoop Filter 和 Die-to-Die 接口。</p>
+<p>该结构支持在一个 Base Tile 上扩展 Core Chiplet 数量，也支持在一颗处理器中扩展 CBB 数量。</p>
+<p><img data-src="/images/IntelCPUHotChips2026/diamond-compute-building-block.png" alt="Diamond Rapids 的 Compute Building Block"></p>
+<p>图 6：Core Chiplet 通过 3DXbar 访问 Base Tile 上由 CBB 共享的 LLC。</p>
+<h3 id="2-4-Fabric-Hub-与内存子系统"><a href="#2-4-Fabric-Hub-与内存子系统" class="headerlink" title="2.4 Fabric Hub 与内存子系统"></a>2.4 Fabric Hub 与内存子系统</h3><p>Fabric Hub 同时连接 FlexBus I&#x2F;O Fabric 和 Unified Memory Fabric。其内部包括灵活 I&#x2F;O 子系统、内存子系统、I&#x2F;O Cache、加速器、Snoop Filter、Home Agent 和内存加密等模块。Diamond Rapids 的内存子系统带宽最高为 1.6 TB&#x2F;s。</p>
+<p><img data-src="/images/IntelCPUHotChips2026/diamond-fabric-hub.png" alt="Diamond Rapids 的 Fabric Hub"></p>
+<p>图 7：Fabric Hub 集成内存控制、I&#x2F;O、缓存、一致性过滤、加密和固定功能加速器。</p>
+<p>内存子系统的主要模块包括：</p>
+<ul>
+<li><strong>Memory Controller（MC）</strong>：调度 DDR 访问，提供 ECC、电源管理和 Rowhammer 防护；</li>
+<li><strong>Memory Value Function（MVF）</strong>：支持 CXL 内存的 1LM、Flat2LM 和镜像；</li>
+<li><strong>Memory Encryption Engine（MSE）</strong>：支持 DDR 或 CXL 内存加密；</li>
+<li><strong>Home Agent 与 Home Snoop Filter</strong>：通过片上 Snoop Filter 维护一致性。</li>
+</ul>
+<h3 id="2-5-Flexible-I-O-与固定功能加速器"><a href="#2-5-Flexible-I-O-与固定功能加速器" class="headerlink" title="2.5 Flexible I&#x2F;O 与固定功能加速器"></a>2.5 Flexible I&#x2F;O 与固定功能加速器</h3><p>每个 Fabric Hub 提供 4 组 x16 高速 I&#x2F;O，并另外提供 4 条 PCIe Gen4 Lane 用于平台基础设施。每组 x16 可以配置为 PCIe Gen6、CXL 3、UPI 3 端口或它们的组合。</p>
+<p>每个 Fabric Hub 还提供最高 16 MB I&#x2F;O Cache，并包含片上 Snoop Filter 和 Caching Agent。每个 Hub 内有两个 Accelerator Complex，集成 Intel QAT、DSA 和 IAA。</p>
+<p>在整颗 SoC 上，两个 Fabric Hub 合计提供：</p>
+<ul>
+<li>128 条高速 I&#x2F;O Lane；</li>
+<li>8 条 PCIe Gen4 Lane；</li>
+<li>最高 2 TB&#x2F;s 聚合双向 I&#x2F;O 带宽。</li>
+</ul>
+<p>由于高速 Lane 可以配置为 PCIe、CXL 或 UPI，2 TB&#x2F;s 表示聚合 I&#x2F;O Fabric 带宽，并不对应单一接口类型。</p>
+<h3 id="2-6-功耗与热管理"><a href="#2-6-功耗与热管理" class="headerlink" title="2.6 功耗与热管理"></a>2.6 功耗与热管理</h3><p>Diamond Rapids 将功耗管理划分为四类独立 DVFS Domain：</p>
+<ul>
+<li>Core DVFS Domain；</li>
+<li>CBB Uncore DVFS Domain；</li>
+<li>I&#x2F;O DVFS Domain；</li>
+<li>Memory DVFS Domain。</li>
+</ul>
+<p>处理器还支持保留 L2 Cache 的新核心空闲状态、Priority Core Turbo、Fabric Hub 功耗与热管理、基于 MR4 的内存热管理，以及 UXI 和 PCIe 的 L0p。系统可根据使用场景在计算、I&#x2F;O 和内存之间分配功耗预算。</p>
+<h3 id="2-7-SoC-规格与物理构造"><a href="#2-7-SoC-规格与物理构造" class="headerlink" title="2.7 SoC 规格与物理构造"></a>2.7 SoC 规格与物理构造</h3><p>Diamond Rapids 的公开规格如下：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>规格</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Compute</td>
+<td>4 个 CBB；最高 256 核；所有 CBB 合计最高 1.28 GB LLC</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>16 通道；最高 DDR5-8000；最高 MRDIMM-12800；最高 1.6 TB&#x2F;s</td>
+</tr>
+<tr>
+<td>I&#x2F;O</td>
+<td>128 条高速 Lane；PCIe Gen6、CXL 3.0、UPI 3；另有 8 条 PCIe Gen4 Lane</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Intel TDX、TDX Connect、SGX</td>
+</tr>
+<tr>
+<td>Acceleration</td>
+<td>Intel AMX、AVX 10.2、QAT、DSA、IAA</td>
+</tr>
+</tbody></table>
+<p>物理构造包括：</p>
+<ul>
+<li>2 个采用 Intel 3 工艺的 Fabric Hub Tile；</li>
+<li>16 个采用 Intel 18A-P 工艺的 Core Chiplet；</li>
+<li>4 个采用 Intel 3-T 工艺的 Base Tile；</li>
+<li>Core Chiplet 与 Base Tile 之间使用 Foveros 3D Direct Hybrid Bonding Interface；</li>
+<li>基板上的裸片间连接使用 UCIe-S 铜链路。</li>
+</ul>
+<p><img data-src="/images/IntelCPUHotChips2026/diamond-construction.png" alt="Diamond Rapids 的多裸片与 3D 封装构造"></p>
+<p>图 8：Diamond Rapids 由 Core Chiplet、Base Tile 和 Fabric Hub Tile 组成，并结合 3D 混合键合与基板互连。</p>
+<h3 id="2-8-Intel-18A-P"><a href="#2-8-Intel-18A-P" class="headerlink" title="2.8 Intel 18A-P"></a>2.8 Intel 18A-P</h3><p>演讲列出 Intel 18A-P 相对 18A 的以下变化：</p>
+<ul>
+<li>功耗降低 18%；</li>
+<li>性能提高 9%；</li>
+<li>热阻降低 20%—40%；</li>
+<li>Via 电阻降低 10%—30%；</li>
+<li>提供 PowerBoost 双触点低电阻选项；</li>
+<li>在 ULVT 与 LVT 之间新增第 5 种 Logic Vt；</li>
+<li>Skew Corner 收紧 33%；</li>
+<li>改善制程变化。</li>
+</ul>
+<p>这些百分比基于业界标准核心子模块，并不是 Diamond Rapids 整颗处理器的实测收益。</p>
+<h3 id="2-9-Intel-APX"><a href="#2-9-Intel-APX" class="headerlink" title="2.9 Intel APX"></a>2.9 Intel APX</h3><p>Diamond Rapids 支持 Intel Advanced Performance Extensions（APX）。APX 的主要内容包括：</p>
+<ul>
+<li>新增 16 个通用寄存器，使整数 GPR 总数达到 32；</li>
+<li>为 r16—r31 提供新编码，并通过 XSAVE 保存新增状态；</li>
+<li>提供三操作数 NDD 指令；</li>
+<li>支持 Flag Suppression；</li>
+<li>增加 64-bit Absolute Branch、Conditional ISA 和 Spill&#x2F;Fill 优化指令；</li>
+<li>保持旧 x86 代码兼容；</li>
+<li>既有源代码可以通过重新编译使用 APX 能力。</li>
+</ul>
+<p>演讲没有给出 APX 的独立性能数据，只说明重新编译的软件可以利用新增寄存器和指令获得性能提升。</p>
+<h3 id="2-10-安全与-RAS"><a href="#2-10-安全与-RAS" class="headerlink" title="2.10 安全与 RAS"></a>2.10 安全与 RAS</h3><p>在既有产品中，一致性目录状态存放在 DRAM 中。Diamond Rapids 将目录状态移动到片上 Snoop Filter，并以片上 Snoop Filter Directory 取代 DRAM-resident Directory State。</p>
+<p>材料列出的效果包括：</p>
+<ul>
+<li>减少 Cache Lookup 延迟；</li>
+<li>减少一致性流量；</li>
+<li>简化内存子系统；</li>
+<li>不再使用 DRAM 空间保存目录状态；</li>
+<li>保留完整 ECC 保护并提高可靠性。</li>
+</ul>
+<p>安全功能还包括 Intel TDX、TDX Connect、SGX 和内存加密。内存控制器提供 ECC 与 Rowhammer 防护，CXL 内存也可以使用加密与镜像能力。</p>
+<h3 id="2-11-面向-Agentic-AI-基础设施的配置"><a href="#2-11-面向-Agentic-AI-基础设施的配置" class="headerlink" title="2.11 面向 Agentic AI 基础设施的配置"></a>2.11 面向 Agentic AI 基础设施的配置</h3><p>Intel 将 Diamond Rapids 定位为面向下一代 Agentic AI 基础设施的 CPU，列出的相关能力包括：</p>
+<ul>
+<li>最高 256 个性能核心；</li>
+<li>1.28 GB Last Level Cache；</li>
+<li>AMX 与 AVX 10.2；</li>
+<li>支持 FP8、FP16 和 BF16；</li>
+<li>16 通道 DDR5&#x2F;MRDIMM，内存带宽最高 1.6 TB&#x2F;s；</li>
+<li>128 条高速 I&#x2F;O Lane，聚合双向带宽最高 2 TB&#x2F;s。</li>
+</ul>
+<p>演讲没有给出 Diamond Rapids 的核心频率、TDP、上市时间或端到端应用性能，因此上述内容应理解为公开的架构与规格信息，而不是完整的性能评估。</p>
+<h3 id="2-12-Diamond-Rapids-小结"><a href="#2-12-Diamond-Rapids-小结" class="headerlink" title="2.12 Diamond Rapids 小结"></a>2.12 Diamond Rapids 小结</h3><p>Diamond Rapids 的核心内容是 Fan-out Fabric Architecture。四个 CBB 负责扩展核心与 LLC，两个 Fabric Hub 集中提供内存、I&#x2F;O、加速器、一致性过滤和内存安全功能。完整 SoC 最高包含 256 个核心、1.28 GB LLC、16 通道 DDR5&#x2F;MRDIMM 和 128 条高速 I&#x2F;O Lane。物理实现采用 18A-P Core Chiplet、Intel 3-T Base Tile、Intel 3 Fabric Hub Tile、Foveros 3D Direct 和 UCIe-S。演讲还介绍了独立 DVFS Domain、APX、片上目录、TDX&#x2F;SGX 以及 AMX&#x2F;AVX 10.2 等功能。</p>
+<h2 id="三、两场演讲的总体总结"><a href="#三、两场演讲的总体总结" class="headerlink" title="三、两场演讲的总体总结"></a>三、两场演讲的总体总结</h2><p>Wildcat Lake 与 Diamond Rapids 面向不同产品范围，因此两场演讲的重点也不同。</p>
+<p>Wildcat Lake 主要说明 Core Series 3 如何从 Core Ultra Series 3 派生：缩减计算和 I&#x2F;O 配置，改用有机 MCP，调整主板与内存接口，并为客户端 MCP 引入 UCIe。其公开数据集中在裸片面积、封装尺寸、平台配置、UCIe 实现和良率恢复。</p>
+<p>Diamond Rapids 主要介绍下一代 Xeon 的模块化架构：以 CBB 组织 Core Chiplet 与共享 LLC，以 Fabric Hub 集中内存、I&#x2F;O、固定功能加速器和一致性功能，并通过 3D 混合键合与 UCIe-S 形成完整 SoC。其公开数据主要是最大核心数、缓存、内存、I&#x2F;O、裸片构造和功能支持，尚未包含完整产品性能与功耗信息。</p>
+<p>两份材料共同表明，Intel 的 CPU 设计已经同时覆盖核心、缓存、裸片间互连、封装、内存、I&#x2F;O、功耗管理、安全和产品配置。Wildcat Lake 的重点是主流客户端的规模与成本控制，Diamond Rapids 的重点是高端服务器的模块化扩展。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Intel, <em>Intel Core Series 3 — Codename: Wildcat Lake (WCL)</em>, Hot Chips 2026。</li>
+<li>Intel, <em>Diamond Rapids — Intel’s Next Generation Xeon CPU</em>, Hot Chips 2026。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Hot-Chips-2026/" rel="tag"># Hot Chips 2026</a>
+              <a href="/tags/Intel/" rel="tag"># Intel</a>
+              <a href="/tags/Wildcat-Lake/" rel="tag"># Wildcat Lake</a>
+              <a href="/tags/Diamond-Rapids/" rel="tag"># Diamond Rapids</a>
+              <a href="/tags/UCIe/" rel="tag"># UCIe</a>
+              <a href="/tags/Foveros/" rel="tag"># Foveros</a>
+              <a href="/tags/Xeon/" rel="tag"># Xeon</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/13/MTIA300/" rel="prev" title="MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计">
+                  <i class="fa fa-angle-left"></i> MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

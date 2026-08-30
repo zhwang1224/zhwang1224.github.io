@@ -11,7 +11,27 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-08-27T14:51:34.847Z</updated>
+  <updated>2026-08-30T18:00:04.993Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    <category term="芯粒与先进封装" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E8%8A%AF%E7%B2%92%E4%B8%8E%E5%85%88%E8%BF%9B%E5%B0%81%E8%A3%85/"/>
+    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
+    <category term="Intel" scheme="https://zhwang1224.github.io/tags/Intel/"/>
+    <category term="Wildcat Lake" scheme="https://zhwang1224.github.io/tags/Wildcat-Lake/"/>
+    <category term="Diamond Rapids" scheme="https://zhwang1224.github.io/tags/Diamond-Rapids/"/>
+    <category term="UCIe" scheme="https://zhwang1224.github.io/tags/UCIe/"/>
+    <category term="Foveros" scheme="https://zhwang1224.github.io/tags/Foveros/"/>
+    <category term="Xeon" scheme="https://zhwang1224.github.io/tags/Xeon/"/>
+    <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/</id>
+    <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/"/>
+    <published>2026-08-30T17:24:58.000Z</published>
+    <summary>整理 Intel 在 Hot Chips 2026 公布的 Core Series 3（Wildcat Lake）与下一代 Xeon（Diamond Rapids）：前者聚焦主流客户端的计算、I/O、封装与 UCIe，后者介绍 Fan-out Fabric、CBB、Fabric Hub、内存、I/O、先进封装与 APX。</summary>
+    <title>Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids</title>
+    <updated>2026-08-30T18:00:04.993Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -68,8 +88,8 @@
     <category term="Dragonfly" scheme="https://zhwang1224.github.io/tags/Dragonfly/"/>
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
-    <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
+    <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
     <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
@@ -437,27 +457,5 @@
     <summary>晶圆级系统笔记：以 CoWoS 2.5D 集成为基础，讨论中介层从典型的 858 mm² 扩展到晶圆级 70650 mm² 后，翘曲与生产可靠性这两大挑战。</summary>
     <title>ISCAS-MA-WSN</title>
     <updated>2026-08-27T14:51:34.843Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="模拟与评估" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E6%A8%A1%E6%8B%9F%E4%B8%8E%E8%AF%84%E4%BC%B0/"/>
-    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
-    <category term="大模型训练" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
-    <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="SimAI" scheme="https://zhwang1224.github.io/tags/SimAI/"/>
-    <category term="性能模拟" scheme="https://zhwang1224.github.io/tags/%E6%80%A7%E8%83%BD%E6%A8%A1%E6%8B%9F/"/>
-    <category term="工作负载建模" scheme="https://zhwang1224.github.io/tags/%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD%E5%BB%BA%E6%A8%A1/"/>
-    <category term="通信模拟" scheme="https://zhwang1224.github.io/tags/%E9%80%9A%E4%BF%A1%E6%A8%A1%E6%8B%9F/"/>
-    <category term="阿里云" scheme="https://zhwang1224.github.io/tags/%E9%98%BF%E9%87%8C%E4%BA%91/"/>
-    <id>https://zhwang1224.github.io/2026/06/18/SimAI/</id>
-    <link href="https://zhwang1224.github.io/2026/06/18/SimAI/"/>
-    <published>2026-06-18T07:45:48.000Z</published>
-    <summary>论文笔记：SimAI 统一大模型训练模拟的建模粒度，解决容量规划用流级、性能调优用包级所导致的多工具割裂问题。</summary>
-    <title>SimAI</title>
-    <updated>2026-08-27T14:51:34.854Z</updated>
   </entry>
 </feed>
