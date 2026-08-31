@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="忠实整理 Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I&#x2F;O、集群互连及推理性能口径。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="忠实整理 Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I&#x2F;O、集群互连及推理性能口径。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/memory-bandwidth-comparison.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/wse-moe-placement.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/wafer-fabric.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/nexus-rack-platform.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/cs4-backpack.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/vertical-power-delivery.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/wafer-io-interface.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/cs4-specifications.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/CerebrasCS4/cs4-cluster-interconnect.png">
+<meta property="article:published_time" content="2026-08-30T18:06:42.000Z">
+<meta property="article:modified_time" content="2026-08-31T09:32:06.545Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="CS-4">
+<meta property="article:tag" content="Cerebras">
+<meta property="article:tag" content="Hot Chips 2026">
+<meta property="article:tag" content="WSE-3 Turbo">
+<meta property="article:tag" content="大模型推理">
+<meta property="article:tag" content="晶圆级计算">
+<meta property="article:tag" content="机架级系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/CerebrasCS4/memory-bandwidth-comparison.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/","path":"2026/08/31/HotChips2026-Cerebras-CS4/","title":"Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hot-Chips-2026-Cerebras-CS-4%EF%BC%9A%E6%99%B6%E5%9C%86%E7%BA%A7%E5%BC%95%E6%93%8E%E7%9A%84%E6%9C%BA%E6%9E%B6%E7%BA%A7%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81CS-4-%E4%B8%8E-WSE-3-Turbo"><span class="nav-number">1.1.</span> <span class="nav-text">一、CS-4 与 WSE-3 Turbo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BA%A7%E5%93%81%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 产品定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%89%87%E4%B8%8A%E5%86%85%E5%AD%98%E5%B8%A6%E5%AE%BD"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 片上内存带宽</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Mixture-of-Experts-%E6%A8%A1%E5%9E%8B%E6%98%A0%E5%B0%84"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 Mixture-of-Experts 模型映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%99%B6%E5%9C%86%E5%86%85-Fabric"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 晶圆内 Fabric</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81NEXUS-%E6%A8%A1%E5%9D%97%E5%8C%96%E6%9C%BA%E6%9E%B6%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.2.</span> <span class="nav-text">二、NEXUS 模块化机架平台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%9C%BA%E6%9E%B6%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 机架总体结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-CS-4-Backpack"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 CS-4 Backpack</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BE%9B%E7%94%B5%E4%B8%8E%E5%86%B7%E5%8D%B4%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.</span> <span class="nav-text">三、供电与冷却系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%9E%82%E7%9B%B4%E4%BE%9B%E7%94%B5"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 垂直供电</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%89%8D%E9%83%A8%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%97"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 前部电源模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%90%8E%E9%83%A8%E6%B0%B4%E5%86%B7"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 后部水冷</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%99%B6%E5%9C%86-I-O-%E4%B8%8E-CS-4-%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A0%BC"><span class="nav-number">1.4.</span> <span class="nav-text">四、晶圆 I&#x2F;O 与 CS-4 系统规格</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%96%B0%E4%B8%80%E4%BB%A3%E6%99%B6%E5%9C%86-I-O"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 新一代晶圆 I&#x2F;O</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-CS-3-%E4%B8%8E-CS-4-%E8%A7%84%E6%A0%BC%E5%AF%B9%E6%AF%94"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 CS-3 与 CS-4 规格对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BB%8E%E5%8D%95%E9%A2%97%E6%99%B6%E5%9C%86%E6%89%A9%E5%B1%95%E5%88%B0-CS-4-%E9%9B%86%E7%BE%A4"><span class="nav-number">1.5.</span> <span class="nav-text">五、从单颗晶圆扩展到 CS-4 集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%99%B6%E5%9C%86%E9%97%B4%E4%BA%92%E8%BF%9E"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 晶圆间互连</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 大模型流水线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%88%86%E8%A7%A3%E5%BC%8F%E6%8E%A8%E7%90%86"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 分解式推理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%8E%A8%E7%90%86%E6%80%A7%E8%83%BD%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%8F%A3%E5%BE%84"><span class="nav-number">1.6.</span> <span class="nav-text">六、推理性能与数据口径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%BC%94%E8%AE%B2%E7%BB%99%E5%87%BA%E7%9A%84%E6%80%A7%E8%83%BD%E7%BB%93%E8%AE%BA"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 演讲给出的性能结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%8F%91%E5%B8%83%E6%97%B6%E9%97%B4%E5%8F%A3%E5%BE%84"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 发布时间口径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">324</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/18/ISCA2025-CrammingaDataCenter/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-18</time>
+        <br>
+      ISCA2025-CrammingaDataCenter
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/13/ASPLOS2026-Ouroboros/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-13</time>
+        <br>
+      ASPLOS2026-Ouroboros
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/22/ISCAS-MA-WSN/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-22</time>
+        <br>
+      ISCAS-MA-WSN
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/10/09/Waferscale-Network-Switches/" rel="bookmark">
+        <time class="popular-posts-time">2025-10-09</time>
+        <br>
+      Waferscale_Network_Switches
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/09/25/Switchless/" rel="bookmark">
+        <time class="popular-posts-time">2025-09-25</time>
+        <br>
+      Switchless
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构 | 正在输入">
+      <meta itemprop="description" content="忠实整理 Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I&#x2F;O、集群互连及推理性能口径。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-31 02:06:42 / 修改时间：17:32:06" itemprop="dateCreated datePublished" datetime="2026-08-31T02:06:42+08:00">2026-08-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E6%99%B6%E5%9C%86%E7%BA%A7%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">晶圆级系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">忠实整理 Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I/O、集群互连及推理性能口径。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Cerebras CS-4 是一套以 WSE-3 Turbo 晶圆级引擎为计算核心的机架级系统。单台 CS-4 集成 3 颗 WSE-3 Turbo，公开规格包括 750 PFLOPS AI 计算、132 GByte 内存、129.6 PByte&#x2F;s 内存带宽、160.5 PByte&#x2F;s Fabric 带宽和 7.2 Tbit&#x2F;s I&#x2F;O 带宽。演讲的重点不仅是晶圆级芯片，还包括 NEXUS 模块化机架、Backpack、供电、水冷、晶圆 I&#x2F;O 和多晶圆集群。</p>
+<ul>
+<li><a href="#%E4%B8%80cs-4-%E4%B8%8E-wse-3-turbo">一、CS-4 与 WSE-3 Turbo</a></li>
+<li><a href="#%E4%BA%8Cnexus-%E6%A8%A1%E5%9D%97%E5%8C%96%E6%9C%BA%E6%9E%B6%E5%B9%B3%E5%8F%B0">二、NEXUS 模块化机架平台</a></li>
+<li><a href="#%E4%B8%89%E4%BE%9B%E7%94%B5%E4%B8%8E%E5%86%B7%E5%8D%B4%E7%B3%BB%E7%BB%9F">三、供电与冷却系统</a></li>
+<li><a href="#%E5%9B%9B%E6%99%B6%E5%9C%86-io-%E4%B8%8E-cs-4-%E7%B3%BB%E7%BB%9F%E8%A7%84%E6%A0%BC">四、晶圆 I&#x2F;O 与 CS-4 系统规格</a></li>
+<li><a href="#%E4%BA%94%E4%BB%8E%E5%8D%95%E9%A2%97%E6%99%B6%E5%9C%86%E6%89%A9%E5%B1%95%E5%88%B0-cs-4-%E9%9B%86%E7%BE%A4">五、从单颗晶圆扩展到 CS-4 集群</a></li>
+<li><a href="#%E5%85%AD%E6%8E%A8%E7%90%86%E6%80%A7%E8%83%BD%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%8F%A3%E5%BE%84">六、推理性能与数据口径</a></li>
+<li><a href="#%E4%B8%83%E6%80%BB%E7%BB%93">七、总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Hot-Chips-2026-Cerebras-CS-4：晶圆级引擎的机架级架构"><a href="#Hot-Chips-2026-Cerebras-CS-4：晶圆级引擎的机架级架构" class="headerlink" title="Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构"></a>Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构</h1><h2 id="一、CS-4-与-WSE-3-Turbo"><a href="#一、CS-4-与-WSE-3-Turbo" class="headerlink" title="一、CS-4 与 WSE-3 Turbo"></a>一、CS-4 与 WSE-3 Turbo</h2><h3 id="1-1-产品定位"><a href="#1-1-产品定位" class="headerlink" title="1.1 产品定位"></a>1.1 产品定位</h3><p>Cerebras 将 CS-4 定位为面向大模型推理的晶圆级系统。相对 CS-3，CS-4 在一个机架中安装 3 个晶圆级 Backpack，每个 Backpack 包含一颗 WSE-3 Turbo。总体包括：</p>
+<ul>
+<li>提高 Token 输出速度；</li>
+<li>提高每瓦吞吐量；</li>
+<li>增加单机架计算、内存和 I&#x2F;O 资源；</li>
+<li>使用模块化机架设计支持部署和后续升级；</li>
+<li>支持多晶圆集群与分解式推理。</li>
+</ul>
+<p>相对 CS-3，CS-4 的 Token 速度最高提升 2×，每瓦吞吐量最高提升 10×。Output Speed(Tokens&#x2F;sec)相较于传统 GPU 系统快 30x。</p>
+<h3 id="1-2-片上内存带宽"><a href="#1-2-片上内存带宽" class="headerlink" title="1.2 片上内存带宽"></a>1.2 片上内存带宽</h3><p>Cerebras 将 WSE-3 Turbo 与 GPU 的主要差异概括为模型权重所在的位置。GPU 将大模型权重放在片外 HBM 中，计算单元通过外部存储接口访问权重；WSE-3 Turbo 将 LLM 权重放在晶圆的片上内存中，使存储靠近计算核心。</p>
+<p>演讲给出的带宽对比如下：</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th align="right">内存带宽</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NVIDIA Rubin</td>
+<td align="right">22 TByte&#x2F;s</td>
+</tr>
+<tr>
+<td>Cerebras CS-4 WSE-3T</td>
+<td align="right">43,200 TByte&#x2F;s</td>
+</tr>
+</tbody></table>
+<p>WSE-3T 的内存带宽标为 Rubin 的 2,000×。</p>
+<p><img data-src="/images/CerebrasCS4/memory-bandwidth-comparison.png" alt="Cerebras 对 WSE-3T 与 NVIDIA Rubin 内存带宽的比较"></p>
+<p>图 1：WSE-3T 的 43,200 TByte&#x2F;s 片上内存带宽与 Rubin 的 22 TByte&#x2F;s 对比。</p>
+<h3 id="1-3-Mixture-of-Experts-模型映射"><a href="#1-3-Mixture-of-Experts-模型映射" class="headerlink" title="1.3 Mixture-of-Experts 模型映射"></a>1.3 Mixture-of-Experts 模型映射</h3><p>对于 Mixture-of-Experts（MoE）模型，Cerebras 对比了 GPU 集群和 WSE-3T 的部署方式。</p>
+<p>在 GPU 系统中，专家可能分布到多个 GPU，需要使用张量并行和专家并行聚合内存带宽，同时产生 GPU 间通信。Cerebras 给出的 WSE-3T 方案则是：</p>
+<ul>
+<li>所有专家运行在一颗晶圆级芯片上；</li>
+<li>专家交错放置在晶圆内存中；</li>
+<li>不需要跨芯片通信；</li>
+<li>不需要复杂的跨设备路由。</li>
+</ul>
+<p><img data-src="/images/CerebrasCS4/wse-moe-placement.png" alt="WSE-3T 上的 MoE 专家放置方式"></p>
+<p>图 2：Cerebras 将 MoE 专家交错放置在单颗 WSE-3T 的晶圆内存中。</p>
+<h3 id="1-4-晶圆内-Fabric"><a href="#1-4-晶圆内-Fabric" class="headerlink" title="1.4 晶圆内 Fabric"></a>1.4 晶圆内 Fabric</h3><p>WSE-3T 的晶圆内 Fabric 带宽为 53.5 PB&#x2F;s，互连全部位于晶圆上，不需要机内线缆。作为对比，演讲列出 Rubin NVL72 的 NVLink 带宽为 260 TB&#x2F;s，并提到系统包含约 5,000 根线缆。Cerebras 将 WSE-3T 的片上 Fabric 带宽标为 GPU 互连的 200×。</p>
+<p><img data-src="/images/CerebrasCS4/wafer-fabric.png" alt="WSE-3T 的晶圆内 Fabric"></p>
+<p>图 3：WSE-3T 在片上提供 53.5 PB&#x2F;s 晶圆 Fabric，演讲强调其不依赖线缆。</p>
+<p>这里比较的是晶圆片上 Fabric 与机架内 GPU 互连，两者处于不同物理层级。该数字主要说明 Cerebras 将大量通信保留在晶圆内部的设计方式。</p>
+<h2 id="二、NEXUS-模块化机架平台"><a href="#二、NEXUS-模块化机架平台" class="headerlink" title="二、NEXUS 模块化机架平台"></a>二、NEXUS 模块化机架平台</h2><h3 id="2-1-机架总体结构"><a href="#2-1-机架总体结构" class="headerlink" title="2.1 机架总体结构"></a>2.1 机架总体结构</h3><p>CS-4 使用 NEXUS Rack-Scale Platform。计算和水路位于机架后部，电源位于前部。后部安装可插拔 Backpack，每个 Backpack 包含一颗晶圆级引擎；单台 CS-4 共安装 3 个晶圆级 Backpack。</p>
+<p>NEXUS 平台的模块化目标包括：</p>
+<ul>
+<li>简化构建；</li>
+<li>缩短部署时间；</li>
+<li>允许电源、计算和 I&#x2F;O 独立演进；</li>
+<li>允许更换或升级 Backpack；</li>
+<li>支持后续 CS-5 和 CS-6 产品。</li>
+</ul>
+<p><img data-src="/images/CerebrasCS4/nexus-rack-platform.png" alt="NEXUS 模块化机架平台"></p>
+<p>图 4：NEXUS 将前部供电与后部可插拔晶圆级 Backpack 分开布置。</p>
+<h3 id="2-2-CS-4-Backpack"><a href="#2-2-CS-4-Backpack" class="headerlink" title="2.2 CS-4 Backpack"></a>2.2 CS-4 Backpack</h3><p>CS-4 Backpack 包含晶圆封装、晶圆 I&#x2F;O 模块、供电与冷却结构。相对 CS-3，演讲列出以下变化：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>CS-4 Backpack 的变化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wafer I&#x2F;O Module</td>
+<td>带宽提高 2×；延迟速度提高 2×；支持模块化升级</td>
+</tr>
+<tr>
+<td>Wafer Package</td>
+<td>直接垂直供电；供电能力提高 2×；冷却能力提高 2×</td>
+</tr>
+<tr>
+<td>Manufacturing</td>
+<td>组件减少 50%；自动化程度提高 60%</td>
+</tr>
+</tbody></table>
+<p><img data-src="/images/CerebrasCS4/cs4-backpack.png" alt="CS-4 Backpack 的内部构造"></p>
+<p>图 5：Backpack 集成晶圆封装、晶圆 I&#x2F;O 模块、垂直供电与冷却结构。</p>
+<p>材料中的 2×、50% 和 60% 均以 CS-3 为比较基线。</p>
+<h2 id="三、供电与冷却系统"><a href="#三、供电与冷却系统" class="headerlink" title="三、供电与冷却系统"></a>三、供电与冷却系统</h2><h3 id="3-1-垂直供电"><a href="#3-1-垂直供电" class="headerlink" title="3.1 垂直供电"></a>3.1 垂直供电</h3><p>以 GPU 供电为对照：功率转换器与硅负载之间的距离约为 50 mm，电流需要穿过 PCB；为了降低电阻损耗，PCB 需要增加铜层。</p>
+<p>CS-4 使用 54.5 V DC 母排，不在晶圆和功率转换器之间使用传统 PCB 供电路径。DC&#x2F;DC 功率转换器均匀分布并直接放置在晶圆背面，转换器到硅负载的距离约为 0.5 mm。这一距离相对 GPU 的变化标为 100× 改善，可以降低额外电阻损耗与寄生电感。</p>
+<p><img data-src="/images/CerebrasCS4/vertical-power-delivery.png" alt="CS-4 的直接垂直供电"></p>
+<p>图 6：DC&#x2F;DC 功率转换器直接位于晶圆背面，供电距离约为 0.5 mm。</p>
+<h3 id="3-2-前部电源模块"><a href="#3-2-前部电源模块" class="headerlink" title="3.2 前部电源模块"></a>3.2 前部电源模块</h3><p>机架前部安装 AC&#x2F;DC Power Supply Module：</p>
+<ul>
+<li>输入电压最高为 277 VAC；</li>
+<li>输出电压为 54.5 VDC；</li>
+<li>每个 Backpack 最多配置 30 个电源模块；</li>
+<li>电源冗余可以配置为 5+1、4+1、3+1 或 4+2；</li>
+<li>每个电源模块由 30 A 断路器保护；</li>
+<li>机架顶部最多接入 6 路 AC 输入；</li>
+<li>机架两侧布置完全相位平衡的 AC 供电互连；</li>
+<li>风冷风扇负责冷却 Backpack 内的小型器件。</li>
+</ul>
+<h3 id="3-3-后部水冷"><a href="#3-3-后部水冷" class="headerlink" title="3.3 后部水冷"></a>3.3 后部水冷</h3><p>计算和水路集中在机架后部。集成水冷系统包括：</p>
+<ul>
+<li>位于两侧的供水与回水歧管；</li>
+<li>带阀门的干式快速断开接头；</li>
+<li>用于保证流量的调节执行器；</li>
+<li>监测泄漏与冷凝的检测模块；</li>
+<li>监测水流速率以及进水、出水温度的仪表；</li>
+<li>出现异常时关闭所有 Power Supply Module AC 电源的联动功能。</li>
+</ul>
+<p>水路与前部高压 AC 电源区相互隔离，光纤线缆则通过集成导管进行保护。Backpack 可以从后部拆卸和更换。</p>
+<h2 id="四、晶圆-I-O-与-CS-4-系统规格"><a href="#四、晶圆-I-O-与-CS-4-系统规格" class="headerlink" title="四、晶圆 I&#x2F;O 与 CS-4 系统规格"></a>四、晶圆 I&#x2F;O 与 CS-4 系统规格</h2><h3 id="4-1-新一代晶圆-I-O"><a href="#4-1-新一代晶圆-I-O" class="headerlink" title="4.1 新一代晶圆 I&#x2F;O"></a>4.1 新一代晶圆 I&#x2F;O</h3><p>CS-4 使用新的晶圆 I&#x2F;O 模块，将 Fabric 从晶圆边缘扩展到外部网络。该模块包含：</p>
+<ul>
+<li>新型 Direct Wafer Link 接口；</li>
+<li>支持标准 RoCE 协议网络；</li>
+<li>更高带宽和更低延迟；</li>
+<li>可编程、可替换的模块化设计。</li>
+</ul>
+<p><img data-src="/images/CerebrasCS4/wafer-io-interface.png" alt="CS-4 的晶圆 I&#x2F;O 模块"></p>
+<p>图 7：晶圆 I&#x2F;O 模块从晶圆边缘引出 Fabric，并连接 Direct Wafer Link 与 RoCE 网络。</p>
+<h3 id="4-2-CS-3-与-CS-4-规格对比"><a href="#4-2-CS-3-与-CS-4-规格对比" class="headerlink" title="4.2 CS-3 与 CS-4 规格对比"></a>4.2 CS-3 与 CS-4 规格对比</h3><p>CS-4 通过 3 个 WSE-3 Turbo Backpack 扩展单机架资源。给出的规格如下：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">CS-3</th>
+<th align="right">CS-4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI Compute</td>
+<td align="right">125 PFLOPS</td>
+<td align="right">750 PFLOPS</td>
+</tr>
+<tr>
+<td>晶圆</td>
+<td align="right">1×WSE-3</td>
+<td align="right">3×WSE-3 Turbo</td>
+</tr>
+<tr>
+<td>内存容量</td>
+<td align="right">44 GByte</td>
+<td align="right">132 GByte</td>
+</tr>
+<tr>
+<td>内存带宽</td>
+<td align="right">21.6 PByte&#x2F;s</td>
+<td align="right">129.6 PByte&#x2F;s</td>
+</tr>
+<tr>
+<td>Fabric 带宽</td>
+<td align="right">26.7 PByte&#x2F;s</td>
+<td align="right">160.5 PByte&#x2F;s</td>
+</tr>
+<tr>
+<td>I&#x2F;O 带宽</td>
+<td align="right">1.2 Tbit&#x2F;s</td>
+<td align="right">7.2 Tbit&#x2F;s</td>
+</tr>
+<tr>
+<td>I&#x2F;O 延迟</td>
+<td align="right">5 μs</td>
+<td align="right">2 μs</td>
+</tr>
+</tbody></table>
+<p><img data-src="/images/CerebrasCS4/cs4-specifications.png" alt="CS-3 与 CS-4 的规格对比"></p>
+<p>图 8：CS-4 在一个机架中集成 3 个 WSE-3 Turbo，并增加计算、内存、Fabric 和 I&#x2F;O 资源。</p>
+<h2 id="五、从单颗晶圆扩展到-CS-4-集群"><a href="#五、从单颗晶圆扩展到-CS-4-集群" class="headerlink" title="五、从单颗晶圆扩展到 CS-4 集群"></a>五、从单颗晶圆扩展到 CS-4 集群</h2><h3 id="5-1-晶圆间互连"><a href="#5-1-晶圆间互连" class="headerlink" title="5.1 晶圆间互连"></a>5.1 晶圆间互连</h3><p>CS-4 Cluster 通过新的高速晶圆链路和低延迟数据包流水线连接多个晶圆。演讲给出的改进包括：</p>
+<ul>
+<li>每颗晶圆带宽提高 2×；</li>
+<li>网络延迟速度提高 1.7×；</li>
+<li>晶圆到晶圆速度提高 2.5×；</li>
+<li>网络内部延迟为 3 μs；</li>
+<li>晶圆到晶圆延迟为 2 μs；</li>
+<li>到用户和分解式设备的网络延迟为 3 μs。</li>
+</ul>
+<p><img data-src="/images/CerebrasCS4/cs4-cluster-interconnect.png" alt="CS-4 集群的晶圆间互连"></p>
+<p>图 9：CS-4 Cluster 通过 Direct Wafer Link 和低延迟数据包流水线连接晶圆、用户与分解式设备。</p>
+<h3 id="5-2-大模型流水线"><a href="#5-2-大模型流水线" class="headerlink" title="5.2 大模型流水线"></a>5.2 大模型流水线</h3><p>演讲以 CS-3 Cluster 说明大型前沿模型的跨晶圆执行方式：</p>
+<ol>
+<li>将大部分高通信量保留在晶圆内部，使用晶圆内高带宽 Fabric；</li>
+<li>晶圆之间主要传输激活值，降低跨晶圆带宽需求；</li>
+<li>将大型模型流水线划分到多个晶圆上。</li>
+</ol>
+<p>材料称，更高的 I&#x2F;O 带宽可以缩短晶圆间跳转，对于 10T 参数模型，跨晶圆部分的延迟低于 0.2 ms。</p>
+<h3 id="5-3-分解式推理"><a href="#5-3-分解式推理" class="headerlink" title="5.3 分解式推理"></a>5.3 分解式推理</h3><p>CS-4 被设计为支持 Disaggregated Inference。其 I&#x2F;O 接口可以连接用户网络以及 GPU&#x2F;ASIC 等分解式设备。演讲没有进一步给出分解式系统中的任务划分协议或完整性能数据，公开内容主要集中在 Direct Wafer Link、RoCE、带宽和延迟。</p>
+<h2 id="六、推理性能与数据口径"><a href="#六、推理性能与数据口径" class="headerlink" title="六、推理性能与数据口径"></a>六、推理性能与数据口径</h2><h3 id="6-1-演讲给出的性能结论"><a href="#6-1-演讲给出的性能结论" class="headerlink" title="6.1 演讲给出的性能结论"></a>6.1 演讲给出的性能结论</h3><p>Cerebras 展示了 CS-3 在多种模型上的生产推理输出速度，模型范围包括 Gemma、Llama 3.3 70B、GPT OSS-120B、GLM 4.7-355B、Kimi K2.7 1T 和 GPT 系列。随后给出的 CS-4 总结包括：</p>
+<ul>
+<li>相对 GPU 的输出速度最高提高 30×；</li>
+<li>相对 CS-3 的 Token 速度最高提高 2×；</li>
+<li>相对 CS-3 的每瓦吞吐量最高提高 10×；</li>
+<li>Token Capacity 最高提高 10×；</li>
+<li>组件数量减少 50%。</li>
+</ul>
+<h3 id="6-2-发布时间口径"><a href="#6-2-发布时间口径" class="headerlink" title="6.2 发布时间口径"></a>6.2 发布时间口径</h3><p>演讲称 CS-4 已提供 Early Access，并计划在 2026 年第三季度后期 General Availability。NEXUS 平台同时面向后续 CS-5 和 CS-6 设计。</p>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>Cerebras CS-4 将 3 颗 WSE-3 Turbo 集成到一个 NEXUS 机架中。每颗晶圆提供片上内存和高带宽 Fabric，机架通过可插拔 Backpack 组织计算、晶圆 I&#x2F;O、垂直供电和水冷。系统前部集中 AC&#x2F;DC 供电，后部放置计算与水路，并通过模块化晶圆 I&#x2F;O 接入 Direct Wafer Link 和 RoCE 网络。</p>
+<p>CS-4 的机架级设计围绕三个方面展开：第一，将模型权重和高通信量尽量保留在晶圆内部；第二，通过模块化 Backpack、供电和水冷结构扩展到三晶圆机架；第三，通过新型晶圆 I&#x2F;O 和低延迟链路构建多晶圆集群及分解式推理系统。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Cerebras Systems, <em>Rack-Scale Architecture for Wafer Scale Engine</em>, Hot Chips 2026。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag"># 大模型推理</a>
+              <a href="/tags/%E6%99%B6%E5%9C%86%E7%BA%A7%E8%AE%A1%E7%AE%97/" rel="tag"># 晶圆级计算</a>
+              <a href="/tags/Hot-Chips-2026/" rel="tag"># Hot Chips 2026</a>
+              <a href="/tags/Cerebras/" rel="tag"># Cerebras</a>
+              <a href="/tags/CS-4/" rel="tag"># CS-4</a>
+              <a href="/tags/WSE-3-Turbo/" rel="tag"># WSE-3 Turbo</a>
+              <a href="/tags/%E6%9C%BA%E6%9E%B6%E7%BA%A7%E7%B3%BB%E7%BB%9F/" rel="tag"># 机架级系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/31/HotChips2026-CPU/" rel="prev" title="Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids">
+                  <i class="fa fa-angle-left"></i> Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
