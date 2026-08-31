@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="整理 OpenAI 在 Hot Chips 2026 发布的 Jalapeño 推理 ASIC：为什么选择单颗内部异构芯片，如何用本地 HBM、专用集合网络和两级 Clos 系统降低延迟，以及 AI 如何参与芯片与内核优化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="整理 OpenAI 在 Hot Chips 2026 发布的 Jalapeño 推理 ASIC：为什么选择单颗内部异构芯片，如何用本地 HBM、专用集合网络和两级 Clos 系统降低延迟，以及 AI 如何参与芯片与内核优化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/project-timeline.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/unified-chip.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/locality-architecture.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/spatial-architecture.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/system-network.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/specifications.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/ai-hardware-design.png">
+<meta property="article:published_time" content="2026-08-31T10:20:00.000Z">
+<meta property="article:modified_time" content="2026-08-31T12:00:08.291Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="ASIC">
+<meta property="article:tag" content="HBM4">
+<meta property="article:tag" content="Hot Chips 2026">
+<meta property="article:tag" content="Jalapeño">
+<meta property="article:tag" content="OpenAI">
+<meta property="article:tag" content="推理加速器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/OpenAIJalapeno/project-timeline.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/","path":"2026/08/31/HotChips2026-OpenAI-Jalapeno/","title":"OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenAI-Jalapeno%EF%BC%9A%E4%B8%BA%E6%99%BA%E8%83%BD%E4%BD%93%E6%8E%A8%E7%90%86%E8%87%AA%E7%A0%94%E7%9A%84-ASIC-%E4%B8%8E-2-048-%E8%8A%AF%E7%89%87%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81OpenAI-%E5%85%B7%E4%BD%93%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">一、OpenAI 具体做了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E2%80%9C%E4%B8%80%E9%A2%97%E5%9D%87%E8%A1%A1%E8%8A%AF%E7%89%87%E2%80%9D"><span class="nav-number">1.2.</span> <span class="nav-text">二、为什么选择“一颗均衡芯片”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E6%9C%AC%E5%9C%B0%E6%80%A7%E7%9C%9F%E6%AD%A3%E5%8F%91%E6%8C%A5-HBM-%E5%B8%A6%E5%AE%BD"><span class="nav-number">1.3.</span> <span class="nav-text">三、用本地性真正发挥 HBM 带宽</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">空间编程模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%BB%8E-128-%E9%A2%97%E8%8A%AF%E7%89%87%E6%89%A9%E5%B1%95%E5%88%B0-2-048-%E9%A2%97"><span class="nav-number">1.4.</span> <span class="nav-text">四、从 128 颗芯片扩展到 2,048 颗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81AI-%E5%90%8C%E6%97%B6%E5%8F%82%E4%B8%8E%E9%80%A0%E8%8A%AF%E7%89%87%E5%92%8C%E5%86%99%E5%86%85%E6%A0%B8"><span class="nav-number">1.5.</span> <span class="nav-text">五、AI 同时参与造芯片和写内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%A7%E8%83%BD%E7%BB%93%E6%9E%9C%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%84%8F%E4%B9%89"><span class="nav-number">1.6.</span> <span class="nav-text">六、性能结果与技术意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">332</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Google-TPU8/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/12/MRC-SRv6/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-12</time>
+        <br>
+      使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Cerebras-CS4/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-CPU/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统 | 正在输入">
+      <meta itemprop="description" content="整理 OpenAI 在 Hot Chips 2026 发布的 Jalapeño 推理 ASIC：为什么选择单颗内部异构芯片，如何用本地 HBM、专用集合网络和两级 Clos 系统降低延迟，以及 AI 如何参与芯片与内核优化。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-31 18:20:00 / 修改时间：20:00:08" itemprop="dateCreated datePublished" datetime="2026-08-31T18:20:00+08:00">2026-08-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">整理 OpenAI 在 Hot Chips 2026 发布的 Jalapeño 推理 ASIC：为什么选择单颗内部异构芯片，如何用本地 HBM、专用集合网络和两级 Clos 系统降低延迟，以及 AI 如何参与芯片与内核优化。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>OpenAI 做的并不只是单颗推理芯片，而是一套针对自身智能体工作负载设计的计算系统：<strong>Jalapeño ASIC、2,048 芯片纵向扩展网络、空间编程模型，以及用 AI 优化硬件和内核的开发流程</strong>。它的核心目标不是追求孤立的峰值 FLOPS，而是在交互式延迟约束下提高每瓦请求吞吐量。</p>
+<p>Jalapeño 最重要的设计选择，是把 Prefill、Draft 和 Spec-verify 所需的不同计算、内存与网络资源放进同一颗内部异构芯片，让 KV Cache 保持本地，再按阶段启用不同单元。这避免了在多类专用加速器之间反复搬运 KV，也把 OpenAI 的模型、软件和芯片设计连接成了一条完整优化链路。</p>
+<span id="more"></span>
+
+<h1 id="OpenAI-Jalapeno：为智能体推理自研的-ASIC-与-2-048-芯片系统"><a href="#OpenAI-Jalapeno：为智能体推理自研的-ASIC-与-2-048-芯片系统" class="headerlink" title="OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统"></a>OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统</h1><h2 id="一、OpenAI-具体做了什么"><a href="#一、OpenAI-具体做了什么" class="headerlink" title="一、OpenAI 具体做了什么"></a>一、OpenAI 具体做了什么</h2><p>Jalapeño 是 OpenAI 面向推理与智能体负载开发的第一代自研 ASIC。项目在 2024 年 10 月形成架构概念，2025 年 2 月进入初始 RTL，7 月冻结 RTL，11 月流片；从初始 RTL 到流片用时 9 个月。首颗芯片在 2026 年 5 月返回实验室，同月 Codex 已在 Jalapeño 上运行。</p>
+<p><img data-src="/images/OpenAIJalapeno/project-timeline.png" alt="Jalapeño 从架构概念到运行 OpenAI 工作负载的时间线"></p>
+<p>图 1：OpenAI 用 9 个月完成从初始 RTL 到流片，并在首颗芯片返回后迅速运行实际工作负载。</p>
+<p>这项工作的交付物包括三层：</p>
+<ul>
+<li><strong>芯片</strong>：包含计算裸片、I&#x2F;O 芯粒和 6 组 HBM4；</li>
+<li><strong>系统</strong>：把 128 颗芯片组成本地域，再扩展到 2,048 颗芯片；</li>
+<li><strong>软件</strong>：使用 Gluon 表达空间程序，并让内部 AI 系统参与硬件模块、映射和内核优化。</li>
+</ul>
+<p>因此，Jalapeño 更接近一个围绕 OpenAI 推理请求重新设计的计算平台，而不是把现有 GPU 工作流简单迁移到另一颗 ASIC。</p>
+<h2 id="二、为什么选择“一颗均衡芯片”"><a href="#二、为什么选择“一颗均衡芯片”" class="headerlink" title="二、为什么选择“一颗均衡芯片”"></a>二、为什么选择“一颗均衡芯片”</h2><p>一次智能体推理请求会经过三种硬件特征不同的阶段：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>主要工作</th>
+<th>主要约束</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prefill</td>
+<td>编码上下文、执行注意力</td>
+<td>计算密集，通信相对平滑</td>
+</tr>
+<tr>
+<td>Draft</td>
+<td>小模型以极低 Batch 生成候选 Token</td>
+<td>网络带宽需求不高，但对延迟极敏感</td>
+</tr>
+<tr>
+<td>Spec-verify</td>
+<td>验证候选并继续解码</td>
+<td>注意力需要计算，MoE 需要 HBM 带宽，通信呈突发状态</td>
+</tr>
+</tbody></table>
+<p>这些阶段的占比还会随模型结构、上下文长度、推测接受率和延迟目标变化。若分别建设 Prefill、Draft 和 Verify 加速器，某一阶段空闲时，相关设备仍要承担封装、HBM、I&#x2F;O、网络和冷却的基础成本；阶段切换还需要跨系统移动 KV Cache 并同步。</p>
+<p>OpenAI 选择把这种异构性移入单颗芯片：计算、内存与网络模块共存，KV 保持本地，当前阶段需要的单元被激活，其余单元通过门控进入暗态。其作用是把“移动状态”改成“切换活跃资源比例”，减少阶段边界上的数据传输与同步。</p>
+<p><img data-src="/images/OpenAIJalapeno/unified-chip.png" alt="解耦式专用系统与单颗内部异构芯片的差别"></p>
+<p>图 2：Jalapeño 让 KV 留在芯片本地，并随推理阶段改变计算、内存和网络的活跃比例。</p>
+<p>这里的设计判断可以概括为演讲中的一句话：<strong>暗硅比空闲加速器便宜</strong>。芯片内部暂时不用的模块可以关闭，而独立设备即使利用率不足，仍占用完整的系统资源。</p>
+<h2 id="三、用本地性真正发挥-HBM-带宽"><a href="#三、用本地性真正发挥-HBM-带宽" class="headerlink" title="三、用本地性真正发挥 HBM 带宽"></a>三、用本地性真正发挥 HBM 带宽</h2><p>OpenAI 认为，推理延迟并不只由 HBM 的标称带宽决定。操作数经过竞争严重的统一内存路径、全局栅栏或集中式网络入口时，可能无法按时到达寄存器，计算单元便会等待。此时增加原始带宽，未必能提高实际利用率。</p>
+<p>Jalapeño 因此采用三类数据路径：</p>
+<ol>
+<li><strong>核心切片与 HBM 切片配对</strong>：64 个 Core Slice 分别连接自己的 HBM Slice，为常用操作数提供低延迟、高带宽的本地视图；</li>
+<li><strong>专用集合通信网络</strong>：处理常见跨核心通信模式，优先保证集合操作的带宽与延迟；</li>
+<li><strong>通用 NoC 与 Scale-up Ethernet Bridge</strong>：承载不规则通信和片外扩展，保留可编程性。</li>
+</ol>
+<p><img data-src="/images/OpenAIJalapeno/locality-architecture.png" alt="Jalapeño 的本地 HBM、集合网络和通用 NoC"></p>
+<p>图 3：常用数据走 Core Slice 与 HBM Slice 之间的本地路径，跨核心集合操作与通用通信分别使用不同网络。</p>
+<p>这套结构的作用，是让高频操作尽量在本地完成，只在必要时使用共享路径。显式数据放置和分布式控制进一步减少全局同步，使聚合 HBM 带宽能够转化为模型执行速度。</p>
+<h3 id="空间编程模型"><a href="#空间编程模型" class="headerlink" title="空间编程模型"></a>空间编程模型</h3><p>Jalapeño 是空间架构。Gluon 把每个物理核心视为类似 Thread Block 的执行单元；核心内部的 Tensor、SIMD 和 Scalar 引擎共享 L1 与本地内存视图。TensorInfo 显式记录张量布局和物理位置，专用集合通信机制负责协调核心间的数据与工作。</p>
+<p><img data-src="/images/OpenAIJalapeno/spatial-architecture.png" alt="Gluon 面向 Jalapeño 物理核心的空间编程模型"></p>
+<p>图 4：程序显式使用本地张量和物理放置，优先本地计算，需要时再访问较慢的全局内存。</p>
+<p>这种编程方式把数据位置和通信暴露给软件。它增加了映射工作的复杂度，却为编译器和 AI 优化器提供了明确的搜索空间，可以联合决定放置、调度、流水化和集合通信编排。</p>
+<h2 id="四、从-128-颗芯片扩展到-2-048-颗"><a href="#四、从-128-颗芯片扩展到-2-048-颗" class="headerlink" title="四、从 128 颗芯片扩展到 2,048 颗"></a>四、从 128 颗芯片扩展到 2,048 颗</h2><p>单颗 Jalapeño 无法容纳所有前沿模型，OpenAI 因而把网络划分为两个带宽层级：</p>
+<ul>
+<li><strong>本地域</strong>：128 颗 Jalapeño，每颗提供 600 GB&#x2F;s Scale-up 带宽；</li>
+<li><strong>全局域</strong>：2,048 颗 Jalapeño，每颗提供 200 GB&#x2F;s 带宽；</li>
+<li><strong>拓扑</strong>：使用 Broadcom TH6 构成“半扁平化”两级 Clos。</li>
+</ul>
+<p><img data-src="/images/OpenAIJalapeno/system-network.png" alt="Jalapeño 的 128 芯片本地域与 2,048 芯片全局域"></p>
+<p>图 5：系统在本地域提供更高带宽，再通过两级 Clos 扩展到 2,048 颗芯片。</p>
+<p>带宽并非在所有层级等比例堆叠。张量并行需要更频繁的数据交换，因此放在 600 GB&#x2F;s 本地域；专家并行扩展到更大的全局域，使用较低带宽。这样的分层既让完整问题能够放入系统，又避免为所有通信配置同样昂贵的链路。</p>
+<p>单颗芯片的主要规格为 13.4 PFLOP&#x2F;s MXFP4 矩阵计算、216 GiB HBM4、15.4 TB&#x2F;s 内存带宽和 700 W 功耗。2,048 芯片系统合计提供 27 EFLOP&#x2F;s MXFP4、432 TiB 内存与 32 PB&#x2F;s 内存带宽。</p>
+<p><img data-src="/images/OpenAIJalapeno/specifications.png" alt="Jalapeño 单芯片与 2,048 芯片系统规格"></p>
+<p>图 6：Jalapeño 使用计算裸片、I&#x2F;O 芯粒和 6 组 HBM4，并扩展为 2,048 芯片系统。</p>
+<h2 id="五、AI-同时参与造芯片和写内核"><a href="#五、AI-同时参与造芯片和写内核" class="headerlink" title="五、AI 同时参与造芯片和写内核"></a>五、AI 同时参与造芯片和写内核</h2><p>Jalapeño 的 9 个月流片周期并不只来自传统设计自动化。OpenAI 采用持续收敛流程：以代表性程序驱动架构，使用周期精确仿真尽早评估性能，再把 RTL、综合质量、设计验证、物理设计和性能反馈放进同一个快速循环。</p>
+<p>在硬件侧，XLS 硬件语言为内部 AI 模型提供清晰语义、快速 QoR 反馈和可验证的优化界面。AI 可以提出修改、生成实现、运行验证并测量 PPA，使较大改动一直能够合入到 RTL 冻结当天。演讲给出的模块结果包括 Matrix Unit 面积减少 10%、SIMD Unit 面积减少 8%。</p>
+<p><img data-src="/images/OpenAIJalapeno/ai-hardware-design.png" alt="AI 参与 Jalapeño 硬件设计与 PPA 优化"></p>
+<p>图 7：内部 AI 模型通过“生成—验证—测量 PPA”循环优化硬件模块，并缩短后期设计迭代。</p>
+<p>在软件侧，工程师先提供功能正确的内核和可执行测试，内部 AI 再结合芯片或仿真器搜索映射与实现。对于 GPT-OSS 的注意力和 MoE 模块，演讲给出的结果是比已有专家手写实现快 1.5–1.8 倍。</p>
+<p>这意味着 AI 在该项目中承担了两个角色：一是芯片设计空间的优化器，二是空间架构的软件映射器。Jalapeño 的硬件层次被设计得便于人类理解，同时把繁重的放置、调度和流水化搜索交给 AI。</p>
+<h2 id="六、性能结果与技术意义"><a href="#六、性能结果与技术意义" class="headerlink" title="六、性能结果与技术意义"></a>六、性能结果与技术意义</h2><p>在演讲采用的 SemiAnalysis InferenceX 测试中，Jalapeño 运行 GPT-OSS-120B、DeepSeek R1 670B 和 Kimi K2.5 1T，在公开的比较配置下给出：</p>
+<ul>
+<li>交互性提高 2.1–4.1×；</li>
+<li>端到端延迟降低 1.7–3.6×；</li>
+<li>峰值吞吐点的每瓦性能提高 1.5–1.9×。</li>
+</ul>
+<p>Jalapeño 在这些结果中使用单 Token 预测（STP），部分比较系统已使用多 Token 预测（MTP）。OpenAI 的目的不是证明某个孤立内核更快，而是说明围绕端到端请求设计的芯片，能够同时移动延迟—能效帕累托前沿。</p>
+<p>更重要的是，Jalapeño 把 OpenAI 的基础设施边界向下推进到了芯片和 Scale-up 网络：模型工作负载决定硬件比例，空间架构暴露本地性，AI 再参与硬件和软件优化。演讲同时披露第二代接近流片、第三代已经规划，表明这不是一次性实验，而是一条持续迭代的自研推理平台路线。</p>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>Jalapeño 解决的核心问题不是“如何再增加一些 HBM 带宽”，而是<strong>如何让计算单元及时获得数据，并让不同推理阶段共享同一套本地状态</strong>。OpenAI 为此完成了四项具体工作：设计内部异构 ASIC、建立本地优先的数据路径、构建 2,048 芯片分层网络，以及让 AI 参与硬件与内核优化。</p>
+<p>它的意义在于把模型、编译、芯片与系统网络放进同一个优化闭环。对于智能体推理，最终价值不是单颗芯片的峰值算力，而是在用户可接受的延迟下，用更少能量持续完成完整请求。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Richard Ho, Ravi Narayanaswami and Chris Leary, <em>You Can Just Build Things … Chips</em>, Hot Chips 2026，OpenAI。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Hot-Chips-2026/" rel="tag"># Hot Chips 2026</a>
+              <a href="/tags/OpenAI/" rel="tag"># OpenAI</a>
+              <a href="/tags/Jalapeno/" rel="tag"># Jalapeño</a>
+              <a href="/tags/ASIC/" rel="tag"># ASIC</a>
+              <a href="/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/" rel="tag"># 推理加速器</a>
+              <a href="/tags/HBM4/" rel="tag"># HBM4</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/31/HotChips2026-Google-TPU8/" rel="prev" title="Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连">
+                  <i class="fa fa-angle-left"></i> Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
