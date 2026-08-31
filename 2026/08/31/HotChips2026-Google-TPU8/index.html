@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Google 在 Hot Chips 2026 公布的第八代 TPU 家族：面向推理的 TPU 8i、面向训练的 TPU 8t，以及 Boardfly、CAE、OCS Superpod、Virgo 网络、RAS 和软硬件协同设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="Google 在 Hot Chips 2026 公布的第八代 TPU 家族：面向推理的 TPU 8i、面向训练的 TPU 8t，以及 Boardfly、CAE、OCS Superpod、Virgo 网络、RAS 和软硬件协同设计。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8i-memory.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/boardfly-network.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/cae.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8i-block-diagram.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8t-overview.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8t-superpod-ocs.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/virgo-network.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8t-block-diagram.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8t-tray.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/GoogleTPU8/ai-assisted-design.png">
+<meta property="article:published_time" content="2026-08-31T09:39:10.000Z">
+<meta property="article:modified_time" content="2026-08-31T11:21:09.179Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Boardfly">
+<meta property="article:tag" content="Google">
+<meta property="article:tag" content="Hot Chips 2026">
+<meta property="article:tag" content="TPU 8i">
+<meta property="article:tag" content="TPU 8t">
+<meta property="article:tag" content="大模型训练与推理">
+<meta property="article:tag" content="集合通信">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/GoogleTPU8/tpu8i-memory.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/","path":"2026/08/31/HotChips2026-Google-TPU8/","title":"Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hot-Chips-2026-Google-%E7%AC%AC%E5%85%AB%E4%BB%A3-TPU%EF%BC%9ATPU-8i%E3%80%81TPU-8t-%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%BA%A7%E4%BA%92%E8%BF%9E"><span class="nav-number">1.</span> <span class="nav-text">Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E7%AC%AC%E5%85%AB%E4%BB%A3-TPU-%E8%A6%81%E6%8B%86%E6%88%90-8i-%E4%B8%8E-8t"><span class="nav-number">1.1.</span> <span class="nav-text">一、为什么第八代 TPU 要拆成 8i 与 8t</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%8E%E4%BA%A4%E6%9B%BF%E8%BF%AD%E4%BB%A3%E5%88%B0%E5%90%8C%E4%BB%A3%E5%8F%8C%E8%8A%AF%E7%89%87"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 从交替迭代到同代双芯片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%A4%E6%AC%BE%E8%8A%AF%E7%89%87%E7%9A%84%E5%85%AC%E5%BC%80%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 两款芯片的公开定位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81TPU-8i%EF%BC%9A%E7%94%A8-SRAM-%E7%BC%93%E8%A7%A3%E6%8E%A8%E7%90%86%E5%86%85%E5%AD%98%E5%A2%99"><span class="nav-number">1.2.</span> <span class="nav-text">二、TPU 8i：用 SRAM 缓解推理内存墙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%8E%A8%E7%90%86%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8F%A6%E4%B8%80%E7%A7%8D%E5%B9%B3%E8%A1%A1"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 推理为什么需要另一种平衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-SRAM-%E4%B8%8E-HBM-%E7%9A%84%E6%95%B0%E9%87%8F%E7%BA%A7%E5%B7%AE%E5%BC%82"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 SRAM 与 HBM 的数量级差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Boardfly-%E4%B8%8E-CAE%EF%BC%9A%E9%99%8D%E4%BD%8E-MoE-%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.3.</span> <span class="nav-text">三、Boardfly 与 CAE：降低 MoE 集合通信延迟</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Boardfly-%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BB%84%E7%BB%87"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 Boardfly 的三级组织</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-CAE-%E6%8A%8A%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C%E6%94%BE%E8%BF%9B%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 CAE 把集合操作放进网络路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81TPU-8i-%E7%9A%84%E8%8A%AF%E7%89%87%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.</span> <span class="nav-text">四、TPU 8i 的芯片结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 计算与存储路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E7%8B%AC%E7%AB%8B%E7%9A%84-ICI-SerDes-%E8%8A%AF%E7%B2%92"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 独立的 ICI SerDes 芯粒</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81TPU-8t%EF%BC%9A%E9%9D%A2%E5%90%91%E4%B8%87%E4%BA%BF%E5%8F%82%E6%95%B0%E8%AE%AD%E7%BB%83"><span class="nav-number">1.5.</span> <span class="nav-text">五、TPU 8t：面向万亿参数训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E8%AE%AD%E7%BB%83%E4%BE%A7%E7%9A%84%E5%85%AC%E5%BC%80%E8%A7%84%E6%A0%BC"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 训练侧的公开规格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-OCS-%E7%BB%84%E7%BB%87%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98-Superpod"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 OCS 组织共享内存 Superpod</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%BB%8E-Superpod-%E6%89%A9%E5%B1%95%E5%88%B0-Virgo-%E9%9B%86%E7%BE%A4"><span class="nav-number">1.6.</span> <span class="nav-text">六、从 Superpod 扩展到 Virgo 集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%8D%95%E9%9B%86%E7%BE%A4-134-400-%E9%A2%97-TPU"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 单集群 134,400 颗 TPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E7%99%BE%E4%B8%87%E7%BA%A7%E6%80%A7%E8%83%BD%E5%A2%9E%E9%95%BF%E8%83%8C%E5%90%8E%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 百万级性能增长背后的系统层次</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81TPU-8t-%E7%9A%84%E8%8A%AF%E7%89%87%E4%B8%8E%E6%89%98%E7%9B%98%E7%BB%93%E6%9E%84"><span class="nav-number">1.7.</span> <span class="nav-text">七、TPU 8t 的芯片与托盘结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E4%B8%8E-TPU-8i-%E7%9A%84%E7%BB%93%E6%9E%84%E5%B7%AE%E5%BC%82"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 与 TPU 8i 的结构差异</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-TPU-8t-%E6%89%98%E7%9B%98"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 TPU 8t 托盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81AI-%E8%BE%85%E5%8A%A9%E8%8A%AF%E7%89%87%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%BB%9F%E4%B8%80%E8%BD%AF%E4%BB%B6%E6%A0%88"><span class="nav-number">1.8.</span> <span class="nav-text">八、AI 辅助芯片设计与统一软件栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E7%94%A8-TPU-%E8%AE%BE%E8%AE%A1%E4%B8%8B%E4%B8%80%E4%BB%A3-TPU"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 用 TPU 设计下一代 TPU</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.9.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.10.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">328</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Cerebras-CS4/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-CPU/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%85%A5%E9%97%A8/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-30</time>
+        <br>
+      集合通信
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-30</time>
+        <br>
+      集合通信库
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连 | 正在输入">
+      <meta itemprop="description" content="Google 在 Hot Chips 2026 公布的第八代 TPU 家族：面向推理的 TPU 8i、面向训练的 TPU 8t，以及 Boardfly、CAE、OCS Superpod、Virgo 网络、RAS 和软硬件协同设计。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-31 17:39:10 / 修改时间：19:21:09" itemprop="dateCreated datePublished" datetime="2026-08-31T17:39:10+08:00">2026-08-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Google 在 Hot Chips 2026 公布的第八代 TPU 家族：面向推理的 TPU 8i、面向训练的 TPU 8t，以及 Boardfly、CAE、OCS Superpod、Virgo 网络、RAS 和软硬件协同设计。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Google 在第八代 TPU 中首次同时推出两种明确分工的芯片：<strong>TPU 8i 面向低延迟推理、推理式计算与强化学习采样，TPU 8t 面向万亿参数规模训练</strong>。两者没有用一套完全相同的硬件覆盖所有负载，而是在保持软件与基础架构兼容的前提下，分别优化内存层次、计算结构和系统互连。</p>
+<p>这套设计的重点已经不只是单芯片算力。TPU 8i 用 384 MB 片上 SRAM、Boardfly 网络和集合加速引擎降低推理的数据访问与通信延迟；TPU 8t 则用原生 FP4、9,600 芯片共享内存 Superpod 和 Virgo 集群网络扩大训练规模。第八代 TPU 因而更适合从“芯片—封装—托盘—Pod—集群”的完整系统视角理解。</p>
+<ul>
+<li><a href="#hot-chips-2026-google-%E7%AC%AC%E5%85%AB%E4%BB%A3-tputpu-8itpu-8t-%E4%B8%8E%E7%B3%BB%E7%BB%9F%E7%BA%A7%E4%BA%92%E8%BF%9E">Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连</a><ul>
+<li><a href="#%E4%B8%80%E4%B8%BA%E4%BB%80%E4%B9%88%E7%AC%AC%E5%85%AB%E4%BB%A3-tpu-%E8%A6%81%E6%8B%86%E6%88%90-8i-%E4%B8%8E-8t">一、为什么第八代 TPU 要拆成 8i 与 8t</a><ul>
+<li><a href="#11-%E4%BB%8E%E4%BA%A4%E6%9B%BF%E8%BF%AD%E4%BB%A3%E5%88%B0%E5%90%8C%E4%BB%A3%E5%8F%8C%E8%8A%AF%E7%89%87">1.1 从交替迭代到同代双芯片</a></li>
+<li><a href="#12-%E4%B8%A4%E6%AC%BE%E8%8A%AF%E7%89%87%E7%9A%84%E5%85%AC%E5%BC%80%E5%AE%9A%E4%BD%8D">1.2 两款芯片的公开定位</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8Ctpu-8i%E7%94%A8-sram-%E7%BC%93%E8%A7%A3%E6%8E%A8%E7%90%86%E5%86%85%E5%AD%98%E5%A2%99">二、TPU 8i：用 SRAM 缓解推理内存墙</a><ul>
+<li><a href="#21-%E6%8E%A8%E7%90%86%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8F%A6%E4%B8%80%E7%A7%8D%E5%B9%B3%E8%A1%A1">2.1 推理为什么需要另一种平衡</a></li>
+<li><a href="#22-sram-%E4%B8%8E-hbm-%E7%9A%84%E6%95%B0%E9%87%8F%E7%BA%A7%E5%B7%AE%E5%BC%82">2.2 SRAM 与 HBM 的数量级差异</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89boardfly-%E4%B8%8E-cae%E9%99%8D%E4%BD%8E-moe-%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BB%B6%E8%BF%9F">三、Boardfly 与 CAE：降低 MoE 集合通信延迟</a><ul>
+<li><a href="#31-boardfly-%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BB%84%E7%BB%87">3.1 Boardfly 的三级组织</a></li>
+<li><a href="#32-cae-%E6%8A%8A%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C%E6%94%BE%E8%BF%9B%E7%BD%91%E7%BB%9C%E8%B7%AF%E5%BE%84">3.2 CAE 把集合操作放进网络路径</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9Btpu-8i-%E7%9A%84%E8%8A%AF%E7%89%87%E7%BB%93%E6%9E%84">四、TPU 8i 的芯片结构</a><ul>
+<li><a href="#41-%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84">4.1 计算与存储路径</a></li>
+<li><a href="#42-%E7%8B%AC%E7%AB%8B%E7%9A%84-ici-serdes-%E8%8A%AF%E7%B2%92">4.2 独立的 ICI SerDes 芯粒</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94tpu-8t%E9%9D%A2%E5%90%91%E4%B8%87%E4%BA%BF%E5%8F%82%E6%95%B0%E8%AE%AD%E7%BB%83">五、TPU 8t：面向万亿参数训练</a><ul>
+<li><a href="#51-%E8%AE%AD%E7%BB%83%E4%BE%A7%E7%9A%84%E5%85%AC%E5%BC%80%E8%A7%84%E6%A0%BC">5.1 训练侧的公开规格</a></li>
+<li><a href="#52-ocs-%E7%BB%84%E7%BB%87%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98-superpod">5.2 OCS 组织共享内存 Superpod</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD%E4%BB%8E-superpod-%E6%89%A9%E5%B1%95%E5%88%B0-virgo-%E9%9B%86%E7%BE%A4">六、从 Superpod 扩展到 Virgo 集群</a><ul>
+<li><a href="#61-%E5%8D%95%E9%9B%86%E7%BE%A4-134400-%E9%A2%97-tpu">6.1 单集群 134,400 颗 TPU</a></li>
+<li><a href="#62-%E7%99%BE%E4%B8%87%E7%BA%A7%E6%80%A7%E8%83%BD%E5%A2%9E%E9%95%BF%E8%83%8C%E5%90%8E%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1">6.2 百万级性能增长背后的系统层次</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%83tpu-8t-%E7%9A%84%E8%8A%AF%E7%89%87%E4%B8%8E%E6%89%98%E7%9B%98%E7%BB%93%E6%9E%84">七、TPU 8t 的芯片与托盘结构</a><ul>
+<li><a href="#71-%E4%B8%8E-tpu-8i-%E7%9A%84%E7%BB%93%E6%9E%84%E5%B7%AE%E5%BC%82">7.1 与 TPU 8i 的结构差异</a></li>
+<li><a href="#72-tpu-8t-%E6%89%98%E7%9B%98">7.2 TPU 8t 托盘</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%ABai-%E8%BE%85%E5%8A%A9%E8%8A%AF%E7%89%87%E8%AE%BE%E8%AE%A1%E4%B8%8E%E7%BB%9F%E4%B8%80%E8%BD%AF%E4%BB%B6%E6%A0%88">八、AI 辅助芯片设计与统一软件栈</a><ul>
+<li><a href="#81-%E7%94%A8-tpu-%E8%AE%BE%E8%AE%A1%E4%B8%8B%E4%B8%80%E4%BB%A3-tpu">8.1 用 TPU 设计下一代 TPU</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Hot-Chips-2026-Google-第八代-TPU：TPU-8i、TPU-8t-与系统级互连"><a href="#Hot-Chips-2026-Google-第八代-TPU：TPU-8i、TPU-8t-与系统级互连" class="headerlink" title="Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连"></a>Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连</h1><h2 id="一、为什么第八代-TPU-要拆成-8i-与-8t"><a href="#一、为什么第八代-TPU-要拆成-8i-与-8t" class="headerlink" title="一、为什么第八代 TPU 要拆成 8i 与 8t"></a>一、为什么第八代 TPU 要拆成 8i 与 8t</h2><h3 id="1-1-从交替迭代到同代双芯片"><a href="#1-1-从交替迭代到同代双芯片" class="headerlink" title="1.1 从交替迭代到同代双芯片"></a>1.1 从交替迭代到同代双芯片</h3><p>Google 将过去十余年的 TPU 路线概括为训练芯片与推理芯片交替演进：2015 年的 TPUv1 是单张 PCIe 卡上的推理加速器，算力为 90 int8 TOPS；到 2026 年，TPU 8t 已扩展为每个 Pod 9,600 颗芯片、约 120 FP4 EFLOPS 的共享内存系统。演讲将这一跨度概括为共享内存系统性能提高 <strong>1,000,000×</strong>。</p>
+<p>这个 1,000,000× 是 2015 年单卡 TPUv1 与 2026 年整套 TPU 8t Pod 的跨层级、跨精度比较。它更直接地反映了 Google TPU 的设计对象已从加速卡扩展到超大规模系统。</p>
+<p>第八代的变化是同时推出：</p>
+<ul>
+<li><strong>TPU 8i</strong>：针对推理优化；</li>
+<li><strong>TPU 8t</strong>：针对训练优化。</li>
+</ul>
+<p>Google 给出的原因是，预训练、蒸馏、采样、混合专家（Mixture-of-Experts，MoE）与智能体模型对硬件的要求正在分化。<strong>推理尤其需要更高的单位算力 HBM 带宽、更低访问延迟和低跳数全对全通信；训练则更需要低精度吞吐、超大共享内存池和可扩展的全局互连</strong>。</p>
+<h3 id="1-2-两款芯片的公开定位"><a href="#1-2-两款芯片的公开定位" class="headerlink" title="1.2 两款芯片的公开定位"></a>1.2 两款芯片的公开定位</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>TPU 8i</th>
+<th>TPU 8t</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主要负载</td>
+<td>推理式计算、低延迟推理、RL 采样</td>
+<td>万亿参数规模训练</td>
+</tr>
+<tr>
+<td>片上存储</td>
+<td>384 MB SRAM</td>
+<td>演讲未给出容量</td>
+</tr>
+<tr>
+<td>HBM</td>
+<td>288 GB HBM3E</td>
+<td>单芯片容量未给出；Superpod 共享 HBM 共 2 PB</td>
+</tr>
+<tr>
+<td>关键互连</td>
+<td>Boardfly、CAE、19.2 Tb&#x2F;s ICI</td>
+<td>OCS 共享内存 Superpod、Virgo、每芯片 2.4 TBps I&#x2F;O</td>
+</tr>
+<tr>
+<td>Pod 规模</td>
+<td>1,152 颗芯片</td>
+<td>9,600 颗芯片</td>
+</tr>
+<tr>
+<td>公开计算口径</td>
+<td>未给出单芯片或 Pod 算力</td>
+<td>121 Exaflops，原生 FP4</td>
+</tr>
+</tbody></table>
+<h2 id="二、TPU-8i：用-SRAM-缓解推理内存墙"><a href="#二、TPU-8i：用-SRAM-缓解推理内存墙" class="headerlink" title="二、TPU 8i：用 SRAM 缓解推理内存墙"></a>二、TPU 8i：用 SRAM 缓解推理内存墙</h2><h3 id="2-1-推理为什么需要另一种平衡"><a href="#2-1-推理为什么需要另一种平衡" class="headerlink" title="2.1 推理为什么需要另一种平衡"></a>2.1 推理为什么需要另一种平衡</h3><p>大模型推理不仅执行矩阵乘法，还要频繁读取权重、访问 KV Cache、调度 MoE 专家，并在强化学习采样中反复执行低批量或不规则计算。此时，继续增加算力并不一定能等比例增加 Token 吞吐；数据访问延迟和每单位算力可获得的带宽会更早成为瓶颈。</p>
+<p>TPU 8i 的设计回答是把更多工作集留在片上：</p>
+<ul>
+<li>384 MB SRAM，是上一代的 2.4×；</li>
+<li>288 GB HBM，采用 HBM3E；</li>
+<li>19.2 Tb&#x2F;s ICI 带宽，是上一代的 2×；</li>
+<li>通过 Boardfly 缩短跨芯片通信路径；</li>
+<li>通过 CAE 在 <strong>I&#x2F;O 裸片</strong>内执行集合通信。</li>
+</ul>
+<p><img data-src="/images/GoogleTPU8/tpu8i-memory.png" alt="TPU 8i 的 SRAM、HBM 容量与 ICI 带宽"></p>
+<p>图 1：TPU 8i 以 384 MB 片上 SRAM、288 GB HBM 和 19.2 Tb&#x2F;s ICI 面向低延迟推理。</p>
+<h3 id="2-2-SRAM-与-HBM-的数量级差异"><a href="#2-2-SRAM-与-HBM-的数量级差异" class="headerlink" title="2.2 SRAM 与 HBM 的数量级差异"></a>2.2 SRAM 与 HBM 的数量级差异</h3><p>给出了片上 SRAM 与片外 HBM 的估算对比：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">SRAM（片上）</th>
+<th align="right">HBM（片外）</th>
+<th align="right">SRAM 优势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>聚合带宽</td>
+<td align="right">约 150–200 TB&#x2F;s</td>
+<td align="right">约 10–15 TB&#x2F;s</td>
+<td align="right">15–20×</td>
+</tr>
+<tr>
+<td>访问延迟</td>
+<td align="right">约 1–2 ns</td>
+<td align="right">约 150–200 ns</td>
+<td align="right">约 100×</td>
+</tr>
+<tr>
+<td>每比特能耗</td>
+<td align="right">约 0.1–0.5 pJ&#x2F;bit</td>
+<td align="right">约 2.0–5.0 pJ&#x2F;bit</td>
+<td align="right">能效高 10–20×</td>
+</tr>
+</tbody></table>
+<p>384 MB SRAM 无法取代 288 GB HBM，但可以承载高复用或延迟敏感的数据。这里的核心不是单纯扩大缓存，而是用一个显著更快、更省能的片上层级，减少关键路径对 HBM 的依赖。对于推理系统，收益可能同时表现为更低尾延迟、更高有效吞吐和更少的数据搬运能耗。</p>
+<h2 id="三、Boardfly-与-CAE：降低-MoE-集合通信延迟"><a href="#三、Boardfly-与-CAE：降低-MoE-集合通信延迟" class="headerlink" title="三、Boardfly 与 CAE：降低 MoE 集合通信延迟"></a>三、Boardfly 与 CAE：降低 MoE 集合通信延迟</h2><h3 id="3-1-Boardfly-的三级组织"><a href="#3-1-Boardfly-的三级组织" class="headerlink" title="3.1 Boardfly 的三级组织"></a>3.1 Boardfly 的三级组织</h3><p>MoE 推理包含 All-to-All 通信：Token 需要根据路由结果发送给不同专家。即使链路总带宽足够，较多的交换级数和网络跳数仍会增加延迟。TPU 8i 因而没有沿用演讲中作为对照的 3D Torus，而是采用 <strong>Boardfly</strong>。</p>
+<p>Boardfly 按三个层级组织：</p>
+<ol>
+<li>每个托盘上的 4 颗 TPU 完全互连，形成一个 Building Block（BB）；</li>
+<li>8 个托盘&#x2F;BB 完全互连，形成一组，共 32 颗 TPU；</li>
+<li>最多 36 个组完全互连，组成 1,152 芯片 Pod。</li>
+</ol>
+<p>演讲给出的最大路径为 <strong>7 跳</strong>，而 3D Torus 示例为 <strong>16 跳</strong>。这并不表示任意拓扑都固定获得相同比例的延迟下降，但说明 Boardfly 明确用更高的连接度换取更短的通信路径。</p>
+<p><img data-src="/images/GoogleTPU8/boardfly-network.png" alt="TPU 8i Boardfly 与 3D Torus 的网络对比"></p>
+<p>图 2：Boardfly 将 4-TPU 托盘、8 托盘组和最多 36 个组分层互连，并将最大跳数控制在 7 跳。</p>
+<h3 id="3-2-CAE-把集合操作放进网络路径"><a href="#3-2-CAE-把集合操作放进网络路径" class="headerlink" title="3.2 CAE 把集合操作放进网络路径"></a>3.2 CAE 把集合操作放进网络路径</h3><p>仅缩短网络路径仍不够。如果集合通信的数据必须进入计算裸片、落到 HBM，再由软件或通用计算单元处理，封装内搬运和存储访问仍会构成延迟。</p>
+<p>TPU 8i 的 <strong>Collective Acceleration Engine（CAE，集合加速引擎）</strong> 位于 ICI I&#x2F;O 裸片，能够执行网内集合通信。Google 给出的片上延迟下降为 <strong>5×</strong>，原因包括：</p>
+<ul>
+<li>缩短数据在封装内部经过的距离；</li>
+<li>避免访问 HBM。</li>
+</ul>
+<p><img data-src="/images/GoogleTPU8/cae.png" alt="TPU 8i CAE 的封装内数据路径对比"></p>
+<p>图 3：CAE 位于 ICI I&#x2F;O 裸片，通过缩短封装内路径并绕过 HBM 来降低集合通信延迟。</p>
+<p>Boardfly 与 CAE 分别优化两个层级：前者减少 Pod 内端点之间的跳数，后者减少单个封装内部处理集合通信的路径。对延迟敏感的 MoE 推理而言，这种“高连接度网络 + I&#x2F;O 裸片内集合加速”比只提高 SerDes 速率更有针对性。</p>
+<h2 id="四、TPU-8i-的芯片结构"><a href="#四、TPU-8i-的芯片结构" class="headerlink" title="四、TPU 8i 的芯片结构"></a>四、TPU 8i 的芯片结构</h2><p>TPU 8i 框图展示了计算、内存、主机接口、管理和 ICI 五部分。</p>
+<p><img data-src="/images/GoogleTPU8/tpu8i-block-diagram.png" alt="TPU 8i 芯片框图"></p>
+<p>图 4：TPU 8i 包含两组 TensorCore、8 组 HBM 接口，以及集成 SC-CAE、路由器和 SerDes 的 ICI 芯粒。</p>
+<h3 id="4-1-计算与存储路径"><a href="#4-1-计算与存储路径" class="headerlink" title="4.1 计算与存储路径"></a>4.1 计算与存储路径</h3><p>框图中的主要模块包括：</p>
+<ul>
+<li>两组 TensorCore，每组包含 TCS、2 个 MXU、2 个 XLU 以及 VPU + Vmem；</li>
+<li>两组 Memory and DMA Interconnect；</li>
+<li>8 组带控制器的 HBM3E Stack；</li>
+<li>PCIe Gen5 ×16 主机接口；</li>
+<li>PCIe Gen2 ×1 管理接口、gBMC 与 Chip Manager。</li>
+</ul>
+<p>这里的 MXU、XLU、VPU&#x2F;Vmem 和 TCS 构成计算数据通路，内存与 DMA 互连把 TensorCore、HBM、主机和 ICI 连接起来。</p>
+<h3 id="4-2-独立的-ICI-SerDes-芯粒"><a href="#4-2-独立的-ICI-SerDes-芯粒" class="headerlink" title="4.2 独立的 ICI SerDes 芯粒"></a>4.2 独立的 ICI SerDes 芯粒</h3><p>ICI 位于独立 SerDes Chiplet 中，框图标出：</p>
+<ul>
+<li>SC-CAE；</li>
+<li>ICR Router；</li>
+<li>6× Link Stack；</li>
+<li>6×200G SerDes octals + PCS。</li>
+</ul>
+<p>这使集合通信功能靠近高速 I&#x2F;O，符合 CAE 缩短封装内路径的目标。</p>
+<h2 id="五、TPU-8t：面向万亿参数训练"><a href="#五、TPU-8t：面向万亿参数训练" class="headerlink" title="五、TPU 8t：面向万亿参数训练"></a>五、TPU 8t：面向万亿参数训练</h2><h3 id="5-1-训练侧的公开规格"><a href="#5-1-训练侧的公开规格" class="headerlink" title="5.1 训练侧的公开规格"></a>5.1 训练侧的公开规格</h3><p>TPU 8t 被定位为面向万亿参数规模的训练芯片。一个 8t Superpod 的公开规格包括：</p>
+<ul>
+<li>9,600 颗 TPU 8t；</li>
+<li>2 PB 共享 HBM；</li>
+<li>121 Exaflops；</li>
+<li>每颗芯片 2.4 TBps I&#x2F;O 带宽，用于 glueless scale-up；</li>
+<li>原生 FP4 支持；</li>
+<li>相对 Ironwood，算力为 3×、每瓦性能为 2×。</li>
+</ul>
+<p><img data-src="/images/GoogleTPU8/tpu8t-overview.png" alt="TPU 8t Superpod 的计算、内存与 I&#x2F;O 规格"></p>
+<p>图 5：TPU 8t Superpod 以 9,600 颗芯片、2 PB 共享 HBM、121 Exaflops 和原生 FP4 支持面向大规模训练。</p>
+<h3 id="5-2-OCS-组织共享内存-Superpod"><a href="#5-2-OCS-组织共享内存-Superpod" class="headerlink" title="5.2 OCS 组织共享内存 Superpod"></a>5.2 OCS 组织共享内存 Superpod</h3><p>9,600 颗芯片通过 Optical Circuit Switching（OCS，光路交换）组成共享内存 Superpod。Google 强调，系统可以创建不同大小和形状的切片，仅受资源池规模与可用性限制；幻灯片给出的例子包括 8×8×4 和 8×8×8。</p>
+<p><img data-src="/images/GoogleTPU8/tpu8t-superpod-ocs.png" alt="9,600 颗 TPU 8t 通过 OCS 组成共享内存 Superpod"></p>
+<p>图 6：OCS 从 9,600 芯片资源池中构造不同尺寸和形状的 TPU 8t 切片。</p>
+<h2 id="六、从-Superpod-扩展到-Virgo-集群"><a href="#六、从-Superpod-扩展到-Virgo-集群" class="headerlink" title="六、从 Superpod 扩展到 Virgo 集群"></a>六、从 Superpod 扩展到 Virgo 集群</h2><h3 id="6-1-单集群-134-400-颗-TPU"><a href="#6-1-单集群-134-400-颗-TPU" class="headerlink" title="6.1 单集群 134,400 颗 TPU"></a>6.1 单集群 134,400 颗 TPU</h3><p>在 Superpod 之上，Google 给出了名为 <strong>Virgo</strong> 的全局无阻塞集群互连：</p>
+<ul>
+<li>单个 Virgo 集群包含 134,400 颗 TPU；</li>
+<li>峰值算力为 1.6 YottaFlops；</li>
+<li>互连带宽为 47 Petabits&#x2F;s；</li>
+<li>使用两级、全无阻塞交换；</li>
+<li>通过彼此独立的平面提高互连韧性；</li>
+<li>可以扩展到多个数据中心站点。</li>
+</ul>
+<p>Virgo 向下连接 TPU 8t 机架与 ICI&#x2F;SPOCS，向上连接 Jupiter 网络、Optical Circuit Switch（Apollo）和分布式全球 WAN。</p>
+<p><img data-src="/images/GoogleTPU8/virgo-network.png" alt="Virgo 全局无阻塞集群网络"></p>
+<p>图 7：Virgo 以两级无阻塞、多独立平面网络连接 TPU 8t 机架，并通过 Jupiter 接入更大范围的网络。</p>
+<h3 id="6-2-百万级性能增长背后的系统层次"><a href="#6-2-百万级性能增长背后的系统层次" class="headerlink" title="6.2 百万级性能增长背后的系统层次"></a>6.2 百万级性能增长背后的系统层次</h3><p>从第八代 TPU 的组织方式可以看到多级扩展关系：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TensorCore / SparseCore</span><br><span class="line">        ↓</span><br><span class="line">TPU 8i 或 TPU 8t 封装</span><br><span class="line">        ↓</span><br><span class="line">托盘与机架</span><br><span class="line">        ↓</span><br><span class="line">Boardfly Pod（8i）或 OCS Superpod（8t）</span><br><span class="line">        ↓</span><br><span class="line">Virgo 集群与 Jupiter 网络（8t）</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、TPU-8t-的芯片与托盘结构"><a href="#七、TPU-8t-的芯片与托盘结构" class="headerlink" title="七、TPU 8t 的芯片与托盘结构"></a>七、TPU 8t 的芯片与托盘结构</h2><h3 id="7-1-与-TPU-8i-的结构差异"><a href="#7-1-与-TPU-8i-的结构差异" class="headerlink" title="7.1 与 TPU 8i 的结构差异"></a>7.1 与 TPU 8i 的结构差异</h3><p>TPU 8t 延续了主机、计算、内存&#x2F;DMA、管理和 ICI 的基本分区，但资源组合明显不同。</p>
+<p><img data-src="/images/GoogleTPU8/tpu8t-block-diagram.png" alt="TPU 8t 芯片框图"></p>
+<p>图 8：TPU 8t 采用一组 TensorCore、两个 SparseCore、6 组 12-hi HBM3E 和独立 ICI SerDes 芯粒。</p>
+<p>框图中的主要模块包括：</p>
+<ul>
+<li>一组 TensorCore，包含 TCS、2 个 MXU、2 个 XLU 与 VPU + Vmem；</li>
+<li>2 个 SparseCore；</li>
+<li>6 组带控制器的 12-hi HBM3E Stack；</li>
+<li>Memory and DMA Interconnect；</li>
+<li>PCIe Gen5 ×16、PCIe Gen2 ×1、gBMC 与 Chip Manager；</li>
+<li>ICI Router、6× Link Stack 和 6×224G SerDes octals。</li>
+</ul>
+<p>演讲进一步标注，TPU 8t 有 6 条 ICI 链路，每条链路双向、8 lane 宽，每个方向为 1.6 Tb&#x2F;s。框图没有披露 MXU 的阵列尺寸、工作频率、单芯片 FP4 峰值以及 SparseCore 的内部结构。</p>
+<p>对比两张框图可以看到，8i 展示了两组 TensorCore、8 组 HBM 和 SC-CAE；8t 则展示一组 TensorCore、两个独立 SparseCore、6 组 HBM 与更高速的 SerDes。</p>
+<h3 id="7-2-TPU-8t-托盘"><a href="#7-2-TPU-8t-托盘" class="headerlink" title="7.2 TPU 8t 托盘"></a>7.2 TPU 8t 托盘</h3><p>TPU 8t 托盘照片显示，每块托盘集成 4 个 TPU 8t 封装、第一阶段稳压器和水冷光学器件。Google 将水冷光学器件称为机器学习系统中的首次采用。</p>
+<p><img data-src="/images/GoogleTPU8/tpu8t-tray.png" alt="TPU 8t 托盘上的封装、稳压器与水冷光学器件"></p>
+<p>图 9：TPU 8t 托盘在同一块板上组织 4 个 TPU 封装、供电与水冷光学器件。</p>
+<p>一个 Superpod 包含 300 个机架。</p>
+<h2 id="八、AI-辅助芯片设计与统一软件栈"><a href="#八、AI-辅助芯片设计与统一软件栈" class="headerlink" title="八、AI 辅助芯片设计与统一软件栈"></a>八、AI 辅助芯片设计与统一软件栈</h2><h3 id="8-1-用-TPU-设计下一代-TPU"><a href="#8-1-用-TPU-设计下一代-TPU" class="headerlink" title="8.1 用 TPU 设计下一代 TPU"></a>8.1 用 TPU 设计下一代 TPU</h3><p>Google 还展示了 AI 参与芯片设计的两阶段流程：</p>
+<ol>
+<li><strong>Spec to RTL</strong>：AI Designer 与 RTL 团队协同，使用约 O(100) 颗 TPU 运行约 1 周；</li>
+<li><strong>RTL&#x2F;PD Optimization</strong>：AI Optimizer 与物理设计团队协同，使用约 O(100) 颗 CPU 运行约 1 周。</li>
+</ol>
+<p><img data-src="/images/GoogleTPU8/ai-assisted-design.png" alt="AI 辅助 TPU 8i 与 TPU 8t 的 RTL 和物理设计优化"></p>
+<p>图 10：Google 使用 AI Designer 与 AI Optimizer 协助从规格生成 RTL，并继续优化 RTL 与物理设计。</p>
+<p>演讲给出的设计结果包括：</p>
+<table>
+<thead>
+<tr>
+<th>芯片</th>
+<th>模块</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TPU 8t</td>
+<td>TensorCore（MXU）</td>
+<td>功耗降低 6%；面积减少 5.8%，用于增加 6% TFLOPs</td>
+</tr>
+<tr>
+<td>TPU 8t</td>
+<td>SparseCore</td>
+<td>面积减少 13%，用于增加 10% TFLOPs</td>
+</tr>
+<tr>
+<td>TPU 8i</td>
+<td>TensorCore（MXU）</td>
+<td>MXU 面积减少 5.3%；同一热预算内增加 5% FLOPS</td>
+</tr>
+<tr>
+<td>TPU 8i</td>
+<td>SparseCore</td>
+<td>帮助满足较激进的时序目标</td>
+</tr>
+</tbody></table>
+<p>这些数字描述 AI 辅助设计在特定模块上的结果。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Google 第八代 TPU 的核心变化不是简单地把上一代做得更大，而是针对训练与推理形成两套不同的资源平衡：</p>
+<ul>
+<li><strong>TPU 8i</strong> 把设计重点放在低延迟数据访问与通信。384 MB SRAM 缓解 HBM 访问瓶颈，Boardfly 将 1,152 芯片 Pod 的最大路径控制在 7 跳，CAE 在 ICI I&#x2F;O 裸片内执行集合通信并减少封装内搬运。</li>
+<li><strong>TPU 8t</strong> 把设计重点放在低精度训练和系统扩展。原生 FP4、2 PB 共享 HBM、9,600 芯片 OCS Superpod 与 134,400 芯片 Virgo 集群共同构成训练平台。</li>
+<li><strong>共同基础</strong> 是相似的 TensorCore、VPU&#x2F;Vmem、内存&#x2F;DMA、主机与 ICI 模块，以及由 Pallas、Mosaic、XLA、JAX、PyTorch 和 Keras 组成的软件路径。</li>
+</ul>
+<p>这场演讲说明，智能体时代的加速器竞争已经从单芯片 FLOPS 转向端到端系统平衡：推理侧要同时处理内存墙和 MoE 通信延迟，训练侧要同时解决共享内存规模、全局互连、可用性和功耗。第八代 TPU 的两款芯片，正是 Google 对这两组约束给出的不同答案。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Norman P. Jouppi and Sridhar Lakshmanamurthy, <em>The Eighth Generation TPU Family: Two Chips Optimized for the Agentic Era</em>, Hot Chips, August 25, 2026，共 22 页。原演讲材料未给出 DOI。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/" rel="tag"># 集合通信</a>
+              <a href="/tags/Hot-Chips-2026/" rel="tag"># Hot Chips 2026</a>
+              <a href="/tags/Google/" rel="tag"># Google</a>
+              <a href="/tags/TPU-8i/" rel="tag"># TPU 8i</a>
+              <a href="/tags/TPU-8t/" rel="tag"># TPU 8t</a>
+              <a href="/tags/Boardfly/" rel="tag"># Boardfly</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%8E%A8%E7%90%86/" rel="tag"># 大模型训练与推理</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/31/HotChips2026-Cerebras-CS4/" rel="prev" title="Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构">
+                  <i class="fa fa-angle-left"></i> Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

@@ -11,7 +11,27 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-08-31T09:32:06.545Z</updated>
+  <updated>2026-08-31T11:21:09.179Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
+    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
+    <category term="Google" scheme="https://zhwang1224.github.io/tags/Google/"/>
+    <category term="TPU 8i" scheme="https://zhwang1224.github.io/tags/TPU-8i/"/>
+    <category term="TPU 8t" scheme="https://zhwang1224.github.io/tags/TPU-8t/"/>
+    <category term="Boardfly" scheme="https://zhwang1224.github.io/tags/Boardfly/"/>
+    <category term="大模型训练与推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%8E%A8%E7%90%86/"/>
+    <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/</id>
+    <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-Google-TPU8/"/>
+    <published>2026-08-31T09:39:10.000Z</published>
+    <summary>Google 在 Hot Chips 2026 公布的第八代 TPU 家族：面向推理的 TPU 8i、面向训练的 TPU 8t，以及 Boardfly、CAE、OCS Superpod、Virgo 网络、RAS 和软硬件协同设计。</summary>
+    <title>Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连</title>
+    <updated>2026-08-31T11:21:09.179Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -28,9 +48,9 @@
     <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/</id>
     <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-Cerebras-CS4/"/>
     <published>2026-08-30T18:06:42.000Z</published>
-    <summary>忠实整理 Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I/O、集群互连及推理性能口径。</summary>
+    <summary>Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I/O、集群互连及推理性能口径。</summary>
     <title>Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构</title>
-    <updated>2026-08-31T09:32:06.545Z</updated>
+    <updated>2026-08-31T11:10:05.491Z</updated>
   </entry>
   <entry>
     <author>
@@ -105,10 +125,10 @@
     <category term="计算机网络" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="Dragonfly" scheme="https://zhwang1224.github.io/tags/Dragonfly/"/>
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
-    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
@@ -313,7 +333,6 @@
     <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
     <category term="流水线并行" scheme="https://zhwang1224.github.io/tags/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/"/>
     <category term="Transformer" scheme="https://zhwang1224.github.io/tags/Transformer/"/>
-    <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <category term="推理服务" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1/"/>
     <category term="KV Cache" scheme="https://zhwang1224.github.io/tags/KV-Cache/"/>
     <category term="Prefill" scheme="https://zhwang1224.github.io/tags/Prefill/"/>
@@ -321,6 +340,7 @@
     <category term="Continuous Batching" scheme="https://zhwang1224.github.io/tags/Continuous-Batching/"/>
     <category term="PagedAttention" scheme="https://zhwang1224.github.io/tags/PagedAttention/"/>
     <category term="投机解码" scheme="https://zhwang1224.github.io/tags/%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81/"/>
+    <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <category term="Roofline Model" scheme="https://zhwang1224.github.io/tags/Roofline-Model/"/>
     <id>https://zhwang1224.github.io/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/</id>
     <link href="https://zhwang1224.github.io/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/"/>
@@ -434,27 +454,5 @@
     <summary>区间调度贪心题解：单银幕电影院排片问题，给定各场电影的放映时间区间求当天最多可放映的场次，含首尾时刻相接可连续放映的边界处理。</summary>
     <title>Algorithm-6.24</title>
     <updated>2026-08-27T14:51:34.815Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    <category term="芯粒互连网络" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E8%8A%AF%E7%B2%92%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/"/>
-    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="Chiplet" scheme="https://zhwang1224.github.io/tags/Chiplet/"/>
-    <category term="2.5D 集成" scheme="https://zhwang1224.github.io/tags/2-5D-%E9%9B%86%E6%88%90/"/>
-    <category term="DATE 2021" scheme="https://zhwang1224.github.io/tags/DATE-2021/"/>
-    <category term="DeFT" scheme="https://zhwang1224.github.io/tags/DeFT/"/>
-    <category term="无死锁路由" scheme="https://zhwang1224.github.io/tags/%E6%97%A0%E6%AD%BB%E9%94%81%E8%B7%AF%E7%94%B1/"/>
-    <category term="容错路由" scheme="https://zhwang1224.github.io/tags/%E5%AE%B9%E9%94%99%E8%B7%AF%E7%94%B1/"/>
-    <category term="拥塞感知" scheme="https://zhwang1224.github.io/tags/%E6%8B%A5%E5%A1%9E%E6%84%9F%E7%9F%A5/"/>
-    <category term="虚拟网络" scheme="https://zhwang1224.github.io/tags/%E8%99%9A%E6%8B%9F%E7%BD%91%E7%BB%9C/"/>
-    <id>https://zhwang1224.github.io/2026/06/22/DATE2021-DeFT/</id>
-    <link href="https://zhwang1224.github.io/2026/06/22/DATE2021-DeFT/"/>
-    <published>2026-06-22T09:07:11.000Z</published>
-    <summary>论文笔记（DATE 2021）：DeFT 面向 3D 集成的 NoC 设计，应对 TSV 垂直堆叠带来的制造成本上升、功率密度增大与散热变差导致的热热点可靠性问题。</summary>
-    <title>DATE2021-DeFT</title>
-    <updated>2026-08-27T14:51:34.832Z</updated>
   </entry>
 </feed>
