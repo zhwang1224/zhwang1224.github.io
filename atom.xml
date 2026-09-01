@@ -11,7 +11,30 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-08-31T12:00:08.291Z</updated>
+  <updated>2026-09-01T09:38:33.258Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="分布式训练网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
+    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
+    <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
+    <category term="NAIC 2026" scheme="https://zhwang1224.github.io/tags/NAIC-2026/"/>
+    <category term="SIGCOMM 2026" scheme="https://zhwang1224.github.io/tags/SIGCOMM-2026/"/>
+    <category term="Dragonfly-Ultra" scheme="https://zhwang1224.github.io/tags/Dragonfly-Ultra/"/>
+    <category term="直连拓扑" scheme="https://zhwang1224.github.io/tags/%E7%9B%B4%E8%BF%9E%E6%8B%93%E6%89%91/"/>
+    <category term="死锁避免" scheme="https://zhwang1224.github.io/tags/%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D/"/>
+    <id>https://zhwang1224.github.io/2026/09/01/NAIC2026-DragonflyUltra/</id>
+    <link href="https://zhwang1224.github.io/2026/09/01/NAIC2026-DragonflyUltra/"/>
+    <published>2026-09-01T08:42:18.000Z</published>
+    <summary>论文笔记：Dragonfly-Ultra 用 spine 层全互连替换 Dragonfly+ 的组间连接，从拓扑上根除“下-上”绕行，再配合双水线自适应路由、只在 L2 部署的虚拟链路，以及均匀亲和感知 rank 放置，以 3 层 Clos 的 82% 成本扩展到 26 万块 GPU。</summary>
+    <title>Dragonfly-Ultra：面向高性能 AI 集群的可扩展、低成本网络架构</title>
+    <updated>2026-09-01T09:38:33.258Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -148,10 +171,10 @@
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
-    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <id>https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/</id>
     <link href="https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/"/>
@@ -168,7 +191,6 @@
     <category term="分布式训练" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
     <category term="大模型训练" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
     <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <category term="Tensor Parallelism" scheme="https://zhwang1224.github.io/tags/Tensor-Parallelism/"/>
     <category term="Megatron-LM" scheme="https://zhwang1224.github.io/tags/Megatron-LM/"/>
@@ -176,6 +198,7 @@
     <category term="Column Parallel" scheme="https://zhwang1224.github.io/tags/Column-Parallel/"/>
     <category term="Row Parallel" scheme="https://zhwang1224.github.io/tags/Row-Parallel/"/>
     <category term="Sequence Parallel" scheme="https://zhwang1224.github.io/tags/Sequence-Parallel/"/>
+    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <id>https://zhwang1224.github.io/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/</id>
     <link href="https://zhwang1224.github.io/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <published>2026-08-06T08:00:00.000Z</published>
@@ -192,8 +215,8 @@
     <category term="流水线并行" scheme="https://zhwang1224.github.io/tags/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/"/>
     <category term="大模型训练" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
     <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <category term="模型并行" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C/"/>
+    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <category term="Pipeline Parallelism" scheme="https://zhwang1224.github.io/tags/Pipeline-Parallelism/"/>
     <category term="GPipe" scheme="https://zhwang1224.github.io/tags/GPipe/"/>
     <category term="微批次" scheme="https://zhwang1224.github.io/tags/%E5%BE%AE%E6%89%B9%E6%AC%A1/"/>
@@ -214,8 +237,8 @@
     <category term="分布式训练" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
     <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
     <category term="Ring AllReduce" scheme="https://zhwang1224.github.io/tags/Ring-AllReduce/"/>
-    <category term="数据并行" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C/"/>
     <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
+    <category term="数据并行" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C/"/>
     <category term="DataParallel" scheme="https://zhwang1224.github.io/tags/DataParallel/"/>
     <category term="DistributedDataParallel" scheme="https://zhwang1224.github.io/tags/DistributedDataParallel/"/>
     <category term="DeepSpeed" scheme="https://zhwang1224.github.io/tags/DeepSpeed/"/>
@@ -432,27 +455,5 @@
     <summary>LeetCode Hot 100 普通数组专题：最大子数组和等题目的动态规划思路整理，以 f(i) 表示以第 i 个数结尾的连续子数组最大和。</summary>
     <title>Algorithm-Hot100-普通数组</title>
     <updated>2026-08-27T14:51:34.817Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="大模型推理" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
-    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="ASPLOS 2026" scheme="https://zhwang1224.github.io/tags/ASPLOS-2026/"/>
-    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
-    <category term="晶圆级计算" scheme="https://zhwang1224.github.io/tags/%E6%99%B6%E5%9C%86%E7%BA%A7%E8%AE%A1%E7%AE%97/"/>
-    <category term="SRAM" scheme="https://zhwang1224.github.io/tags/SRAM/"/>
-    <category term="CIM" scheme="https://zhwang1224.github.io/tags/CIM/"/>
-    <category term="存内计算" scheme="https://zhwang1224.github.io/tags/%E5%AD%98%E5%86%85%E8%AE%A1%E7%AE%97/"/>
-    <category term="流水线并行" scheme="https://zhwang1224.github.io/tags/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/"/>
-    <category term="权重映射" scheme="https://zhwang1224.github.io/tags/%E6%9D%83%E9%87%8D%E6%98%A0%E5%B0%84/"/>
-    <id>https://zhwang1224.github.io/2026/07/13/ASPLOS2026-Ouroboros/</id>
-    <link href="https://zhwang1224.github.io/2026/07/13/ASPLOS2026-Ouroboros/"/>
-    <published>2026-07-13T05:37:42.000Z</published>
-    <summary>论文笔记：Ouroboros 把大模型的权重、激活值与 KV Cache 全部放进晶圆级 SRAM 并就地计算，再用 Token 粒度流水线、分布式 KV Cache 管理和通信感知映射消除存储层级间的数据搬运开销。</summary>
-    <title>ASPLOS2026-Ouroboros</title>
-    <updated>2026-08-27T14:51:34.829Z</updated>
   </entry>
 </feed>
