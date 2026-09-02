@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="总结 Groq 3 LPU 的全 SRAM、周期级调度、同步互连及其在异构推理中的作用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="总结 Groq 3 LPU 的全 SRAM、周期级调度、同步互连及其在异构推理中的作用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/gpu-lpu-positioning.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/lpu-near-sram-architecture.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/lpx-rack-scale.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/external-drafter.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/attention-ffn-disaggregation.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/prefill-decode-disaggregation.png">
+<meta property="article:published_time" content="2026-09-01T14:39:24.000Z">
+<meta property="article:modified_time" content="2026-09-01T14:56:09.235Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="Groq 3">
+<meta property="article:tag" content="Hot Chips 2026">
+<meta property="article:tag" content="LPU">
+<meta property="article:tag" content="NVIDIA">
+<meta property="article:tag" content="大模型推理">
+<meta property="article:tag" content="异构计算">
+<meta property="article:tag" content="推理加速器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/NVIDIAGroq3LPU/gpu-lpu-positioning.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/","path":"2026/09/01/HotChips2026-NVIDIA-LPU/","title":"NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NVIDIA-Groq-3-LPU%EF%BC%9A%E7%94%A8%E7%A1%AE%E5%AE%9A%E6%80%A7%E6%89%A7%E8%A1%8C%E5%8A%A0%E9%80%9F%E4%BA%A4%E4%BA%92%E5%BC%8F-AI-%E6%8E%A8%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81LPU-%E8%A6%81%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">一、LPU 要解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81LPU-%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97%E7%A1%AE%E5%AE%9A%E6%80%A7%E4%BD%8E%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.2.</span> <span class="nav-text">二、LPU 如何获得确定性低延迟</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%94%A8%E7%89%87%E4%B8%8A-SRAM-%E7%BC%A9%E7%9F%AD%E6%95%B0%E6%8D%AE%E8%B7%AF%E5%BE%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 用片上 SRAM 缩短数据路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%8A%8A%E8%BF%90%E8%A1%8C%E6%97%B6%E8%B0%83%E5%BA%A6%E7%A7%BB%E5%88%B0%E7%BC%96%E8%AF%91%E6%9C%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 把运行时调度移到编译期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%8A%8A%E5%A4%9A%E9%A2%97%E8%8A%AF%E7%89%87%E6%8E%92%E8%BF%9B%E5%90%8C%E4%B8%80%E5%BC%A0%E6%97%B6%E9%97%B4%E8%A1%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 把多颗芯片排进同一张时间表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81LPU-%E5%9C%A8%E5%BC%82%E6%9E%84%E6%8E%A8%E7%90%86%E4%B8%AD%E7%9A%84%E4%B8%89%E7%A7%8D%E4%BD%9C%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">三、LPU 在异构推理中的三种作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%B8%BA%E6%8E%A8%E6%B5%8B%E8%A7%A3%E7%A0%81%E7%94%9F%E6%88%90%E8%8D%89%E7%A8%BF"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 为推测解码生成草稿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%8A%8A-Attention-%E4%B8%8E-FFN-%E5%88%86%E7%BB%99%E4%B8%8D%E5%90%8C%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 把 Attention 与 FFN 分给不同架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%8B%86%E5%88%86-Prefill-%E4%B8%8E-Decode"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 拆分 Prefill 与 Decode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%A1%AE%E5%AE%9A%E6%80%A7%E8%BF%98%E5%B8%A6%E6%9D%A5%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.4.</span> <span class="nav-text">四、确定性还带来了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E6%BC%94%E8%AE%B2%E4%B8%AD%E7%9A%84%E6%80%A7%E8%83%BD%E6%95%B0%E5%AD%97"><span class="nav-number">1.5.</span> <span class="nav-text">五、如何理解演讲中的性能数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">六、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.7.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">341</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-OpenAI-Jalapeno/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Cerebras-CS4/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Google-TPU8/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-16</time>
+        <br>
+      大模型推理基础
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/13/ASPLOS2026-Ouroboros/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-13</time>
+        <br>
+      ASPLOS2026-Ouroboros
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理 | 正在输入">
+      <meta itemprop="description" content="总结 Groq 3 LPU 的全 SRAM、周期级调度、同步互连及其在异构推理中的作用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-01 22:39:24 / 修改时间：22:56:09" itemprop="dateCreated datePublished" datetime="2026-09-01T22:39:24+08:00">2026-09-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">总结 Groq 3 LPU 的全 SRAM、周期级调度、同步互连及其在异构推理中的作用。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>NVIDIA 在 Hot Chips 2026 展示的 Groq 3 LPU，目标并不是取代 GPU，而是补上 GPU 系统在交互式推理中的另一条轴：<strong>GPU 擅长用大批量获得高吞吐，LPU 则用确定性执行换取低而稳定的单用户延迟</strong>。在 NVIDIA 的 Vera Rubin 平台中，两者被组合成异构推理系统，让不同阶段落到更合适的硬件上。</p>
+<p>LPU 的关键并非某一个矩阵单元，而是一整套协同设计：权重与中间数据尽量留在片上 SRAM，编译器按时钟周期安排计算和通信，多颗芯片共享虚拟全局时钟。由此，模型执行从“运行时不断等待和仲裁”变成一张提前排好的时间表，LPU 也就能以可预测的节奏连续生成 Token。</p>
+<span id="more"></span>
+
+<h1 id="NVIDIA-Groq-3-LPU：用确定性执行加速交互式-AI-推理"><a href="#NVIDIA-Groq-3-LPU：用确定性执行加速交互式-AI-推理" class="headerlink" title="NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理"></a>NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理</h1><h2 id="一、LPU-要解决什么问题"><a href="#一、LPU-要解决什么问题" class="headerlink" title="一、LPU 要解决什么问题"></a>一、LPU 要解决什么问题</h2><p>智能体工作负载会把提示、模型输出和工具调用结果不断追加到上下文中。会话轮次越多，KV Cache 越大，后续推理延迟也越容易累积。对于面向用户的服务，仅提高整个机房每秒处理的 Token 数并不够，还要提高单个用户实际感受到的生成速度，即演讲中的 <strong>TPS&#x2F;User</strong>。</p>
+<p>这正是 LPU 与 GPU 的定位差异：GPU 依靠并行度和批处理提高 TPS&#x2F;MW，适合吞吐优先的任务；LPU 把工作负载变成确定性的计算与通信流水线，面向小 Batch、延迟敏感的 decode。二者组合的目的，是同时扩大吞吐与交互性，而不是让一种芯片包办所有阶段。</p>
+<p><img data-src="/images/NVIDIAGroq3LPU/gpu-lpu-positioning.png" alt="GPU、LPU 及 GPU+LPU 的吞吐与交互性定位"></p>
+<p>图 1：演讲将 GPU 放在高吞吐一侧、LPU 放在极低延迟一侧，异构组合则用于兼顾两项目标。</p>
+<h2 id="二、LPU-如何获得确定性低延迟"><a href="#二、LPU-如何获得确定性低延迟" class="headerlink" title="二、LPU 如何获得确定性低延迟"></a>二、LPU 如何获得确定性低延迟</h2><h3 id="2-1-用片上-SRAM-缩短数据路径"><a href="#2-1-用片上-SRAM-缩短数据路径" class="headerlink" title="2.1 用片上 SRAM 缩短数据路径"></a>2.1 用片上 SRAM 缩短数据路径</h3><p>Groq 3 LPU 采用扁平内存层次，工作数据全部放在片上 SRAM，并通过高带宽 Stream 向计算单元供数。核心中的主要功能单元包括：</p>
+<ul>
+<li><strong>MEM</strong>：片上 SRAM 及其读写路径；</li>
+<li><strong>VXM</strong>：向量处理单元；</li>
+<li><strong>MXM</strong>：由乘加单元组成的矩阵计算阵列；</li>
+<li><strong>SXM</strong>：负责移位、重排等数据变换。</li>
+</ul>
+<p>这项选择绕开了多级缓存命中、片外 DRAM 访问和运行时搬运带来的不确定等待。代价也很明确：SRAM 的容量不如 DRAM&#x2F;HBM，软件必须更严格地规划模型切分、数据放置和生命周期。因此，LPU 更适合容纳延迟关键的工作集，而长上下文 KV 等大容量状态仍可交给 GPU 一侧的 DRAM。</p>
+<p><img data-src="/images/NVIDIAGroq3LPU/lpu-near-sram-architecture.png" alt="Groq 3 LPU 的近 SRAM 计算与 Stream 数据流"></p>
+<p>图 2：MEM、VXM、MXM 和 SXM 由高带宽 Stream 串成数据流，控制逻辑只占较小面积。</p>
+<h3 id="2-2-把运行时调度移到编译期"><a href="#2-2-把运行时调度移到编译期" class="headerlink" title="2.2 把运行时调度移到编译期"></a>2.2 把运行时调度移到编译期</h3><p>LPU 使用 VLIW 风格架构，由软件以时钟周期为粒度安排 SRAM 读写、算术运算和数据传输。演讲中的简单例子把两次读取、一次加法、结果上流和写回精确放到第 0、2、3、5、7 周期；独立操作可以同时占用不同单元，连续算子之间也不需要经过 kernel 边界或 MEMBAR，因而能够直接融合成更长的流水线。</p>
+<p>它带来的作用不是让每条指令本身更复杂，而是减少运行时仲裁和同步：编译器提前知道某个张量在何时到达、哪个单元在何时空闲，执行时间和资源利用率因而可以预测。静态调度也不等于程序不能分支；Groq 3 允许在若干具有确定时间上界的基本块之间，根据数据选择不同路径。</p>
+<h3 id="2-3-把多颗芯片排进同一张时间表"><a href="#2-3-把多颗芯片排进同一张时间表" class="headerlink" title="2.3 把多颗芯片排进同一张时间表"></a>2.3 把多颗芯片排进同一张时间表</h3><p>LPU 的确定性从芯片内部延伸到机架。系统让机架内乃至跨机架的 LPU 工作在同一个虚拟全局时钟下，并对芯片间时钟漂移做确定性补偿。每颗 LPU 同时充当处理器与路由器，编译器把消息传输和计算一起排进程序，因此网络不需要依赖自适应路由或拥塞感知来临场决策。</p>
+<p>这种网络传输的是已知时间、已知大小的张量，而不是不可预测的通用流量。协议只保留很低的头尾开销，也省去硬件流控和虚拟通道信息，对推理中的小张量尤其有利。其成立前提同样是通信模式能够被编译器掌握；它并不是为任意突发网络负载设计的通用替代品。</p>
+<p>一个 Groq 3 LPX 机架包含 256 颗 LPU，演讲给出的汇总规格为 128 GB SRAM、315 PFLOPS FP8、40 PB&#x2F;s 聚合 SRAM 带宽，以及从一颗芯片 SRAM 到另一颗芯片 SRAM 的 350 ns 延迟。系统还能继续扩展到 1,000 颗以上 LPU。</p>
+<p><img data-src="/images/NVIDIAGroq3LPU/lpx-rack-scale.png" alt="Groq 3 LPX 机架的 LPU、SRAM、算力与互连规格"></p>
+<p>图 3：256 颗 LPU 通过低延迟互连组成 LPX 机架，并以聚合 SRAM 带宽持续为计算单元供数。</p>
+<h2 id="三、LPU-在异构推理中的三种作用"><a href="#三、LPU-在异构推理中的三种作用" class="headerlink" title="三、LPU 在异构推理中的三种作用"></a>三、LPU 在异构推理中的三种作用</h2><h3 id="3-1-为推测解码生成草稿"><a href="#3-1-为推测解码生成草稿" class="headerlink" title="3.1 为推测解码生成草稿"></a>3.1 为推测解码生成草稿</h3><p>第一种模式是外部 Drafter 推测解码。LPX 上的小模型以低延迟提前生成一批候选 Token，Vera Rubin NVL72 上的大目标模型负责验证、接受并提交结果。两个机架各自保存本模型的 KV Cache，链路上主要传递候选 Token 和被拒绝的位置，而不需要持续搬运两套模型状态。</p>
+<p>这里 LPU 的作用是让“串行起草”尽可能快，GPU 的作用则是高效完成大模型验证。通过按块交接并让下一轮起草与验证形成流水，系统可以提高目标模型的利用率，同时缩短用户等待时间。</p>
+<p><img data-src="/images/NVIDIAGroq3LPU/external-drafter.png" alt="LPU 作为外部 Drafter、GPU 作为 Verifier 的推测解码"></p>
+<p>图 4：LPX 运行小型草稿模型，Vera Rubin 运行大型目标模型，跨机架只传递草稿与反馈。</p>
+<h3 id="3-2-把-Attention-与-FFN-分给不同架构"><a href="#3-2-把-Attention-与-FFN-分给不同架构" class="headerlink" title="3.2 把 Attention 与 FFN 分给不同架构"></a>3.2 把 Attention 与 FFN 分给不同架构</h3><p>第二种模式在 decode 内部进一步拆分：GPU 计算长上下文 Attention，并利用 DRAM 保存容量持续增长的 KV Cache；LPU 把 FFN 权重放进 SRAM，以低延迟执行前馈层。二者每经过一个完整 Attention 层交换一次中间张量。</p>
+<p>这个划分利用了两类算子的差异。Attention 对长上下文状态容量和访问更敏感，GPU 的大容量内存更合适；FFN 更容易形成规则、可静态编排的矩阵流水，LPU 的 SRAM 带宽和确定性调度更容易发挥作用。</p>
+<p><img data-src="/images/NVIDIAGroq3LPU/attention-ffn-disaggregation.png" alt="跨机架拆分 Attention 与 FFN 的 decode 流程"></p>
+<p>图 5：GPU 保存 KV Cache 并执行 Attention，LPU 保存权重并执行 FFN，层间只交换中间结果。</p>
+<h3 id="3-3-拆分-Prefill-与-Decode"><a href="#3-3-拆分-Prefill-与-Decode" class="headerlink" title="3.3 拆分 Prefill 与 Decode"></a>3.3 拆分 Prefill 与 Decode</h3><p>第三种模式按推理阶段拆分。Vera Rubin 负责长上下文 Prefill 和 KV Cache，LPX 负责对延迟最敏感的 Decode；两侧以“每轮一次”的方式交接 KV 状态。这样既保留 GPU 处理大上下文和高并行计算的能力，又把逐 Token 生成放到低延迟流水线上。</p>
+<p>演讲还提出让 GPU 与 LPU 的计算、双向传输相互重叠，避免异构拆分把收益消耗在等待上。因此，LPU 真正的系统作用不是单独跑出一个峰值数字，而是成为 GPU 流水线中的低延迟阶段。</p>
+<p><img data-src="/images/NVIDIAGroq3LPU/prefill-decode-disaggregation.png" alt="GPU 负责 Prefill、LPU 负责 Decode 的阶段拆分"></p>
+<p>图 6：Vera Rubin 完成长上下文 Prefill，LPX 接手 Decode，把容量需求与交互延迟分别交给更合适的硬件。</p>
+<h2 id="四、确定性还带来了什么"><a href="#四、确定性还带来了什么" class="headerlink" title="四、确定性还带来了什么"></a>四、确定性还带来了什么</h2><p>周期精确的执行计划也能反过来帮助供电和散热。硬件可以在负载到达前向稳压器预订电流，演讲称这种 Pre-Emptive Power 机制使电压下冲减少超过 60%、过冲减少超过 70%。编译器还可以按计算块分配功耗，让原本温度较低的区域提高利用率，而不是因为最热点而对整颗芯片统一降频。</p>
+<p>另一方面，真实服务并不完全确定。Groq 3 因而在 LPU 同步域外保留 FPGA Runtime Orchestrator 和 Host 控制平面：主机负责系统软件、DRAM 访问、LPU—GPU 连接和任务提交，进入 LPU 的延迟关键工作集才接受周期精确调度。这道异步桥把动态服务控制与确定性数据面分开，是 LPU 能进入完整 AI 系统的重要条件。</p>
+<p>软件生态仍处于扩展阶段。演讲把 CUDA 对 LPU 的完整支持列为未来方向，规划让 cuTile、CUTLASS、LPU-DSL、Dynamo 和 NVIDIA 加速库共同面向 GPU 与 LPU；LPU 侧则继续使用离线流程完成模型导入、布局向量化、多芯片切分、指令映射、缓冲区分配和调度。</p>
+<h2 id="五、如何理解演讲中的性能数字"><a href="#五、如何理解演讲中的性能数字" class="headerlink" title="五、如何理解演讲中的性能数字"></a>五、如何理解演讲中的性能数字</h2><p>NVIDIA 给出的单机架结果包括：Groq 3 LPX 在 Gemma 4 31B 编码基准中达到 11,000 Token&#x2F;s；第三方 Artificial Analysis 的 100K 上下文测试中，演讲将其标为 4 倍领先。由于演讲页没有同时披露所有对比系统的完整配置，这些数字更适合用来理解 LPX 的低延迟定位，而不应直接外推到其他模型、Batch 或上下文长度。</p>
+<p>在 GPT-OSS-2T、缓存输入 400K Token、新输入 4K Token、输出 400 Token 的系统分析中，演讲相对 Vera Rubin 基线分别给外部 Drafter、Attention&#x2F;FFN 拆分、Prefill&#x2F;Decode 拆分标出约 3×、3× 和 5× 的交互性提升。三个点对应不同的 TPS&#x2F;MW 与 TPS&#x2F;User 位置，并不是在完全相同吞吐约束下得到的单一加速比。这里真正要表达的是：上下文越长，按阶段和算子选择 GPU 或 LPU，越有机会向外移动整个推理系统的延迟—能效帕累托前沿。</p>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>LPU 的核心作用可以归纳为一句话：<strong>把规则、延迟敏感的推理部分编译成跨芯片的确定性流水线，为 GPU 系统提供更快的逐 Token 生成路径。</strong></p>
+<p>为此，Groq 3 LPU 做了三件关键的事：用片上 SRAM 和 Stream 缩短数据路径，用周期级软件调度消除运行时不确定性，再把相同的时间模型扩展到机架网络。进入 Vera Rubin 异构系统后，它可以承担草稿生成、FFN 或 Decode；GPU 则继续处理大模型验证、长上下文 Attention 与 Prefill。</p>
+<p>这也说明了 LPU 的边界：它以容量、通用性和部分运行时灵活性换取确定性低延迟。NVIDIA 的方案并不是在 GPU 与 LPU 之间二选一，而是把二者组织成同一条流水线——<strong>GPU 负责把工作做大，LPU 负责把关键路径做快。</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Igor Arsovski and Santosh Raghavan, <em>Think Fast: LPU Accelerator for Heterogeneous Compute</em>, NVIDIA, Hot Chips 2026，共 44 页。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag"># 大模型推理</a>
+              <a href="/tags/Hot-Chips-2026/" rel="tag"># Hot Chips 2026</a>
+              <a href="/tags/NVIDIA/" rel="tag"># NVIDIA</a>
+              <a href="/tags/Groq-3/" rel="tag"># Groq 3</a>
+              <a href="/tags/LPU/" rel="tag"># LPU</a>
+              <a href="/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/" rel="tag"># 推理加速器</a>
+              <a href="/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/" rel="tag"># 异构计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/01/NAIC2026-DragonflyUltra/" rel="prev" title="Dragonfly-Ultra：面向高性能 AI 集群的可扩展、低成本网络架构">
+                  <i class="fa fa-angle-left"></i> Dragonfly-Ultra：面向高性能 AI 集群的可扩展、低成本网络架构
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

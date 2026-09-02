@@ -11,7 +11,27 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-09-01T09:38:33.258Z</updated>
+  <updated>2026-09-01T14:56:09.235Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
+    <category term="NVIDIA" scheme="https://zhwang1224.github.io/tags/NVIDIA/"/>
+    <category term="Groq 3" scheme="https://zhwang1224.github.io/tags/Groq-3/"/>
+    <category term="LPU" scheme="https://zhwang1224.github.io/tags/LPU/"/>
+    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
+    <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
+    <id>https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/</id>
+    <link href="https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/"/>
+    <published>2026-09-01T14:39:24.000Z</published>
+    <summary>总结 Groq 3 LPU 的全 SRAM、周期级调度、同步互连及其在异构推理中的作用。</summary>
+    <title>NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理</title>
+    <updated>2026-09-01T14:56:09.235Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -42,10 +62,10 @@
     <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
+    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
     <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="Jalapeño" scheme="https://zhwang1224.github.io/tags/Jalapeno/"/>
     <category term="ASIC" scheme="https://zhwang1224.github.io/tags/ASIC/"/>
-    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
     <category term="HBM4" scheme="https://zhwang1224.github.io/tags/HBM4/"/>
     <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/</id>
     <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/"/>
@@ -145,8 +165,8 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="分布式训练网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="Clos 网络" scheme="https://zhwang1224.github.io/tags/Clos-%E7%BD%91%E7%BB%9C/"/>
     <category term="容错网络" scheme="https://zhwang1224.github.io/tags/%E5%AE%B9%E9%94%99%E7%BD%91%E7%BB%9C/"/>
+    <category term="Clos 网络" scheme="https://zhwang1224.github.io/tags/Clos-%E7%BD%91%E7%BB%9C/"/>
     <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="MRC" scheme="https://zhwang1224.github.io/tags/MRC/"/>
@@ -170,11 +190,11 @@
     <category term="Dragonfly" scheme="https://zhwang1224.github.io/tags/Dragonfly/"/>
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
-    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
-    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
+    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <id>https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/</id>
     <link href="https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/"/>
@@ -399,14 +419,14 @@
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
     <category term="InfiniBand" scheme="https://zhwang1224.github.io/tags/InfiniBand/"/>
+    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
+    <category term="无损网络" scheme="https://zhwang1224.github.io/tags/%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C/"/>
     <category term="Ethernet" scheme="https://zhwang1224.github.io/tags/Ethernet/"/>
     <category term="RoCEv2" scheme="https://zhwang1224.github.io/tags/RoCEv2/"/>
-    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="PFC" scheme="https://zhwang1224.github.io/tags/PFC/"/>
     <category term="ECN" scheme="https://zhwang1224.github.io/tags/ECN/"/>
     <category term="DCQCN" scheme="https://zhwang1224.github.io/tags/DCQCN/"/>
     <category term="Ultra Ethernet" scheme="https://zhwang1224.github.io/tags/Ultra-Ethernet/"/>
-    <category term="无损网络" scheme="https://zhwang1224.github.io/tags/%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C/"/>
     <category term="AI 集群" scheme="https://zhwang1224.github.io/tags/AI-%E9%9B%86%E7%BE%A4/"/>
     <id>https://zhwang1224.github.io/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/</id>
     <link href="https://zhwang1224.github.io/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/"/>
@@ -425,35 +445,15 @@
     <category term="AI 基础设施" scheme="https://zhwang1224.github.io/tags/AI-%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/"/>
     <category term="InfiniBand" scheme="https://zhwang1224.github.io/tags/InfiniBand/"/>
     <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
-    <category term="无损网络" scheme="https://zhwang1224.github.io/tags/%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C/"/>
     <category term="Queue Pair" scheme="https://zhwang1224.github.io/tags/Queue-Pair/"/>
     <category term="Subnet Manager" scheme="https://zhwang1224.github.io/tags/Subnet-Manager/"/>
     <category term="信用流控" scheme="https://zhwang1224.github.io/tags/%E4%BF%A1%E7%94%A8%E6%B5%81%E6%8E%A7/"/>
+    <category term="无损网络" scheme="https://zhwang1224.github.io/tags/%E6%97%A0%E6%8D%9F%E7%BD%91%E7%BB%9C/"/>
     <id>https://zhwang1224.github.io/2026/07/15/InfiniBand%E6%98%AF%E4%BB%80%E4%B9%88/</id>
     <link href="https://zhwang1224.github.io/2026/07/15/InfiniBand%E6%98%AF%E4%BB%80%E4%B9%88/"/>
     <published>2026-07-15T09:10:33.000Z</published>
     <summary>InfiniBand 入门：点到点交换式 Fabric、基于信用的链路级流控与原生 RDMA，如何为 HPC 与 AI 集群同时提供高带宽、低延迟和低 CPU 开销。</summary>
     <title>InfiniBand是什么?</title>
     <updated>2026-08-27T14:51:34.841Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
-    <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
-    <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
-    <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="数组" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E7%BB%84/"/>
-    <category term="动态规划" scheme="https://zhwang1224.github.io/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
-    <category term="区间合并" scheme="https://zhwang1224.github.io/tags/%E5%8C%BA%E9%97%B4%E5%90%88%E5%B9%B6/"/>
-    <category term="矩阵" scheme="https://zhwang1224.github.io/tags/%E7%9F%A9%E9%98%B5/"/>
-    <id>https://zhwang1224.github.io/2026/07/14/Algorithm-Hot100-%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84/</id>
-    <link href="https://zhwang1224.github.io/2026/07/14/Algorithm-Hot100-%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84/"/>
-    <published>2026-07-14T09:17:56.000Z</published>
-    <summary>LeetCode Hot 100 普通数组专题：最大子数组和等题目的动态规划思路整理，以 f(i) 表示以第 i 个数结尾的连续子数组最大和。</summary>
-    <title>Algorithm-Hot100-普通数组</title>
-    <updated>2026-08-27T14:51:34.817Z</updated>
   </entry>
 </feed>
