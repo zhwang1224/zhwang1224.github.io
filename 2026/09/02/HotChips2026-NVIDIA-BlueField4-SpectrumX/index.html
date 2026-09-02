@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="英伟达如何用 BlueField-4 隔离并接管网络、存储与安全数据路径，再用 Spectrum-X 多平面网络把 AI Factory 扩展到数十万块 GPU。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="英伟达如何用 BlueField-4 隔离并接管网络、存储与安全数据路径，再用 Spectrum-X 多平面网络把 AI Factory 扩展到数十万块 GPU。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/five-ai-factory-networks.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/bluefield-trusted-entity.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/bluefield4-architecture.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/bluefield4-astra-7tbps.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/storage-scale-context.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/spectrum-x-multiplane-topology.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/multiplane-switch-savings.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/multiplane-failure-recovery.png">
+<meta property="article:published_time" content="2026-09-02T09:48:29.000Z">
+<meta property="article:modified_time" content="2026-09-02T10:08:31.204Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="AI Factory">
+<meta property="article:tag" content="BlueField-4">
+<meta property="article:tag" content="DPU">
+<meta property="article:tag" content="Hot Chips 2026">
+<meta property="article:tag" content="NVIDIA">
+<meta property="article:tag" content="RoCE">
+<meta property="article:tag" content="Spectrum-X">
+<meta property="article:tag" content="多平面网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/NVIDIABlueField4SpectrumX/five-ai-factory-networks.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/","path":"2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/","title":"英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8B%B1%E4%BC%9F%E8%BE%BE-BlueField-4-%E4%B8%8E-Spectrum-X%EF%BC%9AAI-Factory-%E7%9A%84%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E4%B8%8E%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81AI-Factory-%E4%B8%8D%E5%86%8D%E5%8F%AA%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E7%BD%91%E7%BB%9C"><span class="nav-number">1.1.</span> <span class="nav-text">一、AI Factory 不再只需要一张网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81BlueField-4%EF%BC%9A%E6%8A%8A%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E7%A7%BB%E5%87%BA%E7%A7%9F%E6%88%B7%E4%B8%BB%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">二、BlueField-4：把基础设施移出租户主机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-DPU-%E6%88%90%E4%B8%BA%E5%B9%B3%E5%8F%B0%E7%9A%84%E5%8F%AF%E4%BF%A1%E5%AE%9E%E4%BD%93"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 DPU 成为平台的可信实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%BB%8E%E9%80%9A%E7%94%A8-Cloud-DPU-%E8%BD%AC%E5%90%91-AI-Native-DPU"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 从通用 Cloud DPU 转向 AI-Native DPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Astra-%E7%94%A8%E4%B8%80%E4%B8%AA%E6%8E%A7%E5%88%B6%E5%9F%9F%E6%8E%A5%E7%AE%A1-7-Tb-s-%E6%95%B0%E6%8D%AE%E8%B7%AF%E5%BE%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 Astra 用一个控制域接管 7 Tb&#x2F;s 数据路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E7%94%A8-Storage-Scale-%E6%89%A9%E5%B1%95%E6%99%BA%E8%83%BD%E4%BD%93%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 用 Storage-Scale 扩展智能体上下文</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Spectrum-X%EF%BC%9A%E4%BB%8E%E5%A4%9A%E8%BD%A8%E6%89%A9%E5%B1%95%E5%88%B0%E5%A4%9A%E5%B9%B3%E9%9D%A2"><span class="nav-number">1.3.</span> <span class="nav-text">三、Spectrum-X：从多轨扩展到多平面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%A4%9A%E8%BD%A8%E7%BD%91%E7%BB%9C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BB%8D%E7%84%B6%E5%8F%97%E8%A7%84%E6%A8%A1%E9%99%90%E5%88%B6"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 多轨网络为什么仍然受规模限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%94%A8-200G-%E7%AB%AF%E5%8F%A3%E5%92%8C-8-%E4%B8%AA-Plane-%E6%89%A9%E5%B1%95%E8%B7%AF%E5%BE%84%E5%A4%9A%E6%A0%B7%E6%80%A7"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 用 200G 端口和 8 个 Plane 扩展路径多样性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%89%81%E5%B9%B3%E5%A4%9A%E5%B9%B3%E9%9D%A2%E5%87%8F%E5%B0%91%E4%BA%A4%E6%8D%A2%E6%9C%BA%E6%95%B0%E9%87%8F"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 扁平多平面减少交换机数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%95%85%E9%9A%9C%E6%97%B6%E4%BF%9D%E7%95%99%E5%A4%A7%E9%83%A8%E5%88%86%E5%B8%A6%E5%AE%BD"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 故障时保留大部分带宽</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%9B%B4%E7%BB%95%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C%E8%A1%A5%E9%BD%90%E5%85%89%E4%BA%92%E8%BF%9E%E4%B8%8E%E8%B7%A8%E7%AB%99%E7%82%B9%E6%89%A9%E5%B1%95"><span class="nav-number">1.4.</span> <span class="nav-text">四、围绕多平面网络补齐光互连与跨站点扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81BlueField-4-%E4%B8%8E-Spectrum-X-%E5%A6%82%E4%BD%95%E5%BD%A2%E6%88%90%E4%B8%80%E6%9D%A1%E6%95%B0%E6%8D%AE%E8%B7%AF%E5%BE%84"><span class="nav-number">1.5.</span> <span class="nav-text">五、BlueField-4 与 Spectrum-X 如何形成一条数据路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E8%AE%BE%E8%AE%A1%E4%BA%AE%E7%82%B9%E4%B8%8E%E8%BE%B9%E7%95%8C"><span class="nav-number">1.6.</span> <span class="nav-text">六、设计亮点与边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">67</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">345</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/12/MRC-SRv6/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-12</time>
+        <br>
+      使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/01/HotChips2026-NVIDIA-LPU/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-01</time>
+        <br>
+      NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-OpenAI-Jalapeno/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Google-TPU8/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Google 第八代 TPU：TPU 8i、TPU 8t 与系统级互连
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/07/Extreme-Scale-Interconnection-Networks/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-07</time>
+        <br>
+      Extreme-Scale Interconnection Networks：面向超大规模系统的多程随机叶脊网络
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络 | 正在输入">
+      <meta itemprop="description" content="英伟达如何用 BlueField-4 隔离并接管网络、存储与安全数据路径，再用 Spectrum-X 多平面网络把 AI Factory 扩展到数十万块 GPU。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-02 17:48:29 / 修改时间：18:08:31" itemprop="dateCreated datePublished" datetime="2026-09-02T17:48:29+08:00">2026-09-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">数据中心网络</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">英伟达如何用 BlueField-4 隔离并接管网络、存储与安全数据路径，再用 Spectrum-X 多平面网络把 AI Factory 扩展到数十万块 GPU。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>英伟达正在把 AI Factory 的设计边界从 GPU 计算扩展到整套数据中心基础设施。BlueField-4 位于服务器与数据中心共享资源之间，独立执行网络、存储、安全和遥测；Spectrum-X 则用多轨、多平面的以太网拓扑，将低抖动 RDMA 网络扩展到数十万块 GPU。</p>
+<p>两者解决的是同一条数据路径上的不同问题：<strong>BlueField-4 决定流量能否安全、高效地离开计算节点，Spectrum-X 决定这些流量能否在大规模集群中稳定到达。</strong> 这种分工让 CPU 和 GPU 聚焦租户工作负载，同时把基础设施控制权保留在独立的可信域中。</p>
+<span id="more"></span>
+
+<h1 id="英伟达-BlueField-4-与-Spectrum-X：AI-Factory-的基础设施与多平面网络"><a href="#英伟达-BlueField-4-与-Spectrum-X：AI-Factory-的基础设施与多平面网络" class="headerlink" title="英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络"></a>英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络</h1><h2 id="一、AI-Factory-不再只需要一张网络"><a href="#一、AI-Factory-不再只需要一张网络" class="headerlink" title="一、AI Factory 不再只需要一张网络"></a>一、AI Factory 不再只需要一张网络</h2><p>英伟达把 AI Factory 的互连拆成五个面向不同距离和流量特征的网络，而不是用一张通用以太网覆盖所有场景：</p>
+<table>
+<thead>
+<tr>
+<th>网络维度</th>
+<th>连接对象</th>
+<th>主要技术</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scale-In</td>
+<td>计算节点与存储、安全、云服务及管理系统</td>
+<td>BlueField-4</td>
+<td>隔离租户与基础设施，承载服务访问</td>
+</tr>
+<tr>
+<td>Scale-Up</td>
+<td>同一计算域内的 GPU</td>
+<td>NVLink</td>
+<td>提供高带宽、低延迟的 GPU 互连</td>
+</tr>
+<tr>
+<td>Scale-Out</td>
+<td>多个计算域或机架</td>
+<td>Spectrum-X</td>
+<td>承载训练和推理的 RDMA 通信</td>
+</tr>
+<tr>
+<td>Scale-Across</td>
+<td>多座 AI Factory</td>
+<td>Spectrum-XGS</td>
+<td>支持跨园区、跨地域分布式计算</td>
+</tr>
+<tr>
+<td>Context Scale</td>
+<td>HBM、系统内存与共享存储</td>
+<td>BlueField Storage Processor</td>
+<td>扩展智能体上下文和 KV Cache 容量</td>
+</tr>
+</tbody></table>
+<p>其中，Scale-In 不是通常所说的芯片内部互连，而是英伟达给计算节点访问数据中心服务定义的新路径。BlueField-4 管理这条路径的安全与资源，Spectrum-X 则从 Scale-Out 开始承担集群级通信。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/five-ai-factory-networks.png" alt="英伟达为 AI Factory 划分的五类专用网络"></p>
+<p>图 1：五类网络分别处理节点内 GPU 互连、节点服务访问、集群扩展、跨站点连接和上下文存储。</p>
+<h2 id="二、BlueField-4：把基础设施移出租户主机"><a href="#二、BlueField-4：把基础设施移出租户主机" class="headerlink" title="二、BlueField-4：把基础设施移出租户主机"></a>二、BlueField-4：把基础设施移出租户主机</h2><h3 id="2-1-DPU-成为平台的可信实体"><a href="#2-1-DPU-成为平台的可信实体" class="headerlink" title="2.1 DPU 成为平台的可信实体"></a>2.1 DPU 成为平台的可信实体</h3><p>传统服务器通常由主机操作系统直接管理网卡、存储和安全策略。这意味着租户工作负载与数据中心控制面共享同一个信任边界，基础设施服务也会占用主机 CPU。</p>
+<p>BlueField-4 在主机前增加一个独立服务器域。上层租户域包含 CPU、GPU、LPU、模型权重、LLM 请求和用户数据；下层 BlueField DPU 运行自己的 DPU OS 与 DOCA，控制网络、存储和安全；再向下才是数据中心共享资源。基础设施策略因此不需要依赖租户操作系统执行。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/bluefield-trusted-entity.png" alt="BlueField DPU 将租户域与数据中心域隔离"></p>
+<p>图 2：BlueField 位于主机与共享资源之间，成为网络、存储和安全策略的独立执行点。</p>
+<p>这种设计带来三个直接作用：</p>
+<ol>
+<li><strong>隔离</strong>：租户操作系统不能绕过 DPU 直接控制数据中心网络；</li>
+<li><strong>卸载</strong>：网络、存储、安全和遥测不再持续占用主机 CPU；</li>
+<li><strong>统一策略</strong>：流量进入网络之前即可完成认证、加密、访问控制和可观测性处理。</li>
+</ol>
+<h3 id="2-2-从通用-Cloud-DPU-转向-AI-Native-DPU"><a href="#2-2-从通用-Cloud-DPU-转向-AI-Native-DPU" class="headerlink" title="2.2 从通用 Cloud DPU 转向 AI-Native DPU"></a>2.2 从通用 Cloud DPU 转向 AI-Native DPU</h3><p>面向普通云服务器的 DPU 通常对应一块可插拔网卡和约 200 Gb&#x2F;s 的网络。Vera Rubin 计算托盘却包含多条 800 Gb&#x2F;s 链路，GPU Scale-Out、服务访问和管理流量合计接近 7 Tb&#x2F;s。若为每块网卡复制一套 CPU、内存、管理接口和 DPU，功耗、成本与布线复杂度都会快速增加。</p>
+<p>BlueField-4 将 Grace CPU 与 ConnectX-9 网络、存储和安全加速器组合起来：</p>
+<ul>
+<li>64 个 Arm Neoverse V2 核心，频率 1.7 GHz；</li>
+<li>275 GB&#x2F;s LPDDR5 CPU 内存带宽；</li>
+<li>800 Gb&#x2F;s Ethernet 与 200G PAM4 SerDes；</li>
+<li>PCIe Gen6 x16；</li>
+<li>200 MPPS 包处理和 25 MIOPS 存储处理；</li>
+<li>支持 PSP、TLS、IPsec 和 AES-XTS 等内联加密。</li>
+</ul>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/bluefield4-architecture.png" alt="BlueField-4 集成 Grace CPU 与 ConnectX-9 加速器"></p>
+<p>图 3：Grace CPU 处理复杂控制逻辑，ConnectX-9 数据面负责高速网络、存储和内联安全。</p>
+<p>这里的 CPU 与加速器承担不同任务：ConnectX-9 处理 RDMA、TCP&#x2F;IP、交换、路由、加密和存储 I&#x2F;O；Grace CPU 管理密钥、会话、连接状态、存储卷、遥测和健康检查。高频数据面由硬件加速，变化更复杂的控制面仍保留可编程 CPU。</p>
+<h3 id="2-3-Astra-用一个控制域接管-7-Tb-s-数据路径"><a href="#2-3-Astra-用一个控制域接管-7-Tb-s-数据路径" class="headerlink" title="2.3 Astra 用一个控制域接管 7 Tb&#x2F;s 数据路径"></a>2.3 Astra 用一个控制域接管 7 Tb&#x2F;s 数据路径</h3><p>英伟达通过 Astra 将一颗 BlueField-4 与计算托盘中的多颗 ConnectX-9 连接起来，使 DPU 能在不经过租户主机的情况下统一控制约 7 Tb&#x2F;s 聚合流量。每条外部链路仍是 800 Gb&#x2F;s，因此 7 Tb&#x2F;s 是 Vera Rubin 托盘级汇总能力，不是单个 BlueField-4 端口速率。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/bluefield4-astra-7tbps.png" alt="BlueField-4 Astra 接管 Vera Rubin 托盘的全部网络流量"></p>
+<p>图 4：Astra 把多颗 ConnectX-9 纳入同一 BlueField-4 控制域，使 Scale-In 与 Scale-Out 流量都经过可信数据路径。</p>
+<p>集中式 DPU 不需要在每块网卡旁重复配置 CPU 和内存，却仍能对所有链路执行零信任策略、加密和遥测。英伟达给出的测试曲线显示，加密和虚拟化后的 Scale-Out 带宽可以随 1 至 8 块网卡接近线性增长。</p>
+<h3 id="2-4-用-Storage-Scale-扩展智能体上下文"><a href="#2-4-用-Storage-Scale-扩展智能体上下文" class="headerlink" title="2.4 用 Storage-Scale 扩展智能体上下文"></a>2.4 用 Storage-Scale 扩展智能体上下文</h3><p>智能体会话不断累积上下文，KV Cache 不能永远留在容量有限的 GPU HBM 中。英伟达因而把上下文存储划分成多级：G1 HBM 保存活跃 KV，G2 系统内存用于暂存和溢出，G3 本地存储保存可复用的温热 KV，G3.5 CMX 与 G4 通过 Scale-In 网络提供更冷或共享的上下文。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/storage-scale-context.png" alt="Storage-Scale 的分层 KV Cache 与上下文存储"></p>
+<p>图 5：上下文根据活跃程度在 HBM、系统内存、本地存储和共享存储之间分层放置。</p>
+<p>BlueField-4 与 DOCA MEMOS 负责端到端的数据移动和管理。英伟达为基于 Vera CPU 与 ConnectX-9 的 Storage-Scale 系统给出 3.2 Tb&#x2F;s 存储访问、10 倍 IOPS 和 5 倍能效，但比较基线和完整配置需要结合实际部署进一步确认。其设计意义在于让 GPU 保留热数据，把容量扩展和状态管理转移到独立基础设施层。</p>
+<h2 id="三、Spectrum-X：从多轨扩展到多平面"><a href="#三、Spectrum-X：从多轨扩展到多平面" class="headerlink" title="三、Spectrum-X：从多轨扩展到多平面"></a>三、Spectrum-X：从多轨扩展到多平面</h2><h3 id="3-1-多轨网络为什么仍然受规模限制"><a href="#3-1-多轨网络为什么仍然受规模限制" class="headerlink" title="3.1 多轨网络为什么仍然受规模限制"></a>3.1 多轨网络为什么仍然受规模限制</h3><p>Spectrum-X Multi-Rail 为每块 Rubin GPU 提供 1.6 Tb&#x2F;s Scale-Out 带宽，并用 4 条 Rail 分散流量。采用约 100 Tb&#x2F;s、64 个 1.6 Tb&#x2F;s 端口的交换机时，这种结构可连接约 8,000 块 GPU。</p>
+<p>Rail 可以隔离不同 GPU 端口产生的通信，但如果每条高速端口仍以较粗粒度连接少量交换机，交换机端口数会限制网络规模；继续增加多级交换机又会引入更多跳数、设备、功耗和故障点。</p>
+<h3 id="3-2-用-200G-端口和-8-个-Plane-扩展路径多样性"><a href="#3-2-用-200G-端口和-8-个-Plane-扩展路径多样性" class="headerlink" title="3.2 用 200G 端口和 8 个 Plane 扩展路径多样性"></a>3.2 用 200G 端口和 8 个 Plane 扩展路径多样性</h3><p>Spectrum-X Multiplane 将约 100 Tb&#x2F;s 交换容量组织为 512 个 200 Gb&#x2F;s 端口，并构建 8 个 Plane、4 条 Rail。SuperNIC 把一块 GPU 的 1.6 Tb&#x2F;s 聚合流量分散到多个独立平面，硬件全局自适应路由再根据路径状态选择可用链路。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/spectrum-x-multiplane-topology.png" alt="Spectrum-X 多平面、多轨 Scale-Out 拓扑"></p>
+<p>图 6：细粒度 200G 端口把每块 GPU 分散连接到多个交换平面，扩大端口规模和可选路径数量。</p>
+<p>在相同的单 GPU 1.6 Tb&#x2F;s 带宽下，英伟达把最大规模从 Multi-Rail 的 8,000 块 GPU 提高到 Multiplane 的 512,000 块 GPU，即 64 倍。扩展来自更高端口基数和多个并行平面，而不是简单叠加更多传统 Clos 层级。</p>
+<h3 id="3-3-扁平多平面减少交换机数量"><a href="#3-3-扁平多平面减少交换机数量" class="headerlink" title="3.3 扁平多平面减少交换机数量"></a>3.3 扁平多平面减少交换机数量</h3><p>传统单轨多级网络需要接入、汇聚和核心交换层。Multiplane 让 SuperNIC 直接分散连接多个交换平面，在获得路径多样性的同时减少中间层级。英伟达估算，这种 Multi-Plane Multi-Rail 结构可以节省 1.7 倍 Scale-Out 交换机，从而同步降低机架空间、功耗和成本。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/multiplane-switch-savings.png" alt="Spectrum-X 多平面与传统多级单轨拓扑对比"></p>
+<p>图 7：多平面拓扑使用多个并行直连平面替代更深的多级交换结构。</p>
+<h3 id="3-4-故障时保留大部分带宽"><a href="#3-4-故障时保留大部分带宽" class="headerlink" title="3.4 故障时保留大部分带宽"></a>3.4 故障时保留大部分带宽</h3><p>多平面的另一项价值是故障不必让整个通信域停顿。某个平面或链路失效后，其余平面仍能承载流量；Spectrum-X 的硬件故障检测、自适应路由和拥塞控制负责把流量转移到剩余路径。</p>
+<p>在英伟达给出的故障场景中，Spectrum-X 用 2.68 ms 检测故障，检测期间仍保留约 90% RDMA 带宽，并在 100 ms 内恢复完整带宽。对比的通用以太网多平面方案检测和恢复各需 1,080 ms，检测阶段带宽降为零。英伟达据此给出 400 倍更快的检测、11 倍更快的恢复和 1.6 倍 AI Factory Goodput。</p>
+<p><img data-src="/images/NVIDIABlueField4SpectrumX/multiplane-failure-recovery.png" alt="Spectrum-X 与通用以太网多平面网络的故障检测和恢复"></p>
+<p>图 8：Spectrum-X 在故障检测和重新收敛期间保留可用平面，因此只损失部分带宽。</p>
+<p>在正常负载下，英伟达还给出相对通用以太网的 1.6 倍 RDMA 带宽、2.2 倍多租户带宽和更低抖动；DeepSeek V3 多作业训练性能提高 1.9 倍，部分 NCCL 操作最高提高 14 倍。这些结果对应特定模型、消息模式和并发环境，更适合说明拥塞控制与噪声隔离的作用，而不是作为所有工作负载的固定加速比。</p>
+<h2 id="四、围绕多平面网络补齐光互连与跨站点扩展"><a href="#四、围绕多平面网络补齐光互连与跨站点扩展" class="headerlink" title="四、围绕多平面网络补齐光互连与跨站点扩展"></a>四、围绕多平面网络补齐光互连与跨站点扩展</h2><p>当集群扩展到几十万块 GPU 时，光模块本身会成为功耗和可靠性的重要组成部分。Spectrum-X Photonics 使用微环调制器 CPO、3D 堆叠硅光引擎和可拆卸光纤连接器，把光电转换进一步靠近交换芯片。英伟达给出的目标是减少激光器数量与光互连功耗，使高基数多平面网络能够在机架空间和供电约束下继续扩展。</p>
+<p>跨数据中心的 Spectrum-XGS 则把同一套思路延伸到 Scale-Across：102.4 Tb&#x2F;s 交换机和 800 Gb&#x2F;s ConnectX-9 SuperNIC 配合距离感知负载均衡与拥塞控制，减少跨站点通信对分布式作业的拖累。DSX 平台进一步承担整套 AI Factory 的仿真、验证、软件部署和运行管理。</p>
+<h2 id="五、BlueField-4-与-Spectrum-X-如何形成一条数据路径"><a href="#五、BlueField-4-与-Spectrum-X-如何形成一条数据路径" class="headerlink" title="五、BlueField-4 与 Spectrum-X 如何形成一条数据路径"></a>五、BlueField-4 与 Spectrum-X 如何形成一条数据路径</h2><p>两项技术组合后，一次 Scale-Out 通信大致经过以下边界：</p>
+<ol>
+<li>GPU 或 CPU 在租户域中产生 RDMA、存储或服务请求；</li>
+<li>BlueField-4 在独立可信域中执行身份、策略、加密和遥测；</li>
+<li>ConnectX-9 将流量送入 Spectrum-X 的 Rail 与 Plane；</li>
+<li>Spectrum-X 根据全局路径和拥塞状态选择可用平面；</li>
+<li>目标节点的 BlueField-4 再次执行基础设施策略后，把数据交给租户工作负载。</li>
+</ol>
+<p>这条路径将“谁可以发送”和“怎样送达”分开：BlueField-4 负责信任边界与节点级服务，Spectrum-X 负责集群级带宽、路径选择和故障恢复。主机不再同时承担计算、基础设施控制和网络异常处理。</p>
+<h2 id="六、设计亮点与边界"><a href="#六、设计亮点与边界" class="headerlink" title="六、设计亮点与边界"></a>六、设计亮点与边界</h2><p>BlueField-4 的亮点不是单纯提高 DPU 核心数，而是用 Grace CPU、ConnectX-9 和 Astra 把一个托盘的全部数据路径纳入同一可信控制域；Spectrum-X 的亮点也不只是更快的交换芯片，而是通过多轨、多平面和硬件自适应路由，把交换容量转换成规模、路径多样性和故障期间的有效带宽。</p>
+<p>同时需要注意三个边界：</p>
+<ul>
+<li>7 Tb&#x2F;s 是 Vera Rubin 托盘的聚合数据路径，不是 BlueField-4 的单端口带宽；</li>
+<li>512,000 GPU 是在 1.6 Tb&#x2F;s&#x2F;GPU、100T 交换机、512×200G 端口、8 Plane 和 4 Rail 配置下的拓扑规模；</li>
+<li>1.6 倍 Goodput、1.7 倍交换机节省及存储能效等数字均来自英伟达给定配置，不能脱离流量模式、故障模型和比较基线直接泛化。</li>
+</ul>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p>英伟达为 AI Factory 增加的不是一块更快的网卡，而是两层新的系统结构：<strong>BlueField-4 把基础设施变成独立、可信、可编程的节点级操作域，Spectrum-X Multiplane 把这个操作域延伸成可扩展、可绕障的集群网络。</strong></p>
+<p>前者通过卸载与隔离保护 GPU、模型权重和用户数据，后者通过细粒度端口、并行平面和硬件路由提高规模与可用带宽。两者共同体现了 AI 基础设施的一个变化：计算性能不再只取决于 GPU，而取决于整条数据路径能否以同样的速度完成访问控制、数据移动和故障恢复。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Idan Burstein, <em>NVIDIA BlueField-4 Processor Powers the AI Factory</em>, NVIDIA, Hot Chips 2026，共 25 页。</li>
+<li>Gilad Shainer, <em>NVIDIA Spectrum-X Ethernet Multiplane Network Architecture</em>, NVIDIA, Hot Chips 2026，共 26 页。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Hot-Chips-2026/" rel="tag"># Hot Chips 2026</a>
+              <a href="/tags/NVIDIA/" rel="tag"># NVIDIA</a>
+              <a href="/tags/BlueField-4/" rel="tag"># BlueField-4</a>
+              <a href="/tags/Spectrum-X/" rel="tag"># Spectrum-X</a>
+              <a href="/tags/DPU/" rel="tag"># DPU</a>
+              <a href="/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/" rel="tag"># 多平面网络</a>
+              <a href="/tags/RoCE/" rel="tag"># RoCE</a>
+              <a href="/tags/AI-Factory/" rel="tag"># AI Factory</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/01/HotChips2026-NVIDIA-LPU/" rel="prev" title="NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理">
+                  <i class="fa fa-angle-left"></i> NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
