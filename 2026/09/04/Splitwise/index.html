@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="解读 Splitwise 如何依据大模型推理两个阶段的资源差异，拆分机器池、优化 KV Cache 传输，并在延迟 SLO 下改善吞吐、成本与功耗。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/09/04/Splitwise/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="解读 Splitwise 如何依据大模型推理两个阶段的资源差异，拆分机器池、优化 KV Cache 传输，并在延迟 SLO 下改善吞吐、成本与功耗。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Splitwise/batching-throughput.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Splitwise/phase-power-utilization.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Splitwise/system-architecture.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Splitwise/kv-cache-transfer-latency.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Splitwise/throughput-optimized-clusters.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Splitwise/iso-throughput-clusters.png">
+<meta property="article:published_time" content="2026-09-03T16:27:25.000Z">
+<meta property="article:modified_time" content="2026-09-03T16:37:23.653Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="KV Cache">
+<meta property="article:tag" content="Prefill-Decode 分离">
+<meta property="article:tag" content="Splitwise">
+<meta property="article:tag" content="大模型推理">
+<meta property="article:tag" content="推理调度">
+<meta property="article:tag" content="论文阅读">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/Splitwise/batching-throughput.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/09/04/Splitwise/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/04/Splitwise/","path":"2026/09/04/Splitwise/","title":"Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/09/04/Splitwise/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-publications"><a href="/publications/" rel="section"><i class="fa fa-book-open fa-fw"></i>Publications</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Splitwise%EF%BC%9A%E6%8B%86%E5%88%86-Prefill-%E4%B8%8E-Decode-%E7%9A%84%E9%AB%98%E6%95%88%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8C%E4%B8%80%E5%8F%B0-GPU-%E5%BE%88%E9%9A%BE%E5%90%8C%E6%97%B6%E6%9C%8D%E5%8A%A1%E5%A5%BD%E4%B8%A4%E4%B8%AA%E9%98%B6%E6%AE%B5"><span class="nav-number">1.1.</span> <span class="nav-text">一、为什么同一台 GPU 很难同时服务好两个阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%85%88%E5%88%86%E6%B8%85%E5%9B%9B%E4%B8%AA%E6%8C%87%E6%A0%87"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 先分清四个指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%9C%9F%E5%AE%9E%E8%AF%B7%E6%B1%82%E5%B9%B6%E4%B8%8D%E5%A4%A9%E7%84%B6%E5%BD%A2%E6%88%90%E7%90%86%E6%83%B3%E5%A4%A7-Batch"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 真实请求并不天然形成理想大 Batch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E4%B8%A4%E4%B8%AA%E9%98%B6%E6%AE%B5%E5%AF%B9-Batch-%E7%9A%84%E5%8F%8D%E5%BA%94%E6%AD%A3%E5%A5%BD%E7%9B%B8%E5%8F%8D"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 两个阶段对 Batch 的反应正好相反</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E8%AE%A1%E7%AE%97%E3%80%81%E6%98%BE%E5%AD%98%E5%92%8C%E5%8A%9F%E8%80%97%E4%B9%9F%E4%B8%8D%E5%AF%B9%E7%A7%B0"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 计算、显存和功耗也不对称</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Splitwise-%E7%9A%84%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">二、Splitwise 的总体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B8%A4%E7%BA%A7%E8%B0%83%E5%BA%A6%E5%90%84%E7%AE%A1%E4%B8%80%E5%B1%82%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 两级调度各管一层问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%9A%BE%E7%82%B9%EF%BC%9A%E5%A6%82%E4%BD%95%E6%90%AC%E8%BF%90-KV-Cache"><span class="nav-number">1.3.</span> <span class="nav-text">三、真正的难点：如何搬运 KV Cache</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%A1%AC%E4%BB%B6%E4%B8%8D%E6%98%AF%E5%8F%AA%E6%9C%89%E4%B8%80%E7%A7%8D%E6%8B%86%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">四、硬件不是只有一种拆法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%AF%84%E4%BC%B0%E7%BB%93%E6%9E%9C%E5%BA%94%E8%AF%A5%E6%80%8E%E6%A0%B7%E8%AF%BB"><span class="nav-number">1.5.</span> <span class="nav-text">五、评估结果应该怎样读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%90%8C%E5%8A%9F%E8%80%97%EF%BC%9A%E6%8A%8A%E9%97%B2%E7%BD%AE%E7%AE%97%E5%8A%9B%E6%8D%A2%E6%88%90%E5%90%9E%E5%90%90"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 同功耗：把闲置算力换成吞吐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%90%8C%E6%88%90%E6%9C%AC%EF%BC%9A%E6%97%A7-GPU-%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%9B%B4%E5%A4%9A%E7%A9%BA%E9%97%B4%E6%8D%A2%E5%90%9E%E5%90%90"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 同成本：旧 GPU 可以用更多空间换吞吐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%90%8C%E5%90%9E%E5%90%90%EF%BC%9A%E5%88%86%E5%88%AB%E4%BC%98%E5%8C%96%E5%8A%9F%E8%80%97%E6%88%96%E6%88%90%E6%9C%AC"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 同吞吐：分别优化功耗或成本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%AF%B9%E8%B4%9F%E8%BD%BD%E5%8F%98%E5%8C%96%E7%9A%84%E9%80%82%E5%BA%94%E8%83%BD%E5%8A%9B"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 对负载变化的适应能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81Splitwise-%E7%9A%84%E8%BE%B9%E7%95%8C%E4%B8%8E%E4%BB%A3%E4%BB%B7"><span class="nav-number">1.6.</span> <span class="nav-text">六、Splitwise 的边界与代价</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%AE%83%E6%9C%80%E9%80%82%E5%90%88%E5%8F%97%E4%BA%A4%E4%BA%92%E5%BB%B6%E8%BF%9F%E7%BA%A6%E6%9D%9F%E7%9A%84%E5%9C%A8%E7%BA%BF%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 它最适合受交互延迟约束的在线服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E9%AB%98%E9%80%9F%E4%BA%92%E8%BF%9E%E6%98%AF%E9%87%8D%E8%A6%81%E5%89%8D%E6%8F%90"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 高速互连是重要前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E6%95%85%E9%9A%9C%E6%81%A2%E5%A4%8D%E4%B8%8E%E8%B0%83%E5%BA%A6%E6%89%A9%E5%B1%95%E6%80%A7%E4%BB%8D%E5%BE%85%E5%AE%8C%E5%96%84"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 故障恢复与调度扩展性仍待完善</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E5%AF%B9%E8%AF%9D%E7%8A%B6%E6%80%81%E5%A4%8D%E7%94%A8%E4%BC%9A%E6%94%B9%E5%8F%98%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 对话状态复用会改变数据流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E7%BB%93%E8%AE%BA%E5%8F%97%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%B9%B4%E4%BB%A3%E7%BA%A6%E6%9D%9F"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.5 结论受模型与硬件年代约束</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E5%90%AF%E7%A4%BA"><span class="nav-number">1.7.</span> <span class="nav-text">七、总结与启示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">348</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-16</time>
+        <br>
+      大模型推理基础
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/01/HotChips2026-NVIDIA-LPU/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-01</time>
+        <br>
+      NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/13/ASPLOS2026-Ouroboros/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-13</time>
+        <br>
+      ASPLOS2026-Ouroboros
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/31/HotChips2026-Cerebras-CS4/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-31</time>
+        <br>
+      Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/09/04/Splitwise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统 | 正在输入">
+      <meta itemprop="description" content="解读 Splitwise 如何依据大模型推理两个阶段的资源差异，拆分机器池、优化 KV Cache 传输，并在延迟 SLO 下改善吞吐、成本与功耗。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-04 00:27:25 / 修改时间：00:37:23" itemprop="dateCreated datePublished" datetime="2026-09-04T00:27:25+08:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">计算机体系结构</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>19 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">解读 Splitwise 如何依据大模型推理两个阶段的资源差异，拆分机器池、优化 KV Cache 传输，并在延迟 SLO 下改善吞吐、成本与功耗。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>一次生成式大模型推理，看起来只是模型连续执行多轮前向计算，内部却包含两种几乎相反的工作负载：处理输入提示的 <strong>Prompt&#x2F;Prefill 阶段</strong>计算密集，逐个生成后续 Token 的 <strong>Token Generation&#x2F;Decode 阶段</strong>则更受显存容量和带宽约束。如果把两者始终混在同一批昂贵 GPU 上执行，硬件配置只能迁就二者，批处理还会让首 Token 延迟与 Token 间延迟相互干扰。</p>
+<p>ISCA 2024 论文《Splitwise: Efficient Generative LLM Inference Using Phase Splitting》提出了一条直接但并不简单的路径：<strong>将两个阶段放入独立机器池，为各自选择合适的 GPU、功耗上限和批处理策略，再通过高速互连传递 KV Cache</strong>。在经实机数据校准的集群模拟中，论文报告 Splitwise 集群在满足延迟 SLO 的前提下，可实现最高 <code>1.4×</code> 的吞吐提升并将成本降低 <code>20%</code>；或者在成本和功耗预算不变时获得 <code>2.35×</code> 的吞吐。</p>
+<p>这篇文章从“为什么值得拆”出发，依次分析 Splitwise 的调度、KV Cache 传输、集群配置和评估边界。</p>
+<span id="more"></span>
+
+<h1 id="Splitwise：拆分-Prefill-与-Decode-的高效大模型推理系统"><a href="#Splitwise：拆分-Prefill-与-Decode-的高效大模型推理系统" class="headerlink" title="Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统"></a>Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统</h1><h2 id="一、为什么同一台-GPU-很难同时服务好两个阶段"><a href="#一、为什么同一台-GPU-很难同时服务好两个阶段" class="headerlink" title="一、为什么同一台 GPU 很难同时服务好两个阶段"></a>一、为什么同一台 GPU 很难同时服务好两个阶段</h2><h3 id="1-1-先分清四个指标"><a href="#1-1-先分清四个指标" class="headerlink" title="1.1 先分清四个指标"></a>1.1 先分清四个指标</h3><p>一条请求进入生成式 LLM 后，Prompt 中的全部输入 Token 可以并行完成一次前向计算，得到第一个输出 Token，并生成各层的 KV Cache。此后模型每轮只接收上一个 Token，同时读取此前累积的 KV Cache，串行地产生下一个 Token。</p>
+<p>因此，推理服务不能只看“每秒生成多少 Token”，至少需要同时关注四个指标：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>含义</th>
+<th>用户感知</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E2E latency</td>
+<td>从提交请求到完整响应结束</td>
+<td>总等待时间</td>
+</tr>
+<tr>
+<td>TTFT（Time to First Token）</td>
+<td>请求到达至首 Token 返回</td>
+<td>多快开始响应</td>
+</tr>
+<tr>
+<td>TBT（Time Between Tokens）</td>
+<td>连续两个输出 Token 的平均间隔</td>
+<td>流式输出是否顺畅</td>
+</tr>
+<tr>
+<td>Throughput</td>
+<td>单位时间完成的请求数</td>
+<td>系统容量与成本</td>
+</tr>
+</tbody></table>
+<p>Prompt 阶段直接决定 TTFT，Decode 阶段的每次迭代决定 TBT；由于输出 Token 是串行生成的，哪怕单次 Decode 不慢，它仍可能占据大部分端到端时间。论文的一个典型观测是：对 BLOOM-176B 而言，处理 <code>1500</code> 个输入 Token 的 Prompt 阶段，耗时只相当于生成 <code>6</code> 个输出 Token；即便代码补全请求的输出很短，E2E 仍主要消耗在 Decode 上。</p>
+<h3 id="1-2-真实请求并不天然形成理想大-Batch"><a href="#1-2-真实请求并不天然形成理想大-Batch" class="headerlink" title="1.2 真实请求并不天然形成理想大 Batch"></a>1.2 真实请求并不天然形成理想大 Batch</h3><p>作者使用 2023 年 11 月 11 日采集的两段 Azure 生产轨迹，每段持续 <code>20</code> 分钟，分别代表代码补全与对话服务。受隐私要求限制，实验不读取提示内容，而是按真实轨迹的到达时间、输入长度和输出长度构造请求。主要模型是 Llama 2 70B 与 BLOOM-176B，默认在一台配备 <code>8</code> 张 H100 的机器上以 vLLM 运行。</p>
+<p>两类服务的请求形态差异很大：</p>
+<ul>
+<li>代码补全的输入长度中位数为 <code>1500</code> Token，输出仅 <code>13</code> Token；</li>
+<li>对话服务的输入长度中位数为 <code>1020</code> Token，输出中位数为 <code>129</code> Token，且输出长度近似呈双峰分布。</li>
+</ul>
+<p>即使采用能够把 Prompt 与 Decode 放入同一批次的 mixed continuous batching，机器也没有持续获得理想的大 Batch。对话轨迹中，<code>60%–70%</code> 的时间只运行了不超过 <code>20</code> 个活跃 Token；代码轨迹由于输出短，超过 <code>20%</code> 的时间实际上只有一个 Token 在运行。</p>
+<h3 id="1-3-两个阶段对-Batch-的反应正好相反"><a href="#1-3-两个阶段对-Batch-的反应正好相反" class="headerlink" title="1.3 两个阶段对 Batch 的反应正好相反"></a>1.3 两个阶段对 Batch 的反应正好相反</h3><p>Prompt 的算术强度高，增加输入 Token 可以更充分地使用 GPU 计算单元，但超过某一点后，吞吐反而下降。论文在两种模型上都观察到：Prompt 的批量 Token 数超过 <code>2048</code> 后，吞吐开始降低。以生产轨迹的输入中位数换算，这甚至对应不到两个请求。</p>
+<p>Decode 则不同。单步只处理每条请求最新的一个 Token，扩大 Batch 能把更多请求的矩阵—向量操作合并起来，吞吐一直增长到 Batch Size <code>64</code>，随后才因显存不足而停止。与此同时，Batch Size 从 <code>1</code> 增至 <code>64</code> 时，TBT 只增长约 <code>2×</code>。</p>
+<p><img data-src="/images/Splitwise/batching-throughput.png" alt="Prompt 与 Decode 阶段的批处理吞吐差异"></p>
+<p>图 1（原论文图 6）：Prompt 吞吐在批量 Token 数较小时见顶，Decode 吞吐则随 Batch 扩大而持续上升，直到显存容量成为限制。</p>
+<p>这意味着统一的批处理策略无法两全：Prompt 应限制批量以保护 TTFT 和吞吐，Decode 却应该尽可能聚合更多请求。</p>
+<h3 id="1-4-计算、显存和功耗也不对称"><a href="#1-4-计算、显存和功耗也不对称" class="headerlink" title="1.4 计算、显存和功耗也不对称"></a>1.4 计算、显存和功耗也不对称</h3><p>Prompt 同时计算大量输入 Token，表现为计算受限；Decode 每轮都要读取模型权重和不断增长的 KV Cache，更容易受显存容量与带宽限制。两者的功耗曲线也印证了这一点：Prompt 功耗随 Batch 增大而逼近 GPU 的 TDP，Decode 即使扩大 Batch，功耗仍大致停留在 TDP 的一半附近。</p>
+<p><img data-src="/images/Splitwise/phase-power-utilization.png" alt="Prompt 与 Decode 阶段的功耗利用率"></p>
+<p>图 2（原论文图 8）：Prompt 的功耗随批量增长并接近 TDP，Decode 的平均与峰值功耗对 Batch 大小都不敏感。</p>
+<p>论文进一步把 H100 GPU 的功耗上限从 <code>700 W</code> 降至 <code>350 W</code>：Prompt 延迟显著恶化，Decode 延迟却几乎不变。硬件代际的作用也不同。与 A100 相比，H100 的计算能力提升 <code>3.43×</code>，但 HBM 带宽只提升 <code>1.64×</code>、容量仍为 <code>80 GB</code>；实测 H100 对 TTFT 的改善明显大于对 TBT 的改善。因此，最新、计算能力最强的 GPU 应优先承担 Prompt，Decode 则有机会使用旧一代 GPU 或较低功耗配置。</p>
+<p>到这里，Splitwise 的出发点已经清楚：它不是把一条相同的计算简单切成两半，而是让<strong>计算密集阶段与内存密集阶段分别接受合适的资源管理</strong>。</p>
+<h2 id="二、Splitwise-的总体架构"><a href="#二、Splitwise-的总体架构" class="headerlink" title="二、Splitwise 的总体架构"></a>二、Splitwise 的总体架构</h2><p>Splitwise 将预装同一模型的机器组织为三个池：</p>
+<ul>
+<li><strong>Prompt Pool</strong>：执行 Prompt，生成首 Token 与 KV Cache；</li>
+<li><strong>Token Pool</strong>：接收 KV Cache，继续执行 Decode；</li>
+<li><strong>Mixed Pool</strong>：在负载升高或两侧不平衡时临时承接另一阶段，减少静态分池造成的资源碎片。</li>
+</ul>
+<p>一条新请求到达后，集群级调度器会同时选择一台 Prompt 机器和一台 Token 机器。Prompt 机器完成各层计算并把 KV Cache 发往目标机器，Token 机器随后生成余下输出。三个池不是不可变的物理分区：负载高时，调度器可以把相反角色的任务送入 mixed pool；待混合任务排空后，机器回到原来的角色。若负载分布长期偏离部署假设，系统再以较粗粒度重新划分 Prompt Pool 与 Token Pool。</p>
+<p><img data-src="/images/Splitwise/system-architecture.png" alt="Splitwise 的系统架构"></p>
+<p>图 3（原论文图 10）：集群级调度器管理 Prompt、Token 与动态 Mixed Pool；机器级调度器负责本机队列、显存和批处理，阶段间通过 InfiniBand 传递 KV Cache。</p>
+<h3 id="2-1-两级调度各管一层问题"><a href="#2-1-两级调度各管一层问题" class="headerlink" title="2.1 两级调度各管一层问题"></a>2.1 两级调度各管一层问题</h3><p>**集群级调度器（Cluster-Level Scheduler，CLS）**负责机器池管理和请求路由。它使用 Join-the-Shortest-Queue（JSQ）策略，队列长度按待处理 Token 数定义，而非简单按请求数计算。机器会周期性上报剩余显存和等待队列，但不必在每轮模型迭代后都与 CLS 通信。</p>
+<p>CLS 同时分配 Prompt 与 Token 机器还有一个重要原因：系统可以提前知道 KV Cache 的目的地，从而把传输与 Prompt 计算重叠起来。当目标池队列超过阈值时，CLS 先寻找 mixed pool；若仍无容量，才让对侧机器暂时处理另一种任务。</p>
+<p>**机器级调度器（Machine-Level Scheduler，MLS）**根据阶段采用不同策略：</p>
+<ul>
+<li>Prompt 机器按 FCFS 调度，并把一个批次的 Prompt Token 总数限制在 <code>2048</code> 以内；这是论文实验平台上的经验阈值，不是跨模型、跨硬件不变的常数。</li>
+<li>Token 机器同样按 FCFS 调度，但在显存允许时尽量扩大 Batch，接近容量上限后才让新 Token 排队。</li>
+<li>Mixed 机器为满足 TTFT SLO，会优先调度新 Prompt，必要时抢占 Decode；系统又会随等待时间提高 Decode 的优先级，并限制单个请求可被抢占的次数，以避免饥饿。</li>
+</ul>
+<p>这种设计的关键价值，是将“全局分池与路由”和“局部 Batch 与显存控制”拆开：CLS 不需要介入每次模型迭代，MLS 也不需要理解整个集群的负载。</p>
+<h2 id="三、真正的难点：如何搬运-KV-Cache"><a href="#三、真正的难点：如何搬运-KV-Cache" class="headerlink" title="三、真正的难点：如何搬运 KV Cache"></a>三、真正的难点：如何搬运 KV Cache</h2><p>阶段拆分会引入基线系统不存在的关键开销：Prompt 机器生成的 KV Cache 必须先到达 Token 机器，Decode 才能继续。</p>
+<p>KV Cache 大小与 Prompt Token 数近似成正比。最直接的做法，是等整个 Prompt 阶段结束后再一次性传输；但这会把通信完整地串在首 Token 与第二个 Token 之间，直接拉高第二个 Token 的延迟、TBT 和 E2E。Splitwise 因而采用两种自适应路径：</p>
+<ol>
+<li><strong>小 Prompt 使用串行传输。</strong> 数据量小时，同步与并发传输本身的额外开销可能得不偿失；论文的 H100 实现对小于 <code>512</code> 个批量 Token 的 Prompt 采用这一路径。</li>
+<li><strong>大 Prompt 使用逐层异步传输。</strong> 某一 Transformer 层计算完成后，该层 KV Cache 已经就绪，系统立刻异步发送它，同时 Prompt 机器继续计算下一层，从而把大部分通信隐藏在计算之后。</li>
+</ol>
+<p>作者在 vLLM 上实现该机制，并使用 MSCCL++ 的零拷贝、单边 <code>put</code> 原语通过 InfiniBand 发送数据。每个请求使用独立信号量通知 Token 机器；vLLM 的 KV Block 会尽量按连续内存合并，以减少传输次数。这种逐层流水需要细粒度同步，可能干扰较短 Prompt 的计算，也正是系统没有对所有请求一律启用它的原因。</p>
+<p><img data-src="/images/Splitwise/kv-cache-transfer-latency.png" alt="串行与逐层 KV Cache 传输的可见开销"></p>
+<p>图 4（原论文图 14）：串行传输开销随 Prompt 增长，逐层传输把未被计算隐藏的延迟稳定在 A100 约 <code>8 ms</code>、H100 约 <code>5 ms</code>。</p>
+<p>在两台机器的无 Batch 实验中，传输相对 Prompt 计算的开销低于 <code>7%</code>。对代码轨迹，串行传输在大 Prompt 下最多增加约 <code>3%</code> 的 E2E，而 Splitwise 的自适应方案把 E2E 开销压到 <code>0.8%</code>。从流式体验看，Splitwise 让第二个 Token 的延迟增加 <code>16.5%</code>，串行传输则会增加 <code>64%</code>。</p>
+<p>这些数字不是说通信已经“免费”。它们依赖高速后端网络：实验中的 A100 与 H100 环境分别使用 <code>200 Gbps</code> 和 <code>400 Gbps</code> InfiniBand。更准确的结论是：<strong>只要在层粒度暴露数据就绪时机，阶段拆分新增的数据搬运就可以从完整串行停顿变成多数可隐藏的流水开销。</strong></p>
+<h2 id="四、硬件不是只有一种拆法"><a href="#四、硬件不是只有一种拆法" class="headerlink" title="四、硬件不是只有一种拆法"></a>四、硬件不是只有一种拆法</h2><p>Splitwise 用两个字母表示 Prompt 与 Token 机器的类型，并评估四种部署：</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>Prompt Pool</th>
+<th>Token Pool</th>
+<th>设计意图</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Splitwise-AA</td>
+<td>DGX-A100</td>
+<td>DGX-A100</td>
+<td>复用成本较低、供给更充足的旧一代 GPU</td>
+</tr>
+<tr>
+<td>Splitwise-HH</td>
+<td>DGX-H100</td>
+<td>DGX-H100</td>
+<td>保持硬件同构，只改变阶段管理方式</td>
+</tr>
+<tr>
+<td>Splitwise-HA</td>
+<td>DGX-H100</td>
+<td>DGX-A100</td>
+<td>Prompt 用更强计算，Decode 用更高性价比硬件</td>
+</tr>
+<tr>
+<td>Splitwise-HHcap</td>
+<td>DGX-H100</td>
+<td>限功耗 DGX-H100</td>
+<td>同构部署下回收 Decode 用不到的功耗预算</td>
+</tr>
+</tbody></table>
+<p>HHcap 并不是把整机简单减半：论文将 Token 机器的每张 H100 GPU 限制在额定功耗的 <code>50%</code>，折算后 Token 机器的整机供电约为未限功耗 H100 机器的 <code>70%</code>。</p>
+<p>机器数量同样不能凭阶段耗时比例直接推算。作者构建事件驱动的 SplitwiseSim，以真实硬件上不同输入、输出和 Batch 大小的 profiling 数据建立分段线性性能模型。模型在 <code>80:20</code> 的训练&#x2F;测试划分上平均绝对百分比误差低于 <code>3%</code>，模拟器还使用生产负载进行了超过 <code>50K</code> 次迭代的端到端交叉验证。</p>
+<p>给定请求轨迹、目标模型、硬件性能模型、TTFT&#x2F;TBT&#x2F;E2E SLO、吞吐约束和成本或功耗目标后，模拟器搜索 Prompt 与 Token 机器数量。例如，论文针对代码负载和 <code>70 RPS</code> 峰值搜索 Splitwise-HH 时，最低成本的可行配置是 <code>27</code> 台 Prompt 机器与 <code>3</code> 台 Token 机器。这个 <code>27:3</code> 不是通用比例，而是特定模型、轨迹、SLO 和硬件下的搜索结果。</p>
+<h2 id="五、评估结果应该怎样读"><a href="#五、评估结果应该怎样读" class="headerlink" title="五、评估结果应该怎样读"></a>五、评估结果应该怎样读</h2><p>论文评估的集群级结果主要来自 SplitwiseSim，但其性能模型与 KV Cache 通信模型建立在 A100&#x2F;H100 实机测量之上。基线集群同样使用 mixed continuous batching；所有设计都必须同时满足 TTFT、TBT 和 E2E 的 P50、P90 与 P99 共九项 SLO。因此，下列收益不能理解成脱离延迟约束的裸吞吐峰值。</p>
+<h3 id="5-1-同功耗：把闲置算力换成吞吐"><a href="#5-1-同功耗：把闲置算力换成吞吐" class="headerlink" title="5.1 同功耗：把闲置算力换成吞吐"></a>5.1 同功耗：把闲置算力换成吞吐</h3><p>在同功耗、吞吐优先的对话服务配置中，基准功耗等于 <code>40</code> 台 DGX-H100，或 <code>70</code> 台 DGX-A100。与 Baseline-A100 相比：</p>
+<ul>
+<li>Splitwise-AA 在相同功耗与成本下达到 <code>2.15×</code> 吞吐；</li>
+<li>Splitwise-HA 在相同功耗下达到 <code>1.18×</code> 吞吐，同时成本低 <code>10%</code>。</li>
+</ul>
+<p>这里 AA 能获益，不是因为 A100 单卡突然比 H100 快，而是阶段分池让 Decode 更容易形成大 Batch，也避免大 Prompt 混入后持续扰动 TBT。到高负载时，mixed pool 会接管更多跨阶段任务，批量分布逐渐接近基线，从而减少固定分池带来的碎片。</p>
+<p><img data-src="/images/Splitwise/throughput-optimized-clusters.png" alt="同功耗与同成本下的吞吐优化集群"></p>
+<p>图 5（原论文图 18）：左图比较同功耗设计的机器数、吞吐与成本，右图比较同成本设计的机器数、吞吐与功耗，均以 Baseline-A100 归一化。</p>
+<h3 id="5-2-同成本：旧-GPU-可以用更多空间换吞吐"><a href="#5-2-同成本：旧-GPU-可以用更多空间换吞吐" class="headerlink" title="5.2 同成本：旧 GPU 可以用更多空间换吞吐"></a>5.2 同成本：旧 GPU 可以用更多空间换吞吐</h3><p>在成本相同的配置中，Splitwise-AA 相比 Baseline-H100 获得 <code>1.4×</code> 吞吐，但代价是功耗增加 <code>25%</code>、机架空间达到 <code>2×</code>。这更适合不受供电与空间约束、又希望使用较易获得的 A100 的客户；对已经触及数据中心功耗墙的云服务商，它未必是最佳点。</p>
+<h3 id="5-3-同吞吐：分别优化功耗或成本"><a href="#5-3-同吞吐：分别优化功耗或成本" class="headerlink" title="5.3 同吞吐：分别优化功耗或成本"></a>5.3 同吞吐：分别优化功耗或成本</h3><p>当目标改为保持与 Baseline-H100 相同的吞吐时：</p>
+<ul>
+<li>功耗优化的 Splitwise-HHcap 在成本与空间相同的情况下，将功耗降低 <code>25%</code>；</li>
+<li>成本优化的 Splitwise-AA 将成本降低 <code>25%</code>，但会占用更多机器。</li>
+</ul>
+<p><img data-src="/images/Splitwise/iso-throughput-clusters.png" alt="同吞吐下的功耗与成本优化集群"></p>
+<p>图 6（原论文图 19）：左图按最低功耗配置同吞吐集群，右图按最低成本配置；不同目标会选择不同的 Prompt&#x2F;Token 机器组合。</p>
+<p>这也解释了为什么论文不给出唯一的“最佳 Splitwise 集群”。吞吐、租用成本、供电和机架空间互相制约；阶段拆分的价值是扩大可选设计空间，而不是让一个固定配置在所有维度同时占优。</p>
+<h3 id="5-4-对负载变化的适应能力"><a href="#5-4-对负载变化的适应能力" class="headerlink" title="5.4 对负载变化的适应能力"></a>5.4 对负载变化的适应能力</h3><p>作者还把对话轨迹放到为代码轨迹配置的集群上，并把 Llama 2 70B 放到为 BLOOM-176B 配置的集群上。AA 和 HH 可以依靠 mixed pool 基本吸收轨迹变化；HA 与 HHcap 因两个池的硬件能力或功耗配置不对称，相比专门为对话优化的配置出现 <code>7%</code> 吞吐下降，但仍优于两种基线。</p>
+<p>这说明 mixed pool 不只是低负载下的“备用池”，还是 Splitwise 面对输入&#x2F;输出长度变化时的重要安全阀。不过，它只能缓解阶段比例的波动，不能消除长期错误配置；持续偏移仍需要重新规划机器池。</p>
+<h2 id="六、Splitwise-的边界与代价"><a href="#六、Splitwise-的边界与代价" class="headerlink" title="六、Splitwise 的边界与代价"></a>六、Splitwise 的边界与代价</h2><h3 id="6-1-它最适合受交互延迟约束的在线服务"><a href="#6-1-它最适合受交互延迟约束的在线服务" class="headerlink" title="6.1 它最适合受交互延迟约束的在线服务"></a>6.1 它最适合受交互延迟约束的在线服务</h3><p>对于没有严格 TTFT&#x2F;TBT SLO、可以把集群压到极高负载的离线批任务，所有机器最终都会进入 mixed pool。此时 Splitwise 退化为按机器数相同的混合批处理基线，阶段拆分优势基本消失。论文报告，重压下 Baseline-A100 与 Splitwise-AA 的吞吐成本比同为 <code>0.89 RPS/$</code>，Baseline-H100 与 Splitwise-HH 同为 <code>0.75 RPS/$</code>。</p>
+<h3 id="6-2-高速互连是重要前提"><a href="#6-2-高速互连是重要前提" class="headerlink" title="6.2 高速互连是重要前提"></a>6.2 高速互连是重要前提</h3><p>论文假设 Prompt 与 Token 机器之间有 InfiniBand。H100 与 A100 跨代直连虽然技术上可行，却不是云数据中心普遍提供的标准拓扑，这使 Splitwise-HA 的落地比同构方案更复杂。作者认为即使网络带宽降低 <code>10×</code>，优化后的传输仍可能有收益，并提出通过 RoCE 或压缩 KV Cache 进一步降低要求；但这些属于讨论和未来方向，并没有在本文中完成等价验证。</p>
+<h3 id="6-3-故障恢复与调度扩展性仍待完善"><a href="#6-3-故障恢复与调度扩展性仍待完善" class="headerlink" title="6.3 故障恢复与调度扩展性仍待完善"></a>6.3 故障恢复与调度扩展性仍待完善</h3><p>当前设计在 Prompt 或 Token 机器故障时会从头重启请求，与当时的常见推理系统相似。定期把 KV Cache 写入内存数据库可以减少重算，但安全、高效的恢复协议不在论文范围内。另一方面，单个 CLS 在超大规模集群中可能成为瓶颈，未来需要借鉴分区或复制式集群调度器。</p>
+<h3 id="6-4-对话状态复用会改变数据流"><a href="#6-4-对话状态复用会改变数据流" class="headerlink" title="6.4 对话状态复用会改变数据流"></a>6.4 对话状态复用会改变数据流</h3><p>论文按当时的 Chat API 形态假设每轮请求携带完整上下文，并出于安全隔离考虑，不跨请求复用 KV Cache。如果未来服务长期保存会话状态，Prompt 的显存特征会变化；为了处理下一轮对话，系统还可能需要把更新后的 KV Cache 从 Token 机器传回 Prompt 侧。此时单向的阶段流水需要扩展。</p>
+<h3 id="6-5-结论受模型与硬件年代约束"><a href="#6-5-结论受模型与硬件年代约束" class="headerlink" title="6.5 结论受模型与硬件年代约束"></a>6.5 结论受模型与硬件年代约束</h3><p>评估对象是 Llama 2 70B、BLOOM-176B、A100 与 H100。论文的核心方法依赖自回归模型普遍存在的 Prompt&#x2F;Decode 两阶段，而不是某个特定模型结构；但 <code>2048</code> Token 的 Prompt 批量阈值、<code>512</code> Token 的传输策略切换点以及具体机器比例，都来自这套软硬件与轨迹，迁移到新模型、新 GPU 或 MoE 时必须重新 profiling 和规划。</p>
+<h2 id="七、总结与启示"><a href="#七、总结与启示" class="headerlink" title="七、总结与启示"></a>七、总结与启示</h2><p>Splitwise 最值得记住的并不是“Prefill&#x2F;Decode 分离”这六个字，而是它把这一观察落实成了完整系统：</p>
+<ol>
+<li>用生产轨迹证明两个阶段在 Batch、延迟、显存和功耗上的需求确实不同；</li>
+<li>用 Prompt、Token 与动态 Mixed Pool 同时获得专业化和负载适应性；</li>
+<li>用 CLS&#x2F;MLS 两级调度分别处理集群路由与机器内批处理；</li>
+<li>用逐层异步传输把 KV Cache 搬运隐藏在 Prompt 计算之后；</li>
+<li>最后以实机 profiling 驱动的模拟器搜索机器类型、数量、成本与功耗，而不是预设一种固定集群。</li>
+</ol>
+<p>它揭示了一个更一般的系统设计原则：<strong>当同一请求的不同阶段受不同资源约束时，统一硬件与统一调度未必真的通用；只要状态交接的成本可以被控制，按阶段专门化就可能同时改善利用率和用户体验。</strong></p>
+<p>Splitwise 也没有回避这条路线的代价。高速网络、额外调度层、机器池碎片、异构运维与故障恢复都会增加复杂度。它给出的答案不是“拆分一定更快”，而是更严谨的条件句：对于必须满足 TTFT、TBT 与 E2E 尾延迟的在线自回归推理，阶段拆分提供了一个值得搜索的新设计空间。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Pratyush Patel, Esha Choukse, Chaojie Zhang, Aashaka Shah, Íñigo Goiri, Saeed Maleki, and Ricardo Bianchini. <em>Splitwise: Efficient Generative LLM Inference Using Phase Splitting</em>. ISCA 2024. <a target="_blank" rel="noopener" href="https://doi.org/10.1109/ISCA59077.2024.00019">DOI: 10.1109&#x2F;ISCA59077.2024.00019</a></li>
+<li>Splitwise Artifact. <a target="_blank" rel="noopener" href="https://doi.org/10.5281/zenodo.11003049">Zenodo: 10.5281&#x2F;zenodo.11003049</a></li>
+<li>SplitwiseSim：论文开源的离散事件集群模拟器。<a target="_blank" rel="noopener" href="https://github.com/Mutinifni/splitwise-sim">GitHub</a></li>
+<li>Azure Public Dataset：论文使用的部分生产请求轨迹。<a target="_blank" rel="noopener" href="https://github.com/Azure/AzurePublicDataset">GitHub</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag"># 大模型推理</a>
+              <a href="/tags/Splitwise/" rel="tag"># Splitwise</a>
+              <a href="/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/" rel="tag"># Prefill-Decode 分离</a>
+              <a href="/tags/KV-Cache/" rel="tag"># KV Cache</a>
+              <a href="/tags/%E6%8E%A8%E7%90%86%E8%B0%83%E5%BA%A6/" rel="tag"># 推理调度</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/" rel="prev" title="英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络">
+                  <i class="fa fa-angle-left"></i> 英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
