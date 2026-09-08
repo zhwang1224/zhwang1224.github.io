@@ -209,8 +209,8 @@
     <category term="容错网络" scheme="https://zhwang1224.github.io/tags/%E5%AE%B9%E9%94%99%E7%BD%91%E7%BB%9C/"/>
     <category term="多平面网络" scheme="https://zhwang1224.github.io/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/"/>
     <category term="RoCE" scheme="https://zhwang1224.github.io/tags/RoCE/"/>
-    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
+    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="MRC" scheme="https://zhwang1224.github.io/tags/MRC/"/>
     <category term="SRv6" scheme="https://zhwang1224.github.io/tags/SRv6/"/>
     <id>https://zhwang1224.github.io/2026/08/12/MRC-SRv6/</id>
@@ -252,13 +252,13 @@
     <category term="大模型训练" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
     <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
     <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
+    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
+    <category term="模型并行" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C/"/>
     <category term="Tensor Parallelism" scheme="https://zhwang1224.github.io/tags/Tensor-Parallelism/"/>
     <category term="Megatron-LM" scheme="https://zhwang1224.github.io/tags/Megatron-LM/"/>
-    <category term="模型并行" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C/"/>
     <category term="Column Parallel" scheme="https://zhwang1224.github.io/tags/Column-Parallel/"/>
     <category term="Row Parallel" scheme="https://zhwang1224.github.io/tags/Row-Parallel/"/>
     <category term="Sequence Parallel" scheme="https://zhwang1224.github.io/tags/Sequence-Parallel/"/>
-    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <id>https://zhwang1224.github.io/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/</id>
     <link href="https://zhwang1224.github.io/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <published>2026-08-06T08:00:00.000Z</published>
@@ -275,10 +275,10 @@
     <category term="流水线并行" scheme="https://zhwang1224.github.io/tags/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/"/>
     <category term="大模型训练" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
     <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="模型并行" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C/"/>
     <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <category term="Pipeline Parallelism" scheme="https://zhwang1224.github.io/tags/Pipeline-Parallelism/"/>
     <category term="GPipe" scheme="https://zhwang1224.github.io/tags/GPipe/"/>
+    <category term="模型并行" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C/"/>
     <category term="微批次" scheme="https://zhwang1224.github.io/tags/%E5%BE%AE%E6%89%B9%E6%AC%A1/"/>
     <category term="Pipeline Bubble" scheme="https://zhwang1224.github.io/tags/Pipeline-Bubble/"/>
     <category term="激活重计算" scheme="https://zhwang1224.github.io/tags/%E6%BF%80%E6%B4%BB%E9%87%8D%E8%AE%A1%E7%AE%97/"/>
@@ -297,8 +297,8 @@
     <category term="分布式训练" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
     <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
     <category term="Ring AllReduce" scheme="https://zhwang1224.github.io/tags/Ring-AllReduce/"/>
-    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <category term="数据并行" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E5%B9%B6%E8%A1%8C/"/>
+    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
     <category term="DataParallel" scheme="https://zhwang1224.github.io/tags/DataParallel/"/>
     <category term="DistributedDataParallel" scheme="https://zhwang1224.github.io/tags/DistributedDataParallel/"/>
     <category term="DeepSpeed" scheme="https://zhwang1224.github.io/tags/DeepSpeed/"/>
@@ -436,13 +436,13 @@
     <category term="流水线并行" scheme="https://zhwang1224.github.io/tags/%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%B9%B6%E8%A1%8C/"/>
     <category term="Transformer" scheme="https://zhwang1224.github.io/tags/Transformer/"/>
     <category term="KV Cache" scheme="https://zhwang1224.github.io/tags/KV-Cache/"/>
-    <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <category term="推理服务" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1/"/>
     <category term="Prefill" scheme="https://zhwang1224.github.io/tags/Prefill/"/>
     <category term="Decode" scheme="https://zhwang1224.github.io/tags/Decode/"/>
     <category term="Continuous Batching" scheme="https://zhwang1224.github.io/tags/Continuous-Batching/"/>
     <category term="PagedAttention" scheme="https://zhwang1224.github.io/tags/PagedAttention/"/>
     <category term="投机解码" scheme="https://zhwang1224.github.io/tags/%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81/"/>
+    <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
     <category term="Roofline Model" scheme="https://zhwang1224.github.io/tags/Roofline-Model/"/>
     <id>https://zhwang1224.github.io/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/</id>
     <link href="https://zhwang1224.github.io/2026/07/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%9F%BA%E7%A1%80/"/>
