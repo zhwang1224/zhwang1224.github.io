@@ -209,8 +209,8 @@
     <category term="容错网络" scheme="https://zhwang1224.github.io/tags/%E5%AE%B9%E9%94%99%E7%BD%91%E7%BB%9C/"/>
     <category term="多平面网络" scheme="https://zhwang1224.github.io/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/"/>
     <category term="RoCE" scheme="https://zhwang1224.github.io/tags/RoCE/"/>
-    <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
+    <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="MRC" scheme="https://zhwang1224.github.io/tags/MRC/"/>
     <category term="SRv6" scheme="https://zhwang1224.github.io/tags/SRv6/"/>
     <id>https://zhwang1224.github.io/2026/08/12/MRC-SRv6/</id>
