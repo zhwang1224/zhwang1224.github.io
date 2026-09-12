@@ -21,16 +21,16 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查">
+    <meta name="description" content="InfiniBand RDMA Verbs 编程、可编译示例">
 <meta property="og:type" content="article">
-<meta property="og:title" content="InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发">
+<meta property="og:title" content="InfiniBand RDMA 编程">
 <meta property="og:url" content="https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查">
+<meta property="og:description" content="InfiniBand RDMA Verbs 编程、可编译示例">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhwang1224.github.io/images/Infiniband/02-tcpip-rdma-data-path.png">
 <meta property="article:published_time" content="2026-09-12T02:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-12T10:55:48.863Z">
+<meta property="article:modified_time" content="2026-09-12T13:34:09.722Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="InfiniBand">
 <meta property="article:tag" content="RDMA">
@@ -44,10 +44,10 @@
 <link rel="canonical" href="https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/","path":"2026/09/12/infiniband-rdma-programming-guide/","title":"InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/","path":"2026/09/12/infiniband-rdma-programming-guide/","title":"InfiniBand RDMA 编程"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发 | 正在输入</title>
+<title>InfiniBand RDMA 编程 | 正在输入</title>
   
 
 
@@ -301,12 +301,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发 | 正在输入">
-      <meta itemprop="description" content="InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查">
+      <meta itemprop="name" content="InfiniBand RDMA 编程 | 正在输入">
+      <meta itemprop="description" content="InfiniBand RDMA Verbs 编程、可编译示例">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发
+          InfiniBand RDMA 编程
         </h1>
 
         <div class="post-meta-container">
@@ -318,7 +318,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-09-12 10:00:00 / 修改时间：18:55:48" itemprop="dateCreated datePublished" datetime="2026-09-12T10:00:00+08:00">2026-09-12</time>
+      <time title="创建时间：2026-09-12 10:00:00 / 修改时间：21:34:09" itemprop="dateCreated datePublished" datetime="2026-09-12T10:00:00+08:00">2026-09-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -340,11 +340,11 @@
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>17 分钟</span>
+      <span>19 分钟</span>
     </span>
 </div>
 
-            <div class="post-description">InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查</div>
+            <div class="post-description">InfiniBand RDMA Verbs 编程、可编译示例</div>
         </div>
       </header>
 
@@ -352,34 +352,48 @@
     
     
     <div class="post-body" itemprop="articleBody"><ul>
-<li><a href="#1-%E5%85%88%E5%88%86%E6%B8%85-InfiniBand%E3%80%81RDMA-%E4%B8%8E-Verbs">1. 先分清 InfiniBand、RDMA 与 Verbs</a></li>
-<li><a href="#2-RDMA-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB%EF%BC%8C%E5%8F%88%E6%8A%8A%E4%BB%80%E4%B9%88%E8%B4%A3%E4%BB%BB%E4%BA%A4%E7%BB%99%E4%BA%86%E7%A8%8B%E5%BA%8F">2. RDMA 为什么快，又把什么责任交给了程序</a></li>
-<li><a href="#3-Verbs-%E7%9A%84%E8%B5%84%E6%BA%90%E6%A8%A1%E5%9E%8B">3. Verbs 的资源模型</a></li>
-<li><a href="#4-%E5%9B%9B%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%EF%BC%9A%E6%B6%88%E6%81%AF%E8%AF%AD%E4%B9%89%E4%B8%8E%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89">4. 四类数据操作</a></li>
-<li><a href="#5-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87%E4%B8%8E%E9%93%BE%E8%B7%AF%E6%A3%80%E6%9F%A5">5. 环境准备与链路检查</a></li>
-<li><a href="#6-%E4%B8%80%E4%B8%AA-RC-%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">6. 一个 RC 连接的完整生命周期</a></li>
-<li><a href="#7-%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%EF%BC%9ARC-Send-Recv">7. 第一个可运行程序</a></li>
-<li><a href="#8-%E4%BB%8E-Send-Recv-%E6%94%B9%E4%B8%BA-RDMA-Read-Write">8. 改为 RDMA Read&#x2F;Write</a></li>
-<li><a href="#9-Completion-%E5%88%B0%E5%BA%95%E8%AF%81%E6%98%8E%E4%BA%86%E4%BB%80%E4%B9%88">9. Completion 到底证明了什么</a></li>
-<li><a href="#10-%E6%AD%A3%E7%A1%AE%E6%80%A7%E3%80%81%E5%AE%89%E5%85%A8%E4%B8%8E%E8%B5%84%E6%BA%90%E5%9B%9E%E6%94%B6">10. 正确性、安全与资源回收</a></li>
-<li><a href="#11-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%EF%BC%9A%E5%85%88%E5%BB%BA%E7%AB%8B%E6%B5%81%E6%B0%B4%E7%BA%BF%EF%BC%8C%E5%86%8D%E5%87%8F%E5%B0%91%E5%BC%80%E9%94%80">11. 性能优化</a></li>
-<li><a href="#12-%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E4%B8%8E%E6%8E%92%E6%9F%A5%E9%A1%BA%E5%BA%8F">12. 常见错误与排查顺序</a></li>
-<li><a href="#13-%E4%B8%A4%E4%BB%BD%E5%85%A5%E9%97%A8%E6%9D%90%E6%96%99%E4%B8%AD%E5%AE%B9%E6%98%93%E8%AF%AF%E8%A7%A3%E7%9A%84%E7%BB%86%E8%8A%82">13. 原教程中容易误解的细节</a></li>
-<li><a href="#14-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF">14. 下一步学习路线</a></li>
+<li><a href="#infiniband-rdma-%E7%BC%96%E7%A8%8B%E5%85%A5%E9%97%A8">InfiniBand RDMA 编程入门</a><ul>
+<li><a href="#1-rdma-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84">1. RDMA 体系结构</a></li>
+<li><a href="#2-rdma-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB">2. RDMA 为什么快</a></li>
+<li><a href="#3-verbs-%E7%9A%84%E8%B5%84%E6%BA%90%E6%A8%A1%E5%9E%8B">3. Verbs 的资源模型</a><ul>
+<li><a href="#31-device-%E4%B8%8E-context">3.1 Device 与 Context</a></li>
+<li><a href="#32-protection-domainpd">3.2 Protection Domain（PD）</a></li>
+<li><a href="#33-memory-regionmr">3.3 Memory Region（MR）</a></li>
+<li><a href="#34-queue-pairqp">3.4 Queue Pair（QP）</a></li>
+<li><a href="#35-completion-queuecq">3.5 Completion Queue（CQ）</a></li>
+<li><a href="#36-wrwqesge-%E4%B8%8E-wc">3.6 WR、WQE、SGE 与 WC</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%9B%9B%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%E6%B6%88%E6%81%AF%E8%AF%AD%E4%B9%89%E4%B8%8E%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89">4. 四类数据操作：消息语义与内存语义</a><ul>
+<li><a href="#41-sendrecv%E5%8F%8C%E8%BE%B9%E6%B6%88%E6%81%AF%E8%AF%AD%E4%B9%89">4.1 Send&#x2F;Recv：双边消息语义</a></li>
+<li><a href="#42-rdma-write%E5%8D%95%E8%BE%B9%E5%86%99">4.2 RDMA Write：单边写</a></li>
+<li><a href="#43-rdma-read-%E4%B8%8E-atomic">4.3 RDMA Read 与 Atomic</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%B8%80%E4%B8%AA-rc-%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">5. 一个 RC 连接的完整生命周期</a><ul>
+<li><a href="#61-%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90">6.1 创建本地资源</a></li>
+<li><a href="#62-%E5%BB%BA%E8%BF%9E%E7%A9%B6%E7%AB%9F%E8%A6%81%E4%BA%A4%E6%8D%A2%E4%BB%80%E4%B9%88">6.2 建连究竟要交换什么</a></li>
+<li><a href="#63-reset--init">6.3 RESET → INIT</a></li>
+<li><a href="#64-init--rtr">6.4 INIT → RTR</a></li>
+<li><a href="#65-rtr--rts">6.5 RTR → RTS</a></li>
+<li><a href="#66-tcp-%E6%8E%A7%E5%88%B6%E9%9D%A2">6.6 TCP 控制面</a></li>
+</ul>
+</li>
+<li><a href="#7-%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8Frc-sendrecv">7. 第一个可运行程序：RC Send&#x2F;Recv</a></li>
+<li><a href="#8-%E4%BB%8E-sendrecv-%E6%94%B9%E4%B8%BA-rdma-readwrite">8. 从 Send&#x2F;Recv 改为 RDMA Read&#x2F;Write</a></li>
 <li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+</li>
 </ul>
 <span id="more"></span>
 
 <h1 id="InfiniBand-RDMA-编程入门"><a href="#InfiniBand-RDMA-编程入门" class="headerlink" title="InfiniBand RDMA 编程入门"></a>InfiniBand RDMA 编程入门</h1><h2 id="1-RDMA-体系结构"><a href="#1-RDMA-体系结构" class="headerlink" title="1. RDMA 体系结构"></a>1. RDMA 体系结构</h2><ul>
-<li><strong>RDMA</strong> 是一种通信能力：远程直接内存访问 (RDMA) 允许从一台主机（存储或计算主机）的内存直接访问另一台主机的内存，而无需远程操作系统和 CPU 的参与，从而降低延迟、减少 CPU 负载并提高带宽，进而提升网络和主机性能。相比之下，TCP&#x2F;IP 通信通常需要复制操作，这会增加延迟并消耗大量的 CPU 和内存资源。</li>
-<li><strong>InfiniBand（IB）</strong> 是一种高速、低延迟、低 CPU 开销、高效且可扩展的服务器与存储互连技术。其关键能力之一是原生支持 RDMA。IB 可在服务器之间、服务器与存储之间传输数据，而主机 CPU 不参与数据路径。IB 使用 I&#x2F;O 通道通信（每主机最多约 1600 万条），每条通道提供虚拟化 NIC&#x2F;HCA 的语义（安全、隔离等）。</li>
-<li><strong>Virtual Protocol Interconnect（VPI）</strong> 架构在网卡与交换机之间提供高性能、低延迟且可靠的通信手段，并同时支持 InfiniBand 与以太网语义。VPI 适配器或交换机可以按端口配置为提供 InfiniBand 语义或以太网语义。</li>
+<li><strong>RDMA</strong> 是一种通信能力：远程直接内存访问 (RDMA) 允许从一台主机（存储或计算主机）的内存直接访问另一台主机的内存，而无需远程操作系统和 CPU 的参与，从而降低延迟、减少 CPU 负载并提高带宽，进而提升网络和主机性能。相比之下，TCP&#x2F;IP 通信通常需要复制操作，这会增加延迟并消耗大量 CPU 和内存资源。</li>
+<li><strong>InfiniBand（IB）</strong> 是一种高速、低延迟、低 CPU 开销、高效且可扩展的服务器与存储互连技术。其关键能力之一是原生支持 RDMA。IB 可在服务器之间、服务器与存储之间传输数据，而主机 CPU 不参与数据路径。IB 使用 I&#x2F;O 通道通信（每主机最多约 1600 万条），每条通道提供虚拟化 NIC&#x2F;HCA 的语义。</li>
+<li><strong>Virtual Protocol Interconnect（VPI）</strong> 架构在网卡与交换机之间提供高性能、低延迟且可靠的通信手段，并同时支持 InfiniBand 与以太网语义。VPI 适配器或交换机可以按端口配置为提供 InfiniBand 或以太网语义。</li>
 <li><strong>RoCE</strong> 是 IBTA 定义的“以太网上的 RDMA”标准。它为以太网提供真正的 RDMA 语义，不需要 iWARP 那种复杂且性能较低的 TCP 传输。RoCE 是目前最高效的低延迟以太网方案。它所需的 CPU 开销非常低，并利用数据中心桥接以太网（Data Center Bridging Ethernet）中的优先级流控（Priority Flow Control）实现无损连接。</li>
 <li><strong>Verbs</strong> 是面向 RDMA 设备的编程抽象。Linux 用户态通常通过 <code>libibverbs</code> 使用它；<code>rdma-core</code> 中的 provider 再把通用 Verbs 映射到具体 HCA 驱动。</li>
 </ul>
-<p>在 Linux 中，典型调用路径可以简化为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">应用</span><br><span class="line">  │  libibverbs / librdmacm</span><br><span class="line">  ▼</span><br><span class="line">用户态 provider（例如 mlx5）</span><br><span class="line">  │  控制路径经 /dev/infiniband/uverbsN</span><br><span class="line">  │  快速路径通过映射的队列和 doorbell</span><br><span class="line">  ▼</span><br><span class="line">内核 RDMA 子系统 + HCA 驱动</span><br><span class="line">  ▼</span><br><span class="line">HCA（Host Channel Adapter）</span><br></pre></td></tr></table></figure>
-
 <p>目前支持 RDMA 的技术主要有三种：InfiniBand、以太网 RoCE，以及以太网 iWARP。这三项技术可共用同一套用户 API，但物理层和链路层不同。就以太网方案而言，RoCE 相对 iWARP 具有明显的性能优势——无论是延迟、吞吐还是 CPU 开销。许多主流方案都支持 RoCE，并且它已被纳入 Windows Server 软件（InfiniBand 同样如此）。</p>
 <p>RDMA 结构中的主要硬件&#x2F;管理组件：</p>
 <ul>
@@ -395,7 +409,14 @@
 <p><img data-src="/images/Infiniband/02-tcpip-rdma-data-path.png" alt="传统 TCP&#x2F;IP 与 RDMA 数据传输路径对比：TCP&#x2F;IP 数据经过 Socket、内核协议栈和内核缓冲区，RDMA 由 RNIC 在已注册内存之间直接传输"></p>
 <p>TCP&#x2F;IP 的每一次操作都需要操作系统介入，并且线路两端都包含缓冲拷贝。当应用想发送一个分组时，操作系统把这些字节放入属于操作系统的、主存中的匿名缓冲；字节传输完成后，操作系统再把其缓冲中的数据拷贝到应用的接收缓冲。每当有分组到达，这一过程就会重复，直到整段字节流收完。因拥塞而丢失的分组，由 TCP 负责重传。</p>
 <p>在 InfiniBand 中，一条完整消息会直接投递给应用。一旦应用请求传输一次 RDMA Read 或 Write，InfiniBand 硬件会按需要把出站消息分段成多个分组，分组大小由结构路径的最大传输单元（path MTU）决定。这些分组经 InfiniBand 网络传输，并直接写入接收应用的虚拟缓冲，在那里被重新组装成完整消息。整条消息接收完成后，才会通知接收应用。因此，在整条消息被投递进接收应用的缓冲之前，发送方和接收方应用都不必介入。</p>
-<h2 id="3-Verbs-的资源模型"><a href="#3-Verbs-的资源模型" class="headerlink" title="3. Verbs 的资源模型"></a>3. Verbs 的资源模型</h2><pre><code class="highlight mermaid">flowchart LR
+<h2 id="3-Verbs-的资源模型"><a href="#3-Verbs-的资源模型" class="headerlink" title="3. Verbs 的资源模型"></a>3. Verbs 的资源模型</h2><p>Verbs 编程需要理解资源之间的关系。可以先把它们分成三层：</p>
+<ul>
+<li><strong>设备层</strong>：打开 RDMA 设备，得到操作设备所需的 Context；</li>
+<li><strong>资源层</strong>：在 Context 下创建 PD、CQ，并在 PD 中注册 MR、创建 QP；</li>
+<li><strong>请求层</strong>：应用把 WR 提交到 QP，HCA 执行后再通过 CQ 返回完成结果。</li>
+</ul>
+<p>它们之间的依赖关系如下：</p>
+<pre><code class="highlight mermaid">flowchart LR
     DEV[ibv_device] --&gt; CTX[ibv_context]
     CTX --&gt; PD[Protection Domain]
     CTX --&gt; CQ[Completion Queue]
@@ -405,17 +426,22 @@
     QP --&gt; RQ[Receive Queue]
     SQ -. completion .-&gt; CQ
     RQ -. completion .-&gt; CQ
-    MR -. lkey / rkey .-&gt; QP</code></pre>
+    MR -. local access: lkey .-&gt; QP
+    RQP[Remote QP] -. remote access: addr + rkey .-&gt; MR</code></pre>
 
-<h3 id="3-1-Device-与-Context"><a href="#3-1-Device-与-Context" class="headerlink" title="3.1 Device 与 Context"></a>3.1 Device 与 Context</h3><p><code>ibv_get_device_list()</code> 用于枚举系统中的 RDMA 设备，<code>ibv_open_device()</code> 则打开指定设备，并返回与之关联的用户态上下文 <code>ibv_context</code>。</p>
-<h3 id="3-2-Protection-Domain（PD）"><a href="#3-2-Protection-Domain（PD）" class="headerlink" title="3.2 Protection Domain（PD）"></a>3.2 Protection Domain（PD）</h3><p>PD 是本地资源的保护边界。 IB 内存区域并创建队列对。保护域通过调用 <code>ibv_alloc_pd()</code> 进行分配。</p>
-<h3 id="3-3-Memory-Region（MR）"><a href="#3-3-Memory-Region（MR）" class="headerlink" title="3.3 Memory Region（MR）"></a>3.3 Memory Region（MR）</h3><p>普通进程虚拟地址不能直接交给远端使用。<code>ibv_reg_mr()</code> 把一段本地虚拟地址注册到 PD，建立 HCA 所需的地址翻译与访问权限，并返回：</p>
+<p>其中，PD 决定“哪些 QP 可以访问哪些 MR”，QP 负责接收工作请求，CQ 负责报告完成结果。理解这三者的分工，基本就掌握了 Verbs 的资源模型。</p>
+<h3 id="3-1-Device-与-Context"><a href="#3-1-Device-与-Context" class="headerlink" title="3.1 Device 与 Context"></a>3.1 Device 与 Context</h3><p><code>ibv_device</code> 表示系统中可用的 RDMA 设备。应用先通过 <code>ibv_get_device_list()</code> 枚举设备，再调用 <code>ibv_open_device()</code> 打开其中一个设备，得到 <code>ibv_context</code>。</p>
+<p>Context 是应用操作该设备的入口。后续查询端口、分配 PD、创建 CQ 等操作，都需要使用这个 Context。它只代表本地设备上下文。</p>
+<h3 id="3-2-Protection-Domain（PD）"><a href="#3-2-Protection-Domain（PD）" class="headerlink" title="3.2 Protection Domain（PD）"></a>3.2 Protection Domain（PD）</h3><p>Protection Domain（保护域）是本地资源之间的隔离边界，通过 <code>ibv_alloc_pd()</code> 创建。MR 注册到某个 PD，QP 也隶属于某个 PD；QP 只能使用同一 PD 中 MR 的 <code>lkey</code>。</p>
+<p>因此，PD 本身不传输数据，也不分配缓冲区。它的作用更像一个“权限容器”：把可以协同工作的 QP 和 MR 归为一组，防止 QP 误用其他保护域中的内存。</p>
+<h3 id="3-3-Memory-Region（MR）"><a href="#3-3-Memory-Region（MR）" class="headerlink" title="3.3 Memory Region（MR）"></a>3.3 Memory Region（MR）</h3><p>应用不能把一段普通虚拟地址直接交给 HCA 或远端访问。使用缓冲区前，需要通过 <code>ibv_reg_mr()</code> 将它注册为 Memory Region。注册过程把地址范围、所属 PD 和访问权限告知 HCA，并返回三个关键信息：</p>
 <ul>
-<li><code>lkey</code>：本地 QP 在 SGE 中引用这段内存；</li>
-<li><code>rkey</code>：远端发起 RDMA Read、Write 或 Atomic 时证明其访问权限；</li>
-<li><code>addr</code> 与 <code>length</code>：注册范围。</li>
+<li><code>addr</code> 与 <code>length</code>：MR 覆盖的本地虚拟地址范围；</li>
+<li><code>lkey</code>：本地 WR 在 SGE 中引用该内存时使用；</li>
+<li><code>rkey</code>：远端执行 RDMA Read、Write 或 Atomic 时使用。</li>
 </ul>
-<p>本地读权限总是存在。常见访问标志如下：</p>
+<p><code>lkey</code> 供本地 HCA 校验内存访问，不能发送给对端代替 <code>rkey</code>。<code>rkey</code> 则应视为一种访问凭据，只应通过可信的控制面提供给确实需要访问该 MR 的对端。</p>
+<p>MR 始终允许本地 HCA 读取；其他能力由注册时的访问标志决定：</p>
 <table>
 <thead>
 <tr>
@@ -441,23 +467,98 @@
 </tr>
 </tbody></table>
 <p>若设置 <code>REMOTE_WRITE</code> 或 <code>REMOTE_ATOMIC</code>，还必须设置 <code>LOCAL_WRITE</code>。</p>
-<h3 id="3-4-Queue-Pair（QP）"><a href="#3-4-Queue-Pair（QP）" class="headerlink" title="3.4 Queue Pair（QP）"></a>3.4 Queue Pair（QP）</h3><p>队列对 QP 包含一条 Send Queue（SQ）和一条 Receive Queue（RQ）。应用向 SQ 提交 Send、RDMA Read、RDMA Write、Atomic 等 WR（工作请求），向 RQ 提交 Receive WR。创建时要指定：</p>
+<h3 id="3-4-Queue-Pair（QP）"><a href="#3-4-Queue-Pair（QP）" class="headerlink" title="3.4 Queue Pair（QP）"></a>3.4 Queue Pair（QP）</h3><p>Queue Pair 是数据面工作的核心。每个 QP 由两条队列组成：</p>
+<ul>
+<li><strong>Send Queue（SQ）</strong>：接收 Send、RDMA Read、RDMA Write、Atomic 等发送侧 WR 工作请求；</li>
+<li><strong>Receive Queue（RQ）</strong>：接收 Receive WR，为到来的 Send 消息预先准备缓冲区。</li>
+</ul>
+<p>创建 QP 时，需要指定：</p>
 <ul>
 <li>传输类型，如 RC、UC 或 UD；</li>
 <li>Send CQ 与 Receive CQ；两者可以是同一个 CQ；</li>
 <li>最大 Send&#x2F;Receive WR 数与每个 WR 的最大 SGE 数；</li>
 <li>是否让所有 Send WR 自动产生 Completion。</li>
 </ul>
-<p>RC 是连接型、可靠且按序的传输：每条 RC QP 只与一条远端 QP 通信，支持 Send&#x2F;Recv、RDMA Read&#x2F;Write 和 Atomic，由于功能完整且能由传输层处理丢包与重传。UC 同样是一对一的连接型传输，但不提供可靠重传；它支持 Send&#x2F;Recv 和 RDMA Write，不支持 RDMA Read 与 Atomic。UD 是无连接、不可靠的数据报传输，一条 QP 可以向多个远端 UD QP 发送单包消息；它只支持 Send&#x2F;Recv，不保证消息送达或按序到达，消息大小还受到路径 MTU 的限制。</p>
-<h3 id="3-5-Completion-Queue（CQ）"><a href="#3-5-Completion-Queue（CQ）" class="headerlink" title="3.5 Completion Queue（CQ）"></a>3.5 Completion Queue（CQ）</h3><p>HCA 执行完 WR 后，可以向 CQ 写入 CQE；应用通过 <code>ibv_poll_cq()</code> 取出 <code>ibv_wc</code>。一个 CQ 可服务多个 QP，<code>wr_id</code> 是应用填写并原样带回的 64 位标识，通常用于定位请求上下文或缓冲区。</p>
-<p>不是每个 Send WR 都必须产生 CQE：<code>sq_sig_all=0</code> 时，只有带 <code>IBV_SEND_SIGNALED</code> 的 Send WR 才正常产生完成。Receive 完成会报告到 Receive CQ。CQ 容量不是无限的；应用若不及时消费导致 overrun，会触发 <code>IBV_EVENT_CQ_ERR</code>，该 CQ 随即不可继续使用。</p>
-<h3 id="3-6-WR、WQE、SGE-与-WC"><a href="#3-6-WR、WQE、SGE-与-WC" class="headerlink" title="3.6 WR、WQE、SGE 与 WC"></a>3.6 WR、WQE、SGE 与 WC</h3><ul>
-<li><strong>WR（Work Request）</strong>：应用提交给 Verbs 的工作描述；</li>
-<li><strong>WQE（Work Queue Element）</strong>：WR 在工作队列中的表示；</li>
-<li><strong>SGE（Scatter&#x2F;Gather Element）</strong>：由 <code>addr + length + lkey</code> 描述的一段本地缓冲区；</li>
-<li><strong>WC（Work Completion）</strong>：从 CQ 取出的完成结果。</li>
+<p>常见的 QP 传输类型对比如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>连接方式</th>
+<th>可靠性与顺序</th>
+<th>支持的主要操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RC（Reliable Connection）</td>
+<td>一对一</td>
+<td>可靠、按序，传输层负责重传</td>
+<td>Send&#x2F;Recv、RDMA Read&#x2F;Write、Atomic</td>
+</tr>
+<tr>
+<td>UC（Unreliable Connection）</td>
+<td>一对一</td>
+<td>不提供可靠重传</td>
+<td>Send&#x2F;Recv、RDMA Write</td>
+</tr>
+<tr>
+<td>UD（Unreliable Datagram）</td>
+<td>一对多</td>
+<td>不保证送达或按序</td>
+<td>Send&#x2F;Recv；消息不能超过路径 MTU</td>
+</tr>
+</tbody></table>
+<p>本教程后续使用 RC。它的功能最完整，也最适合用来理解连接建立、双边消息和单边内存访问。</p>
+<h3 id="3-5-Completion-Queue（CQ）"><a href="#3-5-Completion-Queue（CQ）" class="headerlink" title="3.5 Completion Queue（CQ）"></a>3.5 Completion Queue（CQ）</h3><p>Completion Queue 用于报告工作请求的完成状态。HCA 生成的底层记录称为 CQE（Completion Queue Entry）；应用调用 <code>ibv_poll_cq()</code> 后，得到的是 <code>ibv_wc</code>（Work Completion）。</p>
+<p>一个 CQ 可以被多个 QP 共用，Send Queue 和 Receive Queue 也可以绑定同一个 CQ。应用通常通过 WC 中的以下字段判断完成的是哪项工作：</p>
+<ul>
+<li><code>wr_id</code>：提交 WR 时由应用填写的 64 位标识，完成时原样返回；</li>
+<li><code>status</code>：操作成功或失败的状态；</li>
+<li><code>opcode</code>：完成的操作类型；</li>
+<li><code>byte_len</code>：接收等操作实际完成的字节数。</li>
 </ul>
-<p><code>ibv_post_send()</code> 或 <code>ibv_post_recv()</code> 返回 0，只说明 WR 已成功放入工作队列，<strong>不说明传输已经完成</strong>。调用返回后，栈上的 WR 和 SGE 描述符可以销毁；数据缓冲区仍必须保持有效，直到相应 Completion 到达。使用 <code>IBV_SEND_INLINE</code> 时是例外：数据已复制进 WQE，提交调用返回后源缓冲区即可复用。</p>
+<p>不是每个成功的 Send WR 都必须产生 CQE。当 <code>sq_sig_all=0</code> 时，应用可以只为需要完成通知的 WR 设置 <code>IBV_SEND_SIGNALED</code>，从而减少 CQ 压力；被实际消耗的 Receive WR 则会产生完成通知。</p>
+<p>需要特别注意：CQ 的容量有限，应用必须及时轮询。若 CQ 发生 overrun，通常会触发 <code>IBV_EVENT_CQ_ERR</code>，该 CQ 将无法继续正常使用。</p>
+<h3 id="3-6-WR、WQE、SGE-与-WC"><a href="#3-6-WR、WQE、SGE-与-WC" class="headerlink" title="3.6 WR、WQE、SGE 与 WC"></a>3.6 WR、WQE、SGE 与 WC</h3><p>这四个缩写描述了一次请求从提交到完成的不同阶段：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>所在阶段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WR（Work Request）</td>
+<td>提交前</td>
+<td>应用构造的工作请求，描述要执行的操作</td>
+</tr>
+<tr>
+<td>SGE（Scatter&#x2F;Gather Element）</td>
+<td>WR 内部</td>
+<td>用<code>addr + length + lkey</code> 描述一段本地缓冲区；一个 WR 可包含多个 SGE</td>
+</tr>
+<tr>
+<td>WQE（Work Queue Element）</td>
+<td>提交后</td>
+<td>WR 被放入 SQ 或 RQ 后，在工作队列中的表示</td>
+</tr>
+<tr>
+<td>WC（Work Completion）</td>
+<td>完成后</td>
+<td>应用从 CQ 取出的完成结果</td>
+</tr>
+</tbody></table>
+<p>一次典型操作可以概括为：</p>
+<ol>
+<li>应用准备数据缓冲区，并将其注册为 MR；</li>
+<li>用一个或多个 SGE 描述缓冲区，再构造 WR；</li>
+<li>调用 <code>ibv_post_send()</code> 或 <code>ibv_post_recv()</code>，把 WR 提交为 WQE；</li>
+<li>HCA 取出并执行 WQE；</li>
+<li>需要通知时，HCA 向 CQ 写入 CQE，应用通过 <code>ibv_poll_cq()</code> 得到 WC。</li>
+</ol>
+<p><code>ibv_post_send()</code> 或 <code>ibv_post_recv()</code> 返回 0，只说明 WR 已成功提交，<strong>不代表数据传输已经完成</strong>。调用返回后，栈上的 WR 和 SGE 描述符可以销毁，但它们引用的数据缓冲区仍必须保持注册且不可被不安全地复用，直到对应操作完成。</p>
+<p><code>IBV_SEND_INLINE</code> 是一个例外：HCA 会在提交时把待发送数据复制到 WQE 中，因此 <code>ibv_post_send()</code> 成功返回后，应用即可复用源缓冲区。不过，QP 队列空间等资源仍要等该 WR 完成后才能回收。</p>
 <h2 id="4-四类数据操作：消息语义与内存语义"><a href="#4-四类数据操作：消息语义与内存语义" class="headerlink" title="4. 四类数据操作：消息语义与内存语义"></a>4. 四类数据操作：消息语义与内存语义</h2><table>
 <thead>
 <tr>
