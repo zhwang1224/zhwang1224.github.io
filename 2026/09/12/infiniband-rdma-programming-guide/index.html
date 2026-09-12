@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/Infiniband/02-tcpip-rdma-data-path.png">
+<meta property="article:published_time" content="2026-09-12T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-12T10:55:48.863Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="InfiniBand">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="libibverbs">
+<meta property="article:tag" content="rdma-core">
+<meta property="article:tag" content="高性能网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/Infiniband/02-tcpip-rdma-data-path.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/","path":"2026/09/12/infiniband-rdma-programming-guide/","title":"InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#InfiniBand-RDMA-%E7%BC%96%E7%A8%8B%E5%85%A5%E9%97%A8"><span class="nav-number">1.</span> <span class="nav-text">InfiniBand RDMA 编程入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-RDMA-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">1. RDMA 体系结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-RDMA-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB"><span class="nav-number">1.2.</span> <span class="nav-text">2. RDMA 为什么快</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Verbs-%E7%9A%84%E8%B5%84%E6%BA%90%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">3. Verbs 的资源模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Device-%E4%B8%8E-Context"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 Device 与 Context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Protection-Domain%EF%BC%88PD%EF%BC%89"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 Protection Domain（PD）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Memory-Region%EF%BC%88MR%EF%BC%89"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 Memory Region（MR）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Queue-Pair%EF%BC%88QP%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 Queue Pair（QP）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Completion-Queue%EF%BC%88CQ%EF%BC%89"><span class="nav-number">1.3.5.</span> <span class="nav-text">3.5 Completion Queue（CQ）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-WR%E3%80%81WQE%E3%80%81SGE-%E4%B8%8E-WC"><span class="nav-number">1.3.6.</span> <span class="nav-text">3.6 WR、WQE、SGE 与 WC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%9B%9B%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%EF%BC%9A%E6%B6%88%E6%81%AF%E8%AF%AD%E4%B9%89%E4%B8%8E%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89"><span class="nav-number">1.4.</span> <span class="nav-text">4. 四类数据操作：消息语义与内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Send-Recv%EF%BC%9A%E5%8F%8C%E8%BE%B9%E6%B6%88%E6%81%AF%E8%AF%AD%E4%B9%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 Send&#x2F;Recv：双边消息语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-RDMA-Write%EF%BC%9A%E5%8D%95%E8%BE%B9%E5%86%99"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 RDMA Write：单边写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-RDMA-Read-%E4%B8%8E-Atomic"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 RDMA Read 与 Atomic</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%B8%80%E4%B8%AA-RC-%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.5.</span> <span class="nav-text">5. 一个 RC 连接的完整生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90"><span class="nav-number">1.5.1.</span> <span class="nav-text">6.1 创建本地资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%BB%BA%E8%BF%9E%E7%A9%B6%E7%AB%9F%E8%A6%81%E4%BA%A4%E6%8D%A2%E4%BB%80%E4%B9%88"><span class="nav-number">1.5.2.</span> <span class="nav-text">6.2 建连究竟要交换什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-RESET-%E2%86%92-INIT"><span class="nav-number">1.5.3.</span> <span class="nav-text">6.3 RESET → INIT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-INIT-%E2%86%92-RTR"><span class="nav-number">1.5.4.</span> <span class="nav-text">6.4 INIT → RTR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-RTR-%E2%86%92-RTS"><span class="nav-number">1.5.5.</span> <span class="nav-text">6.5 RTR → RTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-TCP-%E6%8E%A7%E5%88%B6%E9%9D%A2"><span class="nav-number">1.5.6.</span> <span class="nav-text">6.6 TCP 控制面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%EF%BC%9ARC-Send-Recv"><span class="nav-number">1.6.</span> <span class="nav-text">7. 第一个可运行程序：RC Send&#x2F;Recv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E4%BB%8E-Send-Recv-%E6%94%B9%E4%B8%BA-RDMA-Read-Write"><span class="nav-number">1.7.</span> <span class="nav-text">8. 从 Send&#x2F;Recv 改为 RDMA Read&#x2F;Write</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">351</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-16</time>
+        <br>
+      InfiniBand与以太网
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/15/InfiniBand%E6%98%AF%E4%BB%80%E4%B9%88/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-15</time>
+        <br>
+      InfiniBand是什么?
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/13/MTIA300/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-13</time>
+        <br>
+      MTIA 300：Meta 首款训练芯片的内置 NIC 与集合通信卸载设计
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/12/MRC-SRv6/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-12</time>
+        <br>
+      使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-30</time>
+        <br>
+      集合通信库
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发 | 正在输入">
+      <meta itemprop="description" content="InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          InfiniBand RDMA 编程入门：从 Verbs 资源模型到 RC 收发
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-12 10:00:00 / 修改时间：18:55:48" itemprop="dateCreated datePublished" datetime="2026-09-12T10:00:00+08:00">2026-09-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">高性能网络</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">InfiniBand RDMA Verbs 编程、可编译示例、性能优化和故障排查</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#1-%E5%85%88%E5%88%86%E6%B8%85-InfiniBand%E3%80%81RDMA-%E4%B8%8E-Verbs">1. 先分清 InfiniBand、RDMA 与 Verbs</a></li>
+<li><a href="#2-RDMA-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB%EF%BC%8C%E5%8F%88%E6%8A%8A%E4%BB%80%E4%B9%88%E8%B4%A3%E4%BB%BB%E4%BA%A4%E7%BB%99%E4%BA%86%E7%A8%8B%E5%BA%8F">2. RDMA 为什么快，又把什么责任交给了程序</a></li>
+<li><a href="#3-Verbs-%E7%9A%84%E8%B5%84%E6%BA%90%E6%A8%A1%E5%9E%8B">3. Verbs 的资源模型</a></li>
+<li><a href="#4-%E5%9B%9B%E7%B1%BB%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C%EF%BC%9A%E6%B6%88%E6%81%AF%E8%AF%AD%E4%B9%89%E4%B8%8E%E5%86%85%E5%AD%98%E8%AF%AD%E4%B9%89">4. 四类数据操作</a></li>
+<li><a href="#5-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87%E4%B8%8E%E9%93%BE%E8%B7%AF%E6%A3%80%E6%9F%A5">5. 环境准备与链路检查</a></li>
+<li><a href="#6-%E4%B8%80%E4%B8%AA-RC-%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%AE%8C%E6%95%B4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">6. 一个 RC 连接的完整生命周期</a></li>
+<li><a href="#7-%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%EF%BC%9ARC-Send-Recv">7. 第一个可运行程序</a></li>
+<li><a href="#8-%E4%BB%8E-Send-Recv-%E6%94%B9%E4%B8%BA-RDMA-Read-Write">8. 改为 RDMA Read&#x2F;Write</a></li>
+<li><a href="#9-Completion-%E5%88%B0%E5%BA%95%E8%AF%81%E6%98%8E%E4%BA%86%E4%BB%80%E4%B9%88">9. Completion 到底证明了什么</a></li>
+<li><a href="#10-%E6%AD%A3%E7%A1%AE%E6%80%A7%E3%80%81%E5%AE%89%E5%85%A8%E4%B8%8E%E8%B5%84%E6%BA%90%E5%9B%9E%E6%94%B6">10. 正确性、安全与资源回收</a></li>
+<li><a href="#11-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%EF%BC%9A%E5%85%88%E5%BB%BA%E7%AB%8B%E6%B5%81%E6%B0%B4%E7%BA%BF%EF%BC%8C%E5%86%8D%E5%87%8F%E5%B0%91%E5%BC%80%E9%94%80">11. 性能优化</a></li>
+<li><a href="#12-%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E4%B8%8E%E6%8E%92%E6%9F%A5%E9%A1%BA%E5%BA%8F">12. 常见错误与排查顺序</a></li>
+<li><a href="#13-%E4%B8%A4%E4%BB%BD%E5%85%A5%E9%97%A8%E6%9D%90%E6%96%99%E4%B8%AD%E5%AE%B9%E6%98%93%E8%AF%AF%E8%A7%A3%E7%9A%84%E7%BB%86%E8%8A%82">13. 原教程中容易误解的细节</a></li>
+<li><a href="#14-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF">14. 下一步学习路线</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="InfiniBand-RDMA-编程入门"><a href="#InfiniBand-RDMA-编程入门" class="headerlink" title="InfiniBand RDMA 编程入门"></a>InfiniBand RDMA 编程入门</h1><h2 id="1-RDMA-体系结构"><a href="#1-RDMA-体系结构" class="headerlink" title="1. RDMA 体系结构"></a>1. RDMA 体系结构</h2><ul>
+<li><strong>RDMA</strong> 是一种通信能力：远程直接内存访问 (RDMA) 允许从一台主机（存储或计算主机）的内存直接访问另一台主机的内存，而无需远程操作系统和 CPU 的参与，从而降低延迟、减少 CPU 负载并提高带宽，进而提升网络和主机性能。相比之下，TCP&#x2F;IP 通信通常需要复制操作，这会增加延迟并消耗大量的 CPU 和内存资源。</li>
+<li><strong>InfiniBand（IB）</strong> 是一种高速、低延迟、低 CPU 开销、高效且可扩展的服务器与存储互连技术。其关键能力之一是原生支持 RDMA。IB 可在服务器之间、服务器与存储之间传输数据，而主机 CPU 不参与数据路径。IB 使用 I&#x2F;O 通道通信（每主机最多约 1600 万条），每条通道提供虚拟化 NIC&#x2F;HCA 的语义（安全、隔离等）。</li>
+<li><strong>Virtual Protocol Interconnect（VPI）</strong> 架构在网卡与交换机之间提供高性能、低延迟且可靠的通信手段，并同时支持 InfiniBand 与以太网语义。VPI 适配器或交换机可以按端口配置为提供 InfiniBand 语义或以太网语义。</li>
+<li><strong>RoCE</strong> 是 IBTA 定义的“以太网上的 RDMA”标准。它为以太网提供真正的 RDMA 语义，不需要 iWARP 那种复杂且性能较低的 TCP 传输。RoCE 是目前最高效的低延迟以太网方案。它所需的 CPU 开销非常低，并利用数据中心桥接以太网（Data Center Bridging Ethernet）中的优先级流控（Priority Flow Control）实现无损连接。</li>
+<li><strong>Verbs</strong> 是面向 RDMA 设备的编程抽象。Linux 用户态通常通过 <code>libibverbs</code> 使用它；<code>rdma-core</code> 中的 provider 再把通用 Verbs 映射到具体 HCA 驱动。</li>
+</ul>
+<p>在 Linux 中，典型调用路径可以简化为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">应用</span><br><span class="line">  │  libibverbs / librdmacm</span><br><span class="line">  ▼</span><br><span class="line">用户态 provider（例如 mlx5）</span><br><span class="line">  │  控制路径经 /dev/infiniband/uverbsN</span><br><span class="line">  │  快速路径通过映射的队列和 doorbell</span><br><span class="line">  ▼</span><br><span class="line">内核 RDMA 子系统 + HCA 驱动</span><br><span class="line">  ▼</span><br><span class="line">HCA（Host Channel Adapter）</span><br></pre></td></tr></table></figure>
+
+<p>目前支持 RDMA 的技术主要有三种：InfiniBand、以太网 RoCE，以及以太网 iWARP。这三项技术可共用同一套用户 API，但物理层和链路层不同。就以太网方案而言，RoCE 相对 iWARP 具有明显的性能优势——无论是延迟、吞吐还是 CPU 开销。许多主流方案都支持 RoCE，并且它已被纳入 Windows Server 软件（InfiniBand 同样如此）。</p>
+<p>RDMA 结构中的主要硬件&#x2F;管理组件：</p>
+<ul>
+<li><strong>主机通道适配器（HCA &#x2F; Network Adapter）</strong> ：HCA 是 IB 终端节点（例如服务器）接入 IB 网络的连接点。它们相当于以太网网卡（NIC）。</li>
+<li><strong>距离延伸器（Range Extenders）</strong> ：用于延长 IB 链路距离。</li>
+<li><strong>子网管理器（Subnet Manager）</strong> ：发现拓扑、分配本地标识符 LID、计算并下发路由、管理交换机转发表。</li>
+<li><strong>交换机（Switches）</strong> ：按 SM 编程的转发表转发报文，支持 VL 等 QoS 能力。许多交换机内置子网管理器。</li>
+</ul>
+<h2 id="2-RDMA-为什么快"><a href="#2-RDMA-为什么快" class="headerlink" title="2. RDMA 为什么快"></a>2. RDMA 为什么快</h2><p>Socket（套接字）是操作系统提供的网络通信抽象。程序通过 Socket 使用 TCP、UDP 等协议收发数据，而不需要直接操作网卡、IP 数据包或 TCP 状态机。在 Linux 中，Socket 是一种内核对象，由内核维护的网络对象，应用程序通过文件描述符访问它。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">应用程序</span><br><span class="line">   ↓ read/write、send/recv</span><br><span class="line">Socket</span><br><span class="line">   ↓</span><br><span class="line">操作系统 TCP/IP 协议栈</span><br><span class="line">   ↓</span><br><span class="line">网卡驱动</span><br><span class="line">   ↓</span><br><span class="line">网络</span><br></pre></td></tr></table></figure>
+
+<p>传统 Socket 路径通常需要协议栈处理、内核缓冲、系统调用和数据复制。RDMA 的稳定数据面让应用提前创建队列、注册缓冲区，随后通过用户态队列向 HCA 提交工作。它减少的是每条消息的 CPU 与软件路径开销。</p>
+<p><img data-src="/images/Infiniband/02-tcpip-rdma-data-path.png" alt="传统 TCP&#x2F;IP 与 RDMA 数据传输路径对比：TCP&#x2F;IP 数据经过 Socket、内核协议栈和内核缓冲区，RDMA 由 RNIC 在已注册内存之间直接传输"></p>
+<p>TCP&#x2F;IP 的每一次操作都需要操作系统介入，并且线路两端都包含缓冲拷贝。当应用想发送一个分组时，操作系统把这些字节放入属于操作系统的、主存中的匿名缓冲；字节传输完成后，操作系统再把其缓冲中的数据拷贝到应用的接收缓冲。每当有分组到达，这一过程就会重复，直到整段字节流收完。因拥塞而丢失的分组，由 TCP 负责重传。</p>
+<p>在 InfiniBand 中，一条完整消息会直接投递给应用。一旦应用请求传输一次 RDMA Read 或 Write，InfiniBand 硬件会按需要把出站消息分段成多个分组，分组大小由结构路径的最大传输单元（path MTU）决定。这些分组经 InfiniBand 网络传输，并直接写入接收应用的虚拟缓冲，在那里被重新组装成完整消息。整条消息接收完成后，才会通知接收应用。因此，在整条消息被投递进接收应用的缓冲之前，发送方和接收方应用都不必介入。</p>
+<h2 id="3-Verbs-的资源模型"><a href="#3-Verbs-的资源模型" class="headerlink" title="3. Verbs 的资源模型"></a>3. Verbs 的资源模型</h2><pre><code class="highlight mermaid">flowchart LR
+    DEV[ibv_device] --&gt; CTX[ibv_context]
+    CTX --&gt; PD[Protection Domain]
+    CTX --&gt; CQ[Completion Queue]
+    PD --&gt; MR[Memory Region]
+    PD --&gt; QP[Queue Pair]
+    QP --&gt; SQ[Send Queue]
+    QP --&gt; RQ[Receive Queue]
+    SQ -. completion .-&gt; CQ
+    RQ -. completion .-&gt; CQ
+    MR -. lkey / rkey .-&gt; QP</code></pre>
+
+<h3 id="3-1-Device-与-Context"><a href="#3-1-Device-与-Context" class="headerlink" title="3.1 Device 与 Context"></a>3.1 Device 与 Context</h3><p><code>ibv_get_device_list()</code> 用于枚举系统中的 RDMA 设备，<code>ibv_open_device()</code> 则打开指定设备，并返回与之关联的用户态上下文 <code>ibv_context</code>。</p>
+<h3 id="3-2-Protection-Domain（PD）"><a href="#3-2-Protection-Domain（PD）" class="headerlink" title="3.2 Protection Domain（PD）"></a>3.2 Protection Domain（PD）</h3><p>PD 是本地资源的保护边界。 IB 内存区域并创建队列对。保护域通过调用 <code>ibv_alloc_pd()</code> 进行分配。</p>
+<h3 id="3-3-Memory-Region（MR）"><a href="#3-3-Memory-Region（MR）" class="headerlink" title="3.3 Memory Region（MR）"></a>3.3 Memory Region（MR）</h3><p>普通进程虚拟地址不能直接交给远端使用。<code>ibv_reg_mr()</code> 把一段本地虚拟地址注册到 PD，建立 HCA 所需的地址翻译与访问权限，并返回：</p>
+<ul>
+<li><code>lkey</code>：本地 QP 在 SGE 中引用这段内存；</li>
+<li><code>rkey</code>：远端发起 RDMA Read、Write 或 Atomic 时证明其访问权限；</li>
+<li><code>addr</code> 与 <code>length</code>：注册范围。</li>
+</ul>
+<p>本地读权限总是存在。常见访问标志如下：</p>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>IBV_ACCESS_LOCAL_WRITE</code></td>
+<td>HCA 可写本地 MR；Receive 缓冲区和 RDMA Read 的本地目标都需要它</td>
+</tr>
+<tr>
+<td><code>IBV_ACCESS_REMOTE_WRITE</code></td>
+<td>允许远端向该 MR 执行 RDMA Write</td>
+</tr>
+<tr>
+<td><code>IBV_ACCESS_REMOTE_READ</code></td>
+<td>允许远端从该 MR 执行 RDMA Read</td>
+</tr>
+<tr>
+<td><code>IBV_ACCESS_REMOTE_ATOMIC</code></td>
+<td>允许远端原子操作，且设备必须支持</td>
+</tr>
+</tbody></table>
+<p>若设置 <code>REMOTE_WRITE</code> 或 <code>REMOTE_ATOMIC</code>，还必须设置 <code>LOCAL_WRITE</code>。</p>
+<h3 id="3-4-Queue-Pair（QP）"><a href="#3-4-Queue-Pair（QP）" class="headerlink" title="3.4 Queue Pair（QP）"></a>3.4 Queue Pair（QP）</h3><p>队列对 QP 包含一条 Send Queue（SQ）和一条 Receive Queue（RQ）。应用向 SQ 提交 Send、RDMA Read、RDMA Write、Atomic 等 WR（工作请求），向 RQ 提交 Receive WR。创建时要指定：</p>
+<ul>
+<li>传输类型，如 RC、UC 或 UD；</li>
+<li>Send CQ 与 Receive CQ；两者可以是同一个 CQ；</li>
+<li>最大 Send&#x2F;Receive WR 数与每个 WR 的最大 SGE 数；</li>
+<li>是否让所有 Send WR 自动产生 Completion。</li>
+</ul>
+<p>RC 是连接型、可靠且按序的传输：每条 RC QP 只与一条远端 QP 通信，支持 Send&#x2F;Recv、RDMA Read&#x2F;Write 和 Atomic，由于功能完整且能由传输层处理丢包与重传。UC 同样是一对一的连接型传输，但不提供可靠重传；它支持 Send&#x2F;Recv 和 RDMA Write，不支持 RDMA Read 与 Atomic。UD 是无连接、不可靠的数据报传输，一条 QP 可以向多个远端 UD QP 发送单包消息；它只支持 Send&#x2F;Recv，不保证消息送达或按序到达，消息大小还受到路径 MTU 的限制。</p>
+<h3 id="3-5-Completion-Queue（CQ）"><a href="#3-5-Completion-Queue（CQ）" class="headerlink" title="3.5 Completion Queue（CQ）"></a>3.5 Completion Queue（CQ）</h3><p>HCA 执行完 WR 后，可以向 CQ 写入 CQE；应用通过 <code>ibv_poll_cq()</code> 取出 <code>ibv_wc</code>。一个 CQ 可服务多个 QP，<code>wr_id</code> 是应用填写并原样带回的 64 位标识，通常用于定位请求上下文或缓冲区。</p>
+<p>不是每个 Send WR 都必须产生 CQE：<code>sq_sig_all=0</code> 时，只有带 <code>IBV_SEND_SIGNALED</code> 的 Send WR 才正常产生完成。Receive 完成会报告到 Receive CQ。CQ 容量不是无限的；应用若不及时消费导致 overrun，会触发 <code>IBV_EVENT_CQ_ERR</code>，该 CQ 随即不可继续使用。</p>
+<h3 id="3-6-WR、WQE、SGE-与-WC"><a href="#3-6-WR、WQE、SGE-与-WC" class="headerlink" title="3.6 WR、WQE、SGE 与 WC"></a>3.6 WR、WQE、SGE 与 WC</h3><ul>
+<li><strong>WR（Work Request）</strong>：应用提交给 Verbs 的工作描述；</li>
+<li><strong>WQE（Work Queue Element）</strong>：WR 在工作队列中的表示；</li>
+<li><strong>SGE（Scatter&#x2F;Gather Element）</strong>：由 <code>addr + length + lkey</code> 描述的一段本地缓冲区；</li>
+<li><strong>WC（Work Completion）</strong>：从 CQ 取出的完成结果。</li>
+</ul>
+<p><code>ibv_post_send()</code> 或 <code>ibv_post_recv()</code> 返回 0，只说明 WR 已成功放入工作队列，<strong>不说明传输已经完成</strong>。调用返回后，栈上的 WR 和 SGE 描述符可以销毁；数据缓冲区仍必须保持有效，直到相应 Completion 到达。使用 <code>IBV_SEND_INLINE</code> 时是例外：数据已复制进 WQE，提交调用返回后源缓冲区即可复用。</p>
+<h2 id="4-四类数据操作：消息语义与内存语义"><a href="#4-四类数据操作：消息语义与内存语义" class="headerlink" title="4. 四类数据操作：消息语义与内存语义"></a>4. 四类数据操作：消息语义与内存语义</h2><table>
+<thead>
+<tr>
+<th>操作</th>
+<th align="right">需要远端预投 Receive</th>
+<th align="right">需要远端地址 &#x2F; rkey</th>
+<th align="right">远端通常有 CQE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Send &#x2F; Receive</td>
+<td align="right">是</td>
+<td align="right">否</td>
+<td align="right">是，<code>IBV_WC_RECV</code></td>
+</tr>
+<tr>
+<td>RDMA Write</td>
+<td align="right">否</td>
+<td align="right">是</td>
+<td align="right">否</td>
+</tr>
+<tr>
+<td>RDMA Write with Immediate</td>
+<td align="right">是，用于通知</td>
+<td align="right">是</td>
+<td align="right">是，带 immediate data</td>
+</tr>
+<tr>
+<td>RDMA Read</td>
+<td align="right">否</td>
+<td align="right">是</td>
+<td align="right">否</td>
+</tr>
+<tr>
+<td>Atomic</td>
+<td align="right">否</td>
+<td align="right">是</td>
+<td align="right">否</td>
+</tr>
+</tbody></table>
+<h3 id="4-1-Send-Recv：双边消息语义"><a href="#4-1-Send-Recv：双边消息语义" class="headerlink" title="4.1 Send&#x2F;Recv：双边消息语义"></a>4.1 Send&#x2F;Recv：双边消息语义</h3><p>接收端先执行 <code>ibv_post_recv()</code>，把本地缓冲区交给 RQ；发送端以 <code>IBV_WR_SEND</code> 提交 Send WR。消息到达时，HCA 从 RQ 取出一个 Receive WQE，把 payload scatter 到它的 SGE 中，并在接收 CQ 生成 WC。</p>
+<p>Send&#x2F;Recv 不暴露接收缓冲区地址给发送端，也不需要交换 MR 的 <code>rkey</code>。发送端只知道自己连接的是哪条远端 QP。若远端没有可用 Receive，RC 会收到 RNR NAK 并按 <code>rnr_retry</code> 重试；重试耗尽后得到 <code>IBV_WC_RNR_RETRY_EXC_ERR</code>。</p>
+<h3 id="4-2-RDMA-Write：单边写"><a href="#4-2-RDMA-Write：单边写" class="headerlink" title="4.2 RDMA Write：单边写"></a>4.2 RDMA Write：单边写</h3><p>发起端提供本地 SGE，以及远端 <code>remote_addr + rkey</code>。远端 HCA 校验权限和边界后把数据直接放到目标 MR，不消耗普通 Receive WQE，也默认不在远端产生 CQE。</p>
+<p>远端仍要事先注册并授权内存，通过控制面安全地发布地址与 <code>rkey</code>，还要知道何时数据完整可见、何时可以复用或撤销缓冲区。常见做法是在同一 RC QP 上使用 Write with Immediate，或在 Write 后再发一个 Send 作为通知。</p>
+<p>Write with Immediate 的 payload 仍写入 <code>remote_addr</code> 指向的 MR；被消耗的 Receive WQE 用于生成远端通知，而不是承载这段 RDMA payload。Immediate Data 只有 32 位，并按网络字节序传输。</p>
+<h3 id="4-3-RDMA-Read-与-Atomic"><a href="#4-3-RDMA-Read-与-Atomic" class="headerlink" title="4.3 RDMA Read 与 Atomic"></a>4.3 RDMA Read 与 Atomic</h3><p>RDMA Read 把远端 MR 的内容拉到发起端本地 SGE。远端需开放 <code>REMOTE_READ</code>，发起端本地目标需允许本地写。操作完成只在发起端产生 WC；远端应用默认不会得到通知。并发 Read&#x2F;Atomic 数还受两端 <code>max_rd_atomic</code> 与 <code>max_dest_rd_atomic</code> 约束。</p>
+<p>RC 的 Compare-and-Swap 和 Fetch-and-Add 要求目标 MR 开放 <code>REMOTE_ATOMIC</code>，设备能力、对齐和操作宽度也必须满足要求。Verbs Atomic 只保证规定宽度上的设备级原子性，不会自动把更大的应用对象或持久化更新变成事务。</p>
+<h2 id="5-一个-RC-连接的完整生命周期"><a href="#5-一个-RC-连接的完整生命周期" class="headerlink" title="5. 一个 RC 连接的完整生命周期"></a>5. 一个 RC 连接的完整生命周期</h2><p>收发两端通常先用 TCP 等带外通道交换连接参数，再把 QP 从 RESET 依次推进到 INIT、RTR 和 RTS：</p>
+<pre><code class="highlight mermaid">sequenceDiagram
+    participant A as 主机 A
+    participant C as TCP / RDMA CM 控制面
+    participant B as 主机 B
+    A-&gt;&gt;A: Context、PD、MR、CQ、QP
+    B-&gt;&gt;B: Context、PD、MR、CQ、QP
+    A-&gt;&gt;A: RESET → INIT，预投 Receive
+    B-&gt;&gt;B: RESET → INIT，预投 Receive
+    A-&gt;&gt;C: LID/GID、QPN、PSN、MTU
+    B-&gt;&gt;C: LID/GID、QPN、PSN、MTU
+    C--&gt;&gt;A: B 的连接参数
+    C--&gt;&gt;B: A 的连接参数
+    A-&gt;&gt;A: INIT → RTR → RTS
+    B-&gt;&gt;B: INIT → RTR → RTS
+    A-&gt;&gt;C: Ready
+    B-&gt;&gt;C: Ready
+    A-&gt;&gt;B: RDMA 数据面开始</code></pre>
+
+<h3 id="6-1-创建本地资源"><a href="#6-1-创建本地资源" class="headerlink" title="6.1 创建本地资源"></a>6.1 创建本地资源</h3><p>典型顺序是：</p>
+<ol>
+<li><code>ibv_get_device_list()</code>、<code>ibv_open_device()</code>；</li>
+<li><code>ibv_query_port()</code> 检查端口；</li>
+<li><code>ibv_alloc_pd()</code>；</li>
+<li>分配缓冲区并 <code>ibv_reg_mr()</code>；</li>
+<li><code>ibv_create_cq()</code>；</li>
+<li><code>ibv_create_qp()</code>；</li>
+<li>把 QP 修改到 INIT；</li>
+<li>在对端可能发送前预投足够的 Receive；</li>
+<li>交换连接参数并进入 RTR、RTS。</li>
+</ol>
+<h3 id="6-2-建连究竟要交换什么"><a href="#6-2-建连究竟要交换什么" class="headerlink" title="6.2 建连究竟要交换什么"></a>6.2 建连究竟要交换什么</h3><p>原生 IB 同一子网的最小 RC 路径通常需要：</p>
+<ul>
+<li>对端端口 LID；</li>
+<li>对端 QP Number；</li>
+<li>对端初始 Packet Sequence Number（PSN）；</li>
+<li>双方一致且不超过链路能力的 Path MTU。</li>
+</ul>
+<p>只有 RDMA Read&#x2F;Write&#x2F;Atomic 才需要额外发布远端虚拟地址、长度和 <code>rkey</code>；Send&#x2F;Recv 不需要。控制消息应使用固定宽度整数、明确版本和网络字节序。</p>
+<h3 id="6-3-RESET-→-INIT"><a href="#6-3-RESET-→-INIT" class="headerlink" title="6.3 RESET → INIT"></a>6.3 RESET → INIT</h3><p>QP 刚创建时处于 RESET。INIT 阶段选择本地端口、P_Key 分区和允许进入本 QP 的远端操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">qp_to_init</span><span class="params">(<span class="keyword">struct</span> ibv_qp *qp, <span class="type">uint8_t</span> ib_port,</span></span><br><span class="line"><span class="params">                      <span class="type">int</span> remote_access_flags)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_qp_attr</span> <span class="title">a</span> =</span> &#123;</span><br><span class="line">        .qp_state        = IBV_QPS_INIT,</span><br><span class="line">        .pkey_index      = <span class="number">0</span>,</span><br><span class="line">        .port_num        = ib_port,</span><br><span class="line">        .qp_access_flags = remote_access_flags,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ibv_modify_qp(qp, &amp;a,</span><br><span class="line">        IBV_QP_STATE | IBV_QP_PKEY_INDEX |</span><br><span class="line">        IBV_QP_PORT  | IBV_QP_ACCESS_FLAGS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>纯 Send&#x2F;Recv 可把 <code>remote_access_flags</code> 设为 0；若要接受对端 Read&#x2F;Write，则按需加入 <code>IBV_ACCESS_REMOTE_READ</code> 和 <code>IBV_ACCESS_REMOTE_WRITE</code>。QP 权限与 MR 权限要同时允许，操作才会成功。</p>
+<h3 id="6-4-INIT-→-RTR"><a href="#6-4-INIT-→-RTR" class="headerlink" title="6.4 INIT → RTR"></a>6.4 INIT → RTR</h3><p>RTR（Ready to Receive）阶段把远端 QP 和路径写入本地 QP：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">qp_to_rtr</span><span class="params">(<span class="keyword">struct</span> ibv_qp *qp, <span class="type">uint8_t</span> ib_port,</span></span><br><span class="line"><span class="params">                     <span class="keyword">enum</span> ibv_mtu mtu, <span class="type">uint16_t</span> dlid,</span></span><br><span class="line"><span class="params">                     <span class="type">uint32_t</span> dest_qpn, <span class="type">uint32_t</span> dest_psn)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_qp_attr</span> <span class="title">a</span> =</span> &#123;</span><br><span class="line">        .qp_state           = IBV_QPS_RTR,</span><br><span class="line">        .path_mtu           = mtu,</span><br><span class="line">        .dest_qp_num        = dest_qpn,</span><br><span class="line">        .rq_psn             = dest_psn,</span><br><span class="line">        .max_dest_rd_atomic = <span class="number">1</span>,</span><br><span class="line">        .min_rnr_timer      = <span class="number">12</span>,</span><br><span class="line">        .ah_attr = &#123;</span><br><span class="line">            .is_global     = <span class="number">0</span>,  <span class="comment">/* 本例只支持原生 IB 同一子网 */</span></span><br><span class="line">            .dlid          = dlid,</span><br><span class="line">            .sl            = <span class="number">0</span>,</span><br><span class="line">            .src_path_bits = <span class="number">0</span>,</span><br><span class="line">            .port_num      = ib_port,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ibv_modify_qp(qp, &amp;a,</span><br><span class="line">        IBV_QP_STATE | IBV_QP_AV | IBV_QP_PATH_MTU |</span><br><span class="line">        IBV_QP_DEST_QPN | IBV_QP_RQ_PSN |</span><br><span class="line">        IBV_QP_MAX_DEST_RD_ATOMIC | IBV_QP_MIN_RNR_TIMER);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意 <code>rq_psn</code> 必须等于<strong>对端发送方向</strong>使用的初始 PSN。Path MTU 不能超过路径任一端的 active MTU。进入 RTR 后 QP 可以接收；要发出 SQ 中的工作，还需进入 RTS。</p>
+<h3 id="6-5-RTR-→-RTS"><a href="#6-5-RTR-→-RTS" class="headerlink" title="6.5 RTR → RTS"></a>6.5 RTR → RTS</h3><p>RTS（Ready to Send）设置本地发送 PSN、RC 超时与重试参数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">qp_to_rts</span><span class="params">(<span class="keyword">struct</span> ibv_qp *qp, <span class="type">uint32_t</span> local_psn)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_qp_attr</span> <span class="title">a</span> =</span> &#123;</span><br><span class="line">        .qp_state      = IBV_QPS_RTS,</span><br><span class="line">        .timeout       = <span class="number">14</span>,</span><br><span class="line">        .retry_cnt     = <span class="number">7</span>,</span><br><span class="line">        .rnr_retry     = <span class="number">7</span>,</span><br><span class="line">        .sq_psn        = local_psn,</span><br><span class="line">        .max_rd_atomic = <span class="number">1</span>,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ibv_modify_qp(qp, &amp;a,</span><br><span class="line">        IBV_QP_STATE | IBV_QP_TIMEOUT | IBV_QP_RETRY_CNT |</span><br><span class="line">        IBV_QP_RNR_RETRY | IBV_QP_SQ_PSN |</span><br><span class="line">        IBV_QP_MAX_QP_RD_ATOMIC);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>timeout</code>、<code>min_rnr_timer</code> 等是规范定义的编码值，不是直接填写毫秒。<code>rnr_retry=7</code> 表示无限 RNR 重试，而 <code>retry_cnt=7</code> 表示最多重试 7 次；生产环境应按故障恢复目标设定。</p>
+<p>QP 创建时请求的是能力上限，provider 可能回写实际值：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_qp_init_attr</span> <span class="title">qia</span> =</span> &#123;</span><br><span class="line">    .send_cq = cq,</span><br><span class="line">    .recv_cq = cq,</span><br><span class="line">    .qp_type = IBV_QPT_RC,</span><br><span class="line">    .sq_sig_all = <span class="number">0</span>,</span><br><span class="line">    .cap = &#123;</span><br><span class="line">        .max_send_wr  = <span class="number">16</span>,</span><br><span class="line">        .max_recv_wr  = <span class="number">16</span>,</span><br><span class="line">        .max_send_sge = <span class="number">1</span>,</span><br><span class="line">        .max_recv_sge = <span class="number">1</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_qp</span> *<span class="title">qp</span> =</span> ibv_create_qp(pd, &amp;qia);</span><br></pre></td></tr></table></figure>
+
+<p>不要把请求值当成硬件保证。创建后可读取被回写的 <code>qia.cap</code>；对更一般的程序，还应先用设备查询接口校验需求。</p>
+<h3 id="6-6-TCP-控制面"><a href="#6-6-TCP-控制面" class="headerlink" title="6.6 TCP 控制面"></a>6.6 TCP 控制面</h3><p>TCP 在示例中承担三件事：交换连接参数、等待双方 QP 都进入 RTS、在退出前协调生命周期。RC 的可靠性只覆盖已经建立的数据路径，不负责服务发现、身份认证或密钥发布。</p>
+<p>生产程序可用 <code>librdmacm</code> 把地址解析、路由解析、连接请求&#x2F;接受和 QP 建连组织为事件流程。它能同时服务 InfiniBand、RoCE 和 iWARP，避免应用手工拼接 LID&#x2F;GID 路径；建连完成后，数据操作仍然使用相同的 Verbs 对象和 WR。</p>
+<h2 id="7-第一个可运行程序：RC-Send-Recv"><a href="#7-第一个可运行程序：RC-Send-Recv" class="headerlink" title="7. 第一个可运行程序：RC Send&#x2F;Recv"></a>7. 第一个可运行程序：RC Send&#x2F;Recv</h2><p>可运行基线直接采用 rdma-core 官方的 <a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/libibverbs/examples/rc_pingpong.c">rc_pingpong.c</a>，发行版通常已将它构建成 <code>ibv_rc_pingpong</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端</span></span><br><span class="line">ibv_rc_pingpong -d mlx5_0 -i 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端</span></span><br><span class="line">ibv_rc_pingpong -d mlx5_0 -i 1 server-control-ip</span><br></pre></td></tr></table></figure>
+
+<p>下面从官方示例中抽出并简化关键路径。为了讲清 LID 寻址，这些片段按原生 InfiniBand 同一子网解释，RoCE 必须补充完整 GID&#x2F;GRH 参数。</p>
+<p>示例把一块注册区分成独立的发送和接收缓冲区，避免同一地址同时被未完成的 Send 读取和 Receive 写入。Receive 必须在通知对端“Ready”之前提交：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">post_recv</span><span class="params">(<span class="keyword">struct</span> resources *r)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span> <span class="title">sge</span> =</span> &#123;</span><br><span class="line">        .addr   = (<span class="type">uintptr_t</span>)r-&gt;recv_buf,</span><br><span class="line">        .length = MSG_SIZE,</span><br><span class="line">        .lkey   = r-&gt;mr-&gt;lkey,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_recv_wr</span> <span class="title">wr</span> =</span> &#123;</span><br><span class="line">        .wr_id   = WRID_RECV,</span><br><span class="line">        .sg_list = &amp;sge,</span><br><span class="line">        .num_sge = <span class="number">1</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_recv_wr</span> *<span class="title">bad</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> ibv_post_recv(r-&gt;qp, &amp;wr, &amp;bad);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Send 的 SGE 也只描述<strong>本地</strong>数据；远端 HCA 会自行选择 RQ 中下一个 Receive WQE：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">post_send</span><span class="params">(<span class="keyword">struct</span> resources *r, <span class="type">size_t</span> len)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span> <span class="title">sge</span> =</span> &#123;</span><br><span class="line">        .addr   = (<span class="type">uintptr_t</span>)r-&gt;send_buf,</span><br><span class="line">        .length = len,</span><br><span class="line">        .lkey   = r-&gt;mr-&gt;lkey,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> <span class="title">wr</span> =</span> &#123;</span><br><span class="line">        .wr_id      = WRID_SEND,</span><br><span class="line">        .sg_list    = &amp;sge,</span><br><span class="line">        .num_sge    = <span class="number">1</span>,</span><br><span class="line">        .opcode     = IBV_WR_SEND,</span><br><span class="line">        .send_flags = IBV_SEND_SIGNALED,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> *<span class="title">bad</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> ibv_post_send(r-&gt;qp, &amp;wr, &amp;bad);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>轮询必须同时检查 <code>ibv_poll_cq()</code> 的返回值与 WC 状态：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_wc</span> <span class="title">wc</span>[8];</span></span><br><span class="line"><span class="type">int</span> n = ibv_poll_cq(cq, <span class="number">8</span>, wc);</span><br><span class="line"><span class="keyword">if</span> (n &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">/* CQ poll 本身失败 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (wc[i].status != IBV_WC_SUCCESS) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;status=%s\n&quot;</span>,</span><br><span class="line">                ibv_wc_status_str(wc[i].status));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二个参数是 WC <strong>数组容量</strong>，不是等待数量。若传 8，就必须实际提供 8 个元素；把单个 <code>struct ibv_wc</code> 的地址与大于 1 的数量传入，会越界写栈。<code>ibv_poll_cq()</code> 返回 0 表示当前没有完成，它不会阻塞等待。</p>
+<p>示例的执行顺序是：</p>
+<ol>
+<li>双方创建资源、进入 INIT 并各投一个 Receive；</li>
+<li>经 TCP 交换 <code>version、MTU、LID、QPN、PSN</code>；</li>
+<li>双方进入 RTR、RTS，再做一次 TCP barrier；</li>
+<li>客户端 Send “hello”，服务端获得 Receive WC；</li>
+<li>服务端 Send 回复，客户端等待自己的 Send WC 与 Receive WC；</li>
+<li>所有在途 WR 完成后，双方协调退出并逆序释放资源。</li>
+</ol>
+<p>真实程序通常维护 RQ 水位，一次预投多个 Receive，并为每个 <code>wr_id</code> 绑定独立缓冲区状态。</p>
+<h2 id="8-从-Send-Recv-改为-RDMA-Read-Write"><a href="#8-从-Send-Recv-改为-RDMA-Read-Write" class="headerlink" title="8. 从 Send&#x2F;Recv 改为 RDMA Read&#x2F;Write"></a>8. 从 Send&#x2F;Recv 改为 RDMA Read&#x2F;Write</h2><p>单边操作要同时改变权限、元数据交换和 WR。假设 B 暴露一段供 A 写入的内存，B 至少需要：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> access = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_WRITE;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_mr</span> *<span class="title">mr</span> =</span> ibv_reg_mr(pd, buf, len, access);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* QP 在 RESET → INIT 时也要允许进入该 QP 的远端写 */</span></span><br><span class="line">qp_to_init(qp, ib_port, IBV_ACCESS_REMOTE_WRITE);</span><br></pre></td></tr></table></figure>
+
+<p>B 只发布必要信息，例如固定格式的 <code>{version, addr, length, rkey}</code>；A 校验长度和协议状态后提交：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_sge</span> <span class="title">sge</span> =</span> &#123;</span><br><span class="line">    .addr   = (<span class="type">uintptr_t</span>)local_buf,</span><br><span class="line">    .length = len,</span><br><span class="line">    .lkey   = local_mr-&gt;lkey,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> <span class="title">wr</span> =</span> &#123;</span><br><span class="line">    .wr_id      = WRID_WRITE,</span><br><span class="line">    .sg_list    = &amp;sge,</span><br><span class="line">    .num_sge    = <span class="number">1</span>,</span><br><span class="line">    .opcode     = IBV_WR_RDMA_WRITE,</span><br><span class="line">    .send_flags = IBV_SEND_SIGNALED,</span><br><span class="line">    .wr.rdma = &#123;</span><br><span class="line">        .remote_addr = remote_addr,</span><br><span class="line">        .rkey        = remote_rkey,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ibv_send_wr</span> *<span class="title">bad</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line"><span class="type">int</span> rc = ibv_post_send(qp, &amp;wr, &amp;bad);</span><br></pre></td></tr></table></figure>
+
+<p>RDMA Read 使用 <code>IBV_WR_RDMA_READ</code>，远端 MR&#x2F;QP 改为开放 <code>REMOTE_READ</code>；本地 SGE 是读回数据的目标，因此 MR 要有 <code>LOCAL_WRITE</code>。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/jcxue/RDMA-Tutorial/wiki">jcxue：RDMA Tutorial</a></li>
+<li><a target="_blank" rel="noopener" href="https://insujang.github.io/2020-02-09/introduction-to-programming-infiniband/">Insu Jang：Introduction to Programming InfiniBand RDMA</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core">linux-rdma&#x2F;rdma-core</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/Documentation/libibverbs.md">rdma-core：libibverbs 说明</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/libibverbs/man/ibv_rc_pingpong.1">rdma-core：ibv_rc_pingpong 手册与源码</a></li>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man3/ibv_modify_qp.3.html">libibverbs：ibv_modify_qp(3)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/libibverbs/man/ibv_post_send.3">libibverbs：ibv_post_send(3)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/libibverbs/man/ibv_reg_mr.3">libibverbs：ibv_reg_mr(3)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/libibverbs/man/ibv_poll_cq.3">libibverbs：ibv_poll_cq(3)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/man/rdma_cm.7">librdmacm：rdma_cm(7)</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.nvidia.com/rdma-aware-networks-programming-user-manual-1-7.pdf">NVIDIA：RDMA Aware Networks Programming User Manual</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/InfiniBand/" rel="tag"># InfiniBand</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/libibverbs/" rel="tag"># libibverbs</a>
+              <a href="/tags/rdma-core/" rel="tag"># rdma-core</a>
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/" rel="tag"># 高性能网络</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/04/Splitwise/" rel="prev" title="Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统">
+                  <i class="fa fa-angle-left"></i> Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
