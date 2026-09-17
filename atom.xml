@@ -11,7 +11,27 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-09-16T16:42:27.460Z</updated>
+  <updated>2026-09-17T08:06:16.693Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
+    <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
+    <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
+    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
+    <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="快慢指针" scheme="https://zhwang1224.github.io/tags/%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/"/>
+    <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
+    <id>https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/</id>
+    <link href="https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/"/>
+    <published>2026-09-17T07:55:49.000Z</published>
+    <summary>LeetCode Hot 100 链表专题 I，包括相交链表、反转链表、回文链表、环形链表、环形链表 II、合并两个有序链表与两数相加。</summary>
+    <title>Algorithm-Hot100-链表-I</title>
+    <updated>2026-09-17T08:06:16.693Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -289,10 +309,10 @@
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
-    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <id>https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/</id>
     <link href="https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/"/>
@@ -418,26 +438,5 @@
     <summary>集合通信库为什么无法被点对点收发替代：DP、TP、PP、EP、SP/CP 与 ZeRO 分片各自对应的固定数据交换模式，以及这类通信区别于普通收发的三个共同特征。</summary>
     <title>集合通信库</title>
     <updated>2026-08-27T14:51:34.864Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
-    <category term="深度学习" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    <category term="Transformer" scheme="https://zhwang1224.github.io/tags/Transformer/"/>
-    <category term="自注意力" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B/"/>
-    <category term="多头注意力" scheme="https://zhwang1224.github.io/tags/%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B/"/>
-    <category term="编码器-解码器" scheme="https://zhwang1224.github.io/tags/%E7%BC%96%E7%A0%81%E5%99%A8-%E8%A7%A3%E7%A0%81%E5%99%A8/"/>
-    <category term="位置编码" scheme="https://zhwang1224.github.io/tags/%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"/>
-    <category term="前向传播" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD/"/>
-    <category term="张量形状" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%BD%A2%E7%8A%B6/"/>
-    <category term="Softmax" scheme="https://zhwang1224.github.io/tags/Softmax/"/>
-    <id>https://zhwang1224.github.io/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/</id>
-    <link href="https://zhwang1224.github.io/2026/07/28/Transformer%E8%AE%A1%E7%AE%97%E6%B5%81%E7%A8%8B/"/>
-    <published>2026-07-28T04:52:22.000Z</published>
-    <summary>Transformer 前向计算逐步拆解：以 the cat sat down → 猫 坐 下 了 为贯穿示例，走完编码器与解码器每一步的张量形状与具体运算。</summary>
-    <title>Transformer计算流程</title>
-    <updated>2026-08-27T14:51:34.855Z</updated>
   </entry>
 </feed>
