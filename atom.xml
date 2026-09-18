@@ -11,7 +11,28 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-09-17T08:06:16.693Z</updated>
+  <updated>2026-09-18T12:01:17.884Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="优先队列" scheme="https://zhwang1224.github.io/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
+    <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
+    <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
+    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
+    <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="归并排序" scheme="https://zhwang1224.github.io/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
+    <category term="LRU" scheme="https://zhwang1224.github.io/tags/LRU/"/>
+    <id>https://zhwang1224.github.io/2026/09/18/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-II/</id>
+    <link href="https://zhwang1224.github.io/2026/09/18/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-II/"/>
+    <published>2026-09-18T11:46:27.000Z</published>
+    <summary>LeetCode Hot 100 链表专题 II，包括删除倒数第 N 个节点、两两交换、K 个一组反转、复制随机链表、链表排序、合并 K 个链表与 LRU 缓存。</summary>
+    <title>Algorithm-Hot100-链表-II</title>
+    <updated>2026-09-18T12:01:17.884Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -157,8 +178,8 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="分布式训练网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
+    <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <category term="NAIC 2026" scheme="https://zhwang1224.github.io/tags/NAIC-2026/"/>
@@ -305,14 +326,14 @@
     <category term="计算机网络" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="Dragonfly" scheme="https://zhwang1224.github.io/tags/Dragonfly/"/>
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
-    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
-    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <id>https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/</id>
     <link href="https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/"/>
@@ -414,29 +435,5 @@
     <summary>集合通信入门：通信域、Rank 与 Root Rank 的基本概念，各类集合操作的语义，以及调用顺序或数据类型不一致时可能造成阻塞、数据错误甚至崩溃的常见坑。</summary>
     <title>集合通信</title>
     <updated>2026-08-27T14:51:34.863Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="集合通信" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
-    <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
-    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
-    <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="NCCL" scheme="https://zhwang1224.github.io/tags/NCCL/"/>
-    <category term="HCCL" scheme="https://zhwang1224.github.io/tags/HCCL/"/>
-    <category term="RCCL" scheme="https://zhwang1224.github.io/tags/RCCL/"/>
-    <category term="oneCCL" scheme="https://zhwang1224.github.io/tags/oneCCL/"/>
-    <category term="MSCCL" scheme="https://zhwang1224.github.io/tags/MSCCL/"/>
-    <category term="MPI" scheme="https://zhwang1224.github.io/tags/MPI/"/>
-    <category term="拓扑感知通信" scheme="https://zhwang1224.github.io/tags/%E6%8B%93%E6%89%91%E6%84%9F%E7%9F%A5%E9%80%9A%E4%BF%A1/"/>
-    <category term="通信性能模型" scheme="https://zhwang1224.github.io/tags/%E9%80%9A%E4%BF%A1%E6%80%A7%E8%83%BD%E6%A8%A1%E5%9E%8B/"/>
-    <id>https://zhwang1224.github.io/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93/</id>
-    <link href="https://zhwang1224.github.io/2026/07/30/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%BA%93/"/>
-    <published>2026-07-30T07:20:11.000Z</published>
-    <summary>集合通信库为什么无法被点对点收发替代：DP、TP、PP、EP、SP/CP 与 ZeRO 分片各自对应的固定数据交换模式，以及这类通信区别于普通收发的三个共同特征。</summary>
-    <title>集合通信库</title>
-    <updated>2026-08-27T14:51:34.864Z</updated>
   </entry>
 </feed>
