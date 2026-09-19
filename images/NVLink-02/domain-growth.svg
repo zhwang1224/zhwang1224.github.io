@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="660" viewBox="0 0 1600 660" role="img" aria-labelledby="title desc">
+  <title id="title">NVLink domain 规模</title>
+  <desc id="desc">单机 8 GPU、DGX-2 的 16 GPU、Hopper NVLink Network 的 256 GPU，以及 Blackwell/Rubin NVL72 的 72 GPU 机架域。</desc>
+  
+    <defs>
+      <filter id="shadow" x="-12%" y="-12%" width="124%" height="140%">
+        <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+      </filter>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+      </marker>
+      <style>
+        .text{font-family:Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;fill:#0f172a}
+        .muted{fill:#64748b}
+        .center{text-anchor:middle}
+      </style>
+    </defs>
+  <rect width="1600" height="660" fill="#f8fafc"/>
+  
+  <text class="text" x="58" y="56" font-size="32" font-weight="800">NVLink domain 规模</text>
+  <text class="text muted" x="58" y="92" font-size="17">同一 fabric 内可按内存语义互访的 GPU 集合</text>
+
+  
+    <text class="text" x="80" y="182" font-size="16" font-weight="700">DGX-1 HCM</text>
+    <rect x="360" y="160" width="980" height="36" rx="8" fill="#f1f5f9"/>
+    <rect x="360" y="160" width="36" height="36" rx="8" fill="#94a3b8"/>
+    <text class="text" x="412" y="184" font-size="16" font-weight="750">8 GPU</text>
+    <text class="text muted" x="1560" y="184" font-size="14">2016–17</text>
+  
+  
+    <text class="text" x="80" y="262" font-size="16" font-weight="700">DGX-2 NVSwitch</text>
+    <rect x="360" y="240" width="980" height="36" rx="8" fill="#f1f5f9"/>
+    <rect x="360" y="240" width="61" height="36" rx="8" fill="#64748b"/>
+    <text class="text" x="437" y="264" font-size="16" font-weight="750">16 GPU</text>
+    <text class="text muted" x="1560" y="264" font-size="14">2018</text>
+  
+  
+    <text class="text" x="80" y="342" font-size="16" font-weight="700">HGX A100 / H100 节点</text>
+    <rect x="360" y="320" width="980" height="36" rx="8" fill="#f1f5f9"/>
+    <rect x="360" y="320" width="36" height="36" rx="8" fill="#2563eb"/>
+    <text class="text" x="412" y="344" font-size="16" font-weight="750">8 GPU</text>
+    <text class="text muted" x="1560" y="344" font-size="14">2020–22</text>
+  
+  
+    <text class="text" x="80" y="422" font-size="16" font-weight="700">NVLink Network</text>
+    <rect x="360" y="400" width="980" height="36" rx="8" fill="#f1f5f9"/>
+    <rect x="360" y="400" width="980" height="36" rx="8" fill="#d97706"/>
+    <text class="text" x="1356" y="424" font-size="16" font-weight="750">256 GPU</text>
+    <text class="text muted" x="1560" y="424" font-size="14">Hopper SuperPOD</text>
+  
+  
+    <text class="text" x="80" y="502" font-size="16" font-weight="700">NVL72</text>
+    <rect x="360" y="480" width="980" height="36" rx="8" fill="#f1f5f9"/>
+    <rect x="360" y="480" width="276" height="36" rx="8" fill="#059669"/>
+    <text class="text" x="652" y="504" font-size="16" font-weight="750">72 GPU</text>
+    <text class="text muted" x="1560" y="504" font-size="14">Blackwell / Rubin 机架，无超额订阅</text>
+  
+
+  <text class="text muted" x="80" y="580" font-size="15">横轴按 256 GPU 归一。Hopper NVLink Network 为跨节点、2:1 锥形 Fat-tree；NVL72 为单机架单层、无超额订阅。Blackwell 另给出最大 576 GPU domain；Rubin 路线图给出 1152。</text>
+  
+</svg>

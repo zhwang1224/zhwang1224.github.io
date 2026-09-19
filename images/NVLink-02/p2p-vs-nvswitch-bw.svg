@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-labelledby="title desc">
+  <title id="title">点对点分摊与 NVSwitch 非阻塞</title>
+  <desc id="desc">H100 每 GPU 900 GB/s 注入。点对点拓扑须把注入分给 7 个邻居；NVSwitch 上任意对仍为 900 GB/s。</desc>
+  
+    <defs>
+      <filter id="shadow" x="-12%" y="-12%" width="124%" height="140%">
+        <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+      </filter>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+      </marker>
+      <style>
+        .text{font-family:Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;fill:#0f172a}
+        .muted{fill:#64748b}
+        .center{text-anchor:middle}
+      </style>
+    </defs>
+  <rect width="1600" height="640" fill="#f8fafc"/>
+  
+  <text class="text" x="58" y="56" font-size="32" font-weight="800">点对点分摊 vs NVSwitch 非阻塞</text>
+  <text class="text muted" x="58" y="92" font-size="17">H100：每 GPU 18 link，合计 900 GB/s 双向注入。数据来自 NVIDIA Technical Blog（2024-08-12）</text>
+
+  <g filter="url(#shadow)"><rect x="48" y="140" width="1504" height="440" rx="24" fill="#ffffff" stroke="#cbd5e1"/></g>
+
+  <text class="text" x="90" y="200" font-size="18" font-weight="800">参与通信的 GPU 数</text>
+  <text class="text" x="520" y="200" font-size="18" font-weight="800">点对点（注入七等分）</text>
+  <text class="text" x="1020" y="200" font-size="18" font-weight="800">NVSwitch（非阻塞）</text>
+
+  
+    <text class="text" x="90" y="250" font-size="22" font-weight="750">2</text>
+    <rect x="480" y="214" width="400" height="56" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <text class="text center" x="680" y="250" font-size="20" font-weight="750">128 GB/s</text>
+    <rect x="980" y="214" width="400" height="56" rx="12" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <text class="text center" x="1180" y="250" font-size="20" font-weight="750">900 GB/s</text>
+  
+  
+    <text class="text" x="90" y="340" font-size="22" font-weight="750">4</text>
+    <rect x="480" y="304" width="400" height="56" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <text class="text center" x="680" y="340" font-size="20" font-weight="750">3 × 128 GB/s</text>
+    <rect x="980" y="304" width="400" height="56" rx="12" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <text class="text center" x="1180" y="340" font-size="20" font-weight="750">900 GB/s</text>
+  
+  
+    <text class="text" x="90" y="430" font-size="22" font-weight="750">8</text>
+    <rect x="480" y="394" width="400" height="56" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <text class="text center" x="680" y="430" font-size="20" font-weight="750">7 × 128 GB/s</text>
+    <rect x="980" y="394" width="400" height="56" rx="12" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <text class="text center" x="1180" y="430" font-size="20" font-weight="750">900 GB/s</text>
+  
+
+  <text class="text muted" x="90" y="530" font-size="15">128 GB/s = 900/7。TP=2 时点对点仅能使用一对专用 link 的带宽；NVSwitch 上该对仍可占用全部 900 GB/s 注入。</text>
+  
+</svg>

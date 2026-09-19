@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="860" viewBox="0 0 1600 860" role="img" aria-labelledby="title desc">
+  <title id="title">H100 与 Blackwell 的带宽层级</title>
+  <desc id="desc">对比单卡 HBM、NVLink、PCIe 与 400/800 Gb 级网卡的双向带宽。HBM 远高于 NVLink，NVLink 又远高于 PCIe 和 scale-out 网卡。</desc>
+  
+    <defs>
+      <filter id="shadow" x="-12%" y="-12%" width="124%" height="140%">
+        <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+      </filter>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+      </marker>
+      <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#dc2626"/>
+      </marker>
+      <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#059669"/>
+      </marker>
+      <marker id="arrow-slate" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#64748b"/>
+      </marker>
+      <style>
+        .text{font-family:Inter, 'Noto Sans SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;fill:#0f172a}
+        .muted{fill:#64748b}
+        .center{text-anchor:middle}
+        .end{text-anchor:end}
+      </style>
+    </defs>
+  <rect width="1600" height="860" fill="#f8fafc"/>
+  
+  <text class="text" x="58" y="58" font-size="34" font-weight="800">单 GPU 带宽层级</text>
+  <text class="text muted" x="58" y="96" font-size="18">HBM、NVLink、PCIe 与单口网卡的双向标称带宽。网卡按全双工线速计</text>
+
+  <g filter="url(#shadow)"><rect x="48" y="128" width="1504" height="330" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text" x="80" y="176" font-size="22" font-weight="800">H100 SXM</text>
+  <text class="text muted" x="220" y="176" font-size="16">NVIDIA 公开规格中的双向互连带宽；HBM 为显存聚合带宽</text>
+
+  
+    <text class="text" x="80" y="232" font-size="16" font-weight="700">HBM3</text>
+    <rect x="290" y="214" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="214" width="1040" height="28" rx="8" fill="#2563eb"/>
+    <text class="text end" x="1472" y="234" font-size="16" font-weight="750">3.35 TB/s</text>
+  
+  
+    <text class="text" x="80" y="286" font-size="16" font-weight="700">NVLink 4</text>
+    <rect x="290" y="268" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="268" width="279" height="28" rx="8" fill="#059669"/>
+    <text class="text end" x="1472" y="288" font-size="16" font-weight="750">900 GB/s</text>
+  
+  
+    <text class="text" x="80" y="340" font-size="16" font-weight="700">PCIe Gen5 x16</text>
+    <rect x="290" y="322" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="322" width="40" height="28" rx="8" fill="#d97706"/>
+    <text class="text end" x="1472" y="342" font-size="16" font-weight="750">128 GB/s</text>
+  
+  
+    <text class="text" x="80" y="394" font-size="16" font-weight="700">400 Gb/s NIC</text>
+    <rect x="290" y="376" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="376" width="31" height="28" rx="8" fill="#7c3aed"/>
+    <text class="text end" x="1472" y="396" font-size="16" font-weight="750">100 GB/s</text>
+  
+  <text class="text muted" x="80" y="430" font-size="14">400 Gb/s 网卡按全双工约 50 GB/s × 2 = 100 GB/s 计；实际有效载荷仍低于线速。</text>
+
+  <g filter="url(#shadow)"><rect x="48" y="478" width="1504" height="330" rx="26" fill="#ffffff" stroke="#cbd5e1"/></g>
+  <text class="text" x="80" y="526" font-size="22" font-weight="800">Blackwell GPU</text>
+  <text class="text muted" x="250" y="526" font-size="16">B200 / GB200 一类产品：HBM 约 8 TB/s，NVLink 5 为 1.8 TB/s</text>
+
+  
+    <text class="text" x="80" y="582" font-size="16" font-weight="700">HBM3e</text>
+    <rect x="290" y="564" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="564" width="1040" height="28" rx="8" fill="#2563eb"/>
+    <text class="text end" x="1472" y="584" font-size="16" font-weight="750">8.0 TB/s</text>
+  
+  
+    <text class="text" x="80" y="636" font-size="16" font-weight="700">NVLink 5</text>
+    <rect x="290" y="618" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="618" width="234" height="28" rx="8" fill="#059669"/>
+    <text class="text end" x="1472" y="638" font-size="16" font-weight="750">1.8 TB/s</text>
+  
+  
+    <text class="text" x="80" y="690" font-size="16" font-weight="700">PCIe Gen6 x16</text>
+    <rect x="290" y="672" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="672" width="33" height="28" rx="8" fill="#d97706"/>
+    <text class="text end" x="1472" y="692" font-size="16" font-weight="750">256 GB/s</text>
+  
+  
+    <text class="text" x="80" y="744" font-size="16" font-weight="700">800 Gb/s NIC</text>
+    <rect x="290" y="726" width="1040" height="28" rx="8" fill="#f1f5f9"/>
+    <rect x="290" y="726" width="26" height="28" rx="8" fill="#7c3aed"/>
+    <text class="text end" x="1472" y="746" font-size="16" font-weight="750">200 GB/s</text>
+  
+  <text class="text muted" x="80" y="780" font-size="14">PCIe / NVLink / 网卡均为双向标称值。NVLink 5 约为 PCIe Gen5 x16 的 14 倍、PCIe Gen6 x16 的 7 倍。</text>
+  
+</svg>
