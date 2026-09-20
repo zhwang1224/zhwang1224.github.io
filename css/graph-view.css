@@ -31,6 +31,35 @@
   margin: 1.4rem 0 0.4rem;
 }
 
+.sidebar-inner:has(.knowledge-graph-sidebar) {
+  justify-content: flex-start;
+}
+
+.knowledge-graph-sidebar {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--graph-border);
+  text-align: left;
+}
+
+.knowledge-graph-sidebar .knowledge-graph-header h3,
+.sidebar-graph-title {
+  margin: 0 0 8px;
+  color: var(--graph-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.knowledge-graph-sidebar .graph-global-btn {
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+}
+
 .knowledge-graph-header h3 {
   margin: 0 0 0.45rem;
   font-size: 1rem;
@@ -53,6 +82,10 @@
   height: 72vh;
   min-height: 420px;
   max-height: 760px;
+}
+
+.knowledge-graph-outer-sidebar {
+  height: 176px;
 }
 
 .graph-container {

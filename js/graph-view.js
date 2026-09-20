@@ -13,7 +13,9 @@
       empty: '暂无图谱数据',
       loading: '正在生成图谱…',
       hint: '拖拽节点 · 滚轮缩放 · 点击打开',
-      local: '本文的局部关联图谱',
+      local: '关联图谱',
+      localAria: '当前条目的关联图谱',
+      openGlobal: '打开全局图谱',
       meta: function (posts, tags, cats) {
         return posts + ' 篇文章 · ' + tags + ' 个标签 · ' + cats + ' 个分类';
       }
@@ -28,7 +30,9 @@
       empty: 'No graph data yet',
       loading: 'Building graph…',
       hint: 'Drag nodes · scroll to zoom · click to open',
-      local: 'Local graph of this post',
+      local: 'Graph',
+      localAria: 'Local graph of the current page',
+      openGlobal: 'Open global graph',
       meta: function (posts, tags, cats) {
         return posts + ' posts · ' + tags + ' tags · ' + cats + ' categories';
       }
@@ -100,13 +104,18 @@
 
   function currentNodeId(data, hintPath) {
     var path = normalizePath(hintPath || location.pathname);
+    path = path.replace(/\/page\/\d+\/?$/, '/');
+    if (path.indexOf('/en/') === 0) {
+      path = path.slice(3);
+      if (path.charAt(0) !== '/') path = '/' + path;
+    }
     for (var i = 0; i < data.nodes.length; i++) {
       if (normalizePath(data.nodes[i].path) === path) return data.nodes[i].id;
     }
     return null;
   }
 
-  function neighbourhood(data, originId, depth, showTags, showCats, minTagDegree) {
+  function neighbourhood(data, originId, depth, showTags, showCats, minTagDegree, maxNodes) {
     var links = data.links;
     var nodesById = new Map();
     var degree = new Map();
@@ -170,6 +179,20 @@
     }).map(function (link) {
       return { source: link.source, target: link.target, type: link.type };
     });
+
+    if (maxNodes && nodes.length > maxNodes) {
+      var origin = nodes.filter(function (n) { return n.id === originId; });
+      var hubs = nodes.filter(function (n) { return n.id !== originId && n.type !== 'post'; });
+      var posts = nodes.filter(function (n) { return n.id !== originId && n.type === 'post'; })
+        .sort(function (a, b) { return b.degree - a.degree; });
+      var picked = origin.concat(hubs);
+      var room = Math.max(0, maxNodes - picked.length);
+      nodes = picked.concat(posts.slice(0, room));
+      nodeSet = new Set(nodes.map(function (n) { return n.id; }));
+      graphLinks = graphLinks.filter(function (link) {
+        return nodeSet.has(link.source) && nodeSet.has(link.target);
+      });
+    }
 
     return { nodes: nodes, links: graphLinks };
   }
@@ -242,19 +265,21 @@
       this.options.depth,
       this.showTags,
       this.showCats,
-      this.options.depth < 0 ? this.minTagDegree : 1
+      this.options.depth < 0 ? this.minTagDegree : 1,
+      this.options.maxNodes
     );
     var byId = new Map();
+    var compact = this.options.compact;
     graph.nodes.forEach(function (node, index) {
       var seed = hashString(node.id);
       var angle = (seed / 4294967295) * Math.PI * 2;
-      var radius = 24 + (hashString(node.id + ':r') / 4294967295) * 140;
+      var radius = (compact ? 10 : 24) + (hashString(node.id + ':r') / 4294967295) * (compact ? 42 : 140);
       node.x = Math.cos(angle) * radius;
       node.y = Math.sin(angle) * radius;
       node.vx = 0;
       node.vy = 0;
       node.index = index;
-      node.r = nodeRadius(node, node.id === this.currentId);
+      node.r = nodeRadius(node, node.id === this.currentId, compact ? 0.82 : 1);
       byId.set(node.id, node);
     }, this);
     graph.links.forEach(function (link) {
@@ -625,10 +650,13 @@
       var show = node.id === self.currentId || node.id === self.hoverId || (query && matchesQuery(node, query));
       if (!show && labelScale > 1.05) show = node.degree >= 3 || node.type !== 'post';
       if (!show && labelScale > 1.8) show = true;
+      if (self.options.compact) {
+        show = node.id === self.currentId || node.id === self.hoverId || node.type !== 'post' || self.nodes.length <= 8;
+      }
       if (!show) return;
       var active = !focus || focus.has(node.id);
       if (!active && node.id !== self.hoverId) return;
-      drawLabel(ctx, node, colors, 11 / self.k);
+      drawLabel(ctx, node, colors, (self.options.compact ? 9 : 11) / self.k, self.options.labelMax || 18);
     });
     ctx.globalAlpha = 1;
   };
@@ -646,10 +674,10 @@
     this.canvas.removeEventListener('click', this.onClick);
   };
 
-  function nodeRadius(node, isCurrent) {
+  function nodeRadius(node, isCurrent, scale) {
     var base = node.type === 'category' ? 5.5 : node.type === 'tag' ? 3.6 : 4.2;
-    var r = base + Math.sqrt(node.degree || 1) * 1.15;
-    return isCurrent ? r + 1.8 : r;
+    var r = (base + Math.sqrt(node.degree || 1) * 1.15) * (scale || 1);
+    return isCurrent ? r + 1.8 * (scale || 1) : r;
   }
 
   function matchesQuery(node, query) {
@@ -697,12 +725,13 @@
     ctx.closePath();
   }
 
-  function drawLabel(ctx, node, colors, size) {
+  function drawLabel(ctx, node, colors, size, maxLen) {
     ctx.font = size + 'px system-ui, -apple-system, "Segoe UI", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     var text = node.type === 'tag' ? '#' + node.title : node.title;
-    if (text.length > 18) text = text.slice(0, 17) + '…';
+    var limit = maxLen || 18;
+    if (text.length > limit) text = text.slice(0, limit - 1) + '…';
     ctx.lineWidth = 3;
     ctx.strokeStyle = colors.halo;
     ctx.strokeText(text, node.x, node.y + node.r + 2);
@@ -719,8 +748,59 @@
     return (el && el.getAttribute('data-data-url')) || '/graph/data.json';
   }
 
+  function isGraphPage() {
+    var path = normalizePath(location.pathname);
+    if (path.indexOf('/en/') === 0) path = path.slice(3);
+    return path === '/graph/';
+  }
+
+  function mountSidebar() {
+    var sidebar = document.querySelector('.sidebar > .sidebar-inner');
+    var widget = document.querySelector('.knowledge-graph-sidebar');
+    if (!sidebar || !widget || isGraphPage()) return;
+
+    var strings = t();
+    loadData(dataUrlFrom(widget)).then(function (data) {
+      var currentId = currentNodeId(data);
+      if (!currentId) return;
+
+      addVisited(currentId);
+      sidebar.appendChild(widget);
+      widget.hidden = false;
+      widget.removeAttribute('hidden');
+
+      var title = widget.querySelector('.sidebar-graph-title');
+      if (title) title.textContent = strings.local;
+      var container = widget.querySelector('.graph-container');
+      if (container) container.setAttribute('aria-label', strings.localAria);
+      var btn = widget.querySelector('.graph-global-btn');
+      if (btn) btn.setAttribute('aria-label', strings.openGlobal);
+
+      var view = new GraphView(container, data, {
+        depth: 1,
+        scale: 1.2,
+        focusOnHover: false,
+        enableRadial: false,
+        currentId: currentId,
+        showTags: true,
+        showCats: true,
+        minTagDegree: 1,
+        maxNodes: 24,
+        labelMax: 10,
+        compact: true,
+        centerForce: 0.09,
+        linkDistance: 22,
+        repelForce: 0.42,
+        reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      });
+      localViews.push(view);
+    }).catch(function () {
+      /* 侧栏图谱加载失败时保持隐藏 */
+    });
+  }
+
   function mountLocal() {
-    var widgets = document.querySelectorAll('.knowledge-graph .graph-container[data-mode="local"]');
+    var widgets = document.querySelectorAll('.knowledge-graph:not(.knowledge-graph-sidebar) .graph-container[data-mode="local"]');
     if (!widgets.length) return;
     var url = dataUrlFrom(document.querySelector('.knowledge-graph')) || dataUrlFrom(widgets[0]);
     loadData(url).then(function (data) {
@@ -886,11 +966,11 @@
 
   function init() {
     var strings = t();
-    document.querySelectorAll('.graph-global-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (event) {
-        event.preventDefault();
-        openOverlay();
-      });
+    document.addEventListener('click', function (event) {
+      var btn = event.target.closest && event.target.closest('.graph-global-btn');
+      if (!btn) return;
+      event.preventDefault();
+      openOverlay();
     });
     var overlay = overlayEl();
     if (overlay) {
@@ -901,6 +981,7 @@
       if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
     }
     document.addEventListener('keydown', onKey);
+    mountSidebar();
     mountLocal();
     mountPage();
 
