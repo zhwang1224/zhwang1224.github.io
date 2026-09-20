@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="从 Pascal 的点对点互连，到 NVSwitch 交换网络与 NVL72 机架级系统，梳理 NVLink 六代技术在链路带宽、拓扑、集合通信和可靠性上的变化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NVLink的技术演进">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="从 Pascal 的点对点互连，到 NVSwitch 交换网络与 NVL72 机架级系统，梳理 NVLink 六代技术在链路带宽、拓扑、集合通信和可靠性上的变化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink1-dgx1-hybrid-cube-mesh.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink2-hgx2-dual-baseboard.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink3-hgx-a100-topology.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink4-hgx-h200-baseboard.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink5-gb200-nvl72-switch-system.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink6-vera-rubin-switch-system.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NVLink-02/technical-evolution.svg">
+<meta property="article:published_time" content="2026-09-19T11:54:37.000Z">
+<meta property="article:modified_time" content="2026-09-19T16:00:00.000Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="GPU 互连">
+<meta property="article:tag" content="NVL72">
+<meta property="article:tag" content="NVLink">
+<meta property="article:tag" content="NVLink Network">
+<meta property="article:tag" content="NVSwitch">
+<meta property="article:tag" content="Scale-up">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/NVLink-02/nvlink1-dgx1-hybrid-cube-mesh.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/","path":"2026/09/19/NVLink-02-代际演进/","title":"NVLink的技术演进"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>NVLink的技术演进 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<script src="/js/visitor-map.js"></script>
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%85%88%E5%8C%BA%E5%88%86%E9%93%BE%E8%B7%AF%E3%80%81%E4%BA%A4%E6%8D%A2%E8%8A%AF%E7%89%87%E5%92%8C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">1. 先区分链路、交换芯片和系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E5%AE%BD%E6%95%B0%E5%AD%97"><span class="nav-number">1.1.</span> <span class="nav-text">带宽数字</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-NVLink-1%EF%BC%9A%E4%BB%8E-PCIe-%E9%80%9A%E4%BF%A1%E8%B5%B0%E5%90%91%E4%B8%93%E7%94%A8-GPU-%E4%BA%92%E8%BF%9E"><span class="nav-number">2.</span> <span class="nav-text">2. NVLink 1：从 PCIe 通信走向专用 GPU 互连</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-NVLink-2-%E4%B8%8E%E7%AC%AC%E4%B8%80%E4%BB%A3-NVSwitch%EF%BC%9A%E4%BB%8E%E5%9B%BA%E5%AE%9A%E9%82%BB%E5%B1%85%E5%88%B0%E4%BA%A4%E6%8D%A2%E7%BD%91%E7%BB%9C"><span class="nav-number">3.</span> <span class="nav-text">3. NVLink 2 与第一代 NVSwitch：从固定邻居到交换网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-NVLink-3%EF%BC%9A%E6%8F%90%E9%AB%98%E5%B8%A6%E5%AE%BD%EF%BC%8C%E5%BD%A2%E6%88%90%E7%81%B5%E6%B4%BB%E7%9A%84%E5%A4%9A-GPU-%E5%9F%BA%E6%9D%BF"><span class="nav-number">4.</span> <span class="nav-text">4. NVLink 3：提高带宽，形成灵活的多 GPU 基板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-NVLink-4%EF%BC%9A%E8%B7%A8%E8%8A%82%E7%82%B9%E4%BA%92%E8%BF%9E%E4%B8%8E%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1%E5%8D%B8%E8%BD%BD"><span class="nav-number">5.</span> <span class="nav-text">5. NVLink 4：跨节点互连与集合通信卸载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%8D%95%E6%9C%BA%E6%8E%A5%E7%BA%BF%E6%89%A9%E5%B1%95%E4%B8%BA%E8%B7%A8%E8%8A%82%E7%82%B9%E7%BD%91%E7%BB%9C"><span class="nav-number">5.1.</span> <span class="nav-text">从单机接线扩展为跨节点网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E6%8D%A2%E8%8A%AF%E7%89%87%E5%BC%80%E5%A7%8B%E5%8F%82%E4%B8%8E%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1"><span class="nav-number">5.2.</span> <span class="nav-text">交换芯片开始参与集合通信</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-NVLink-5%EF%BC%9A%E6%8A%8A%E9%AB%98%E9%80%9F%E4%BA%92%E8%BF%9E%E5%9F%9F%E6%89%A9%E5%B1%95%E5%88%B0%E6%9C%BA%E6%9E%B6"><span class="nav-number">6.</span> <span class="nav-text">6. NVLink 5：把高速互连域扩展到机架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-NVLink-6%EF%BC%9A%E5%B8%A6%E5%AE%BD%E4%B9%8B%E5%A4%96%EF%BC%8C%E5%A2%9E%E5%8A%A0%E6%9C%BA%E6%9E%B6%E7%BA%A7%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7"><span class="nav-number">7.</span> <span class="nav-text">7. NVLink 6：带宽之外，增加机架级可维护性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E5%B0%86%E5%85%AD%E4%BB%A3%E5%8F%98%E5%8C%96%E6%94%BE%E5%9C%A8%E4%B8%80%E8%B5%B7%E7%9C%8B"><span class="nav-number">8.</span> <span class="nav-text">8. 将六代变化放在一起看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">372</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-19</time>
+        <br>
+      NVLink 01｜为什么需要 NVLink
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/16/InfiniBand%E4%B8%8E%E4%BB%A5%E5%A4%AA%E7%BD%91/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-16</time>
+        <br>
+      InfiniBand与以太网
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/15/InfiniBand%E6%98%AF%E4%BB%80%E4%B9%88/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-15</time>
+        <br>
+      InfiniBand是什么?
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/12/infiniband-rdma-programming-guide/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-12</time>
+        <br>
+      InfiniBand RDMA 编程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/04/Splitwise/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-04</time>
+        <br>
+      Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="NVLink的技术演进 | 正在输入">
+      <meta itemprop="description" content="从 Pascal 的点对点互连，到 NVSwitch 交换网络与 NVL72 机架级系统，梳理 NVLink 六代技术在链路带宽、拓扑、集合通信和可靠性上的变化。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NVLink的技术演进
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-19 19:54:37" itemprop="dateCreated datePublished" datetime="2026-09-19T19:54:37+08:00">2026-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-20 00:00:00" itemprop="dateModified" datetime="2026-09-20T00:00:00+08:00">2026-09-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/" itemprop="url" rel="index"><span itemprop="name">高性能互连</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">从 Pascal 的点对点互连，到 NVSwitch 交换网络与 NVL72 机架级系统，梳理 NVLink 六代技术在链路带宽、拓扑、集合通信和可靠性上的变化。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a href="/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/">上一篇</a>讨论了为什么多 GPU 系统需要更快的互连。这篇文章继续追问：当 GPU 的数量和通信需求不断增加，NVLink 如何从几张卡之间的高速连接，发展为覆盖整个机架的交换网络？</p>
+<p>这段演进包含三种变化：每张 GPU 可以收发更多数据，更多 GPU 可以进入同一个高速互连域，交换网络开始承担部分集合通信和系统管理工作。只有把链路、交换芯片和整机配置分开，才能准确理解各代技术的进步。</p>
+<p>本文以 NVIDIA 官方架构介绍、产品资料和 CUDA 文档为依据，资料核对截至 <strong>2026 年 9 月 20 日</strong>。</p>
+<span id="more"></span>
+
+<h2 id="1-先区分链路、交换芯片和系统"><a href="#1-先区分链路、交换芯片和系统" class="headerlink" title="1. 先区分链路、交换芯片和系统"></a>1. 先区分链路、交换芯片和系统</h2><p><strong>NVLink</strong> 是互连技术。GPU 可以通过多条 NVLink 连接其他 GPU，也可以连接交换芯片。<strong>NVSwitch</strong> 是转发 NVLink 流量的交换芯片；由这些芯片、连接线缆及管理软件组成的交换系统，可以连接更多 GPU。<strong>NVLink 域（domain）</strong> 则描述一个具体系统中通过 NVLink 网络互连的 GPU 范围。</p>
+<p>因此，某代 NVLink 并不只对应一种 GPU 数量或一种拓扑。例如，同代 GPU 既可以采用少量设备之间的直接连接，也可以接入多颗 NVSwitch 构成的网络。</p>
+<h3 id="带宽数字"><a href="#带宽数字" class="headerlink" title="带宽数字"></a>带宽数字</h3><p>本文的链路规格统一采用十进制 GB/s、TB/s，以及<strong>双向合计</strong>口径。若一张 GPU 有 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: 0;" xmlns="http://www.w3.org/2000/svg" width="2.009ex" height="1.545ex" role="img" focusable="false" viewBox="0 -683 888 683"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g></g></g></svg></mjx-container> 条等速链路，每条链路双向带宽为 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="0.971ex" height="1.595ex" role="img" focusable="false" viewBox="0 -694 429 705"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path></g></g></g></svg></mjx-container>，则其理论聚合带宽为：</p>
+<p><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -0.65ex;" xmlns="http://www.w3.org/2000/svg" width="16.62ex" height="2.22ex" role="img" focusable="false" viewBox="0 -694 7346.3 981.2"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D435" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path></g><g data-mml-node="TeXAtom" transform="translate(792,-150) scale(0.707)" data-mjx-texclass="ORD"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><path data-c="47" d="M56 342Q56 428 89 500T174 615T283 681T391 705Q394 705 400 705T408 704Q499 704 569 636L582 624L612 663Q639 700 643 704Q644 704 647 704T653 705H657Q660 705 666 699V419L660 413H626Q620 419 619 430Q610 512 571 572T476 651Q457 658 426 658Q401 658 376 654T316 633T254 592T205 519T177 411Q173 369 173 335Q173 259 192 201T238 111T302 58T370 31T431 24Q478 24 513 45T559 100Q562 110 562 160V212Q561 213 557 216T551 220T542 223T526 225T502 226T463 227H437V273H449L609 270Q715 270 727 273H735V227H721Q674 227 668 215Q666 211 666 108V6Q660 0 657 0Q653 0 639 10Q617 25 600 42L587 54Q571 27 524 3T406 -22Q317 -22 238 22T108 151T56 342Z"></path><path data-c="50" d="M130 622Q123 629 119 631T103 634T60 637H27V683H214Q237 683 276 683T331 684Q419 684 471 671T567 616Q624 563 624 489Q624 421 573 372T451 307Q429 302 328 301H234V181Q234 62 237 58Q245 47 304 46H337V0H326Q305 3 182 3Q47 3 38 0H27V46H60Q102 47 111 49T130 61V622ZM507 488Q507 514 506 528T500 564T483 597T450 620T397 635Q385 637 307 637H286Q237 637 234 628Q231 624 231 483V342H302H339Q390 342 423 349T481 382Q507 411 507 488Z" transform="translate(785,0)"></path><path data-c="55" d="M128 622Q121 629 117 631T101 634T58 637H25V683H36Q57 680 180 680Q315 680 324 683H335V637H302Q262 636 251 634T233 622L232 418V291Q232 189 240 145T280 67Q325 24 389 24Q454 24 506 64T571 183Q575 206 575 410V598Q569 608 565 613T541 627T489 637H472V683H481Q496 680 598 680T715 683H724V637H707Q634 633 622 598L621 399Q620 194 617 180Q617 179 615 171Q595 83 531 31T389 -22Q304 -22 226 33T130 192Q129 201 128 412V622Z" transform="translate(1466,0)"></path></g><g data-mml-node="mo" transform="translate(2216,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g data-mml-node="mi" transform="translate(2494,0)"><path data-c="62" d="M307 -11Q234 -11 168 55L158 37Q156 34 153 28T147 17T143 10L138 1L118 0H98V298Q98 599 97 603Q94 622 83 628T38 637H20V660Q20 683 22 683L32 684Q42 685 61 686T98 688Q115 689 135 690T165 693T176 694H179V543Q179 391 180 391L183 394Q186 397 192 401T207 411T228 421T254 431T286 439T323 442Q401 442 461 379T522 216Q522 115 458 52T307 -11ZM182 98Q182 97 187 90T196 79T206 67T218 55T233 44T250 35T271 29T295 26Q330 26 363 46T412 113Q424 148 424 212Q424 287 412 323Q385 405 300 405Q270 405 239 390T188 347L182 339V98Z"></path><path data-c="69" d="M69 609Q69 637 87 653T131 669Q154 667 171 652T188 609Q188 579 171 564T129 549Q104 549 87 564T69 609ZM247 0Q232 3 143 3Q132 3 106 3T56 1L34 0H26V46H42Q70 46 91 49Q100 53 102 60T104 102V205V293Q104 345 102 359T88 378Q74 385 41 385H30V408Q30 431 32 431L42 432Q52 433 70 434T106 436Q123 437 142 438T171 441T182 442H185V62Q190 52 197 50T232 46H255V0H247Z" transform="translate(556,0)"></path></g></g></g></g><g data-mml-node="mo" transform="translate(3473,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mi" transform="translate(4528.8,0)"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g><g data-mml-node="mo" transform="translate(5639,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mi" transform="translate(6639.3,0)"><path data-c="1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path></g><g data-mml-node="mo" transform="translate(7068.3,0)"><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path></g></g></g></svg></mjx-container></p>
+<p>这表示该 GPU 所有链路的收发能力之和。对于对称全双工连接，单向发送预算约为其一半。不能把双向总量直接当成一次单向拷贝的速度。</p>
+<p>还需要区分三个层次：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>回答的问题</th>
+<th>不能据此直接推出什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>每 GPU 聚合带宽</td>
+<td>一张 GPU 的全部链路合计有多快？</td>
+<td>任意一对 GPU 都能独占这个带宽</td>
+</tr>
+<tr>
+<td>GPU 对之间的可用带宽</td>
+<td>给定拓扑下，两张 GPU 能利用哪些路径？</td>
+<td>多个通信对同时运行时仍有相同吞吐</td>
+</tr>
+<tr>
+<td>系统聚合带宽</td>
+<td>系统所有 GPU 的接口能力合计是多少？</td>
+<td>网络对分带宽、AllReduce 有效吞吐或应用加速比</td>
+</tr>
+</tbody></table>
+<p><strong>同时，非阻塞交换网络仍然受端点带宽限制。</strong> 一张 GPU 同时向多个目标发送数据时，这些流量分享它的发送能力；多个源同时向一个目标发送时，也会受到目标接收能力的限制。</p>
+<h2 id="2-NVLink-1：从-PCIe-通信走向专用-GPU-互连"><a href="#2-NVLink-1：从-PCIe-通信走向专用-GPU-互连" class="headerlink" title="2. NVLink 1：从 PCIe 通信走向专用 GPU 互连"></a>2. NVLink 1：从 PCIe 通信走向专用 GPU 互连</h2><p>2016 年的 Tesla P100 SXM2 将第一代 NVLink 带入实际产品。每张 GPU 有 4 条链路，每条单向 20 GB/s、双向 40 GB/s，合计双向 160 GB/s。每块P100 GPU集成了4条NVLink 1.0链路。每条NVLink 1.0链路由8对差分线（8个通道）组成。每对差分线（每个通道）的双向带宽是5GB/s。所以，每条NVLink 1.0链路的双向带宽是40GB/s。因此，每块P100 GPU的总双向带宽可达160GB/s，是PCIe3 x16（总带宽大约32GB/s）的五倍。</p>
+<p>NVLink还支持内存一致性和直接内存访问（DMA），进一步提高了数据传输效率和计算性能。</p>
+<p>Tesla P100 加速器以两种形式提供：一种是适用于 PCIe 服务器的传统 GPU 加速板，另一种是适用于 NVLink 优化服务器的 SXM2 模块。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/inside-pascal/">Inside Pascal</a></p>
+<p>第一代的重要变化，是在原有主机 I/O 路径之外，为 GPU 间通信提供专用连接。在 x86 DGX-1 中，CPU 与 GPU 仍通过 PCIe 连接，8 张 P100 则组成 Hybrid Cube Mesh 混合立方体网格。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/dgx-1-fastest-deep-learning-system/">DGX-1 系统架构</a></p>
+<p><img data-src="/images/NVLink-02/nvlink1-dgx1-hybrid-cube-mesh.png" alt="NVLink 1：DGX-1 中 8 张 P100 的 Hybrid Cube Mesh 拓扑，绿色为 NVLink，紫色为 PCIe"></p>
+<p><em>图 1 第一代 NVLink 的 DGX-1 拓扑。绿色连接组成两个四卡全连接子图，并通过四条 NVLink 相连；每张 P100 直接连接四个邻居。紫色为 PCIe，顶部灰色为 CPU 间 QPI，图中的 PCIe Switch 不是 NVSwitch。来源：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/dgx-1-fastest-deep-learning-system/">NVIDIA DGX-1 系统架构，原文图 4</a>。</em></p>
+<p>这个拓扑可以看成一个立方体：8 张 GPU 位于顶点，12 条棱对应连接，再在两个相对的面上加入对角连接。每张 GPU 直接连接 4 个邻居，使用完自己的 4 条 NVLink。</p>
+<p>这也揭示了直接连接的限制。8 张 GPU 若要两两直接相连，每张 GPU 至少需要连接 7 个邻居；4 条链路无法满足这一要求。软件需要根据实际连接组织通信。</p>
+<p>第一代解决了直接相连 GPU 之间的带宽问题，但不同 GPU 对之间的连接条件仍然不同。新增算力能否被充分利用，开始更明显地依赖拓扑与通信算法的配合。</p>
+<h2 id="3-NVLink-2-与第一代-NVSwitch：从固定邻居到交换网络"><a href="#3-NVLink-2-与第一代-NVSwitch：从固定邻居到交换网络" class="headerlink" title="3. NVLink 2 与第一代 NVSwitch：从固定邻居到交换网络"></a>3. NVLink 2 与第一代 NVSwitch：从固定邻居到交换网络</h2><p>Volta V100 将 NVLink 链路数提高到 6 条，每条双向 50 GB/s，整卡合计双向 300 GB/s。相对 P100 SXM2 的 160 GB/s，增加来自链路数量和单链路带宽两个方面。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/volta-tuning-guide/index.html#nvlink-interconnect">Volta Tuning Guide</a></p>
+<p>不过，增加链路数量并不会自动消除拓扑约束。只要链路直接接到某个邻居，这部分物理带宽就被分配给了这个邻居。其他通信对能否利用它，需要看路径和软件组织方式。</p>
+<p>2018 年，DGX-2 使用第一代 NVSwitch 连接 16 张 V100。单颗 NVSwitch 提供 18 个 NVLink 端口，内部使用全连接交叉开关。每块 GPU 基板配置 8 张 GPU 和 6 颗交换芯片，每张 GPU 分别用一条链路连接每颗交换芯片；两块基板之间再通过 NVLink 连接。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvswitch-leveraging-nvlink-to-maximum-effect/">NVSwitch 技术介绍</a></p>
+<p><img data-src="/images/NVLink-02/nvlink2-hgx2-dual-baseboard.png" alt="NVLink 2：HGX-2 的两块八卡 V100 基板通过 NVSwitch 与 48 条板间 NVLink 连接"></p>
+<p><em>图 2 第二代 NVLink 与第一代 NVSwitch 的 16 GPU 连接方案。图示为 HGX-2 双基板逻辑拓扑：每块基板有 8 张 V100 和 6 颗 NVSwitch，两板之间共有 48 条 NVLink。这是与本节 DGX-2 相对应的基板级架构，300 GB/s 指每 GPU 双向聚合带宽。来源：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/hgx-2-fuses-ai-computing/">NVIDIA HGX-2 架构介绍，原文图 1</a>。</em></p>
+<p>架构变化在于：<strong>GPU 不再需要把有限端口逐一分给所有通信对象，而是将链路接入交换网络，由网络把数据送到目标。</strong></p>
+<p>用一个简化例子理解：假设一张 GPU 的单向总带宽为 120 GB/s，直接连接三个邻居时，各分配 40 GB/s。如果任务只和其中一个邻居通信，另外两组链路通常不能直接变成这个通信对的额外物理带宽。接入容量充足的交换网络后，同样的 120 GB/s 接口预算可以用于不同目标，而不必按邻居永久切开。</p>
+<p>这不意味着同时向三个目标各发送 120 GB/s。交换网络改善的是路径选择和带宽使用的灵活性，端点总预算仍然是 120 GB/s。这个区别是理解 NVSwitch 的基础。</p>
+<h2 id="4-NVLink-3：提高带宽，形成灵活的多-GPU-基板"><a href="#4-NVLink-3：提高带宽，形成灵活的多-GPU-基板" class="headerlink" title="4. NVLink 3：提高带宽，形成灵活的多 GPU 基板"></a>4. NVLink 3：提高带宽，形成灵活的多 GPU 基板</h2><p>2020 年的 A100 提供 12 条第三代 NVLink，整卡双向带宽达到 600 GB/s。其每条链路使用的物理通道数量和信号速率发生变化，但每条逻辑链路仍提供单向 25 GB/s、双向 50 GB/s。因此，单条物理 lane 的速率与整条 NVLink 的带宽不能混为一谈。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/">Ampere 架构说明</a></p>
+<p>HGX A100 的 8 GPU 基板配置 6 颗 NVSwitch，将每张 GPU 的 12 条链路接入交换网络。官方资料还描述了两块基板背靠背连接、组成 16 GPU 系统的方案。因此，“常见配置是 8 GPU”与“这一代只能连接 8 GPU”是两回事。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/introducing-hgx-a100-most-powerful-accelerated-server-platform-for-ai-hpc/">HGX A100 平台介绍</a></p>
+<p><img data-src="/images/NVLink-02/nvlink3-hgx-a100-topology.png" alt="NVLink 3：HGX A100 八卡基板中的 8 张 A100 和 6 颗 NVSwitch 逻辑连接"></p>
+<p><em>图 3 第三代 NVLink 的 HGX A100 八卡基板。每张 A100 通过 12 条 NVLink 接入 6 颗 NVSwitch；图中 600 GB/s 是每 GPU 的双向聚合带宽，上方 PCIe Gen4 接口是另一条 I/O 路径。来源：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/introducing-hgx-a100-most-powerful-accelerated-server-platform-for-ai-hpc/">NVIDIA HGX A100 平台介绍，原文图 1</a>。</em></p>
+<p>同一平台也提供 4 GPU 直接连接的基板，每对 GPU 的双向带宽为 200 GB/s。它面向不同的 CPU/GPU 配比、功率和资源分配需求。这说明引入 NVSwitch 后，直接连接并没有失去意义：系统规模较小、通信关系明确时，点对点拓扑仍是一种选择。</p>
+<p>这一阶段更适合用“系统配置逐渐丰富”来理解。NVLink 提供带宽，基板决定如何分配这些链路，交换网络决定不同通信模式可以怎样使用它们。</p>
+<h2 id="5-NVLink-4：跨节点互连与集合通信卸载"><a href="#5-NVLink-4：跨节点互连与集合通信卸载" class="headerlink" title="5. NVLink 4：跨节点互连与集合通信卸载"></a>5. NVLink 4：跨节点互连与集合通信卸载</h2><p>2022 年的 Hopper H100 将链路数增加到 18 条，双向聚合带宽达到 900 GB/s，是 A100 的 1.5 倍。每条逻辑链路仍为双向 50 GB/s。HGX H100/H200 的 8 GPU 系统使用 4 颗第三代 NVSwitch 组织 GPU 间通信。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/">Hopper 架构说明</a>、<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-nvlink-and-nvidia-nvswitch-supercharge-large-language-model-inference/">Hopper 多 GPU 互连</a></p>
+<p><img data-src="/images/NVLink-02/nvlink4-hgx-h200-baseboard.png" alt="NVLink 4：HGX H200 八卡基板，绿色框标出四颗第三代 NVSwitch 的位置"></p>
+<p><em>图 4 第四代 NVLink 的 Hopper 基板实例。原图型号为 <strong>HGX H200</strong>，展示 8 GPU 基板上 4 颗第三代 NVSwitch 的位置；H200 与本节 H100 同属第四代 NVLink 平台。此图展示节点内硬件，不代表下文的 256 GPU 跨节点网络。来源：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-nvlink-and-nvidia-nvswitch-supercharge-large-language-model-inference/">NVIDIA 多 GPU 推理互连介绍，原文图 3</a>。</em></p>
+<p>更重要的变化发生在网络和交换功能上。</p>
+<h3 id="从单机接线扩展为跨节点网络"><a href="#从单机接线扩展为跨节点网络" class="headerlink" title="从单机接线扩展为跨节点网络"></a>从单机接线扩展为跨节点网络</h3><p>Hopper 的公开架构包含 NVLink Network 和节点外的 NVLink Switch System。它引入网络地址空间及地址隔离机制，描述了最多 32 个节点、256 张 GPU 的连接方案，拓扑为 <strong>2:1 收敛的 Fat-tree</strong>。这里的收敛意味着对外链路容量小于节点内部总接口容量，跨节点通信不能直接按节点内峰值估算。</p>
+<p>这项能力属于特定交换系统方案。原始架构文章也注明了当时的可用性限制，因此不能仅凭服务器装有 H100，就认定它支持或已经部署了 256 GPU 的 NVLink 域。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/">Hopper：NVLink Switch System</a></p>
+<h3 id="交换芯片开始参与集合通信"><a href="#交换芯片开始参与集合通信" class="headerlink" title="交换芯片开始参与集合通信"></a>交换芯片开始参与集合通信</h3><p>第三代 NVSwitch 加入多播和 SHARP 网内归约能力。普通交换只负责转发数据；网内归约则能在支持的集合通信路径中合并部分数据，减少 GPU 侧执行归约的负担。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/">Hopper：第三代 NVSwitch</a></p>
+<p>归约和多播是不同操作：ReduceScatter 涉及归约，AllGather 则是收集与分发，不能把所有集合通信加速都称为“做规约”。实际应用还需要通信库选择支持这些硬件能力的算法。</p>
+<p>因此，这一代的进步不能只用 600 → 900 GB/s 表达。互连开始具备跨节点寻址、隔离和通信处理能力，逐步形成一套网络系统。</p>
+<h2 id="6-NVLink-5：把高速互连域扩展到机架"><a href="#6-NVLink-5：把高速互连域扩展到机架" class="headerlink" title="6. NVLink 5：把高速互连域扩展到机架"></a>6. NVLink 5：把高速互连域扩展到机架</h2><p>Blackwell 第五代 NVLink 保持每 GPU 18 条链路，将每条双向带宽提高到 100 GB/s，整卡达到 1.8 TB/s。GB200 NVL72 是这一代具有代表性的系统：72 张 Blackwell GPU 通过 NVLink Switch System 形成一个高速互连域。<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference/">GB200 NVL72 架构介绍</a></p>
+<p><img data-src="/images/NVLink-02/nvlink5-gb200-nvl72-switch-system.png" alt="NVLink 5：GB200 NVL72 的九个 NVLink 交换托盘及机架内连接背板"></p>
+<p><em>图 5 第五代 NVLink 的 GB200 NVL72 交换系统。图中展示 9 个交换托盘及其 cable cartridge 连接组件；计算托盘未显示。它对应单个 72 GPU 域，不能将图中的硬件直接理解为后文提及的 576 GPU 扩展配置。来源：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference/">NVIDIA GB200 NVL72 架构介绍，原文图 2</a>。</em></p>
+<p>在其单机架配置中，18 个计算托盘各包含 4 张 GPU，9 个交换托盘提供连接。每个交换托盘有 144 个 NVLink 端口，GPU 侧与交换侧的端口数分别为：</p>
+<p><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -0.439ex;" xmlns="http://www.w3.org/2000/svg" width="35.825ex" height="1.971ex" role="img" focusable="false" viewBox="0 -677 15834.7 871"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="37" d="M55 458Q56 460 72 567L88 674Q88 676 108 676H128V672Q128 662 143 655T195 646T364 644H485V605L417 512Q408 500 387 472T360 435T339 403T319 367T305 330T292 284T284 230T278 162T275 80Q275 66 275 52T274 28V19Q270 2 255 -10T221 -22Q210 -22 200 -19T179 0T168 40Q168 198 265 368Q285 400 349 489L395 552H302Q128 552 119 546Q113 543 108 522T98 479L95 458V455H55V458Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path></g><g data-mml-node="mo" transform="translate(1222.2,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(2222.4,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="38" d="M70 417T70 494T124 618T248 666Q319 666 374 624T429 515Q429 485 418 459T392 417T361 389T335 371T324 363L338 354Q352 344 366 334T382 323Q457 264 457 174Q457 95 399 37T249 -22Q159 -22 101 29T43 155Q43 263 172 335L154 348Q133 361 127 368Q70 417 70 494ZM286 386L292 390Q298 394 301 396T311 403T323 413T334 425T345 438T355 454T364 471T369 491T371 513Q371 556 342 586T275 624Q268 625 242 625Q201 625 165 599T128 534Q128 511 141 492T167 463T217 431Q224 426 228 424L286 386ZM250 21Q308 21 350 55T392 137Q392 154 387 169T375 194T353 216T330 234T301 253T274 270Q260 279 244 289T218 306L210 311Q204 311 181 294T133 239T107 157Q107 98 150 60T250 21Z" transform="translate(500,0)"></path></g><g data-mml-node="mo" transform="translate(3500.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(4556,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path><path data-c="39" d="M352 287Q304 211 232 211Q154 211 104 270T44 396Q42 412 42 436V444Q42 537 111 606Q171 666 243 666Q245 666 249 666T257 665H261Q273 665 286 663T323 651T370 619T413 560Q456 472 456 334Q456 194 396 97Q361 41 312 10T208 -22Q147 -22 108 7T68 93T121 149Q143 149 158 135T173 96Q173 78 164 65T148 49T135 44L131 43Q131 41 138 37T164 27T206 22H212Q272 22 313 86Q352 142 352 280V287ZM244 248Q292 248 321 297T351 430Q351 508 343 542Q341 552 337 562T323 588T293 615T246 625Q208 625 181 598Q160 576 154 546T147 441Q147 358 152 329T172 282Q197 248 244 248Z" transform="translate(1000,0)"></path><path data-c="36" d="M42 313Q42 476 123 571T303 666Q372 666 402 630T432 550Q432 525 418 510T379 495Q356 495 341 509T326 548Q326 592 373 601Q351 623 311 626Q240 626 194 566Q147 500 147 364L148 360Q153 366 156 373Q197 433 263 433H267Q313 433 348 414Q372 400 396 374T435 317Q456 268 456 210V192Q456 169 451 149Q440 90 387 34T253 -22Q225 -22 199 -14T143 16T92 75T56 172T42 313ZM257 397Q227 397 205 380T171 335T154 278T148 216Q148 133 160 97T198 39Q222 21 251 21Q302 21 329 59Q342 77 347 104T352 209Q352 289 347 316T329 361Q302 397 257 397Z" transform="translate(1500,0)"></path></g><g data-mml-node="mo" transform="translate(6556,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g><g data-mml-node="mstyle" transform="translate(6834,0)"><g data-mml-node="mspace"></g></g><g data-mml-node="mn" transform="translate(9000.7,0)"><path data-c="39" d="M352 287Q304 211 232 211Q154 211 104 270T44 396Q42 412 42 436V444Q42 537 111 606Q171 666 243 666Q245 666 249 666T257 665H261Q273 665 286 663T323 651T370 619T413 560Q456 472 456 334Q456 194 396 97Q361 41 312 10T208 -22Q147 -22 108 7T68 93T121 149Q143 149 158 135T173 96Q173 78 164 65T148 49T135 44L131 43Q131 41 138 37T164 27T206 22H212Q272 22 313 86Q352 142 352 280V287ZM244 248Q292 248 321 297T351 430Q351 508 343 542Q341 552 337 562T323 588T293 615T246 625Q208 625 181 598Q160 576 154 546T147 441Q147 358 152 329T172 282Q197 248 244 248Z"></path></g><g data-mml-node="mo" transform="translate(9722.9,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(10723.1,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="34" d="M462 0Q444 3 333 3Q217 3 199 0H190V46H221Q241 46 248 46T265 48T279 53T286 61Q287 63 287 115V165H28V211L179 442Q332 674 334 675Q336 677 355 677H373L379 671V211H471V165H379V114Q379 73 379 66T385 54Q393 47 442 46H471V0H462ZM293 211V545L74 212L183 211H293Z" transform="translate(500,0)"></path><path data-c="34" d="M462 0Q444 3 333 3Q217 3 199 0H190V46H221Q241 46 248 46T265 48T279 53T286 61Q287 63 287 115V165H28V211L179 442Q332 674 334 675Q336 677 355 677H373L379 671V211H471V165H379V114Q379 73 379 66T385 54Q393 47 442 46H471V0H462ZM293 211V545L74 212L183 211H293Z" transform="translate(1000,0)"></path></g><g data-mml-node="mo" transform="translate(12500.9,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(13556.7,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path><path data-c="39" d="M352 287Q304 211 232 211Q154 211 104 270T44 396Q42 412 42 436V444Q42 537 111 606Q171 666 243 666Q245 666 249 666T257 665H261Q273 665 286 663T323 651T370 619T413 560Q456 472 456 334Q456 194 396 97Q361 41 312 10T208 -22Q147 -22 108 7T68 93T121 149Q143 149 158 135T173 96Q173 78 164 65T148 49T135 44L131 43Q131 41 138 37T164 27T206 22H212Q272 22 313 86Q352 142 352 280V287ZM244 248Q292 248 321 297T351 430Q351 508 343 542Q341 552 337 562T323 588T293 615T246 625Q208 625 181 598Q160 576 154 546T147 441Q147 358 152 329T172 282Q197 248 244 248Z" transform="translate(1000,0)"></path><path data-c="36" d="M42 313Q42 476 123 571T303 666Q372 666 402 630T432 550Q432 525 418 510T379 495Q356 495 341 509T326 548Q326 592 373 601Q351 623 311 626Q240 626 194 566Q147 500 147 364L148 360Q153 366 156 373Q197 433 263 433H267Q313 433 348 414Q372 400 396 374T435 317Q456 268 456 210V192Q456 169 451 149Q440 90 387 34T253 -22Q225 -22 199 -14T143 16T92 75T56 172T42 313ZM257 397Q227 397 205 380T171 335T154 278T148 216Q148 133 160 97T198 39Q222 21 251 21Q302 21 329 59Q342 77 347 104T352 209Q352 289 347 316T329 361Q302 397 257 397Z" transform="translate(1500,0)"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(2000,0)"></path></g></g></g></svg></mjx-container></p>
+<p>端口数量相匹配，说明交换系统可以承接这些 GPU 的全部链路。但<strong>端口数相等不是证明非阻塞的充分条件</strong>；还需要交换芯片内部容量、布线、路由和流量分布共同满足要求。</p>
+<p>按每 GPU 双向 1.8 TB/s 求和：</p>
+<p><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="22.543ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 9964 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="37" d="M55 458Q56 460 72 567L88 674Q88 676 108 676H128V672Q128 662 143 655T195 646T364 644H485V605L417 512Q408 500 387 472T360 435T339 403T319 367T305 330T292 284T284 230T278 162T275 80Q275 66 275 52T274 28V19Q270 2 255 -10T221 -22Q210 -22 200 -19T179 0T168 40Q168 198 265 368Q285 400 349 489L395 552H302Q128 552 119 546Q113 543 108 522T98 479L95 458V455H55V458Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path></g><g data-mml-node="mo" transform="translate(1222.2,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(2222.4,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(500,0)"></path><path data-c="38" d="M70 417T70 494T124 618T248 666Q319 666 374 624T429 515Q429 485 418 459T392 417T361 389T335 371T324 363L338 354Q352 344 366 334T382 323Q457 264 457 174Q457 95 399 37T249 -22Q159 -22 101 29T43 155Q43 263 172 335L154 348Q133 361 127 368Q70 417 70 494ZM286 386L292 390Q298 394 301 396T311 403T323 413T334 425T345 438T355 454T364 471T369 491T371 513Q371 556 342 586T275 624Q268 625 242 625Q201 625 165 599T128 534Q128 511 141 492T167 463T217 431Q224 426 228 424L286 386ZM250 21Q308 21 350 55T392 137Q392 154 387 169T375 194T353 216T330 234T301 253T274 270Q260 279 244 289T218 306L210 311Q204 311 181 294T133 239T107 157Q107 98 150 60T250 21Z" transform="translate(778,0)"></path></g><g data-mml-node="mo" transform="translate(3778.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(4834,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path><path data-c="39" d="M352 287Q304 211 232 211Q154 211 104 270T44 396Q42 412 42 436V444Q42 537 111 606Q171 666 243 666Q245 666 249 666T257 665H261Q273 665 286 663T323 651T370 619T413 560Q456 472 456 334Q456 194 396 97Q361 41 312 10T208 -22Q147 -22 108 7T68 93T121 149Q143 149 158 135T173 96Q173 78 164 65T148 49T135 44L131 43Q131 41 138 37T164 27T206 22H212Q272 22 313 86Q352 142 352 280V287ZM244 248Q292 248 321 297T351 430Q351 508 343 542Q341 552 337 562T323 588T293 615T246 625Q208 625 181 598Q160 576 154 546T147 441Q147 358 152 329T172 282Q197 248 244 248Z" transform="translate(1000,0)"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(1500,0)"></path><path data-c="36" d="M42 313Q42 476 123 571T303 666Q372 666 402 630T432 550Q432 525 418 510T379 495Q356 495 341 509T326 548Q326 592 373 601Q351 623 311 626Q240 626 194 566Q147 500 147 364L148 360Q153 366 156 373Q197 433 263 433H267Q313 433 348 414Q372 400 396 374T435 317Q456 268 456 210V192Q456 169 451 149Q440 90 387 34T253 -22Q225 -22 199 -14T143 16T92 75T56 172T42 313ZM257 397Q227 397 205 380T171 335T154 278T148 216Q148 133 160 97T198 39Q222 21 251 21Q302 21 329 59Q342 77 347 104T352 209Q352 289 347 316T329 361Q302 397 257 397Z" transform="translate(1778,0)"></path></g><g data-mml-node="mtext" transform="translate(7112,0)"><path data-c="A0" d=""></path></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(7362,0)"><g data-mml-node="mi"><path data-c="54" d="M36 443Q37 448 46 558T55 671V677H666V671Q667 666 676 556T685 443V437H645V443Q645 445 642 478T631 544T610 593Q593 614 555 625Q534 630 478 630H451H443Q417 630 414 618Q413 616 413 339V63Q420 53 439 50T528 46H558V0H545L361 3Q186 1 177 0H164V46H194Q264 46 283 49T309 63V339V550Q309 620 304 625T271 630H244H224Q154 630 119 601Q101 585 93 554T81 486T76 443V437H36V443Z"></path><path data-c="42" d="M131 622Q124 629 120 631T104 634T61 637H28V683H229H267H346Q423 683 459 678T531 651Q574 627 599 590T624 512Q624 461 583 419T476 360L466 357Q539 348 595 302T651 187Q651 119 600 67T469 3Q456 1 242 0H28V46H61Q103 47 112 49T131 61V622ZM511 513Q511 560 485 594T416 636Q415 636 403 636T371 636T333 637Q266 637 251 636T232 628Q229 624 229 499V374H312L396 375L406 377Q410 378 417 380T442 393T474 417T499 456T511 513ZM537 188Q537 239 509 282T430 336L329 337H229V200V116Q229 57 234 52Q240 47 334 47H383Q425 47 443 53Q486 67 511 104T537 188Z" transform="translate(722,0)"></path></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(1430,0)"><g data-mml-node="mo"><path data-c="2F" d="M423 750Q432 750 438 744T444 730Q444 725 271 248T92 -240Q85 -250 75 -250Q68 -250 62 -245T56 -231Q56 -221 230 257T407 740Q411 750 423 750Z"></path></g></g><g data-mml-node="mi" transform="translate(1930,0)"><path data-c="73" d="M295 316Q295 356 268 385T190 414Q154 414 128 401Q98 382 98 349Q97 344 98 336T114 312T157 287Q175 282 201 278T245 269T277 256Q294 248 310 236T342 195T359 133Q359 71 321 31T198 -10H190Q138 -10 94 26L86 19L77 10Q71 4 65 -1L54 -11H46H42Q39 -11 33 -5V74V132Q33 153 35 157T45 162H54Q66 162 70 158T75 146T82 119T101 77Q136 26 198 26Q295 26 295 104Q295 133 277 151Q257 175 194 187T111 210Q75 227 54 256T33 318Q33 357 50 384T93 424T143 442T187 447H198Q238 447 268 432L283 424L292 431Q302 440 314 448H322H326Q329 448 335 442V310L329 304H301Q295 310 295 316Z"></path></g></g><g data-mml-node="mo" transform="translate(9686,0)"><path data-c="2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path></g></g></g></svg></mjx-container></p>
+<p>这对应官方约 130 TB/s 的系统聚合带宽。它是接口能力的合计，不是任意一次传输、网络对分或 AllReduce 操作都能达到的有效速度。</p>
+<p>对模型并行而言，72 GPU 域的意义在于：原本需要跨越多个小型 NVLink 域的通信，有机会在一个更大的高速域内完成。是否因此加速，仍取决于模型划分、通信量、负载均衡和计算通信重叠。</p>
+<p>同一篇发布文章还提到最多 576 GPU 的 NVLink 域。这是比 NVL72 更大范围的架构描述，不能当作每套 NVL72 已经具备的连接规模，也不能据此自行推导具体部署的跨机架拓扑和可用带宽。</p>
+<h2 id="7-NVLink-6：带宽之外，增加机架级可维护性"><a href="#7-NVLink-6：带宽之外，增加机架级可维护性" class="headerlink" title="7. NVLink 6：带宽之外，增加机架级可维护性"></a>7. NVLink 6：带宽之外，增加机架级可维护性</h2><p>2026 年的 Vera Rubin 平台继续发展第六代 NVLink。但截至本文核对日期，两份 NVIDIA 官方资料给出的带宽并不一致：</p>
+<table>
+<thead>
+<tr>
+<th>官方资料</th>
+<th align="right">每 GPU 双向带宽</th>
+<th align="right">NVL72 系统聚合带宽</th>
+<th>资料状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NVLink 产品页</td>
+<td align="right">3.0 TB/s</td>
+<td align="right">216 TB/s</td>
+<td>页面标注为初步规格，最多 36 条链路</td>
+</tr>
+<tr>
+<td>2026-07-20 技术博客</td>
+<td align="right">3.6 TB/s</td>
+<td align="right">约 260 TB/s</td>
+<td>文章对 Vera Rubin NVL72 的描述</td>
+</tr>
+</tbody></table>
+<p>来源：<a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/data-center/nvlink/">NVLink 产品页</a>、<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-nvlink-the-scale-up-network-for-ai-factories/">NVLink Scale-up 架构文章</a>。</p>
+<p>两组数字各自满足机架聚合关系：<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="14.33ex" height="1.715ex" role="img" focusable="false" viewBox="0 -676 6334 758"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="37" d="M55 458Q56 460 72 567L88 674Q88 676 108 676H128V672Q128 662 143 655T195 646T364 644H485V605L417 512Q408 500 387 472T360 435T339 403T319 367T305 330T292 284T284 230T278 162T275 80Q275 66 275 52T274 28V19Q270 2 255 -10T221 -22Q210 -22 200 -19T179 0T168 40Q168 198 265 368Q285 400 349 489L395 552H302Q128 552 119 546Q113 543 108 522T98 479L95 458V455H55V458Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path></g><g data-mml-node="mo" transform="translate(1222.2,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(2222.4,0)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(500,0)"></path><path data-c="30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z" transform="translate(778,0)"></path></g><g data-mml-node="mo" transform="translate(3778.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(4834,0)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z" transform="translate(500,0)"></path><path data-c="36" d="M42 313Q42 476 123 571T303 666Q372 666 402 630T432 550Q432 525 418 510T379 495Q356 495 341 509T326 548Q326 592 373 601Q351 623 311 626Q240 626 194 566Q147 500 147 364L148 360Q153 366 156 373Q197 433 263 433H267Q313 433 348 414Q372 400 396 374T435 317Q456 268 456 210V192Q456 169 451 149Q440 90 387 34T253 -22Q225 -22 199 -14T143 16T92 75T56 172T42 313ZM257 397Q227 397 205 380T171 335T154 278T148 216Q148 133 160 97T198 39Q222 21 251 21Q302 21 329 59Q342 77 347 104T352 209Q352 289 347 316T329 361Q302 397 257 397Z" transform="translate(1000,0)"></path></g></g></g></svg></mjx-container>，<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.186ex;" xmlns="http://www.w3.org/2000/svg" width="16.09ex" height="1.715ex" role="img" focusable="false" viewBox="0 -676 7112 758"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mn"><path data-c="37" d="M55 458Q56 460 72 567L88 674Q88 676 108 676H128V672Q128 662 143 655T195 646T364 644H485V605L417 512Q408 500 387 472T360 435T339 403T319 367T305 330T292 284T284 230T278 162T275 80Q275 66 275 52T274 28V19Q270 2 255 -10T221 -22Q210 -22 200 -19T179 0T168 40Q168 198 265 368Q285 400 349 489L395 552H302Q128 552 119 546Q113 543 108 522T98 479L95 458V455H55V458Z"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(500,0)"></path></g><g data-mml-node="mo" transform="translate(1222.2,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mn" transform="translate(2222.4,0)"><path data-c="33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(500,0)"></path><path data-c="36" d="M42 313Q42 476 123 571T303 666Q372 666 402 630T432 550Q432 525 418 510T379 495Q356 495 341 509T326 548Q326 592 373 601Q351 623 311 626Q240 626 194 566Q147 500 147 364L148 360Q153 366 156 373Q197 433 263 433H267Q313 433 348 414Q372 400 396 374T435 317Q456 268 456 210V192Q456 169 451 149Q440 90 387 34T253 -22Q225 -22 199 -14T143 16T92 75T56 172T42 313ZM257 397Q227 397 205 380T171 335T154 278T148 216Q148 133 160 97T198 39Q222 21 251 21Q302 21 329 59Q342 77 347 104T352 209Q352 289 347 316T329 361Q302 397 257 397Z" transform="translate(778,0)"></path></g><g data-mml-node="mo" transform="translate(3778.2,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mn" transform="translate(4834,0)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path><path data-c="35" d="M164 157Q164 133 148 117T109 101H102Q148 22 224 22Q294 22 326 82Q345 115 345 210Q345 313 318 349Q292 382 260 382H254Q176 382 136 314Q132 307 129 306T114 304Q97 304 95 310Q93 314 93 485V614Q93 664 98 664Q100 666 102 666Q103 666 123 658T178 642T253 634Q324 634 389 662Q397 666 402 666Q410 666 410 648V635Q328 538 205 538Q174 538 149 544L139 546V374Q158 388 169 396T205 412T256 420Q337 420 393 355T449 201Q449 109 385 44T229 -22Q148 -22 99 32T50 154Q50 178 61 192T84 210T107 214Q132 214 148 197T164 157Z" transform="translate(500,0)"></path><path data-c="39" d="M352 287Q304 211 232 211Q154 211 104 270T44 396Q42 412 42 436V444Q42 537 111 606Q171 666 243 666Q245 666 249 666T257 665H261Q273 665 286 663T323 651T370 619T413 560Q456 472 456 334Q456 194 396 97Q361 41 312 10T208 -22Q147 -22 108 7T68 93T121 149Q143 149 158 135T173 96Q173 78 164 65T148 49T135 44L131 43Q131 41 138 37T164 27T206 22H212Q272 22 313 86Q352 142 352 280V287ZM244 248Q292 248 321 297T351 430Q351 508 343 542Q341 552 337 562T323 588T293 615T246 625Q208 625 181 598Q160 576 154 546T147 441Q147 358 152 329T172 282Q197 248 244 248Z" transform="translate(1000,0)"></path><path data-c="2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z" transform="translate(1500,0)"></path><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" transform="translate(1778,0)"></path></g></g></g></svg></mjx-container>。但算术自洽不能判断哪组对应最终配置，也不能把产品页的“36 条链路”和另一篇文章的“3.6 TB/s”拼接起来，直接认定单链路规格为 100 GB/s。本文保留来源差异，不据此给出唯一的单链路带宽结论。</p>
+<p>在系统能力上，第六代资料强调了控制面韧性、部分填充机架运行、交换托盘热插拔和动态重路由。随着互连域扩大，一条链路或一个交换托盘的故障可能影响更多 GPU，监测、隔离和维护能力也就成为系统设计的一部分。</p>
+<p><img data-src="/images/NVLink-02/nvlink6-vera-rubin-switch-system.png" alt="NVLink 6：Vera Rubin NVL72 的 NVLink Spine、机架和包含四颗 NVLink 6 交换芯片的交换托盘"></p>
+<p><em>图 6 第六代 NVLink 的 Vera Rubin NVL72 系统。左侧为 NVLink Spine 连接组件，中间为机架，右侧为包含 4 颗 NVLink 6 交换芯片的托盘。本图取自 2026-07-20 技术博客，对应其每 GPU 3.6 TB/s、机架约 260 TB/s 的描述；与产品页的规格差异仍按本节表格保留。来源：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-nvlink-the-scale-up-network-for-ai-factories/">NVIDIA NVLink Scale-up 架构文章，原文图 2</a>。</em></p>
+<p>2026 年技术博客还描述了更大的网内计算能力，并将最多 1152 GPU 的域规模与共封装光学列入路线图。路线图说明发展方向，不能视为所有 NVL72 系统已经提供的能力。</p>
+<h2 id="8-将六代变化放在一起看"><a href="#8-将六代变化放在一起看" class="headerlink" title="8. 将六代变化放在一起看"></a>8. 将六代变化放在一起看</h2><p>下面只汇总代表性配置。年份对应产品或平台公开介绍的阶段；带宽指支持相应连接的代表性 GPU 配置，并非同名 GPU 所有板卡型号都具有相同能力。</p>
+<table>
+<thead>
+<tr>
+<th>NVLink 代际</th>
+<th>代表平台与年份</th>
+<th align="right">每 GPU 链路数</th>
+<th align="right">单链路双向带宽</th>
+<th align="right">每 GPU 双向聚合带宽</th>
+<th>关键变化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>P100 SXM2，2016</td>
+<td align="right">4</td>
+<td align="right">40 GB/s</td>
+<td align="right">160 GB/s</td>
+<td>专用 GPU 互连，DGX-1 使用混合立方体网格</td>
+</tr>
+<tr>
+<td>2</td>
+<td>V100 NVLink 配置，2017</td>
+<td align="right">6</td>
+<td align="right">50 GB/s</td>
+<td align="right">300 GB/s</td>
+<td>带宽提升；2018 年 DGX-2 引入 NVSwitch</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A100，2020</td>
+<td align="right">12</td>
+<td align="right">50 GB/s</td>
+<td align="right">600 GB/s</td>
+<td>更高带宽及直接连接、交换连接等基板方案</td>
+</tr>
+<tr>
+<td>4</td>
+<td>H100 SXM，2022</td>
+<td align="right">18</td>
+<td align="right">50 GB/s</td>
+<td align="right">900 GB/s</td>
+<td>NVLink Network、地址隔离与网内集合通信加速</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Blackwell，2024</td>
+<td align="right">18</td>
+<td align="right">100 GB/s</td>
+<td align="right">1.8 TB/s</td>
+<td>NVL72 将高速互连域扩展到机架</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Vera Rubin，2026</td>
+<td align="right">产品页最多 36</td>
+<td align="right">本文不跨来源反推</td>
+<td align="right">3.0 / 3.6 TB/s，见上节</td>
+<td>更高带宽与机架级可靠性、维护能力</td>
+</tr>
+</tbody></table>
+<p><em>表中参数来源见各代章节。逻辑链路带宽相同，不表示其物理 lane 数、编码方式或信号速率相同。</em></p>
+<p><img data-src="/images/NVLink-02/technical-evolution.svg" alt="NVLink 从点对点连接、交换网络到跨节点和机架级互连的演进"></p>
+<p><em>图 7 技术演进示意。图中列出代表性系统变化，不表示每代只支持一种拓扑；更大规模的网络也不会自动取代小规模配置。</em></p>
+<p>从这条主线可以看出，NVLink 的演进逐渐超出了单条连接的提速：NVSwitch 改变了带宽的组织方式，NVLink Network 扩大了互连范围，NVL72 将计算、交换、布线与维护一起纳入机架设计。</p>
+<p>还需要保留两个边界。首先，GPU 间的 NVLink 与 CPU–GPU 的 NVLink-C2C 是不同连接，后者的一致性能力不能直接推广为整个 GPU 域自动拥有统一、等速的显存。其次，NVLink 扩大 Scale-up 域，并不意味着 Scale-out 网络失去作用；InfiniBand 或以太网仍用于连接更大范围的计算资源。具体并行任务放在哪一层，应由通信需求和实际拓扑决定。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/inside-pascal/">Inside Pascal: NVIDIA’s Newest Computing Platform</a>。P100 型号与第一代 NVLink。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/dgx-1-fastest-deep-learning-system/">NVIDIA DGX-1: The Fastest Deep Learning System</a>。Hybrid Cube Mesh 拓扑与软件配合。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/volta-tuning-guide/index.html">Volta Tuning Guide</a>。V100 的 NVLink 连接规格。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvswitch-leveraging-nvlink-to-maximum-effect/">NVSwitch: Leveraging NVLink to Maximum Effect</a>。第一代 NVSwitch 与 DGX-2。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/">NVIDIA Ampere Architecture In-Depth</a>。第三代 NVLink 的链路实现。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/introducing-hgx-a100-most-powerful-accelerated-server-platform-for-ai-hpc/">Introducing NVIDIA HGX A100</a>。4、8 GPU 基板及 16 GPU 连接方案。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/">NVIDIA Hopper Architecture In-Depth</a>。第四代 NVLink、NVLink Network 和 SHARP。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-nvlink-and-nvidia-nvswitch-supercharge-large-language-model-inference/">NVIDIA NVLink and NVIDIA NVSwitch Supercharge Large Language Model Inference</a>。Hopper 的交换配置与通信需求。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-gb200-nvl72-delivers-trillion-parameter-llm-training-and-real-time-inference/">NVIDIA GB200 NVL72 Delivers Trillion-Parameter LLM Training and Real-Time Inference</a>。第五代 NVLink 与 NVL72。</li>
+<li><a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/data-center/nvlink/">NVIDIA NVLink and NVLink Switch</a>。产品页规格，核对日期：2026-09-20。</li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/nvidia-nvlink-the-scale-up-network-for-ai-factories/">NVIDIA NVLink: The Scale-Up Network for AI Factories</a>。2026-07-20 技术博客中的第六代规格与路线图。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/NVLink/" rel="tag"># NVLink</a>
+              <a href="/tags/GPU-%E4%BA%92%E8%BF%9E/" rel="tag"># GPU 互连</a>
+              <a href="/tags/NVSwitch/" rel="tag"># NVSwitch</a>
+              <a href="/tags/NVLink-Network/" rel="tag"># NVLink Network</a>
+              <a href="/tags/NVL72/" rel="tag"># NVL72</a>
+              <a href="/tags/Scale-up/" rel="tag"># Scale-up</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/" rel="prev" title="NVLink 01｜为什么需要 NVLink">
+                  <i class="fa fa-angle-left"></i> NVLink 01｜为什么需要 NVLink
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>
