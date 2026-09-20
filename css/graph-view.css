@@ -1,0 +1,343 @@
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.knowledge-graph,
+.knowledge-graph-page,
+.graph-global-overlay {
+  --graph-bg: var(--content-bg-color);
+  --graph-border: rgba(128, 138, 160, 0.22);
+  --graph-text: var(--text-color);
+  --graph-muted: var(--grey);
+  --graph-link: rgba(128, 138, 160, 0.38);
+  --graph-post: #8a96a8;
+  --graph-post-visited: #5b8def;
+  --graph-current: var(--theme-color);
+  --graph-tag: #7b6bb8;
+  --graph-category: #c9962a;
+  --graph-halo: rgba(255, 255, 255, 0.88);
+  --graph-panel: var(--content-bg-color);
+}
+
+.knowledge-graph {
+  margin: 1.4rem 0 0.4rem;
+}
+
+.knowledge-graph-header h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 0;
+}
+
+.knowledge-graph-outer,
+.knowledge-graph-outer-page {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 250px;
+  border: 1px solid var(--graph-border);
+  border-radius: 8px;
+  background: var(--graph-bg);
+}
+
+.knowledge-graph-outer-page {
+  height: 72vh;
+  min-height: 420px;
+  max-height: 760px;
+}
+
+.graph-container {
+  width: 100%;
+  height: 100%;
+}
+
+.graph-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.graph-canvas:active {
+  cursor: grabbing;
+}
+
+.graph-global-btn,
+.graph-zoom-btns button,
+.graph-global-close {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--graph-text);
+  cursor: pointer;
+}
+
+.graph-global-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border-radius: 6px;
+  opacity: 0.55;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.graph-global-btn svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.graph-global-btn:hover,
+.graph-global-btn:focus-visible {
+  opacity: 1;
+  background: var(--graph-border);
+}
+
+.graph-zoom-btns {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graph-zoom-btns button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--graph-border);
+  border-radius: 6px;
+  background: var(--graph-bg);
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.graph-zoom-btns button:hover,
+.graph-zoom-btns button:focus-visible {
+  opacity: 1;
+  color: var(--graph-current);
+}
+
+.knowledge-graph-hint,
+.knowledge-graph-meta,
+.knowledge-graph-intro {
+  color: var(--graph-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.knowledge-graph-hint,
+.knowledge-graph-meta {
+  margin: 8px 0 0;
+}
+
+.knowledge-graph-intro {
+  margin: 0 0 14px;
+  color: var(--graph-text);
+  font-size: 15px;
+}
+
+.knowledge-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  color: var(--graph-muted);
+  font-size: 13px;
+}
+
+.knowledge-graph-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.legend-post { background: var(--graph-post); }
+.legend-visited { background: var(--graph-post-visited); }
+.legend-tag {
+  background: transparent;
+  border: 2px solid var(--graph-tag);
+}
+.legend-cat {
+  border-radius: 2px;
+  background: transparent;
+  border: 2px solid var(--graph-category);
+}
+
+.knowledge-graph-toolbar,
+.graph-global-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.graph-search {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.graph-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  color: var(--graph-text);
+  background: var(--graph-bg);
+  border: 1px solid var(--graph-border);
+  border-radius: 8px;
+}
+
+.graph-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--graph-muted);
+  font-size: 13px;
+  user-select: none;
+}
+
+.graph-global-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 16, 28, 0.42);
+  backdrop-filter: blur(4px);
+}
+
+.graph-global-overlay[hidden] {
+  display: none !important;
+}
+
+.graph-global-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  max-width: 1280px;
+  height: 80vh;
+  max-height: 860px;
+  padding: 16px 16px 12px;
+  background: var(--graph-panel);
+  border: 1px solid var(--graph-border);
+  border-radius: 10px;
+  box-shadow: 0 18px 50px rgba(16, 24, 40, 0.18);
+}
+
+.graph-global-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.graph-global-toolbar .graph-search {
+  flex: 1 1 180px;
+}
+
+.graph-global-close {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  font-size: 24px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.graph-global-close:hover,
+.graph-global-close:focus-visible {
+  opacity: 1;
+}
+
+.graph-container-global {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--graph-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.graph-global-overlay .graph-zoom-btns {
+  right: 28px;
+  bottom: 24px;
+}
+
+body.graph-overlay-open {
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .knowledge-graph-outer {
+    height: 220px;
+  }
+
+  .knowledge-graph-outer-page {
+    height: 70vh;
+    min-height: 320px;
+  }
+
+  .graph-global-overlay {
+    padding: 8px;
+  }
+
+  .graph-global-panel {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .knowledge-graph,
+  .knowledge-graph-page,
+  .graph-global-overlay {
+    --graph-border: rgba(200, 205, 220, 0.16);
+    --graph-link: rgba(180, 190, 210, 0.32);
+    --graph-post: #9aa3b5;
+    --graph-post-visited: #6f9dff;
+    --graph-tag: #b7a6f0;
+    --graph-category: #e0b34c;
+    --graph-halo: rgba(31, 31, 31, 0.88);
+  }
+
+  .graph-global-overlay {
+    background: rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graph-global-btn,
+  .graph-zoom-btns button {
+    transition: none;
+  }
+}
