@@ -21,15 +21,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Public visitor statistics of the blog">
+    <meta name="description" content="Public visitor map of the blog">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Statistics">
 <meta property="og:url" content="https://zhwang1224.github.io/en/stat/index.html">
 <meta property="og:site_name" content="正在输入">
-<meta property="og:description" content="Public visitor statistics of the blog">
+<meta property="og:description" content="Public visitor map of the blog">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-09-21T05:05:17.765Z">
-<meta property="article:modified_time" content="2026-09-21T05:05:17.765Z">
+<meta property="article:published_time" content="2026-09-21T11:06:17.439Z">
+<meta property="article:modified_time" content="2026-09-21T11:06:17.439Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="高性能互连网络,片上网络,计算机体系结构,数据中心网络,Chiplet,自适应路由,拥塞控制,分布式训练,集合通信,算法题解">
 <meta name="twitter:card" content="summary">
@@ -78,7 +78,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
   <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/en/stat/"}</script>
   <script src="/js/third-party/quicklink.js" defer></script>
-<script src="/js/visitor-map.js"></script>
 <link rel="stylesheet" href="/css/graph-view.css">
 <style>
   /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
@@ -165,7 +164,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -178,7 +177,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#stats-heading"><span class="nav-number">1.</span> <span class="nav-text">Top Sources</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -243,7 +241,7 @@
 </h1>
 
 <div class="post-meta-container">
-    <div class="post-description">Public visitor statistics of the blog</div>
+    <div class="post-description">Public visitor map of the blog</div>
   <ul class="breadcrumb">
             <li><a href="/en/">ENGLISH</a></li>
           <li>STAT</li>
@@ -256,338 +254,13 @@
       
       
       <div class="post-body">
-          
-<style>
-  .visitor-stats {
-    --stats-accent: #3f7cff;
-    --stats-accent-soft: rgba(63, 124, 255, 0.12);
-    --stats-line: rgba(128, 138, 160, 0.2);
-    max-width: 760px;
-    margin: 0 auto;
-  }
-
-  .stats-intro {
-    margin: 0 0 24px;
-    color: var(--text-color, #666);
-    line-height: 1.8;
-    text-align: center;
-  }
-
-  .stats-overview {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-
-  .stats-card,
-  .stats-ranking {
-    background: var(--content-bg-color, #fff);
-    border: 1px solid var(--stats-line);
-    border-radius: 14px;
-    box-shadow: 0 8px 28px rgba(28, 38, 62, 0.06);
-  }
-
-  .stats-card {
-    padding: 20px 16px;
-    text-align: center;
-  }
-
-  .stats-label {
-    display: block;
-    margin-bottom: 7px;
-    color: var(--grey, #888);
-    font-size: 13px;
-  }
-
-  .stats-value {
-    display: block;
-    color: var(--text-color, #222);
-    font-size: clamp(22px, 5vw, 30px);
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.2;
-  }
-
-  .stats-value.is-date {
-    font-size: 15px;
-    line-height: 36px;
-  }
-
-  .stats-ranking {
-    padding: 22px;
-  }
-
-  .stats-ranking h2 {
-    margin: 0 0 18px;
-    font-size: 18px;
-  }
-
-  .stats-list {
-    display: grid;
-    gap: 15px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .stats-country-head {
-    display: grid;
-    grid-template-columns: 32px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 7px;
-    font-size: 14px;
-  }
-
-  .stats-rank {
-    color: var(--grey, #888);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .stats-country-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .stats-count {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .stats-bar {
-    height: 7px;
-    margin-left: 42px;
-    overflow: hidden;
-    background: var(--stats-accent-soft);
-    border-radius: 999px;
-  }
-
-  .stats-bar span {
-    display: block;
-    width: 0;
-    height: 100%;
-    background: linear-gradient(90deg, #5872e8, var(--stats-accent));
-    border-radius: inherit;
-    transition: width 500ms ease;
-  }
-
-  .stats-state {
-    padding: 44px 16px;
-    color: var(--grey, #888);
-    text-align: center;
-  }
-
-  .stats-retry {
-    display: none;
-    margin: 14px auto 0;
-    padding: 8px 16px;
-    color: #fff;
-    background: var(--stats-accent);
-    border: 0;
-    border-radius: 9px;
-    cursor: pointer;
-  }
-
-  .stats-note {
-    margin: 16px 0 0;
-    color: var(--grey, #888);
-    font-size: 12px;
-    line-height: 1.7;
-    text-align: center;
-  }
-
-  @media (max-width: 620px) {
-    .stats-overview {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .stats-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 15px 18px;
-      text-align: left;
-    }
-
-    .stats-label {
-      margin: 0;
-    }
-
-    .stats-value,
-    .stats-value.is-date {
-      font-size: 18px;
-      line-height: 1.3;
-    }
-
-    .stats-ranking {
-      padding: 18px 16px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .stats-bar span {
-      transition: none;
-    }
-  }
-</style>
-
-<section class="visitor-stats" aria-labelledby="stats-heading">
-  <p class="stats-intro">Here is an overview of public visits to this blog. Data is aggregated by country/region and contains no personal information.</p>
-
-  <div class="stats-overview" aria-label="Overview">
-    <div class="stats-card">
-      <span class="stats-label">Total Visits</span>
-      <strong class="stats-value" id="stats-total">—</strong>
-    </div>
-    <div class="stats-card">
-      <span class="stats-label">Countries / Regions</span>
-      <strong class="stats-value" id="stats-countries">—</strong>
-    </div>
-    <div class="stats-card">
-      <span class="stats-label">Last Updated</span>
-      <strong class="stats-value is-date" id="stats-updated">—</strong>
-    </div>
+          <div class="mapmyvisitors-page">
+  <p class="mapmyvisitors-intro">Visitor origins are shown with MapMyVisitors. Dots mark approximate locations of people who have opened this site; no personal identity is displayed.</p>
+  <div id="mapmyvisitors-mount">
+    <script type="text/javascript" id="mapmyvisitors" src="//mapmyvisitors.com/map.js?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff&amp;w=a"></script>
   </div>
-
-  <div class="stats-ranking">
-    <h2 id="stats-heading">Top Sources</h2>
-    <div class="stats-state" id="stats-state" role="status" aria-live="polite">Loading statistics…</div>
-    <ol class="stats-list" id="stats-list"></ol>
-    <button class="stats-retry" id="stats-retry" type="button">Reload</button>
-  </div>
-
-  <p class="stats-note">Each browser counts at most once per day. Countries/regions are inferred from network egress and may be affected by proxies or VPNs.</p>
-</section>
-
-<script>
-(function () {
-  var totalEl = document.getElementById('stats-total');
-  var countriesEl = document.getElementById('stats-countries');
-  var updatedEl = document.getElementById('stats-updated');
-  var stateEl = document.getElementById('stats-state');
-  var listEl = document.getElementById('stats-list');
-  var retryEl = document.getElementById('stats-retry');
-
-  function formatNumber(value) {
-    return new Intl.NumberFormat('en-US').format(Number(value) || 0);
-  }
-
-  function formatDate(value) {
-    if (!value) return '—';
-    var date = new Date(value);
-    if (Number.isNaN(date.getTime())) return '—';
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'numeric',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  }
-
-  function normalize(payload) {
-    var visitors = payload && payload.visitors ? payload.visitors : {};
-    var entries = Object.keys(visitors).map(function (code) {
-      return {
-        code: code,
-        name: visitors[code].name || code,
-        count: Number(visitors[code].count) || 0,
-        updatedAt: visitors[code].updatedAt || ''
-      };
-    }).filter(function (entry) {
-      return entry.count > 0;
-    }).sort(function (a, b) {
-      return b.count - a.count;
-    });
-
-    return {
-      entries: entries,
-      total: payload && payload.summary ? payload.summary.total : entries.reduce(function (sum, entry) {
-        return sum + entry.count;
-      }, 0),
-      countries: payload && payload.summary ? payload.summary.countries : entries.filter(function (entry) {
-        return entry.code !== 'XX';
-      }).length,
-      updatedAt: payload && payload.summary ? payload.summary.updatedAt : entries.reduce(function (latest, entry) {
-        return entry.updatedAt > latest ? entry.updatedAt : latest;
-      }, '')
-    };
-  }
-
-  function render(payload) {
-    var data = normalize(payload);
-    totalEl.textContent = formatNumber(data.total);
-    countriesEl.textContent = formatNumber(data.countries);
-    updatedEl.textContent = formatDate(data.updatedAt);
-    listEl.replaceChildren();
-
-    if (!data.entries.length) {
-      stateEl.textContent = 'No visits recorded yet';
-      stateEl.style.display = 'block';
-      retryEl.style.display = 'none';
-      return;
-    }
-
-    var maxCount = data.entries[0].count;
-    data.entries.forEach(function (entry, index) {
-      var item = document.createElement('li');
-      var head = document.createElement('div');
-      var rank = document.createElement('span');
-      var name = document.createElement('span');
-      var count = document.createElement('span');
-      var bar = document.createElement('div');
-      var fill = document.createElement('span');
-
-      head.className = 'stats-country-head';
-      rank.className = 'stats-rank';
-      name.className = 'stats-country-name';
-      count.className = 'stats-count';
-      bar.className = 'stats-bar';
-
-      rank.textContent = String(index + 1).padStart(2, '0');
-      name.textContent = entry.name;
-      count.textContent = formatNumber(entry.count);
-      fill.style.width = Math.max(4, entry.count / maxCount * 100) + '%';
-
-      head.append(rank, name, count);
-      bar.appendChild(fill);
-      item.append(head, bar);
-      listEl.appendChild(item);
-    });
-
-    stateEl.style.display = 'none';
-    retryEl.style.display = 'none';
-  }
-
-  function showError() {
-    stateEl.textContent = 'Statistics are temporarily unavailable';
-    stateEl.style.display = 'block';
-    retryEl.style.display = 'block';
-  }
-
-  function load() {
-    stateEl.textContent = 'Loading statistics…';
-    stateEl.style.display = 'block';
-    retryEl.style.display = 'none';
-
-    if (!window.VisitorMap) {
-      showError();
-      return;
-    }
-
-    VisitorMap.record()
-      .catch(function () { return VisitorMap.fetchVisitors(); })
-      .then(render)
-      .catch(showError);
-  }
-
-  retryEl.addEventListener('click', load);
-  load();
-})();
-</script>
-
+  <p class="mapmyvisitors-note">A more detailed breakdown is on <a href="https://mapmyvisitors.com/web/1c8de" rel="noopener" target="_blank">MapMyVisitors</a>.</p>
+</div>
 
       </div>
       

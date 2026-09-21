@@ -1414,7 +1414,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #ffd485;
+    background: #4e4125;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3145,9 +3145,27 @@ header.header {
     --photo-line: rgba(200,200,200,0.14);
     --photo-accent: #64b6aa;
   }
-  .visitor-stats {
-    --stats-accent: #6f9dff;
-    --stats-accent-soft: rgba(111,157,255,0.16);
-    --stats-line: rgba(200,205,220,0.16);
-  }
+}
+.post-body .mapmyvisitors-page {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+.post-body .mapmyvisitors-intro,
+.post-body .mapmyvisitors-note {
+  line-height: 1.8;
+}
+.post-body .mapmyvisitors-intro {
+  margin: 0 0 1.25em;
+}
+.post-body .mapmyvisitors-note {
+  margin: 1.25em 0 0;
+  color: var(--grey, #888);
+  font-size: 13px;
+}
+.post-body #mapmyvisitors-mount {
+  min-height: 180px;
+}
+.post-body #mapmyvisitors-widget {
+  margin: 0 auto;
 }

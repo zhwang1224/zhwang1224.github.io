@@ -19,11 +19,11 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="NVSwitch" scheme="https://zhwang1224.github.io/tags/NVSwitch/"/>
     <category term="NVLink Network" scheme="https://zhwang1224.github.io/tags/NVLink-Network/"/>
     <category term="NVL72" scheme="https://zhwang1224.github.io/tags/NVL72/"/>
     <category term="Scale-up" scheme="https://zhwang1224.github.io/tags/Scale-up/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/"/>
     <published>2026-09-19T11:54:37.000Z</published>
@@ -39,9 +39,9 @@
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="PCIe" scheme="https://zhwang1224.github.io/tags/PCIe/"/>
     <category term="Unified Memory" scheme="https://zhwang1224.github.io/tags/Unified-Memory/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/"/>
     <published>2026-09-19T08:22:30.000Z</published>
@@ -334,12 +334,12 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="分布式训练网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="Clos 网络" scheme="https://zhwang1224.github.io/tags/Clos-%E7%BD%91%E7%BB%9C/"/>
     <category term="容错网络" scheme="https://zhwang1224.github.io/tags/%E5%AE%B9%E9%94%99%E7%BD%91%E7%BB%9C/"/>
+    <category term="Clos 网络" scheme="https://zhwang1224.github.io/tags/Clos-%E7%BD%91%E7%BB%9C/"/>
     <category term="多平面网络" scheme="https://zhwang1224.github.io/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/"/>
     <category term="RoCE" scheme="https://zhwang1224.github.io/tags/RoCE/"/>
-    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
+    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="MRC" scheme="https://zhwang1224.github.io/tags/MRC/"/>
     <category term="SRv6" scheme="https://zhwang1224.github.io/tags/SRv6/"/>
     <id>https://zhwang1224.github.io/2026/08/12/MRC-SRv6/</id>
@@ -360,10 +360,10 @@
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
     <category term="HPC" scheme="https://zhwang1224.github.io/tags/HPC/"/>
     <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
-    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="MRLS" scheme="https://zhwang1224.github.io/tags/MRLS/"/>
     <category term="Leaf-Spine" scheme="https://zhwang1224.github.io/tags/Leaf-Spine/"/>
     <category term="Fat-Tree" scheme="https://zhwang1224.github.io/tags/Fat-Tree/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <id>https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/</id>
     <link href="https://zhwang1224.github.io/2026/08/07/Extreme-Scale-Interconnection-Networks/"/>
