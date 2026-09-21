@@ -1,0 +1,67 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1060' viewBox='0 0 1600 1060' role='img' aria-labelledby='title desc'>
+  <title id='title'>数据在 TCP/IP 各层之间的双向流动</title>
+  <desc id='desc'>两台主机都能同时发送与接收；发送时逐层封装，接收时逐层解封装。</desc>
+  <defs>
+    <filter id='shadow' x='-10%' y='-10%' width='120%' height='135%'><feDropShadow dx='0' dy='7' stdDeviation='10' flood-color='#0f172a' flood-opacity='0.08'/></filter>
+    <marker id='sendArrow' markerWidth='11' markerHeight='11' refX='9' refY='5.5' orient='auto'><path d='M0,0 L11,5.5 L0,11 Z' fill='#ea580c'/></marker>
+    <marker id='receiveArrow' markerWidth='11' markerHeight='11' refX='9' refY='5.5' orient='auto'><path d='M0,0 L11,5.5 L0,11 Z' fill='#2563eb'/></marker>
+    <style>.text{font-family:Inter,'Noto Sans SC','Microsoft YaHei','Segoe UI',Arial,sans-serif;fill:#0f172a}.muted{fill:#64748b}.center{text-anchor:middle}.layer{font-size:22px;font-weight:800}.unit{font-size:16px;font-weight:650}.host{font-size:25px;font-weight:800}.flow{font-size:17px;font-weight:800}.small{font-size:15px}</style>
+  </defs>
+  <rect width='1600' height='1060' fill='#f8fafc'/>
+  <text class='text' x='58' y='62' font-size='36' font-weight='800'>数据在 TCP/IP 各层之间的双向流动</text>
+  <text class='text muted' x='58' y='105' font-size='19'>发送：自上而下封装　·　接收：自下而上解封装　·　两端都可同时执行这两个过程</text>
+  <g class='text' transform='translate(1110 64)'>
+    <line x1='0' y1='0' x2='66' y2='0' stroke='#ea580c' stroke-width='5' marker-end='url(#sendArrow)'/><text class='flow' x='82' y='6' fill='#c2410c'>发送</text>
+    <line x1='185' y1='0' x2='251' y2='0' stroke='#2563eb' stroke-width='5' marker-end='url(#receiveArrow)'/><text class='flow' x='267' y='6' fill='#1d4ed8'>接收</text>
+  </g>
+  <g filter='url(#shadow)'>
+    <rect x='48' y='150' width='704' height='730' rx='26' fill='#ffffff' stroke='#cbd5e1'/>
+    <rect x='848' y='150' width='704' height='730' rx='26' fill='#ffffff' stroke='#cbd5e1'/>
+  </g>
+  <text class='text host center' x='400' y='202'>主机 A</text><text class='text muted center' x='400' y='231' font-size='15'>客户端或服务器</text>
+  <text class='text host center' x='1200' y='202'>主机 B</text><text class='text muted center' x='1200' y='231' font-size='15'>服务器或客户端</text>
+  <line x1='93' y1='294' x2='93' y2='807' stroke='#ea580c' stroke-width='6' stroke-linecap='round' marker-end='url(#sendArrow)'/>
+  <text class='text flow center' x='93' y='270' fill='#c2410c'>发送</text><text class='text small center' x='93' y='845' fill='#c2410c'>封装</text>
+  <line x1='707' y1='807' x2='707' y2='294' stroke='#2563eb' stroke-width='6' stroke-linecap='round' marker-end='url(#receiveArrow)'/>
+  <text class='text flow center' x='707' y='270' fill='#1d4ed8'>接收</text><text class='text small center' x='707' y='845' fill='#1d4ed8'>解封装</text>
+  <line x1='893' y1='294' x2='893' y2='807' stroke='#ea580c' stroke-width='6' stroke-linecap='round' marker-end='url(#sendArrow)'/>
+  <text class='text flow center' x='893' y='270' fill='#c2410c'>发送</text><text class='text small center' x='893' y='845' fill='#c2410c'>封装</text>
+  <line x1='1507' y1='807' x2='1507' y2='294' stroke='#2563eb' stroke-width='6' stroke-linecap='round' marker-end='url(#receiveArrow)'/>
+  <text class='text flow center' x='1507' y='270' fill='#1d4ed8'>接收</text><text class='text small center' x='1507' y='845' fill='#1d4ed8'>解封装</text>
+  <g class='text'>
+    <g>
+      <rect x='132' y='260' width='536' height='94' rx='16' fill='#f5f3ff' stroke='#c4b5fd'/>
+      <text class='layer' x='163' y='301'>应用层</text><text class='unit muted' x='163' y='330'>HTTP、DNS、SSH、TLS …　｜　应用消息 / 字节</text>
+      <rect x='132' y='374' width='536' height='94' rx='16' fill='#eff6ff' stroke='#93c5fd'/>
+      <text class='layer' x='163' y='415'>传输层</text><text class='unit muted' x='163' y='444'>TCP / UDP　｜　TCP 段 / UDP 数据报</text>
+      <rect x='132' y='488' width='536' height='94' rx='16' fill='#ecfdf5' stroke='#6ee7b7'/>
+      <text class='layer' x='163' y='529'>互联网层</text><text class='unit muted' x='163' y='558'>IPv4 / IPv6、ICMP　｜　IP 数据报（分组）</text>
+      <rect x='132' y='602' width='536' height='94' rx='16' fill='#fff7ed' stroke='#fdba74'/>
+      <text class='layer' x='163' y='643'>链路层</text><text class='unit muted' x='163' y='672'>Ethernet、Wi-Fi　｜　帧（只负责当前一跳）</text>
+      <rect x='132' y='716' width='536' height='94' rx='16' fill='#f1f5f9' stroke='#94a3b8'/>
+      <text class='layer' x='163' y='757'>物理层</text><text class='unit muted' x='163' y='786'>网卡与介质　｜　比特 ↔ 电 / 光 / 无线信号</text>
+    </g>
+    <g>
+      <rect x='932' y='260' width='536' height='94' rx='16' fill='#f5f3ff' stroke='#c4b5fd'/>
+      <text class='layer' x='963' y='301'>应用层</text><text class='unit muted' x='963' y='330'>HTTP、DNS、SSH、TLS …　｜　应用消息 / 字节</text>
+      <rect x='932' y='374' width='536' height='94' rx='16' fill='#eff6ff' stroke='#93c5fd'/>
+      <text class='layer' x='963' y='415'>传输层</text><text class='unit muted' x='963' y='444'>TCP / UDP　｜　TCP 段 / UDP 数据报</text>
+      <rect x='932' y='488' width='536' height='94' rx='16' fill='#ecfdf5' stroke='#6ee7b7'/>
+      <text class='layer' x='963' y='529'>互联网层</text><text class='unit muted' x='963' y='558'>IPv4 / IPv6、ICMP　｜　IP 数据报（分组）</text>
+      <rect x='932' y='602' width='536' height='94' rx='16' fill='#fff7ed' stroke='#fdba74'/>
+      <text class='layer' x='963' y='643'>链路层</text><text class='unit muted' x='963' y='672'>Ethernet、Wi-Fi　｜　帧（只负责当前一跳）</text>
+      <rect x='932' y='716' width='536' height='94' rx='16' fill='#f1f5f9' stroke='#94a3b8'/>
+      <text class='layer' x='963' y='757'>物理层</text><text class='unit muted' x='963' y='786'>网卡与介质　｜　比特 ↔ 电 / 光 / 无线信号</text>
+    </g>
+  </g>
+  <line x1='672' y1='748' x2='925' y2='748' stroke='#ea580c' stroke-width='6' marker-end='url(#sendArrow)'/>
+  <text class='text small center' x='800' y='733' fill='#c2410c'>A → B</text>
+  <line x1='928' y1='790' x2='675' y2='790' stroke='#2563eb' stroke-width='6' marker-end='url(#receiveArrow)'/>
+  <text class='text small center' x='800' y='824' fill='#1d4ed8'>B → A</text>
+  <rect x='48' y='914' width='1504' height='102' rx='20' fill='#ffffff' stroke='#cbd5e1'/>
+  <text class='text' x='82' y='950' font-size='17' font-weight='800'>发送端逐层封装</text>
+  <text class='text muted' x='250' y='950' font-size='16'>应用数据 → [TCP/UDP 首部｜数据] → [IP 首部｜传输层载荷] → [链路首部｜IP 数据报｜链路尾部]</text>
+  <text class='text' x='82' y='987' font-size='17' font-weight='800'>接收端反向处理</text>
+  <text class='text muted' x='250' y='987' font-size='16'>逐层校验并移除本层封装；根据 EtherType、IP 协议号与端口等字段向上分用</text>
+  <text class='text muted center' x='800' y='1043' font-size='15'>同层协议实体之间是逻辑对等关系；数据实际沿发送栈向下、经介质传输，再沿接收栈向上。</text>
+</svg>

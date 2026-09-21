@@ -28,8 +28,8 @@
 <meta property="og:site_name" content="正在输入">
 <meta property="og:description" content="博客公开访问统计">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-07-28T12:46:39.341Z">
-<meta property="article:modified_time" content="2026-07-28T12:46:39.341Z">
+<meta property="article:published_time" content="2026-09-21T05:42:56.272Z">
+<meta property="article:modified_time" content="2026-09-21T05:42:56.272Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="高性能互连网络,片上网络,计算机体系结构,数据中心网络,Chiplet,自适应路由,拥塞控制,分布式训练,集合通信,算法题解">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">372</span>
+        <span class="site-state-item-count">366</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -435,7 +435,7 @@
 
   <div class="stats-overview" aria-label="访问概览">
     <div class="stats-card">
-      <span class="stats-label">累计访问</span>
+      <span class="stats-label">累计独立访问（日去重）</span>
       <strong class="stats-value" id="stats-total">—</strong>
     </div>
     <div class="stats-card">
@@ -455,7 +455,7 @@
     <button class="stats-retry" id="stats-retry" type="button">重新加载</button>
   </div>
 
-  <p class="stats-note">同一浏览器每天最多计入一次；国家或地区根据网络出口推断，可能受代理或 VPN 影响。</p>
+  <p class="stats-note">同一浏览器每天最多计入一次；只保存按天哈希后的匿名标识，不保存 IP。国家或地区根据网络出口推断，可能受代理或 VPN 影响。</p>
 </section>
 
 <script>
@@ -568,7 +568,15 @@
     stateEl.style.display = 'block';
     retryEl.style.display = 'none';
 
+    if (!window.VisitorMap) {
+      showError();
+      return;
+    }
+
     VisitorMap.record()
+      .then(function (payload) {
+        return payload && payload.summary ? payload : VisitorMap.fetchVisitors();
+      })
       .catch(function () { return VisitorMap.fetchVisitors(); })
       .then(render)
       .catch(showError);

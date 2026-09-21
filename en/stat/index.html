@@ -28,8 +28,8 @@
 <meta property="og:site_name" content="正在输入">
 <meta property="og:description" content="Public visitor statistics of the blog">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-08-13T13:24:52.067Z">
-<meta property="article:modified_time" content="2026-08-13T13:24:52.067Z">
+<meta property="article:published_time" content="2026-09-21T05:05:17.765Z">
+<meta property="article:modified_time" content="2026-09-21T05:05:17.765Z">
 <meta property="article:author" content="Zhengzaishuru">
 <meta property="article:tag" content="高性能互连网络,片上网络,计算机体系结构,数据中心网络,Chiplet,自适应路由,拥塞控制,分布式训练,集合通信,算法题解">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">372</span>
+        <span class="site-state-item-count">366</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -571,6 +571,11 @@
     stateEl.textContent = 'Loading statistics…';
     stateEl.style.display = 'block';
     retryEl.style.display = 'none';
+
+    if (!window.VisitorMap) {
+      showError();
+      return;
+    }
 
     VisitorMap.record()
       .catch(function () { return VisitorMap.fetchVisitors(); })
