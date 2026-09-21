@@ -1414,7 +1414,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #4e4125;
+    background: #a15e59;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3147,24 +3147,13 @@ header.header {
   }
 }
 .post-body .mapmyvisitors-page {
-  max-width: 560px;
+  max-width: 840px;
   margin: 0 auto;
   text-align: center;
 }
-.post-body .mapmyvisitors-intro,
-.post-body .mapmyvisitors-note {
-  line-height: 1.8;
-}
-.post-body .mapmyvisitors-intro {
-  margin: 0 0 1.25em;
-}
-.post-body .mapmyvisitors-note {
-  margin: 1.25em 0 0;
-  color: var(--grey, #888);
-  font-size: 13px;
-}
 .post-body #mapmyvisitors-mount {
-  min-height: 180px;
+  width: 100%;
+  min-height: 360px;
 }
 .post-body #mapmyvisitors-widget {
   margin: 0 auto;
