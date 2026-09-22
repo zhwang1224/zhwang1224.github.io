@@ -11,20 +11,41 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-09-22T10:12:13.222Z</updated>
+  <updated>2026-09-22T13:40:35.856Z</updated>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
+    <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
+    <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
+    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
+    <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
+    <category term="拓扑排序" scheme="https://zhwang1224.github.io/tags/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/"/>
+    <category term="Trie" scheme="https://zhwang1224.github.io/tags/Trie/"/>
+    <id>https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E5%9B%BE%E8%AE%BA/</id>
+    <link href="https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E5%9B%BE%E8%AE%BA/"/>
+    <published>2026-09-22T13:38:01.000Z</published>
+    <summary>LeetCode Hot 100 图论专题，包括岛屿数量、腐烂的橘子、课程表与实现 Trie（前缀树）。</summary>
+    <title>Algorithm-Hot100-图论</title>
+    <updated>2026-09-22T13:40:35.856Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <id>https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-I/</id>
     <link href="https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-I/"/>
     <published>2026-09-22T09:51:37.000Z</published>
@@ -75,10 +96,10 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="优先队列" scheme="https://zhwang1224.github.io/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
-    <category term="优先队列" scheme="https://zhwang1224.github.io/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/"/>
     <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
     <category term="归并排序" scheme="https://zhwang1224.github.io/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
@@ -96,10 +117,10 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
     <category term="快慢指针" scheme="https://zhwang1224.github.io/tags/%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/"/>
@@ -116,9 +137,9 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="数组" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E7%BB%84/"/>
     <category term="矩阵" scheme="https://zhwang1224.github.io/tags/%E7%9F%A9%E9%98%B5/"/>
     <category term="模拟" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E6%8B%9F/"/>
@@ -356,9 +377,9 @@
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
     <category term="Clos 网络" scheme="https://zhwang1224.github.io/tags/Clos-%E7%BD%91%E7%BB%9C/"/>
     <category term="容错网络" scheme="https://zhwang1224.github.io/tags/%E5%AE%B9%E9%94%99%E7%BD%91%E7%BB%9C/"/>
+    <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="多平面网络" scheme="https://zhwang1224.github.io/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/"/>
     <category term="RoCE" scheme="https://zhwang1224.github.io/tags/RoCE/"/>
-    <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
     <category term="MRC" scheme="https://zhwang1224.github.io/tags/MRC/"/>
     <category term="SRv6" scheme="https://zhwang1224.github.io/tags/SRv6/"/>
@@ -391,28 +412,5 @@
     <summary>论文笔记：面向十万乃至百万级端点的多程随机叶脊网络，在吞吐、成本与可扩展性之间给出一条可连续调节的折中路径。</summary>
     <title>Extreme-Scale Interconnection Networks：面向超大规模系统的多程随机叶脊网络</title>
     <updated>2026-08-27T14:51:34.837Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="分布式训练" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="大模型训练" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
-    <category term="分布式训练" scheme="https://zhwang1224.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/"/>
-    <category term="张量并行" scheme="https://zhwang1224.github.io/tags/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
-    <category term="PyTorch" scheme="https://zhwang1224.github.io/tags/PyTorch/"/>
-    <category term="Tensor Parallelism" scheme="https://zhwang1224.github.io/tags/Tensor-Parallelism/"/>
-    <category term="Megatron-LM" scheme="https://zhwang1224.github.io/tags/Megatron-LM/"/>
-    <category term="模型并行" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%B9%B6%E8%A1%8C/"/>
-    <category term="Column Parallel" scheme="https://zhwang1224.github.io/tags/Column-Parallel/"/>
-    <category term="Row Parallel" scheme="https://zhwang1224.github.io/tags/Row-Parallel/"/>
-    <category term="Sequence Parallel" scheme="https://zhwang1224.github.io/tags/Sequence-Parallel/"/>
-    <id>https://zhwang1224.github.io/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/</id>
-    <link href="https://zhwang1224.github.io/2026/08/06/%E5%BC%A0%E9%87%8F%E5%B9%B6%E8%A1%8C/"/>
-    <published>2026-08-06T08:00:00.000Z</published>
-    <summary>张量并行详解：如何沿张量维度切分权重矩阵与注意力头完成层内并行，以及 Megatron-LM 为什么要组合列并行与行并行，把通信集中到 Transformer 子模块的少数边界上。</summary>
-    <title>张量并行：从矩阵切分到 Transformer 层内并行</title>
-    <updated>2026-08-27T14:51:34.861Z</updated>
   </entry>
 </feed>
