@@ -11,7 +11,27 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-09-29T13:39:37.857Z</updated>
+  <updated>2026-09-29T15:48:24.814Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    <category term="互连网络" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%92%E8%BF%9E%E7%BD%91%E7%BB%9C/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="Dragonfly" scheme="https://zhwang1224.github.io/tags/Dragonfly/"/>
+    <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
+    <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
+    <category term="Megafly" scheme="https://zhwang1224.github.io/tags/Megafly/"/>
+    <category term="高性能计算" scheme="https://zhwang1224.github.io/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97/"/>
+    <category term="削锥" scheme="https://zhwang1224.github.io/tags/%E5%89%8A%E9%94%A5/"/>
+    <id>https://zhwang1224.github.io/2026/09/29/Megafly-A-Topology-for-Exascale-Systems/</id>
+    <link href="https://zhwang1224.github.io/2026/09/29/Megafly-A-Topology-for-Exascale-Systems/"/>
+    <published>2026-09-29T14:24:03.000Z</published>
+    <summary>ISC 2018 论文阅读。Megafly 用完全二部图构造组内网络，在保持端点间最多三跳的同时，把组规模扩大到同基数 Dragonfly 的 2×、组间最短路径增至 4×，并用切片实现全局与本地的细粒度削锥。</summary>
+    <title>Megafly：面向 E 级系统的三跳间接拓扑</title>
+    <updated>2026-09-29T15:48:24.814Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -57,8 +77,8 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="回溯" scheme="https://zhwang1224.github.io/tags/%E5%9B%9E%E6%BA%AF/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
+    <category term="回溯" scheme="https://zhwang1224.github.io/tags/%E5%9B%9E%E6%BA%AF/"/>
     <category term="排列组合" scheme="https://zhwang1224.github.io/tags/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/"/>
     <category term="剪枝" scheme="https://zhwang1224.github.io/tags/%E5%89%AA%E6%9E%9D/"/>
     <id>https://zhwang1224.github.io/2026/09/23/Algorithm-Hot100-%E5%9B%9E%E6%BA%AF/</id>
@@ -74,12 +94,12 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
+    <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
     <category term="拓扑排序" scheme="https://zhwang1224.github.io/tags/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/"/>
     <category term="Trie" scheme="https://zhwang1224.github.io/tags/Trie/"/>
     <id>https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E5%9B%BE%E8%AE%BA/</id>
@@ -98,8 +118,8 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
     <id>https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-I/</id>
@@ -116,11 +136,11 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="NVSwitch" scheme="https://zhwang1224.github.io/tags/NVSwitch/"/>
     <category term="NVLink Network" scheme="https://zhwang1224.github.io/tags/NVLink-Network/"/>
     <category term="NVL72" scheme="https://zhwang1224.github.io/tags/NVL72/"/>
     <category term="Scale-up" scheme="https://zhwang1224.github.io/tags/Scale-up/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/"/>
     <published>2026-09-19T11:54:37.000Z</published>
@@ -136,9 +156,9 @@
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="PCIe" scheme="https://zhwang1224.github.io/tags/PCIe/"/>
     <category term="Unified Memory" scheme="https://zhwang1224.github.io/tags/Unified-Memory/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/"/>
     <published>2026-09-19T08:22:30.000Z</published>
@@ -287,9 +307,9 @@
     <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
     <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
     <category term="NVIDIA" scheme="https://zhwang1224.github.io/tags/NVIDIA/"/>
+    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
     <category term="Groq 3" scheme="https://zhwang1224.github.io/tags/Groq-3/"/>
     <category term="LPU" scheme="https://zhwang1224.github.io/tags/LPU/"/>
-    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
     <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
     <id>https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/</id>
     <link href="https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/"/>
@@ -305,8 +325,8 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="分布式训练网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="网络拓扑" scheme="https://zhwang1224.github.io/tags/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91/"/>
+    <category term="数据中心网络" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
     <category term="自适应路由" scheme="https://zhwang1224.github.io/tags/%E8%87%AA%E9%80%82%E5%BA%94%E8%B7%AF%E7%94%B1/"/>
     <category term="集合通信" scheme="https://zhwang1224.github.io/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/"/>
     <category term="NAIC 2026" scheme="https://zhwang1224.github.io/tags/NAIC-2026/"/>
@@ -328,10 +348,10 @@
     <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
-    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
     <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
     <category term="Jalapeño" scheme="https://zhwang1224.github.io/tags/Jalapeno/"/>
     <category term="ASIC" scheme="https://zhwang1224.github.io/tags/ASIC/"/>
+    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
     <category term="HBM4" scheme="https://zhwang1224.github.io/tags/HBM4/"/>
     <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/</id>
     <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/"/>
@@ -379,25 +399,5 @@
     <summary>Cerebras 在 Hot Chips 2026 公布的 CS-4 与 NEXUS 机架级平台：WSE-3 Turbo 片上内存和 Fabric、模块化 Backpack、垂直供电、水冷、晶圆 I/O、集群互连及推理性能口径。</summary>
     <title>Hot Chips 2026 Cerebras CS-4：晶圆级引擎的机架级架构</title>
     <updated>2026-08-31T11:10:05.491Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    <category term="芯粒与先进封装" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E8%8A%AF%E7%B2%92%E4%B8%8E%E5%85%88%E8%BF%9B%E5%B0%81%E8%A3%85/"/>
-    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
-    <category term="Intel" scheme="https://zhwang1224.github.io/tags/Intel/"/>
-    <category term="Wildcat Lake" scheme="https://zhwang1224.github.io/tags/Wildcat-Lake/"/>
-    <category term="Diamond Rapids" scheme="https://zhwang1224.github.io/tags/Diamond-Rapids/"/>
-    <category term="UCIe" scheme="https://zhwang1224.github.io/tags/UCIe/"/>
-    <category term="Foveros" scheme="https://zhwang1224.github.io/tags/Foveros/"/>
-    <category term="Xeon" scheme="https://zhwang1224.github.io/tags/Xeon/"/>
-    <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/</id>
-    <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-CPU/"/>
-    <published>2026-08-30T17:24:58.000Z</published>
-    <summary>整理 Intel 在 Hot Chips 2026 公布的 Core Series 3（Wildcat Lake）与下一代 Xeon（Diamond Rapids）：前者聚焦主流客户端的计算、I/O、封装与 UCIe，后者介绍 Fan-out Fabric、CBB、Fabric Hub、内存、I/O、先进封装与 APX。</summary>
-    <title>Hot Chips 2026 Intel CPU 技术总结：Wildcat Lake 与 Diamond Rapids</title>
-    <updated>2026-08-30T18:00:04.993Z</updated>
   </entry>
 </feed>
