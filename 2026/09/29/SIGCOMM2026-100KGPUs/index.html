@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="SIGCOMM 2026 阅读笔记。Meta 在跨多栋数据中心的 10 万+ GPU RoCE 网络上，重做了集合通信库 CCLX 的初始化与 HBM 管理，用 DQPLB 按路径 BDP 做流控，并配套故障定位、性能剖析和 CPU 仿真工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/09/29/SIGCOMM2026-100KGPUs/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="SIGCOMM 2026 阅读笔记。Meta 在跨多栋数据中心的 10 万+ GPU RoCE 网络上，重做了集合通信库 CCLX 的初始化与 HBM 管理，用 DQPLB 按路径 BDP 做流控，并配套故障定位、性能剖析和 CPU 仿真工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/architecture.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/collectives.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/cclx.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/init-time.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/lazy-alloc.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/dqplb.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/a2a-results.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/allgather-results.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/fault-analyzer.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/cpu-emulation.png">
+<meta property="article:published_time" content="2026-09-29T13:11:23.000Z">
+<meta property="article:modified_time" content="2026-09-29T13:39:37.857Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="CCLX">
+<meta property="article:tag" content="DQPLB">
+<meta property="article:tag" content="RoCE">
+<meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="集合通信">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/SIGCOMM2026-100KGPUs/architecture.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/09/29/SIGCOMM2026-100KGPUs/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/09/29/SIGCOMM2026-100KGPUs/","path":"2026/09/29/SIGCOMM2026-100KGPUs/","title":"连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/09/29/SIGCOMM2026-100KGPUs/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<link rel="stylesheet" href="/css/graph-view.css">
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-graph"><a href="/graph/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>图谱</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5-10-%E4%B8%87-GPU%EF%BC%9AMeta-%E9%9D%A2%E5%90%91%E5%A4%A7%E8%A7%84%E6%A8%A1-LLM-%E8%AE%AD%E7%BB%83%E7%9A%84%E9%80%9A%E4%BF%A1%E6%A0%88"><span class="nav-number">1.</span> <span class="nav-text">连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%BD%91%E7%BB%9C%E8%A7%84%E6%A8%A1%E6%89%A9%E5%A4%A7%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">1. 网络规模扩大带来的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%EF%BC%9A%E5%A4%9A%E6%A5%BC%E5%AE%87%E3%80%81%E5%A4%9A%E7%BA%A7-Clos"><span class="nav-number">1.1.1.</span> <span class="nav-text">网络：多楼宇、多级 Clos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%EF%BC%9A%E5%B9%B6%E8%A1%8C%E7%BB%B4%E5%BA%A6%E4%B8%8E%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">负载：并行维度与通信模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%80%9A%E4%BF%A1%E6%A0%88%E6%80%BB%E4%BD%93%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2. 通信栈总体设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CCLX"><span class="nav-number">1.2.1.</span> <span class="nav-text">CCLX</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%8F%AF%E6%89%A9%E5%B1%95%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">3. 可扩展初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%87%8D%E5%90%AF%E9%A2%84%E7%AE%97"><span class="nav-number">1.3.1.</span> <span class="nav-text">系统重启预算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E4%B8%AA%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">三个关键设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-HBM-%E7%AE%A1%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">4. HBM 管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E9%A1%B9%E5%AF%B9%E7%AD%96"><span class="nav-number">1.4.2.</span> <span class="nav-text">三项对策</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BC%A0%E8%BE%93%E5%B1%82%EF%BC%9ADQPLB"><span class="nav-number">1.5.</span> <span class="nav-text">5. 传输层：DQPLB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D%E5%B8%A6%E6%9D%A5%E7%AA%81%E5%8F%91"><span class="nav-number">1.5.1.</span> <span class="nav-text">零拷贝带来突发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0%E5%8C%B9%E9%85%8D-BDP"><span class="nav-number">1.5.2.</span> <span class="nav-text">用三个参数匹配 BDP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A-QP-%E4%B8%8A%E7%9A%84%E6%9C%89%E5%BA%8F%E4%BA%A4%E4%BB%98"><span class="nav-number">1.5.3.</span> <span class="nav-text">多 QP 上的有序交付</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0"><span class="nav-number">1.5.4.</span> <span class="nav-text">评估</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E8%BF%90%E7%BB%B4%E5%B7%A5%E5%85%B7"><span class="nav-number">1.6.</span> <span class="nav-text">6. 运维工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Fault-Analyzer%EF%BC%9A%E4%BB%8E%E8%BF%9E%E9%94%81%E5%81%9C%E6%BB%9E%E4%B8%AD%E6%89%BE%E6%A0%B9%E5%9B%A0"><span class="nav-number">1.6.1.</span> <span class="nav-text">Fault Analyzer：从连锁停滞中找根因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PerfProfiler%EF%BC%9A%E5%8C%BA%E5%88%86%E7%BD%91%E7%BB%9C%E4%B8%8E%E9%9D%9E%E7%BD%91%E7%BB%9C%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.6.2.</span> <span class="nav-text">PerfProfiler：区分网络与非网络原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F-CPU-%E4%BB%BF%E7%9C%9F"><span class="nav-number">1.6.3.</span> <span class="nav-text">分布式 CPU 仿真</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E9%83%A8%E7%BD%B2%E4%B8%8E%E5%B1%80%E9%99%90"><span class="nav-number">1.7.</span> <span class="nav-text">7. 部署与局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.9.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">376</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/07/Extreme-Scale-Interconnection-Networks/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-07</time>
+        <br>
+      Extreme-Scale Interconnection Networks：面向超大规模系统的多程随机叶脊网络
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/12/MRC-SRv6/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-12</time>
+        <br>
+      使用 MRC 与 SRv6 构建具备韧性的 AI 超级计算机网络
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/28/SIGCOMM2026-TurboBus/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-28</time>
+        <br>
+      TurboBus：把空闲 PCIe 借给 GPU 内存卸载
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-02</time>
+        <br>
+      英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/01/NAIC2026-DragonflyUltra/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-01</time>
+        <br>
+      Dragonfly-Ultra：面向高性能 AI 集群的可扩展、低成本网络架构
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/09/29/SIGCOMM2026-100KGPUs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈 | 正在输入">
+      <meta itemprop="description" content="SIGCOMM 2026 阅读笔记。Meta 在跨多栋数据中心的 10 万+ GPU RoCE 网络上，重做了集合通信库 CCLX 的初始化与 HBM 管理，用 DQPLB 按路径 BDP 做流控，并配套故障定位、性能剖析和 CPU 仿真工具。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-29 21:11:23 / 修改时间：21:39:37" itemprop="dateCreated datePublished" datetime="2026-09-29T21:11:23+08:00">2026-09-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>32 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">SIGCOMM 2026 阅读笔记。Meta 在跨多栋数据中心的 10 万+ GPU RoCE 网络上，重做了集合通信库 CCLX 的初始化与 HBM 管理，用 DQPLB 按路径 BDP 做流控，并配套故障定位、性能剖析和 CPU 仿真工具。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>SIGCOMM 2026 上 Meta 的这篇论文，展示的是支撑其 10 万+ GPU 训练集群的通信栈。随着 AI 集群规模的扩大，跨楼宇链路的时延是机架内的 30×；此外 MoE 带来突发的 All-to-All；以及硬件故障每天都会发生都给标准通信栈带来新的挑战，原本”轻量”的初始化和资源管理也成了瓶颈。</p>
+<p>工作主要分三层。通信库 CCLX 把 96K GPU 上的默认进程组初始化提速 11×，把通信占用的 HBM 降低近 2×；传输层的 DQPLB 按路径 BDP 限制在途数据，在 All-to-Allv 基准中把峰值缓冲占用降低约 75%–90%，吞吐接近峰值；运维层提供故障分析器、PerfProfiler 和分布式 CPU 仿真。</p>
+<span id="more"></span>
+
+<h1 id="连接-10-万-GPU：Meta-面向大规模-LLM-训练的通信栈"><a href="#连接-10-万-GPU：Meta-面向大规模-LLM-训练的通信栈" class="headerlink" title="连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈"></a>连接 10 万+ GPU：Meta 面向大规模 LLM 训练的通信栈</h1><blockquote>
+<p>本文依据 SIGCOMM ‘26 论文（14 页，DOI 10.1145&#x2F;3789240.3829152）。同一团队另有一篇 35 页的 arXiv 长文 <em>Collective Communication for 100k+ GPUs</em>（arXiv:2510.20171）。</p>
+</blockquote>
+<h2 id="1-网络规模扩大带来的问题"><a href="#1-网络规模扩大带来的问题" class="headerlink" title="1. 网络规模扩大带来的问题"></a>1. 网络规模扩大带来的问题</h2><p>论文把规模扩展的挑战归为四类：</p>
+<ul>
+<li><strong>基础设施约束</strong>：物理拓扑跨越多栋数据中心楼宇，引入高带宽时延积（BDP）链路和差异很大的 RTT，时延最多是机架内流量的 30×，标准传输协议难以在整个网络上保持稳定的吞吐。</li>
+<li><strong>新负载</strong>：MoE 依赖动态 token 路由，产生高度突发、不规则的 All-to-All，形成大量瞬时拥塞热点。</li>
+<li><strong>“轻量”操作的开销</strong>：依赖全局 barrier 或 O(N²) 拓扑发现的初始化，会把作业重启拖到几分钟甚至几小时；标准通信库还会占用约 10GB HBM（80GB H100 的 12.5%），直接与模型参数竞争内存。</li>
+<li><strong>运维可靠性</strong>：硬件故障从罕见异常变成日常，需要能在极端并发下工作的故障定位、性能监控和大规模仿真工具。</li>
+</ul>
+<h3 id="网络：多楼宇、多级-Clos"><a href="#网络：多楼宇、多级-Clos" class="headerlink" title="网络：多楼宇、多级 Clos"></a>网络：多楼宇、多级 Clos</h3><p>文章中将 Meta 最新一代的基于 RoCE 的网络把称为 the Cluster。每栋楼最多 8 个 AI Zone；每个 AI Zone 最多 288 个机架、每机架 16 块 GPU（约 4K GPU），一栋楼最多约 32K GPU，要到 100K+ 就必须跨楼宇。</p>
+<p>所有 GPU 连在同一张多级 Clos RoCE 网络上：RTSW（Rack Training Switch）连接机架内 GPU，CTSW（Cluster Training Switch）连接 AI Zone 内的机架，ATSW（Aggregator Training Switch）连接楼内的 CTSW，各楼的 ATSW 层之间是全连接网状结构。这种层级可以逐栋楼增量扩展；与上一代网络相比，跨 AI Zone 的收敛比从 1:7 降到 1:2.8，以支撑更大规模的多维并行。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/architecture.png" alt="图 1"></p>
+<p><em>图 1 多楼宇网络架构：楼内 AI Zone 经 ATSW 层汇聚，各楼 ATSW 层之间全互连；右侧展开一个 AI Zone 内的 RTSW–CTSW–ATSW 层级。</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>主机</th>
+<th>机架</th>
+<th>AI Zone</th>
+<th>楼宇</th>
+<th>集群</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GPU 数</td>
+<td>8</td>
+<td>16</td>
+<td>4K</td>
+<td>32K</td>
+<td>100K+</td>
+</tr>
+<tr>
+<td>时延</td>
+<td>很小</td>
+<td>1×</td>
+<td>7×</td>
+<td>15×</td>
+<td>30×</td>
+</tr>
+</tbody></table>
+<p><em>表 2 集群的规模与时延层级。</em></p>
+<p>跨机架（同 AI Zone）、跨 AI Zone、跨楼宇的 GPU 间时延分别是机架内的 7×、15×、30×，来自累积的交换时延和更长的线缆。RTT 增大是集群变大的直接结果，同一栋楼内也存在，并非多楼宇独有。由此得到贯穿全文的约束：集合通信注入的数据要足以填满路径的 BDP，又不能多到造成持续排队和拥塞。</p>
+<h3 id="负载：并行维度与通信模式"><a href="#负载：并行维度与通信模式" class="headerlink" title="负载：并行维度与通信模式"></a>负载：并行维度与通信模式</h3><p>三种趋势改变了训练负载：MoE 引入不规则的 All-to-All；上下文窗口从数千扩展到数百万 token，催生上下文并行（CP）；多模态融合文本与视觉 token，增加了同步和数据处理的复杂度。各并行维度依赖的集合操作如下：</p>
+<table>
+<thead>
+<tr>
+<th>并行</th>
+<th>主要通信</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HSDP（FSDP + DDP）</td>
+<td>FSDP 用 AllGather 收集参数、ReduceScatter 规约梯度；DDP 用 AllReduce</td>
+</tr>
+<tr>
+<td>PP</td>
+<td>点对点 Send&#x2F;Recv，零拷贝实现，配合 Tensor Pool 复用缓冲</td>
+</tr>
+<tr>
+<td>EP</td>
+<td>All-to-All，把 token 发往其专家所在的 rank</td>
+</tr>
+<tr>
+<td>CP</td>
+<td>AllGather 交换 K、V，Q 留在本地</td>
+</tr>
+<tr>
+<td>TP &#x2F; SP</td>
+<td>AllReduce、AllGather、ReduceScatter</td>
+</tr>
+</tbody></table>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/collectives.png" alt="图 2"></p>
+<p><em>图 2 一次大规模 LLM 预训练中的集合通信：(a) 各并行维度的集合类型构成；(b) 各类集合的消息大小分布；(c) 各类集合的进程组大小分布。</em></p>
+<p>据此，论文区分了两类规模需求。<strong>控制面</strong>操作（如初始化）需要全集群参与，频率低，但在这个规模下极易受串行化和网络争用影响，直接决定作业重启时间。<strong>数据面</strong>则被混合并行切成小得多的本地进程组：HSDP 这类最外层并行可跨数千 GPU，承担的是频率较低的权重和梯度同步；通信最密集的并行规模更小，例如 EP 的 All-to-Allv 在结构上局限于小进程组，论文称通常少于 8 个 GPU（图 2c 中 AlltoAllv 的组大小为 4 和 8）。</p>
+<h2 id="2-通信栈总体设计"><a href="#2-通信栈总体设计" class="headerlink" title="2. 通信栈总体设计"></a>2. 通信栈总体设计</h2><p>论文的问题与对应特性（表 1）：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>问题与需求</th>
+<th>特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>通信库</td>
+<td>训练开始前各主机之间的初始化</td>
+<td>可扩展初始化（§3.2）</td>
+</tr>
+<tr>
+<td>通信库</td>
+<td>以最少的 HBM、GPU 计算和网络资源维持高通信性能</td>
+<td>资源管理（§3.3）</td>
+</tr>
+<tr>
+<td>传输层</td>
+<td>多楼宇高时延链路上的高 BDP 与突发 All-to-All</td>
+<td>DQPLB（§4）</td>
+</tr>
+<tr>
+<td>运维工具</td>
+<td>快速定位故障硬件；在多维并行编程中快速调试用户错误</td>
+<td>故障定位（§5.1）</td>
+</tr>
+<tr>
+<td>运维工具</td>
+<td>详细的性能信息，快速找到瓶颈</td>
+<td>性能可观测性（§5.2）</td>
+</tr>
+<tr>
+<td>运维工具</td>
+<td>大规模测试代价过高</td>
+<td>分布式 CPU 仿真（§5.3）</td>
+</tr>
+</tbody></table>
+<h3 id="CCLX"><a href="#CCLX" class="headerlink" title="CCLX"></a>CCLX</h3><p>通信库是训练负载与 NIC 之间的抽象层，经 verbs API 与网卡交互：把 AllReduce 等集合翻译成 ring、tree 等逻辑拓扑，再拆成 GPU 之间的点对点数据事务，调度到 NIC 上创建的队列对（QP）上。</p>
+<p>Meta 在自身环境中直接使用 NCCL 遇到了若干问题，因此开发了 CCLX（NVIDIA 平台上称 NCCLX，AMD 平台上称 RCCLX）。CCLX 提供三种执行模式：主机发起 API、带 GPU 驻留元数据的主机发起 API、设备发起 API（仍在开发），每种都支持集合、点对点和远程内存访问（RMA）语义。其下是自研传输框架 CTran：主机驱动，设计原则是零拷贝、不占用 SM。</p>
+<p>集合调用进入 CCLX 后，被分派到基线 NCCL 路径或 CTran 路径；NCCL 中没有实现的定制操作（如 RMA、GPU 驻留集合）直接交给 CTran。用户也可以用环境变量显式选择底层实现。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/cclx.png" alt="图 3"></p>
+<p><em>图 3 CCLX 总览：PyTorch 之下三种 API 模式，数据路径分派到基线 NCCL（kernel 驱动、拷贝传输）或 CTran（主机驱动，拷贝或零拷贝且不占 SM 的传输）。</em></p>
+<h2 id="3-可扩展初始化"><a href="#3-可扩展初始化" class="headerlink" title="3. 可扩展初始化"></a>3. 可扩展初始化</h2><h3 id="系统重启预算"><a href="#系统重启预算" class="headerlink" title="系统重启预算"></a>系统重启预算</h3><p>故障率高、重启频繁，使初始化成为大规模训练的重要开销。论文的估算：要让平均有效训练时间达到 90%，每天只能承受 144 分钟停机；100K GPU 规模下预计每天约 49.15 次故障（按每 1000 台服务器每天 4 次重启计），摊到每次重启只有 175 秒。torchft 等技术可以缩小单机故障的影响范围，但初始化开销仍随规模快速恶化。</p>
+<p>作业重启时，通信随 PyTorch 进程组（PG）的创建而初始化。NCCL 通过 <code>ncclCommInitRankConfig</code> 引导通信组：每个 rank 初始化本地资源（CUDA 运行时、拓扑探测、代理服务器），建立用于对端发现的控制通道，并与所有 rank 交换本地状态。串行操作、网络争用和计算复杂度使初始化时间非线性增长，100K 规模下 NCCL 需要 4 分钟以上，超出了可容忍的重启时间。</p>
+<h3 id="三个关键设计"><a href="#三个关键设计" class="headerlink" title="三个关键设计"></a>三个关键设计</h3><p><strong>Eager 初始化。</strong> NCCL 的 “Lazy Mode” 让 PG 中每个 rank 在第一次集合操作时独立创建通信器：根 rank 经集中式键值存储广播 <code>ncclUniqueId</code>，各 rank 再调用 <code>ncclCommInitRankConfig</code>。规模变大后有两个问题：一是大模型中 PG 多达 10 个以上，重复独立的创建使键值存储负载过重；二是在已有 PG 中创建子 PG 时无法复用状态，每个新组都要冗余地交换一遍。CCLX 的 Eager 模式先让每个 rank 建立一个覆盖所有 rank 的全局通信器（default-PG），之后的子 PG 都从它派生或切分（split）。复用已建立的状态后，不再需要额外的 <code>ncclUniqueId</code> 交换，子 PG 的创建成本和总体初始化开销都显著下降。</p>
+<p><strong>异步 I&#x2F;O 引导。</strong> NCCL 在 rank 0 上启动 bootstrap server，各 rank 向它获取下一个 rank 的 IP 和端口，从而连成环。为避免超过 128 个 rank 时压垮 server，各 rank 按与 rank ID 成正比的时长（以毫秒计）错开连接请求。100K 规模下，最后一个 rank 约需等待 100 秒才能连上 bootstrap server；论文称这在实践中仍能让 bootstrap 在预算内完成。</p>
+<p><strong>延迟分配初始化资源。</strong> 基线 NCCL 在 <code>ncclCommInitRank</code> 中分配全部资源，可能阻塞应用。CCLX 把资源分配从初始化推迟到第一次集合调用，初始化只做最少的必要设置；首次调用时，算法相关的资源在后台异步分配，与模型加载、数据读取、kernel 计算等工作重叠，进一步缩短了到第一次集合的时间（time-to-first-collective）。</p>
+<p>此外还有几项优化：</p>
+<ul>
+<li>bootstrap 阶段用 AllGather 在通信器内交换控制数据：改为双向 AllGather，步数从 N−1 降到 N&#x2F;2；也评估了基于树的算法（O(log N) 对 O(N)）。</li>
+<li>把收集多种数据类型的 7 次 AllGather 合并为 4 次。</li>
+<li>拓扑计算的复杂度从 O(N²) 降为 O(N)。原文随后给出”48K rank 约 10 s、100K 规模约 100 s”的耗时，但没有说明对应优化前还是优化后。</li>
+<li>取消 unique ID 广播，并优化流水线并行的 P2P 通信器创建。</li>
+</ul>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/init-time.png" alt="图 4"></p>
+<p><em>图 4 默认进程组初始化时间：NCCL 2.21.5 与 CCLX 在 8K、32K、96K GPU 上的对比。</em></p>
+<p>8K GPU 时 NCCL 为 14.5 s、CCLX 为 3.97 s；32K 时为 55.71 s 对 11.89 s；96K 时为 265.0 s 对 24.0 s，提升 11×。单看默认进程组初始化，NCCL 在 96K 上的 265.0 s 已超过前面估算的 175 秒预算。</p>
+<h2 id="4-HBM-管理"><a href="#4-HBM-管理" class="headerlink" title="4. HBM 管理"></a>4. HBM 管理</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>稳态训练中，SM、内存和网络资源的过度占用会降低吞吐，极端时导致作业失败；多维并行下每个并行域可能各自实例化通信器，占用随通信器数量累积。HBM 通常是 LLM 预训练的主要瓶颈：可用 HBM 越多，batch 越大，超参数的探索范围也越宽，吞吐和最终模型质量都会提升。实际上预训练常因 OOM 失败，因为可用 HBM 远低于规格：H100 标称 80GB，扣除系统开销和框架预留后可能只剩约 60GB。</p>
+<p>NCCL 为峰值性能而优化，分配大量对应用不透明、也不与应用共享的内部 GPU 缓冲，且每个通信器各自分配。在 LLM 预训练实验中，10 多个并行组（各对应一个 NCCL 通信器）共占用约 10GB HBM（约为 80GB H100 的 12.5%）。论文把根源归为三个设计选择：</p>
+<ul>
+<li><strong>通信器资源急切分配。</strong> 初始化时按每个收发对端、每种协议（LL&#x2F;LL128&#x2F;SIMPLE）分配内部缓冲和 QP，通信器越多内存越膨胀，在以 All-to-All 为主的 MoE 负载中尤甚。算法相关资源（如 ring）在运行时分配，但训练通常只走其中一部分路径；NVLink 域内的通信器还会拿到更大的分配。问题在于 NCCL 初始化时不知道实际通信模式，而并行组执行的集合种类和消息大小区间其实由模型配置和规模决定。例如 FSDP 组通常只用 ring 做 AllGather 和 ReduceScatter，预分配 tree 资源并无必要。</li>
+<li><strong>通道过度供给。</strong> NCCL 用多通道提高数据搬运的并发度，每个通信器初始化时按最大通道数供给，每个通道持有独立资源。对主要执行小消息集合、不需要很多通道也能接近峰值的通信器，大部分通道资源很少被用到。</li>
+<li><strong>通道元数据对齐。</strong> 通道状态（FIFO 状态、对端连接信息等）放在 HBM 中，便于 kernel 低时延访问。状态本身很小，但受 CUDA 低层虚拟内存管理接口（cuMem API）的对齐约束，每个通道约占 2 MiB，加剧碎片和浪费。总元数据量随通信器的 rank 数增长，在 100K 规模下累计超过 1GB。</li>
+</ul>
+<h3 id="三项对策"><a href="#三项对策" class="headerlink" title="三项对策"></a>三项对策</h3><p><strong>通信器资源延迟分配。</strong> 只在某个算法真正被执行时，才分配它的算法资源和 CTran 对端连接资源。例如某通信器运行时只用 Tree 算法做小消息 AllReduce，CCLX 只在 1 个通道上分配 Tree 缓冲，而 NCCL 会在所有通道上分配、只用其中一部分。仅这一项（lazy connect）就在 LLM 预训练中减少约 2.2GB 内存。</p>
+<p><strong>通道延迟供给。</strong> 初始只分配最少的通道，运行时按需扩展。关键观察是，有些通信器在整个训练过程中只执行小消息集合，不需要多通道并发就能接近峰值带宽。它与上一项互补：上一项推迟所有通道上的算法资源，这一项干脆不为用不到的通道预分配资源。在默认 16 个通道的前提下，若 ring 算法只需 4 个通道，CCLX 不为其余 12 个通道分配资源，额外节省约 1.2GB。</p>
+<p><strong>通道元数据 slab 分配器。</strong> 把多个通信器的元数据打包进连续的 GPU 页，同时减少内部碎片和需要预留的页数。一个 2 MB 页可以容纳约 3000 个对端的元数据；没有 slab 分配时，同样的元数据会因碎片分散到多个页上。通信器在训练结束销毁时释放所有 slab 槽位，避免泄漏。这一项节省约 400MB。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/lazy-alloc.png" alt="图 5"></p>
+<p><em>图 5 延迟资源分配与延迟通道供给示例：只在用到的通道 0–3 上分配元数据和 Ring 缓冲，Tree 缓冲只分配在通道 0 上，P2P 缓冲和通道 4–15 都不分配。</em></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>每 GPU 节省的 HBM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>算法延迟连接（Lazy algorithm connect）</td>
+<td>1.44 GB</td>
+</tr>
+<tr>
+<td>CTran 延迟连接（CTran lazy connect）</td>
+<td>0.79 GB</td>
+</tr>
+<tr>
+<td>Slab 分配器</td>
+<td>0.39 GB</td>
+</tr>
+<tr>
+<td>延迟通道分配</td>
+<td>1.19 GB</td>
+</tr>
+</tbody></table>
+<p><em>表 3 64K GPU LLM 预训练中各特性的内存节省；每项为配置相近的单独实验。</em></p>
+<p>前两项合计即上文的约 2.2GB。综合这些优化，在大规模、10 多个通信器的场景下，GPU 内存占用降低近 2×，评估（表 3）和生产运行都是如此。借助延迟 QP 分配，每个 NIC 上的 RDMA QP 数降到 2000 以下，在 NIC 容量之内，不会导致性能下降。</p>
+<h2 id="5-传输层：DQPLB"><a href="#5-传输层：DQPLB" class="headerlink" title="5. 传输层：DQPLB"></a>5. 传输层：DQPLB</h2><h3 id="零拷贝带来突发"><a href="#零拷贝带来突发" class="headerlink" title="零拷贝带来突发"></a>零拷贝带来突发</h3><p>MoE 的通信呈 on-off 模式，小消息尤其明显，天然突发。这会推高缓冲占用；RTT 不同的流争用带宽和缓冲时，还会带来时延上升和公平性问题。</p>
+<p>时延管理是一种权衡。NCCL 的两阶段拷贝需要接收方先向发送方发 clear-to-send 控制消息，这一步在关键路径上。为降低控制消息时延，CCLX 实现了零拷贝集合，让 NIC 直接执行 RDMA，GPU 之间的交换只需要接收方向发送方发一条控制消息。代价是整条消息一次交给 NIC，发送变得突发。</p>
+<p>Meta 没有用 DCQCN 这类传统拥塞控制来限制交换机缓冲占用，因为在多样化的环境中很难调对参数；而是依靠三者组合：集合通信库中接收方驱动的流控、NIC 上限制在途数据量的粗粒度流控，以及吸收瞬时突发的深缓冲 spine 交换机。这并不完全有效：零拷贝减少了接收方反馈的机会，更可能一次投递大消息，导致缓冲过度堆积。评估也证实，单用零拷贝性能欠佳。相反，拷贝式通信受临时缓冲大小所限，天然把数据切成小块，相当于隐式流控。</p>
+<p>DQPLB（Dynamic Queue Pair Load Balancing）结合两者：保留零拷贝，内部把数据切成较小的消息段，并限制在途段数；在途数据量按连接、按拓扑配置，跨 DC 或跨 AI Zone 的链路可以用更高的上限来匹配其 BDP。论文称，配合 SIGCOMM ‘24 论文中的网络负载均衡改进，交换机缓冲堆积降低了一个数量级。</p>
+<h3 id="用三个参数匹配-BDP"><a href="#用三个参数匹配-BDP" class="headerlink" title="用三个参数匹配 BDP"></a>用三个参数匹配 BDP</h3><p>DQPLB 只用少量可配置参数控制网络中的数据量：每个目的端的 QP 数、段大小、未确认消息的最大数量。三者之积理想情况下应等于收发双方之间路径的 BDP。较小的段还能把数据在网络中铺开，避免一次性突发。</p>
+<p>参数按路径 RTT 和消息大小配置。连接分为四类：同机架、同 AI Zone 跨机架、同 DC 跨 AI Zone、跨 DC。距离近的连接 BDP 低，用保守设置；距离远的连接用更激进的配置，即更多数据 QP、更大的最大在途消息数。消息较小时，在途数据量也可以设得更激进。</p>
+<h3 id="多-QP-上的有序交付"><a href="#多-QP-上的有序交付" class="headerlink" title="多 QP 上的有序交付"></a>多 QP 上的有序交付</h3><p>DQPLB 使用一个控制 QP 和一个或多个数据 QP：控制 QP 在集合开始时交换内存地址，数据 QP 在 scale-out 网络上传输数据。消息按轮询分配到各数据 QP；某个数据 QP 的工作队列达到上限后暂停发送，直到在对应的完成队列（CQ）上收到完成队列元素（CQE），再继续投递工作队列元素（WQE）。于是争用较轻的 QP 发得更快，承担更多负载。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/dqplb.png" alt="图 7"></p>
+<p><em>图 7 DQPLB 设计：(a) 一个控制 QP 加多个数据 QP；(b) 消息在四个 QP 上轮询分布，纵向是数据 QP 总数，横向是每个 QP 的最大在途消息数，每格为一个最大段长的消息。</em></p>
+<p>多个 QP 会打乱到达顺序，DQPLB 用序号、立即数编码和乱序跟踪恢复顺序：</p>
+<ul>
+<li>发送方维护下一个待发序号，接收方维护下一个期望序号。</li>
+<li>发送用 <code>IBV_WR_RDMA_WRITE_WITH_IMM</code> 取代 <code>IBV_WR_RDMA_WRITE</code>，把控制信息编进 32 位立即数：第 0–23 位是消息序号，第 30 位表示走快速路径，第 31 位是多包消息最后一次写的通知标志。超过最大段长的消息拆成多个 WQE，各段分配连续序号，只有最后一段带通知位。</li>
+<li>接收方从立即数中取出序号和通知标志。序号超前于期望值的乱序包暂存在以序号为键的哈希表中，值记录是否带通知标志。滑动窗口持续检查期望序号是否到达；一旦到达，连同表中后续连续的包一起处理，对带通知位的包递增通知计数，并从表中删除。通知因此只在所有前序消息都到达后触发，即使数据分散在多个 QP 上乱序到达，也保持严格的顺序语义。</li>
+</ul>
+<p><strong>快速路径。</strong> 高频操作可以绕过多 QP 分发，直接在一个专用数据 QP 上发送；接收方直接递增接收序号并更新通知计数，不需要乱序跟踪。这降低了每次 RDMA 操作的 CPU 开销，适合包含多次中小规模 RDMA 操作的算法，例如推理。</p>
+<h3 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h3><p><strong>All-to-Allv，32&#x2F;64&#x2F;128 GPU。</strong> 这是网络压力最大的流量之一。基线是开启 NVLink 的 NCCL，DQPLB 则不使用 NVLink：一是实验时库中的 NVLink 支持尚不成熟；二是 DQPLB 针对网络拥塞，与快得多的主机内互连无关，去掉 NVLink 可以避免网络瓶颈被主机内互连掩盖或补偿。实验使用 400 Gbps NIC，底层模拟理想的包喷洒（perfect spray），DQPLB 配置为 1 个 QP、在途 128KB，以精细控制网络中的数据量。</p>
+<p>DQPLB 的总线带宽接近 50 GB&#x2F;s，保持在接近最大值的水平，而峰值缓冲只有基线的一小部分：32 GPU 时降低近 90%，128 GPU 时降低约 75%。基线在 32 GPU 上超过 50 GB&#x2F;s，来自主机内更快的 NVLink，因此两组带宽不宜直接对比。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/a2a-results.png" alt="图 8"></p>
+<p><em>图 8 All-to-Allv：(a) 总线带宽；(b) 缓冲水位。基线为带 NVLink 的 NCCL，DQPLB 不使用 NVLink。</em></p>
+<p><strong>AllGather，256 GPU。</strong> ring 实现，rail 方式、不用 NVLink。这个规模有代表性，因为实际训练把集群切成小得多的本地进程组（通常 32–256 GPU，MoE 的 All-to-Allv 尤其如此）。ring 没有 incast，但混合的 RTT 仍会在接收端造成瞬时突发。先用默认配置（512KB 段、16 个 QP）运行，再调优为 64KB 段，QP 数按范围设定：机架内 2 个，同 DC 跨机架 4 个，跨 DC 64 个。QP 数依据路径 BDP 选择，此处 BDP 完全由 RTT 决定，BDP 越大，QP 按比例越多。</p>
+<p>调优后峰值缓冲降低 72%，1GB 消息没有性能损失，8MB 消息的总线带宽提高 13%。缓冲收益比 All-to-Allv 略小，原因在跨 DC 流量：BDP 大的路径需要一定程度的突发，段大小也不能任意缩小；不过更小的段仍有一定的节奏控制（pacing）作用。8MB 上的提升，作者认为可能来自缓冲降低后的更低时延。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/allgather-results.png" alt="图 9"></p>
+<p><em>图 9 256 GPU AllGather 调优前后：(a) 8MB 与 1GB 消息的总线带宽；(b) 最大缓冲占用。</em></p>
+<h2 id="6-运维工具"><a href="#6-运维工具" class="headerlink" title="6. 运维工具"></a>6. 运维工具</h2><h3 id="Fault-Analyzer：从连锁停滞中找根因"><a href="#Fault-Analyzer：从连锁停滞中找根因" class="headerlink" title="Fault Analyzer：从连锁停滞中找根因"></a>Fault Analyzer：从连锁停滞中找根因</h3><p>LLM 训练同步执行，一台机器崩溃就可能让整个作业停滞或终止。生产中工程师常要花数小时甚至数天定位并隔离故障机器，期间还可能发生新的故障。Fault Analyzer 自动分析作业失败，实时定位故障机器。</p>
+<p>难点在于从大量并发的集合中找出根因。多维并行使集合之间形成复杂的依赖，一个集合挂起会连锁影响所有依赖它的集合；日志量大、机器多、算法复杂度高，穷举分析不可行。Fault Analyzer 在作业运行时增量构建集合间依赖图，删除已完成的集合、加入新调度的集合，持续监视没有未满足依赖的未完成集合，执行时间超过预设阈值即标为罪魁候选。</p>
+<p>依赖图基于两个假设：</p>
+<ol>
+<li>作业停滞足够久后，所有正常的集合都应已完成。</li>
+<li>已调度但未开始的集合，一定在直接或间接地等待同一节点上已开始但未完成的集合，即它依赖所有这样的集合。</li>
+</ol>
+<p>第二个假设是经验性的，但实践中很有效：未开始的集合可能与未完成的集合共享同一个 CUDA stream，与它有 CUDA event 或数据依赖，或者未完成的集合耗尽了关键硬件资源。</p>
+<p>算法对每个有超时集合的节点，先找出已启动 kernel 但未结束的集合，再让该节点上每个未启动的集合依赖它们，合并成全局有向无环图（DAG），没有出边的集合即为罪魁。例如节点 1 上集合 A 已开始未完成、B 已调度未开始，节点 2 上 B 未完成、C 未开始，则加边 B→A 和 C→B；A 没有出边，被判为罪魁。集合的调度、开始和完成状态来自 CCLX 中按集合粒度插桩的 CollTrace。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/fault-analyzer.png" alt="图 10"></p>
+<p><em>图 10 Fault Analyzer 架构：训练进程内的 CollTrace Server 记录集合与代理线程状态，Puller 周期性拉取，全局分析器构建依赖图、定位故障机器，结果写入数据库并通知作业调度器。</em></p>
+<p>对每个罪魁集合，按以下顺序找出负责的 rank，并把其所在节点标为故障：</p>
+<ol>
+<li>检查各 rank 的参数（操作类型、元素个数等），与同伴不一致或非法的 rank 标为故障。</li>
+<li>检查是否所有 rank 都已启动 kernel，未启动的节点标为故障。</li>
+<li>检查通信 rank 对之间抛出的错误；错误有多个时，选出参与失败通信对最多的 rank。</li>
+<li>以上都无异常也无报错时，按代理操作状态构建等待图。发送方把数据写入接收方 HBM 之前，接收方先经代理线程发送描述目的缓冲的控制消息，发送方再从自己的代理线程发起传输。据此建模两类依赖：发送方等待接收方的控制消息，接收方等待发送方的数据。没有出边的节点即候选故障节点。</li>
+</ol>
+<p>两个案例：</p>
+<ul>
+<li><strong>模型代码 bug。</strong> 一个 4K GPU 作业中约 500 个集合超时。Fault Analyzer 把根因定位到某个 TP 进程组的最后一个集合；kernel 状态显示只有一个 rank 没有启动对应的 kernel。开发者据此追溯到一个软件 bug，它让该 rank 在调度最后一个集合之前挂起。</li>
+<li><strong>硬件故障。</strong> 一个 8K GPU 作业反复重启，伴随数百个集合超时。罪魁集合是某个 DP 进程组的最后一个 AllReduce，但网络层跟踪没有显式错误。基于代理操作状态的等待图显示，一台主机停止向对端发送数据，最终确认是该主机上一块故障 NIC。</li>
+</ul>
+<h3 id="PerfProfiler：区分网络与非网络原因"><a href="#PerfProfiler：区分网络与非网络原因" class="headerlink" title="PerfProfiler：区分网络与非网络原因"></a>PerfProfiler：区分网络与非网络原因</h3><p>常规剖析工具缺少横跨负载层和通信层的上下文，难以隔离网络问题，也难以判断受影响的通信是否暴露在关键路径上。PerfProfiler 为低 CPU 开销和灵活采样而设计，开销可以忽略，能在整个训练过程中持续运行。它包括两个模块：</p>
+<ul>
+<li><strong>AlgoProfiler</strong> 在集合算法层收集时间戳，测量缓冲注册、控制消息同步、数据传输等阶段的时延，判断慢集合的瓶颈是内存注册（零拷贝集合特有的开销）、网络拥塞（数据传输变长），还是慢 rank（消息同步变长）。</li>
+<li><strong>SlowRankDetector</strong> 在 CTran 传输层监视各 rank 的网络效率：记录 WQE 发出和完成的时间戳得到单个 RDMA 包的时延，在滚动窗口内计算每个 rank 的总线带宽，报告低于阈值的慢对端连接。</li>
+</ul>
+<p>案例：某次训练在部分迭代中性能明显下降，症状是部分 rank 的流水线并行点对点通信变慢。第一步是确定原因是否在通信或网络。受影响迭代的采样显示，部分 rank 的同步时长长了 100×，而数据传输时长正常；沿这些 rank 追查，发现它们被一次缓慢的 I&#x2F;O 操作阻塞，属于”慢 rank”。</p>
+<h3 id="分布式-CPU-仿真"><a href="#分布式-CPU-仿真" class="headerlink" title="分布式 CPU 仿真"></a>分布式 CPU 仿真</h3><p>在 100K+ 全规模上测试通信栈改动代价过高：控制面回归可能让数万块 GPU 空转，而许多代价最高的故障只在极端并发和拓扑规模下出现。Meta 为此构建了分布式 CPU 仿真框架，在现有 CPU 集群上运行未经修改的通信库和 PyTorch Distributed 二进制，尽早验证控制面的正确性和扩展行为。</p>
+<p>GPU 通信库即便在初始化阶段也依赖 GPU 和 RDMA 的用户态栈，无法直接在 CPU 上运行。框架保留生产二进制，只替换依赖面：为 libcudart、libcuda、libnvidia-ml 和 libibverbs 提供可直接替换的实现，用 <code>LD_LIBRARY_PATH</code> 重定向解析，并用 <code>LD_PRELOAD</code> 加载一个小库来共享仿真器状态。应用、PyTorch 和通信库都不改动。</p>
+<p><img data-src="/images/SIGCOMM2026-100KGPUs/cpu-emulation.png" alt="图 11"></p>
+<p><em>图 11 GPU 通信栈与其 CPU 仿真：应用不变，libcuda 和 libibverbs 换成 mock 实现。</em></p>
+<p>它追求控制面保真，不追求数据面性能。仿真复现 CCLX 初始化和启动所用的 API 语义：设备枚举，稳定的 GPU 内存标识与句柄生命周期，拓扑与 P2P 能力查询，verbs 对象的创建与状态迁移，以及正确的错误传播与拆除。CUDA 分配以锁页主机内存承载；libibverbs 只仿真 CCLX 启动所需的子集（设备&#x2F;上下文发现、保护域、内存区域元数据、QP 对象和事件处理）。每台 CPU 主机呈现 8 个虚拟 GPU、每个虚拟设备一个 rank，在 12K 台 CPU 服务器上即可运行 96K rank 的实验。</p>
+<p>除了用于验证和建模前述可扩展初始化技术，它还暴露了几类在小规模下几乎看不到的控制面问题：</p>
+<ul>
+<li>超过 64K rank 后，bootstrap 的汇聚连接触及操作系统限制，例如临时端口压力、连接风暴下 accept 队列溢出；团队用该框架验证了能容忍突发的重试与退避。</li>
+<li>部分初始化路径的状态随对端数量意外增长（如急切的 QP 和元数据供给），在创建全局通信器时造成过高的内存增长，这直接促成了按需供给。</li>
+<li>初始化期间的遥测出现二次放大：每个 rank 发送逐对端的元数据，形成 O(N²) 的突发并压垮下游系统，促成了启动期间的聚合与限速。</li>
+</ul>
+<h2 id="7-部署与局限"><a href="#7-部署与局限" class="headerlink" title="7. 部署与局限"></a>7. 部署与局限</h2><p>The Cluster 位于单个 DC 区域，共 5 栋楼，分期建成，建成时约有 129,000 块 H100。主机为 Grand Teton，分三层托盘：CPU 托盘含 2 颗 CPU 和前端 NIC；交换托盘含 4 个 PCIe Gen5 交换机、NVMe 存储和 8 块 RDMA NIC；GPU 托盘含 8 块经 NVSwitch 全互连的 GPU。GPU 与 NIC 一一对应。自 2024 年末起，CCLX 及其工具支撑了该集群上所有最先进的 LLM 训练。</p>
+<p>论文列出的局限：</p>
+<ul>
+<li><strong>初始化。</strong> 全局状态交换在走向下一代区域级部署时有根本的扩展极限，后续可能需要分层初始化，或让每个 rank 只维护局部连接元数据的去中心化点对点发现。受开发复杂度和上线时间所限，当前网络没有探索这些架构。把去中心化初始化与 torchft 这类基于副本的恢复模型结合，是超过 100K GPU 的开放需求。</li>
+<li><strong>仿真。</strong> CPU 仿真只保证控制面保真，不模拟数据面执行。在 100K+ 生产规模上做忠实的端到端数据面仿真，仍是开放问题。</li>
+<li><strong>故障定位。</strong> 业界正转向把计算和通信交织在一起的融合 kernel，集合操作的边界变得模糊，而 CollTrace 恰恰依赖逐集合的执行状态来构建依赖图。作者认为未来需要探索 AI 辅助调试来补充或替代静态图模型。</li>
+<li><strong>生产消融。</strong> 大多数 CCLX 改进只在通信基准中验证过。在 10 万+ GPU 的生产环境中做全集群消融，资源、调度和成本上都不可行。各项特性先在小规模测试、由配置开关控制，打包在预定日期上线；预训练持续数周，期间多次从检查点暂停和恢复；出问题的特性可快速关闭，运行平稳的特性常为节省开销而关闭详细遥测。因此只能间接推断效果：快速初始化始终开启，保证每次中断后能在预算内重启；开启 DQPLB 后，所有集合都被计算掩盖。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>论文的核心结论是：到了 10 万卡规模，直接复用现有通信栈会在多楼宇的 RTT&#x2F;BDP、MoE 的突发和频繁的硬件故障面前失效，需要协同设计集合通信库、传输机制和运维可观测性。</p>
+<p>读下来有几点值得记住：</p>
+<ul>
+<li><strong>控制面与数据面的规模不同。</strong> 初始化是真正的全集群操作，而最密集的数据面通信集中在小进程组中。初始化的优化目标由重启预算给出：每天 144 分钟停机，摊到每次重启 175 秒。</li>
+<li><strong>HBM 浪费源于初始化时不知道通信模式。</strong> CCLX 的三项对策，要么把分配推迟到真正用到时，要么压缩元数据的对齐浪费。</li>
+<li><strong>流控放在通信库里做。</strong> DQPLB 不依赖 DCQCN 这类网络反馈，而是利用通信库对路径和消息的了解，按 BDP 设定 QP 数、段大小和在途消息数，把零拷贝的低控制时延与拷贝式的隐式流控结合起来。</li>
+<li><strong>故障定位靠区分根因与连锁停滞。</strong> 两条假设加一张集合间依赖图，就能从数百个超时集合中找到罪魁。</li>
+<li><strong>证据主要来自基准。</strong> 作者坦承多数改进缺少生产消融，生产效果只能间接推断。</li>
+</ul>
+<p>作者在结语中指出，Colossus 2、Rainier、Stargate、Hyperion 等多吉瓦级设施将容纳超过一百万块 GPU，互连从多楼宇走向区域级，通信栈需要继续演进。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Hongyi Zeng, Min Si, Pavan Balaji, et al. Connecting 100K+ GPUs: Building the Communication Stack for Large-Scale LLM Training. ACM SIGCOMM 2026. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3789240.3829152">https://doi.org/10.1145/3789240.3829152</a> （CC BY 4.0，图 1–5、图 7–11 裁自该文。）</li>
+<li>Min Si, Pavan Balaji, et al. Collective Communication for 100k+ GPUs. arXiv:2510.20171, 2025. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.20171">https://arxiv.org/abs/2510.20171</a></li>
+<li>Adithya Gangidi et al. RDMA over Ethernet for Distributed Training at Meta Scale. ACM SIGCOMM 2024. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3651890.3672233">https://doi.org/10.1145/3651890.3672233</a></li>
+<li>Saif Hasan. NCCL Fast Init - CPU Optimizations for NCCL Initialization Large Scale. <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nccl/pull/1789">https://github.com/NVIDIA/nccl/pull/1789</a></li>
+<li>Saif Hasan. NCCL Fast Init - Improve Bootstrap AllGather by 2x at large scale. <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nccl/pull/1791">https://github.com/NVIDIA/nccl/pull/1791</a></li>
+<li>PyTorch. torchft. <a target="_blank" rel="noopener" href="https://github.com/meta-pytorch/torchft">https://github.com/meta-pytorch/torchft</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
+              <a href="/tags/%E9%9B%86%E5%90%88%E9%80%9A%E4%BF%A1/" rel="tag"># 集合通信</a>
+              <a href="/tags/RoCE/" rel="tag"># RoCE</a>
+              <a href="/tags/CCLX/" rel="tag"># CCLX</a>
+              <a href="/tags/DQPLB/" rel="tag"># DQPLB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/28/SIGCOMM2026-TurboBus/" rel="prev" title="TurboBus：把空闲 PCIe 借给 GPU 内存卸载">
+                  <i class="fa fa-angle-left"></i> TurboBus：把空闲 PCIe 借给 GPU 内存卸载
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+<div class="knowledge-graph knowledge-graph-sidebar" hidden data-data-url="/graph/data.json">
+  <div class="knowledge-graph-header">
+    <h3 class="sidebar-graph-title"></h3>
+  </div>
+  <div class="knowledge-graph-outer knowledge-graph-outer-sidebar">
+    <div class="graph-container" data-mode="local" data-depth="1" role="img"></div>
+    <button type="button" class="graph-global-btn" aria-label="Open global graph">
+      <svg viewBox="0 0 55 55" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+          s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+          c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+          C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+          c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+          v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+          s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+          C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="graph-global-overlay" hidden>
+  <div class="graph-global-panel" role="dialog" aria-modal="true" aria-labelledby="graph-global-title">
+    <div class="graph-global-toolbar">
+      <h2 id="graph-global-title" class="graph-global-title"></h2>
+      <label class="graph-search">
+        <span class="sr-only"></span>
+        <input type="search" class="graph-search-input" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-tags" checked> <span data-i18n="tags"></span></label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-cats" checked> <span data-i18n="cats"></span></label>
+      <button type="button" class="graph-global-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="graph-container graph-container-global" data-mode="global" data-depth="-1" data-data-url="/graph/data.json" role="img"></div>
+    <div class="graph-zoom-btns">
+      <button type="button" class="graph-zoom-in" aria-label="+">+</button>
+      <button type="button" class="graph-zoom-out" aria-label="-">-</button>
+    </div>
+  </div>
+</div>
+<script src="/js/graph-view.js" defer></script>
+<img src="https://mapmyvisitors.com/map.png?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff" width="1" height="1" alt="" decoding="async" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;pointer-events:none">
+
+</body>
+</html>
