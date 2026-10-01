@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LeetCode Hot 100 二叉树专题 II，包括二叉搜索树中第 K 小的元素、二叉树的右视图、二叉树展开为链表、从前序与中序遍历序列构造二叉树、路径总和 III、二叉树的最近公共祖先与二叉树中的最大路径和。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithm-Hot100-二叉树-II">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="LeetCode Hot 100 二叉树专题 II，包括二叉搜索树中第 K 小的元素、二叉树的右视图、二叉树展开为链表、从前序与中序遍历序列构造二叉树、路径总和 III、二叉树的最近公共祖先与二叉树中的最大路径和。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-01T13:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-01T13:06:11.976Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Hot 100">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="二叉搜索树">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="前缀和">
+<meta property="article:tag" content="广度优先搜索">
+<meta property="article:tag" content="深度优先搜索">
+<meta property="article:tag" content="递归">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/","path":"2026/10/01/Algorithm-Hot100-二叉树-II/","title":"Algorithm-Hot100-二叉树-II"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithm-Hot100-二叉树-II | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<link rel="stylesheet" href="/css/graph-view.css">
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-graph"><a href="/graph/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>图谱</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E4%BA%8C%E5%8F%89%E6%A0%91-II"><span class="nav-number">1.</span> <span class="nav-text">Hot100 算法题思路汇总-二叉树 II</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">381</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/22/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-I/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-22</time>
+        <br>
+      Algorithm-Hot100-二叉树-I
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/22/Algorithm-Hot100-%E5%9B%BE%E8%AE%BA/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-22</time>
+        <br>
+      Algorithm-Hot100-图论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-17</time>
+        <br>
+      Algorithm-Hot100-链表-I
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/23/Algorithm-Hot100-%E5%9B%9E%E6%BA%AF/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-23</time>
+        <br>
+      Algorithm-Hot100-回溯
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/18/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-II/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-18</time>
+        <br>
+      Algorithm-Hot100-链表-II
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithm-Hot100-二叉树-II | 正在输入">
+      <meta itemprop="description" content="LeetCode Hot 100 二叉树专题 II，包括二叉搜索树中第 K 小的元素、二叉树的右视图、二叉树展开为链表、从前序与中序遍历序列构造二叉树、路径总和 III、二叉树的最近公共祖先与二叉树中的最大路径和。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithm-Hot100-二叉树-II
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-01 21:30:00 / 修改时间：21:06:11" itemprop="dateCreated datePublished" datetime="2026-10-01T21:30:00+08:00">2026-10-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">算法与数据结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/" itemprop="url" rel="index"><span itemprop="name">LeetCode Hot 100</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">LeetCode Hot 100 二叉树专题 II，包括二叉搜索树中第 K 小的元素、二叉树的右视图、二叉树展开为链表、从前序与中序遍历序列构造二叉树、路径总和 III、二叉树的最近公共祖先与二叉树中的最大路径和。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E4%BA%8C%E5%8F%89%E6%A0%91-ii">Hot100 算法题思路汇总-二叉树 II</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Hot100-算法题思路汇总-二叉树-II"><a href="#Hot100-算法题思路汇总-二叉树-II" class="headerlink" title="Hot100 算法题思路汇总-二叉树 II"></a>Hot100 算法题思路汇总-二叉树 II</h1><ol>
+<li>二叉搜索树中第 K 小的元素</li>
+</ol>
+<p>给定一棵二叉搜索树的根节点 <code>root</code> 和一个整数 <code>k</code>，返回树中第 <code>k</code> 小的节点值。<code>k</code> 从 1 开始计数。</p>
+<p>核心思路：二叉搜索树的中序遍历顺序就是节点值的升序。因此只要沿用迭代中序遍历，访问到第 <code>k</code> 个节点时即可返回，不必先收集全部节点再排序。</p>
+<p>迭代过程与普通中序遍历相同。先沿左指针不断向下并把经过的节点压栈；左子树走到底后弹出栈顶，这个节点就是下一个按升序出现的节点。每弹出一个节点就把 <code>k</code> 减 1，减到 0 时当前节点就是答案，随后转向它的右子树。外层循环仍然要同时检查当前节点和栈：当前节点为空时，栈里可能还有尚未访问的祖先。</p>
+<p>题目保证 <code>1 &lt;= k &lt;= 节点数</code>，所以遍历一定能在中途返回。</p>
+<p>时间复杂度：<code>O(h + k)</code>。访问到第 <code>k</code> 个节点后就可以停止；最坏情况下树高和 <code>k</code> 都达到 <code>O(n)</code>。空间复杂度：<code>O(h)</code>，来自显式栈。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">kthSmallest</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        stack&lt;TreeNode*&gt; stk;</span><br><span class="line">        TreeNode* cur = root;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (cur || !stk.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="keyword">while</span> (cur) &#123;</span><br><span class="line">                stk.<span class="built_in">push</span>(cur);</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cur = stk.<span class="built_in">top</span>();</span><br><span class="line">            stk.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="keyword">if</span> (--k == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> cur-&gt;val;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>二叉树的右视图</li>
+</ol>
+<p>给定一棵二叉树的根节点 <code>root</code>，返回从树的右侧看过去、从上到下能够看到的节点值。</p>
+<p>核心思路：每一层只有最右边的那个节点会露在右侧视野里。用队列做层序遍历，每轮开始时队列中保存的恰好是当前层的全部节点。先记下这一层的节点数 <code>size</code>，再从左到右处理这些节点，把最后一个节点的值记入答案。</p>
+<p>左右孩子按先左后右的顺序入队，因此同一层在队列中从左排到右，下标 <code>size - 1</code> 的节点就是这一层最靠右的节点。某一层的可见节点也可能是某个左孩子，只要它在该层队列里排在最后，同样会被记录。</p>
+<p>必须在遍历当前层之前固定 <code>size</code>。队列长度会随着孩子入队变化，如果用实时长度判断最后一个节点，下一层的节点会被算进当前层。</p>
+<p>时间复杂度：<code>O(n)</code>；除返回结果外，空间复杂度为 <code>O(w)</code>，其中 <code>w</code> 为二叉树的最大宽度。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">rightSideView</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res;</span><br><span class="line">        <span class="keyword">if</span> (!root) &#123;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;TreeNode*&gt; q;</span><br><span class="line">        q.<span class="built_in">push</span>(root);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="type">int</span> size = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(q.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">                TreeNode* cur = q.<span class="built_in">front</span>();</span><br><span class="line">                q.<span class="built_in">pop</span>();</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 当前层最后一个节点就是从右侧能看到的节点</span></span><br><span class="line">                <span class="keyword">if</span> (i == size - <span class="number">1</span>) &#123;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(cur-&gt;val);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (cur-&gt;left) &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(cur-&gt;left);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (cur-&gt;right) &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(cur-&gt;right);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>二叉树展开为链表</li>
+</ol>
+<p>给定一棵二叉树的根节点 <code>root</code>，把它原地展开成一条链表。展开后每个节点的左指针都为空，右指针指向链表中的下一个节点，节点顺序与这棵树的前序遍历相同。</p>
+<p>核心思路：前序遍历的顺序是“根节点—左子树—右子树”。如果当前节点有左子树，左子树前序序列的最后一个节点，就是从左孩子出发一直向右走到的那个节点。把原来的右子树接到这个节点后面，再把整棵左子树挪到右指针上，并清空左指针。当前节点的右链就已经按前序接好，接下来不断走向右指针，用同样的方式处理后面的节点。</p>
+<p>以这棵树为例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    1</span><br><span class="line">   / \</span><br><span class="line">  2   5</span><br><span class="line"> / \   \</span><br><span class="line">3   4   6</span><br></pre></td></tr></table></figure>
+
+<p>处理节点 1 时，左子树的最右节点是 4。把以 5 为根的右子树接到 4 的右边，再让 1 的右指针指向 2。接着处理节点 2，把 4 接到 3 的右边。最终链表是 <code>1 → 2 → 3 → 4 → 5 → 6</code>。</p>
+<p>整个过程只改写已有节点的指针，不递归，也不新建节点。</p>
+<p>时间复杂度：<code>O(n)</code>。每个节点作为当前节点只处理一次；寻找左子树最右节点时走过的右指针，在这段子树被接到右链上之后不会被再次搜索。空间复杂度：<code>O(1)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">flatten</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        TreeNode* cur = root;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (cur) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cur-&gt;left) &#123;</span><br><span class="line">                <span class="comment">// 左子树中一直向右走，到达前序序列的最后一个节点</span></span><br><span class="line">                TreeNode* prev = cur-&gt;left;</span><br><span class="line">                <span class="keyword">while</span> (prev-&gt;right) &#123;</span><br><span class="line">                    prev = prev-&gt;right;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                prev-&gt;right = cur-&gt;right;</span><br><span class="line">                cur-&gt;right = cur-&gt;left;</span><br><span class="line">                cur-&gt;left = <span class="literal">nullptr</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>从前序与中序遍历序列构造二叉树</li>
+</ol>
+<p>给定一棵二叉树的前序遍历 <code>preorder</code> 和中序遍历 <code>inorder</code>，构造这棵二叉树并返回根节点。树中的节点值互不相同。</p>
+<p>核心思路：前序遍历的第一个元素是根节点。在中序遍历中找到这个值，它左边的区间是左子树，右边的区间是右子树。两棵子树再用同一规则递归构造。</p>
+<p>先用哈希表记下每个值在中序数组中的下标，确定根节点位置时就不必再线性扫描。前序数组用下标 <code>pre</code> 从左向右消费，每次取出的元素都是当前子树的根。前序遍历在根节点之后先给出整棵左子树，所以必须先递归构造左子树，再构造右子树，<code>pre</code> 才会落在右子树的第一个节点上。</p>
+<p>递归区间是中序数组上的闭区间 <code>[left, right]</code>。<code>left &gt; right</code> 表示区间为空，返回空节点。</p>
+<p>时间复杂度：<code>O(n)</code>。哈希表和新建的树节点占用 <code>O(n)</code> 空间，递归调用栈的空间为 <code>O(h)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">buildTree</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; preorder, vector&lt;<span class="type">int</span>&gt;&amp; inorder)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; <span class="type">m_t</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(inorder.<span class="built_in">size</span>()); i++) &#123;</span><br><span class="line">            <span class="type">m_t</span>[inorder[i]] = i;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> pre = <span class="number">0</span>;</span><br><span class="line">        function&lt;TreeNode*(<span class="type">int</span>, <span class="type">int</span>)&gt; build = [&amp;](<span class="type">int</span> left, <span class="type">int</span> right) -&gt; TreeNode* &#123;</span><br><span class="line">            <span class="keyword">if</span> (left &gt; right) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> root_val = preorder[pre++];</span><br><span class="line">            TreeNode* root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(root_val);</span><br><span class="line">            <span class="type">int</span> mid = <span class="type">m_t</span>[root_val];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 前序先给出左子树，必须先构造左子树</span></span><br><span class="line">            root-&gt;left = <span class="built_in">build</span>(left, mid - <span class="number">1</span>);</span><br><span class="line">            root-&gt;right = <span class="built_in">build</span>(mid + <span class="number">1</span>, right);</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">build</span>(<span class="number">0</span>, <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(preorder.<span class="built_in">size</span>()) - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>路径总和 III</li>
+</ol>
+<p>给定一棵二叉树的根节点 <code>root</code> 和一个整数 <code>targetSum</code>，统计节点值之和等于 <code>targetSum</code> 的向下路径数量。路径必须从父节点走向子节点，起点不必是根，终点也不必是叶子。</p>
+<p>核心思路：维护从根到当前节点的前缀和 <code>curSum</code>。以当前节点结尾、和恰好为 <code>targetSum</code> 的路径，对应前缀和等于 <code>curSum - targetSum</code> 的那些起点。哈希表记录当前根到节点这条路径上每个前缀和出现的次数，查到几次就累加几条路径。这和数组里统计“和为 K 的子数组”是同一种前缀和计数。</p>
+<p><code>prefix[0] = 1</code> 表示空路径的前缀和。这样从根节点出发的路径也能被统计到。进入一个节点时，先用 <code>curSum - targetSum</code> 查询，再把 <code>curSum</code> 写入哈希表。如果先写入，当 <code>targetSum</code> 为 0 时，当前前缀和会匹配到刚刚写入的自己，多计一条并不存在的路径。只由当前节点构成的合法路径仍然可以计上，因为它对应的是写入之前就已经存在的前缀和。</p>
+<p>左右子树共用这一张表。从左子树返回后，要把当前前缀和的计数减回去。否则左子树上的前缀和会留在表里，右子树会把不属于自己路径的起点也算进去。</p>
+<p>节点值可以达到 <code>10^9</code>，路径和用 <code>long long</code> 累加。回溯时只把计数减回 0，键仍留在表中；之后即使查到这个键，加上去的次数也是 0。</p>
+<p>时间复杂度：<code>O(n)</code>；空间复杂度：<code>O(n)</code>，来自哈希表和递归调用栈。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">pathSum</span><span class="params">(TreeNode* root, <span class="type">int</span> targetSum)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">long</span> <span class="type">long</span>, <span class="type">int</span>&gt; prefix;</span><br><span class="line">        prefix[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(root, <span class="number">0</span>, targetSum, prefix);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(TreeNode* root, <span class="type">long</span> <span class="type">long</span> cur_sum, <span class="type">int</span> target, unordered_map&lt;<span class="type">long</span> <span class="type">long</span>, <span class="type">int</span>&gt;&amp; prefix)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!root) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        cur_sum += root-&gt;val;</span><br><span class="line">        <span class="comment">// 先查询再写入，避免 target 为 0 时把当前前缀和多计一次</span></span><br><span class="line">        <span class="keyword">if</span> (prefix.<span class="built_in">count</span>(cur_sum - target)) &#123;</span><br><span class="line">            res += prefix[cur_sum - target];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        prefix[cur_sum]++;</span><br><span class="line">        <span class="built_in">dfs</span>(root-&gt;left, cur_sum, target, prefix);</span><br><span class="line">        <span class="built_in">dfs</span>(root-&gt;right, cur_sum, target, prefix);</span><br><span class="line">        prefix[cur_sum]--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>二叉树的最近公共祖先</li>
+</ol>
+<p>给定一棵二叉树的根节点 <code>root</code>，以及树中的两个节点 <code>p</code> 和 <code>q</code>，返回它们的最近公共祖先。最近公共祖先是同时把 <code>p</code> 和 <code>q</code> 当作后代的最低节点，一个节点可以是自己的后代。</p>
+<p>核心思路：递归函数返回“当前子树中 <code>p</code> 和 <code>q</code> 的最近公共祖先”。子树里只出现其中一个节点时，返回那个节点；两个都没有时，返回空。信息从左右子树返回后再决定当前节点的答案，所以这是一次后序遍历。</p>
+<p>当前节点为空，或者当前节点就是 <code>p</code> 或 <code>q</code> 时，直接返回当前节点。后一种情况也覆盖了“一个节点是另一个节点的祖先”：祖先会立刻把自己返回，另一侧递归得到空，最终结果就是这个祖先。</p>
+<p>左右两侧都返回非空时，<code>p</code> 和 <code>q</code> 分别位于两棵子树，当前节点就是最近公共祖先。只有一侧非空时，答案已经在那一侧得到，把该侧的返回值继续向上传。</p>
+<p>题目保证 <code>p</code> 和 <code>q</code> 都在树中，因此某一侧返回非空时，不需要再去另一侧确认目标是否存在。</p>
+<p>时间复杂度：<code>O(n)</code>；空间复杂度：<code>O(h)</code>，来自递归调用栈。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">lowestCommonAncestor</span><span class="params">(TreeNode* root, TreeNode* p, TreeNode* q)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!root || root == p || root == q) &#123;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        TreeNode* left = <span class="built_in">lowestCommonAncestor</span>(root-&gt;left, p, q);</span><br><span class="line">        TreeNode* right = <span class="built_in">lowestCommonAncestor</span>(root-&gt;right, p, q);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (left &amp;&amp; right) &#123;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> left ? left : right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>二叉树中的最大路径和</li>
+</ol>
+<p>二叉树中的一条路径由相邻节点组成，每个节点最多出现一次。路径不必经过根节点，也不必起止于叶子。路径和是路径上所有节点值之和。给定根节点 <code>root</code>，返回任意一条非空路径的最大路径和。</p>
+<p>核心思路：对每个节点要分开两个量。经过该节点、同时向左右延伸的路径和是答案的候选，但它不能再交给父节点，因为父节点只能再连一条边。能够返回给父节点的，是从当前节点出发、只选择左右子树中较大一侧的那条链。</p>
+<p>空节点的贡献是 0。某一侧的最大贡献如果是负数，接上它只会让路径和变小，用 <code>max(0, ...)</code> 丢掉这一侧。全局变量 <code>res</code> 记录所有节点处 <code>左贡献 + 节点值 + 右贡献</code> 的最大值。</p>
+<p><code>res</code> 初始化为 <code>INT_MIN</code>。节点值可以是负数，最大路径和也可能是负数。此时左右贡献都会变成 0，<code>res</code> 更新为节点自身的值，只包含这一个节点的路径仍然合法。</p>
+<p>递归结构和求二叉树直径相同：在当前节点结算一条完整路径，向上只返回一条链。直径累加的是深度，这里累加的是节点值。</p>
+<p>时间复杂度：<code>O(n)</code>；空间复杂度：<code>O(h)</code>，来自递归调用栈。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> res = INT_MIN;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxPathSum</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">maxPathSum_sub</span>(root);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxPathSum_sub</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!root) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 负贡献的一侧不能提高路径和</span></span><br><span class="line">        <span class="type">int</span> left = <span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">maxPathSum_sub</span>(root-&gt;left));</span><br><span class="line">        <span class="type">int</span> right = <span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">maxPathSum_sub</span>(root-&gt;right));</span><br><span class="line"></span><br><span class="line">        res = <span class="built_in">max</span>(res, left + root-&gt;val + right);</span><br><span class="line">        <span class="comment">// 返回给父节点时只能沿一条链向上延伸</span></span><br><span class="line">        <span class="keyword">return</span> root-&gt;val + <span class="built_in">max</span>(left, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/LeetCode/" rel="tag"># LeetCode</a>
+              <a href="/tags/Hot-100/" rel="tag"># Hot 100</a>
+              <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag"># 二叉树</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/" rel="tag"># 深度优先搜索</a>
+              <a href="/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/" rel="tag"># 广度优先搜索</a>
+              <a href="/tags/%E9%80%92%E5%BD%92/" rel="tag"># 递归</a>
+              <a href="/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" rel="tag"># 二叉搜索树</a>
+              <a href="/tags/%E5%89%8D%E7%BC%80%E5%92%8C/" rel="tag"># 前缀和</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/29/Megafly-A-Topology-for-Exascale-Systems/" rel="prev" title="Megafly：面向 E 级系统的三跳间接拓扑">
+                  <i class="fa fa-angle-left"></i> Megafly：面向 E 级系统的三跳间接拓扑
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+<div class="knowledge-graph knowledge-graph-sidebar" hidden data-data-url="/graph/data.json">
+  <div class="knowledge-graph-header">
+    <h3 class="sidebar-graph-title"></h3>
+  </div>
+  <div class="knowledge-graph-outer knowledge-graph-outer-sidebar">
+    <div class="graph-container" data-mode="local" data-depth="1" role="img"></div>
+    <button type="button" class="graph-global-btn" aria-label="Open global graph">
+      <svg viewBox="0 0 55 55" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+          s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+          c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+          C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+          c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+          v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+          s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+          C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="graph-global-overlay" hidden>
+  <div class="graph-global-panel" role="dialog" aria-modal="true" aria-labelledby="graph-global-title">
+    <div class="graph-global-toolbar">
+      <h2 id="graph-global-title" class="graph-global-title"></h2>
+      <label class="graph-search">
+        <span class="sr-only"></span>
+        <input type="search" class="graph-search-input" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-tags" checked> <span data-i18n="tags"></span></label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-cats" checked> <span data-i18n="cats"></span></label>
+      <button type="button" class="graph-global-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="graph-container graph-container-global" data-mode="global" data-depth="-1" data-data-url="/graph/data.json" role="img"></div>
+    <div class="graph-zoom-btns">
+      <button type="button" class="graph-zoom-in" aria-label="+">+</button>
+      <button type="button" class="graph-zoom-out" aria-label="-">-</button>
+    </div>
+  </div>
+</div>
+<script src="/js/graph-view.js" defer></script>
+<img src="https://mapmyvisitors.com/map.png?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff" width="1" height="1" alt="" decoding="async" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;pointer-events:none">
+
+</body>
+</html>
