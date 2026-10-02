@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LeetCode Hot 100 二分查找专题，包括搜索插入位置、搜索二维矩阵、查找元素的第一个和最后一个位置、搜索旋转排序数组、寻找旋转排序数组中的最小值与两个正序数组的中位数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithm-Hot100-二分查找">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="LeetCode Hot 100 二分查找专题，包括搜索插入位置、搜索二维矩阵、查找元素的第一个和最后一个位置、搜索旋转排序数组、寻找旋转排序数组中的最小值与两个正序数组的中位数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-02T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-02T06:23:36.812Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Hot 100">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="矩阵">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/","path":"2026/10/02/Algorithm-Hot100-二分查找/","title":"Algorithm-Hot100-二分查找"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithm-Hot100-二分查找 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<link rel="stylesheet" href="/css/graph-view.css">
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-graph"><a href="/graph/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>图谱</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">1.</span> <span class="nav-text">Hot100 算法题思路汇总-二分查找</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">381</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/17/Algorithm-Hot100-%E7%9F%A9%E9%98%B5/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-17</time>
+        <br>
+      Algorithm-Hot100-矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/07/14/Algorithm-Hot100-%E6%99%AE%E9%80%9A%E6%95%B0%E7%BB%84/" rel="bookmark">
+        <time class="popular-posts-time">2026-07-14</time>
+        <br>
+      Algorithm-Hot100-普通数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/03/Algorithm-Hot100-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3-%E5%AD%90%E4%B8%B2-%E6%95%B0%E7%BB%84/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-03</time>
+        <br>
+      Algorithm-Hot100-滑动窗口\子串\数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/02/Algorithm-Hot100/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-02</time>
+        <br>
+      Algorithm-Hot100-哈希
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-01</time>
+        <br>
+      Algorithm-Hot100-二叉树-II
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithm-Hot100-二分查找 | 正在输入">
+      <meta itemprop="description" content="LeetCode Hot 100 二分查找专题，包括搜索插入位置、搜索二维矩阵、查找元素的第一个和最后一个位置、搜索旋转排序数组、寻找旋转排序数组中的最小值与两个正序数组的中位数。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithm-Hot100-二分查找
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-02 15:00:00 / 修改时间：14:23:36" itemprop="dateCreated datePublished" datetime="2026-10-02T15:00:00+08:00">2026-10-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">算法与数据结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/" itemprop="url" rel="index"><span itemprop="name">LeetCode Hot 100</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">LeetCode Hot 100 二分查找专题，包括搜索插入位置、搜索二维矩阵、查找元素的第一个和最后一个位置、搜索旋转排序数组、寻找旋转排序数组中的最小值与两个正序数组的中位数。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE">Hot100 算法题思路汇总-二分查找</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Hot100-算法题思路汇总-二分查找"><a href="#Hot100-算法题思路汇总-二分查找" class="headerlink" title="Hot100 算法题思路汇总-二分查找"></a>Hot100 算法题思路汇总-二分查找</h1><ol>
+<li>搜索插入位置</li>
+</ol>
+<p>给定一个升序且元素互不相同的数组 <code>nums</code> 和一个目标值 <code>target</code>，返回 <code>target</code> 在数组中的下标。如果 <code>target</code> 不存在，返回它按升序插入后应处的位置。</p>
+<p>核心思路：在半开区间 <code>[left, right)</code> 上查找第一个大于等于 <code>target</code> 的位置。初始区间是 <code>[0, n)</code>。取中点后只比较一次：</p>
+<ul>
+<li><code>nums[mid] &lt; target</code>：<code>mid</code> 以及它左侧都小于目标，插入点只能在 <code>mid</code> 右边，令 <code>left = mid + 1</code>。</li>
+<li>否则 <code>nums[mid] &gt;= target</code>：<code>mid</code> 仍可能是答案，令 <code>right = mid</code>，把 <code>mid</code> 留在区间内。</li>
+</ul>
+<p>循环条件是 <code>left &lt; right</code>。结束时 <code>left == right</code>，这个下标就是第一个大于等于 <code>target</code> 的位置，也就是插入位置。<code>target</code> 大于全部元素时，<code>left</code> 会停在 <code>n</code>，表示插到数组末尾。</p>
+<p>时间复杂度：<code>O(log n)</code>；空间复杂度：<code>O(1)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">searchInsert</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> right = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums.<span class="built_in">size</span>()); <span class="comment">// 半开区间 [left, right)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = mid;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>搜索二维矩阵</li>
+</ol>
+<p>给定一个 <code>m</code> 行 <code>n</code> 列的矩阵和一个目标值 <code>target</code>。矩阵每行从左到右递增，并且每一行的第一个数都大于上一行的最后一个数。判断 <code>target</code> 是否在矩阵中。</p>
+<p>核心思路：把矩阵按行展开，得到一个长度为 <code>m * n</code> 的升序序列。展开后的下标 <code>mid</code> 对应矩阵中的 <code>matrix[mid / n][mid % n]</code>。之后仍用上一题的半开区间，查找第一个大于等于 <code>target</code> 的位置。</p>
+<p>循环结束时还要确认两件事：下标没有落到 <code>m * n</code>，并且该位置的值确实等于 <code>target</code>。只找到“第一个大于等于 <code>target</code> 的位置”还不能说明目标存在。</p>
+<p>时间复杂度：<code>O(log(mn))</code>；空间复杂度：<code>O(1)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">searchMatrix</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; matrix, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> m = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(matrix.<span class="built_in">size</span>());</span><br><span class="line">        <span class="type">int</span> n = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(matrix[<span class="number">0</span>].<span class="built_in">size</span>());</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> right = m * n;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="type">int</span> val = matrix[mid / n][mid % n];</span><br><span class="line">            <span class="keyword">if</span> (val &lt; target) &#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = mid;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> left &lt; m * n &amp;&amp; matrix[left / n][left % n] == target;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在排序数组中查找元素的第一个和最后一个位置</li>
+</ol>
+<p>给定一个非降序数组 <code>nums</code> 和一个目标值 <code>target</code>，返回 <code>target</code> 在数组中第一次和最后一次出现的下标。不存在时返回 <code>[-1, -1]</code>。</p>
+<p>核心思路：把“找等于 <code>target</code> 的区间”拆成两次“找第一个大于等于某个值的位置”。记 <code>lower(x)</code> 为第一个大于等于 <code>x</code> 的下标，实现和搜索插入位置相同。</p>
+<p><code>lower(target)</code> 是 <code>target</code> 的起点。因为数组元素都是整数，<code>lower(target + 1) - 1</code> 是最后一个小于 <code>target + 1</code> 的位置，也就是 <code>target</code> 的终点。起点处的值不等于 <code>target</code>，或者起点已经落到数组末尾时，说明 <code>target</code> 不存在。</p>
+<p>元素范围在 <code>[-10^9, 10^9]</code> 内，<code>target + 1</code> 不会溢出 <code>int</code>。</p>
+<p>时间复杂度：<code>O(log n)</code>；空间复杂度：<code>O(1)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">searchRange</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> lower = [&amp;](<span class="type">int</span> x) &#123;</span><br><span class="line">            <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">            <span class="type">int</span> right = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">                <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">if</span> (nums[mid] &lt; x) &#123;</span><br><span class="line">                    left = mid + <span class="number">1</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    right = mid;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> left;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> L = <span class="built_in">lower</span>(target);</span><br><span class="line">        <span class="type">int</span> R = <span class="built_in">lower</span>(target + <span class="number">1</span>) - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (L == <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums.<span class="built_in">size</span>()) || nums[L] != target) &#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="number">-1</span>, <span class="number">-1</span>&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> &#123;L, R&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>搜索旋转排序数组</li>
+</ol>
+<p>一个升序且元素互不相同的数组，在某个未知下标处被旋转了一次。例如 <code>[0,1,2,4,5,6,7]</code> 可能变成 <code>[4,5,6,7,0,1,2]</code>。给定旋转后的数组和目标值 <code>target</code>，返回它的下标，不存在时返回 <code>-1</code>。</p>
+<p>核心思路：旋转一次后，数组被分成两段各自有序的区间，后一段的元素都小于前一段。在当前半开区间 <code>[left, right)</code> 中取 <code>mid</code>，两侧至少有一侧仍然连续有序：</p>
+<ul>
+<li><code>nums[left] &lt;= nums[mid]</code> 时，<code>[left, mid]</code> 有序。</li>
+<li>否则旋转点落在左半边，<code>[mid, right)</code> 有序。</li>
+</ul>
+<p>有序的一侧可以直接判断 <code>target</code> 是否落在其中。左半边有序时，范围是 <code>nums[left] &lt;= target &lt; nums[mid]</code>，满足则令 <code>right = mid</code>。右半边有序时，范围是 <code>nums[mid] &lt; target &lt;= nums[right - 1]</code>，满足则令 <code>left = mid + 1</code>。两种情况都不满足时，答案在另一侧。这里的 <code>nums[right - 1]</code> 是当前窗口的最后一个元素，不是整个数组的最后一个元素。</p>
+<p>元素互不相同，<code>nums[left] &lt;= nums[mid]</code> 中的等号只在 <code>left == mid</code>、区间只剩一个元素时出现。若这个元素还不是目标，<code>left</code> 会变成 <code>mid + 1</code>，区间继续收缩。</p>
+<p>时间复杂度：<code>O(log n)</code>；空间复杂度：<code>O(1)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> right = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (nums[mid] == target) &#123;</span><br><span class="line">                <span class="keyword">return</span> mid;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (nums[left] &lt;= nums[mid]) &#123; <span class="comment">// [left, mid] 有序</span></span><br><span class="line">                <span class="keyword">if</span> (nums[left] &lt;= target &amp;&amp; target &lt; nums[mid]) &#123;</span><br><span class="line">                    right = mid;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    left = mid + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; <span class="comment">// [mid, right) 有序</span></span><br><span class="line">                <span class="keyword">if</span> (nums[mid] &lt; target &amp;&amp; target &lt;= nums[right - <span class="number">1</span>]) &#123;</span><br><span class="line">                    left = mid + <span class="number">1</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    right = mid;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>寻找旋转排序数组中的最小值</li>
+</ol>
+<p>一个元素互不相同的升序数组被旋转了若干次，返回其中的最小元素。旋转整数组次数时，数组会回到原来的顺序。</p>
+<p>核心思路：最小值是两段有序区间的分界。它左侧的元素都大于原数组的最后一个元素，它自己和右侧的元素都小于等于最后一个元素。例如 <code>[4,5,6,7,0,1,2]</code> 的末尾是 <code>2</code>，大于 <code>2</code> 的 <code>4,5,6,7</code> 全部位于最小值左边。</p>
+<p>因此每次把 <code>nums[mid]</code> 和整个数组的最后一个元素 <code>nums.back()</code> 比较，比较对象不随窗口变化：</p>
+<ul>
+<li><code>nums[mid] &gt; nums.back()</code>：<code>mid</code> 还在左段，最小值在它右侧，令 <code>left = mid + 1</code>。</li>
+<li>否则 <code>mid</code> 已经落在包含最小值的右段，令 <code>right = mid</code>，把 <code>mid</code> 保留在区间里。</li>
+</ul>
+<p>数组没有发生实际旋转时，任何元素都不大于末尾元素，区间一直向左收缩，最后停在下标 <code>0</code>。半开区间结束时 <code>left</code> 就是最小值的下标，不会走到 <code>n</code>。</p>
+<p>时间复杂度：<code>O(log n)</code>；空间复杂度：<code>O(1)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findMin</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> right = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (nums[mid] &gt; nums.<span class="built_in">back</span>()) &#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = mid;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> nums[left];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>寻找两个正序数组的中位数</li>
+</ol>
+<p>给定两个升序数组 <code>nums1</code> 和 <code>nums2</code>，返回它们合并后的中位数。总元素个数至少为 1，算法需要达到 <code>O(log(m + n))</code>。</p>
+<p>核心思路：在较短的数组上二分切割位置。先把两个数组划分成左右两半，让左半边的元素个数是 <code>half = (m + n + 1) / 2</code>。总长度为奇数时，左半边恰好多一个元素，中位数就是左半边的最大值。</p>
+<p>设从 <code>nums1</code> 取 <code>i</code> 个元素进入左半边，那么从 <code>nums2</code> 取 <code>j = half - i</code> 个。记四条边界为：</p>
+<ul>
+<li><code>aLeft = nums1[i - 1]</code>，<code>aRight = nums1[i]</code></li>
+<li><code>bLeft = nums2[j - 1]</code>，<code>bRight = nums2[j]</code></li>
+</ul>
+<p>切割合法，当且仅当左半边的每个值都不大于右半边，也就是 <code>aLeft &lt;= bRight</code> 并且 <code>bLeft &lt;= aRight</code>。某一侧没有元素时，用 <code>INT_MIN</code> 或 <code>INT_MAX</code> 充当哨兵。</p>
+<p><code>aLeft &gt; bRight</code> 说明 <code>nums1</code> 放入左半边的元素过多，切割点向左移动；否则是 <code>nums2</code> 的左端过大，切割点向右移动。<code>i</code> 可以取 <code>0</code> 到 <code>m</code>，表示一个元素都不取或全部取走，所以这里使用闭区间 <code>[0, m]</code>，收缩时写成 <code>right = i - 1</code> 或 <code>left = i + 1</code>。</p>
+<p>找到合法切割后，奇数长度返回 <code>max(aLeft, bLeft)</code>；偶数长度返回左半边最大值与右半边最小值的平均数。平均数要除以 <code>2.0</code>，否则 <code>1</code> 和 <code>2</code> 的平均数会变成整数 <code>1</code>。</p>
+<p>先保证在较短的数组上二分，时间复杂度是 <code>O(log min(m, n))</code>，空间复杂度是 <code>O(1)</code>。元素范围在 <code>[-10^6, 10^6]</code> 内，两个真实边界相加不会超出 <code>int</code>；左半边至少有一个元素，两个哨兵也不会同时被当成中位数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (nums<span class="number">1.</span><span class="built_in">size</span>() &gt; nums<span class="number">2.</span><span class="built_in">size</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">findMedianSortedArrays</span>(nums2, nums1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> m = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums<span class="number">1.</span><span class="built_in">size</span>());</span><br><span class="line">        <span class="type">int</span> n = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(nums<span class="number">2.</span><span class="built_in">size</span>());</span><br><span class="line">        <span class="type">int</span> half = (m + n + <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> right = m;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="type">int</span> i = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="type">int</span> j = half - i;</span><br><span class="line">            <span class="type">int</span> aLeft = (i == <span class="number">0</span>) ? INT_MIN : nums1[i - <span class="number">1</span>];</span><br><span class="line">            <span class="type">int</span> aRight = (i == m) ? INT_MAX : nums1[i];</span><br><span class="line">            <span class="type">int</span> bLeft = (j == <span class="number">0</span>) ? INT_MIN : nums2[j - <span class="number">1</span>];</span><br><span class="line">            <span class="type">int</span> bRight = (j == n) ? INT_MAX : nums2[j];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (aLeft &lt;= bRight &amp;&amp; bLeft &lt;= aRight) &#123;</span><br><span class="line">                <span class="keyword">if</span> ((m + n) % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="built_in">max</span>(aLeft, bLeft);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> (<span class="built_in">max</span>(aLeft, bLeft) + <span class="built_in">min</span>(aRight, bRight)) / <span class="number">2.0</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (aLeft &gt; bRight) &#123;</span><br><span class="line">                right = i - <span class="number">1</span>; <span class="comment">// nums1 左侧过大，切割点左移</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                left = i + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/LeetCode/" rel="tag"># LeetCode</a>
+              <a href="/tags/Hot-100/" rel="tag"># Hot 100</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag"># 矩阵</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/" rel="prev" title="Algorithm-Hot100-二叉树-II">
+                  <i class="fa fa-angle-left"></i> Algorithm-Hot100-二叉树-II
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+<div class="knowledge-graph knowledge-graph-sidebar" hidden data-data-url="/graph/data.json">
+  <div class="knowledge-graph-header">
+    <h3 class="sidebar-graph-title"></h3>
+  </div>
+  <div class="knowledge-graph-outer knowledge-graph-outer-sidebar">
+    <div class="graph-container" data-mode="local" data-depth="1" role="img"></div>
+    <button type="button" class="graph-global-btn" aria-label="Open global graph">
+      <svg viewBox="0 0 55 55" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+          s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+          c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+          C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+          c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+          v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+          s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+          C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="graph-global-overlay" hidden>
+  <div class="graph-global-panel" role="dialog" aria-modal="true" aria-labelledby="graph-global-title">
+    <div class="graph-global-toolbar">
+      <h2 id="graph-global-title" class="graph-global-title"></h2>
+      <label class="graph-search">
+        <span class="sr-only"></span>
+        <input type="search" class="graph-search-input" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-tags" checked> <span data-i18n="tags"></span></label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-cats" checked> <span data-i18n="cats"></span></label>
+      <button type="button" class="graph-global-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="graph-container graph-container-global" data-mode="global" data-depth="-1" data-data-url="/graph/data.json" role="img"></div>
+    <div class="graph-zoom-btns">
+      <button type="button" class="graph-zoom-in" aria-label="+">+</button>
+      <button type="button" class="graph-zoom-out" aria-label="-">-</button>
+    </div>
+  </div>
+</div>
+<script src="/js/graph-view.js" defer></script>
+<img src="https://mapmyvisitors.com/map.png?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff" width="1" height="1" alt="" decoding="async" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;pointer-events:none">
+
+</body>
+</html>
