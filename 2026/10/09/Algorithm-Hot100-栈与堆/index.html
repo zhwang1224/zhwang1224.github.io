@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="LeetCode Hot 100 栈与堆专题，包括有效的括号、最小栈、字符串解码、每日温度、柱状图中最大的矩形、数组中的第 K 个最大元素、前 K 个高频元素与数据流的中位数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Algorithm-Hot100-栈与堆">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="LeetCode Hot 100 栈与堆专题，包括有效的括号、最小栈、字符串解码、每日温度、柱状图中最大的矩形、数组中的第 K 个最大元素、前 K 个高频元素与数据流的中位数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-09T13:42:23.000Z">
+<meta property="article:modified_time" content="2026-10-09T13:50:20.993Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Hot 100">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="优先队列">
+<meta property="article:tag" content="单调栈">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="堆">
+<meta property="article:tag" content="栈">
+<meta property="article:tag" content="桶排序">
+<meta property="article:tag" content="计数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/","path":"2026/10/09/Algorithm-Hot100-栈与堆/","title":"Algorithm-Hot100-栈与堆"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Algorithm-Hot100-栈与堆 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<link rel="stylesheet" href="/css/graph-view.css">
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-graph"><a href="/graph/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>图谱</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E6%A0%88%E4%B8%8E%E5%A0%86"><span class="nav-number">1.</span> <span class="nav-text">Hot100 算法题思路汇总-栈与堆</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">384</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/06/02/Algorithm-Hot100/" rel="bookmark">
+        <time class="popular-posts-time">2026-06-02</time>
+        <br>
+      Algorithm-Hot100-哈希
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/18/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-II/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-18</time>
+        <br>
+      Algorithm-Hot100-链表-II
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-02</time>
+        <br>
+      Algorithm-Hot100-二分查找
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/" rel="bookmark">
+        <time class="popular-posts-time">2026-10-01</time>
+        <br>
+      Algorithm-Hot100-二叉树-II
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/09/23/Algorithm-Hot100-%E5%9B%9E%E6%BA%AF/" rel="bookmark">
+        <time class="popular-posts-time">2026-09-23</time>
+        <br>
+      Algorithm-Hot100-回溯
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Algorithm-Hot100-栈与堆 | 正在输入">
+      <meta itemprop="description" content="LeetCode Hot 100 栈与堆专题，包括有效的括号、最小栈、字符串解码、每日温度、柱状图中最大的矩形、数组中的第 K 个最大元素、前 K 个高频元素与数据流的中位数。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Algorithm-Hot100-栈与堆
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-09 21:42:23 / 修改时间：21:50:20" itemprop="dateCreated datePublished" datetime="2026-10-09T21:42:23+08:00">2026-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">算法与数据结构</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/" itemprop="url" rel="index"><span itemprop="name">LeetCode Hot 100</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">LeetCode Hot 100 栈与堆专题，包括有效的括号、最小栈、字符串解码、每日温度、柱状图中最大的矩形、数组中的第 K 个最大元素、前 K 个高频元素与数据流的中位数。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><ul>
+<li><a href="#hot100-%E7%AE%97%E6%B3%95%E9%A2%98%E6%80%9D%E8%B7%AF%E6%B1%87%E6%80%BB-%E6%A0%88%E4%B8%8E%E5%A0%86">Hot100 算法题思路汇总-栈与堆</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Hot100-算法题思路汇总-栈与堆"><a href="#Hot100-算法题思路汇总-栈与堆" class="headerlink" title="Hot100 算法题思路汇总-栈与堆"></a>Hot100 算法题思路汇总-栈与堆</h1><p>这八道题分别用栈保存尚未处理完的状态，用单调栈寻找边界，用计数或频次桶处理 Top K，用双堆维护动态中位数。下面沿用各题给出的 C++ 解法，说明维护的状态、更新条件与复杂度。</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/valid-parentheses/">有效的括号（20）</a></li>
+</ol>
+<p>给定一个只包含圆括号、方括号和花括号的字符串 <code>s</code>，判断括号是否有效。每个右括号都要匹配同类型的左括号，并且嵌套顺序正确。</p>
+<p>核心思路：用栈保存还没有被匹配的左括号。遇到左括号就入栈；遇到右括号时，它只能与栈顶的左括号匹配，因为最近打开的括号必须最先关闭。</p>
+<p>哈希表 <code>pairs</code> 保存“右括号 → 对应左括号”的关系。遇到右括号时，如果栈为空，或者栈顶不是对应的左括号，就直接返回 <code>false</code>；匹配成功则弹出栈顶。遍历结束后还要检查栈是否为空，防止遗漏没有关闭的左括号。</p>
+<p>例如 <code>&quot;([)]&quot;</code> 中，读到 <code>&#39;)&#39;</code> 时栈顶是 <code>&#39;[&#39;</code>，立即判定无效。即使三种括号的左右数量分别相同，也不能保证嵌套正确。</p>
+<p>代码先检查 <code>stk.empty()</code>，再访问 <code>stk.top()</code>，利用 <code>||</code> 的短路求值避免访问空栈。题目保证输入只含六种括号字符，所以进入 <code>else</code> 时一定是右括号。</p>
+<p>时间复杂度：<code>O(n)</code>；空间复杂度：<code>O(n)</code>，最坏情况下所有左括号都留在栈中。匹配表只有三项，占用常数空间。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    unordered_map&lt;<span class="type">char</span>, <span class="type">char</span>&gt; pairs = &#123;</span><br><span class="line">        &#123;<span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;(&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;]&#x27;</span>, <span class="string">&#x27;[&#x27;</span>&#125;,</span><br><span class="line">        &#123;<span class="string">&#x27;&#125;&#x27;</span>, <span class="string">&#x27;&#123;&#x27;</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isValid</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        stack&lt;<span class="type">char</span>&gt; stk;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span> c : s) &#123;</span><br><span class="line">            <span class="keyword">if</span> (c == <span class="string">&#x27;(&#x27;</span> || c == <span class="string">&#x27;[&#x27;</span> || c == <span class="string">&#x27;&#123;&#x27;</span>) &#123;</span><br><span class="line">                stk.<span class="built_in">push</span>(c);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (stk.<span class="built_in">empty</span>() || stk.<span class="built_in">top</span>() != pairs[c]) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                stk.<span class="built_in">pop</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> stk.<span class="built_in">empty</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/min-stack/">最小栈（155）</a></li>
+</ol>
+<p>设计一个栈，支持入栈、出栈、读取栈顶，以及读取整个栈中的最小值。每个操作都要在 <code>O(1)</code> 时间内完成。</p>
+<p>核心思路：每一层栈同时保存当前值和到这一层为止的最小值，即 <code>{value, minsofar}</code>。栈顶的第二个字段就是整个栈的最小值。</p>
+<p>空栈入栈时，最小值就是新元素自己。非空时，把新值与旧栈顶的最小值比较，保存 <code>min(st.top().second, value)</code>。出栈直接弹出这一对值，下一层已经保存了此前的最小值，不需要重新扫描。</p>
+<p>例如依次压入 <code>-2、0、-3</code>，栈中保存 <code>(-2,-2)、(0,-2)、(-3,-3)</code>。弹出 <code>-3</code> 后，栈顶变成 <code>(0,-2)</code>，最小值自动恢复为 <code>-2</code>。重复的最小值也能正确处理，因为每层都保存自己的最小值记录。</p>
+<p>题目保证 <code>pop</code>、<code>top</code> 和 <code>getMin</code> 只在非空栈上调用。</p>
+<p>时间复杂度：各操作均为 <code>O(1)</code>；空间复杂度：<code>O(n)</code>，其中 <code>n</code> 为当前栈内元素个数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinStack</span> &#123;</span><br><span class="line">    stack&lt;pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt;&gt; st; <span class="comment">// &#123;当前值, 到这一层为止的最小值&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MinStack</span>() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (st.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            st.<span class="built_in">push</span>(&#123;value, value&#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="type">int</span> minsofar = <span class="built_in">min</span>(st.<span class="built_in">top</span>().second, value);</span><br><span class="line">            st.<span class="built_in">push</span>(&#123;value, minsofar&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        st.<span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> st.<span class="built_in">top</span>().first;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getMin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> st.<span class="built_in">top</span>().second;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/decode-string/">字符串解码（394）</a></li>
+</ol>
+<p>给定一个按 <code>k[encoded_string]</code> 规则编码的字符串，返回解码后的字符串。方括号中的内容重复 <code>k</code> 次，并且允许嵌套。题目保证编码有效，数字只表示重复次数。</p>
+<p>核心思路：用两个栈保存进入下一层括号之前的状态。<code>numStack</code> 保存重复次数，<code>strStack</code> 保存外层已经拼好的前缀；<code>curStr</code> 表示当前层的字符串，<code>curNum</code> 表示正在读取的重复次数。</p>
+<p>从左到右扫描，按字符类型处理：</p>
+<ul>
+<li>数字：执行 <code>curNum = curNum * 10 + (c - &#39;0&#39;)</code>，支持 <code>12[a]</code> 这样的多位重复次数。</li>
+<li><code>&#39;[&#39;</code>：把当前重复次数和字符串前缀分别入栈，然后清空 <code>curNum</code>、<code>curStr</code>，开始处理内层。</li>
+<li><code>&#39;]&#39;</code>：弹出外层的重复次数与前缀，将当前字符串重复对应次数，再接到前缀后面，恢复外层状态。</li>
+<li>字母：直接追加到 <code>curStr</code>。</li>
+</ul>
+<p>以 <code>&quot;3[a2[c]]&quot;</code> 为例，进入外层时保存 <code>3</code> 和空前缀；进入内层时保存 <code>2</code> 和前缀 <code>&quot;a&quot;</code>。第一个右括号把 <code>&quot;c&quot;</code> 重复两次，再接回 <code>&quot;a&quot;</code>，得到 <code>&quot;acc&quot;</code>；第二个右括号把它重复三次，得到 <code>&quot;accaccacc&quot;</code>。</p>
+<p><code>strStack</code> 保存的是进入内层之前的<strong>外层前缀</strong>，这样处理完嵌套部分后，才能接回正确位置。每次读到左括号后还要清空 <code>curNum</code>，避免上一层的次数影响下一层。</p>
+<p>复杂度需要计入字符串构造。记编码长度为 <code>n</code>、最终解码长度为 <code>L</code>，所有字符串复制与拼接处理的字符数总和为 <code>S</code>。扫描输入是 <code>O(n)</code>，总时间为 <code>O(n + S)</code>，最坏可用 <code>O(n + nL)</code> 作为上界。这份实现不仅会在嵌套时反复复制内层结果，处理 <code>1[a]1[b]1[c]…</code> 这样的连续编码段时，也会反复复制越来越长的外层前缀，因此不能仅由扫描一遍输入就判断为线性时间。空间复杂度为 <code>O(n + L)</code>，包括栈、结果和临时字符串。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">decodeString</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; numStack;    <span class="comment">// 当前层的重复次数</span></span><br><span class="line">        stack&lt;string&gt; strStack; <span class="comment">// 进入当前层之前的外层前缀</span></span><br><span class="line">        string curStr;</span><br><span class="line">        <span class="type">int</span> curNum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span> c : s) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">isdigit</span>(c)) &#123;</span><br><span class="line">                curNum = curNum * <span class="number">10</span> + (c - <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">                numStack.<span class="built_in">push</span>(curNum);</span><br><span class="line">                strStack.<span class="built_in">push</span>(curStr);</span><br><span class="line">                curNum = <span class="number">0</span>;</span><br><span class="line">                curStr.<span class="built_in">clear</span>();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&#x27;]&#x27;</span>) &#123;</span><br><span class="line">                <span class="type">int</span> repeatTimes = numStack.<span class="built_in">top</span>();</span><br><span class="line">                numStack.<span class="built_in">pop</span>();</span><br><span class="line">                string preStr = strStack.<span class="built_in">top</span>();</span><br><span class="line">                strStack.<span class="built_in">pop</span>();</span><br><span class="line"></span><br><span class="line">                string repeated;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; repeatTimes; i++) &#123;</span><br><span class="line">                    repeated += curStr;</span><br><span class="line">                &#125;</span><br><span class="line">                curStr = preStr + repeated;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                curStr += c;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> curStr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/daily-temperatures/">每日温度（739）</a></li>
+</ol>
+<p>给定每天的温度 <code>temperatures</code>，返回每一天需要等待多少天才能遇到更高的温度。之后没有更高温度时，该位置返回 <code>0</code>。</p>
+<p>核心思路：用单调栈保存<strong>还没有找到更高温度的日期下标</strong>。从栈底到栈顶，下标递增，对应温度单调不增。</p>
+<p>遍历到第 <code>i</code> 天时，如果当前温度高于栈顶日期的温度，那么今天就是那个日期之后遇到的第一个更暖的日子。弹出下标 <code>preIndex</code>，记录等待天数 <code>i - preIndex</code>，继续检查新的栈顶，最后把今天的下标入栈。</p>
+<p>弹栈条件必须是严格大于。相同温度不能算“更暖”，要继续留在栈中等待。栈里存下标而非温度，是因为既要比较温度，也要计算两个日期之间的距离。</p>
+<p>例如温度为 <code>[73,74,75,71,69,72,76,73]</code>，读到下标 <code>5</code> 的 <code>72</code> 时，会依次弹出下标 <code>4</code> 的 <code>69</code> 和下标 <code>3</code> 的 <code>71</code>，把它们的等待天数设为 <code>1</code> 和 <code>2</code>。最终结果为 <code>[1,1,4,2,1,1,0,0]</code>。</p>
+<p>时间复杂度：<code>O(n)</code>。虽然有两层循环，但每个下标只入栈一次、最多出栈一次。空间复杂度：除答案数组外，单调栈占用 <code>O(n)</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dailyTemperatures</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; temperatures)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(temperatures.<span class="built_in">size</span>());</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">answer</span><span class="params">(n, <span class="number">0</span>)</span></span>;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">while</span> (!st.<span class="built_in">empty</span>() &amp;&amp;</span><br><span class="line">                   temperatures[i] &gt; temperatures[st.<span class="built_in">top</span>()]) &#123;</span><br><span class="line">                <span class="type">int</span> preIndex = st.<span class="built_in">top</span>();</span><br><span class="line">                st.<span class="built_in">pop</span>();</span><br><span class="line">                answer[preIndex] = i - preIndex;</span><br><span class="line">            &#125;</span><br><span class="line">            st.<span class="built_in">push</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> answer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/largest-rectangle-in-histogram/">柱状图中最大的矩形（84）</a></li>
+</ol>
+<p>给定柱状图中各根柱子的高度 <code>heights</code>，每根柱子的宽度为 <code>1</code>，求柱状图能容纳的最大矩形面积。</p>
+<p>核心思路：把某根柱子的高度作为矩形高度，寻找它能向左右扩展的范围。用单调栈保存柱子下标，使栈底到栈顶的高度<strong>单调不减</strong>。遇到更矮的柱子时，较高柱子的右边界已经确定，可以弹栈计算面积。</p>
+<p>设当前下标为 <code>i</code>，弹出的下标为 <code>mid</code>：</p>
+<ul>
+<li>矩形高度是 <code>newHeights[mid]</code>。</li>
+<li>当前柱子比它矮，右侧只能延伸到 <code>i - 1</code>。</li>
+<li>弹出后，新的栈顶为 <code>left</code>，本次计算的左端是 <code>left + 1</code>。</li>
+<li>宽度为 <code>(i - 1) - (left + 1) + 1 = i - left - 1</code>。</li>
+</ul>
+<p>因此面积是 <code>newHeights[mid] * (i - st.top() - 1)</code>。减一是因为左右两端的边界柱子都不计入本次矩形。</p>
+<p>原数组两端各补一个高度为 <code>0</code> 的哨兵。左哨兵让计算宽度时栈仍有左边界；右哨兵会使尚未处理的正高度柱子弹出，统一完成收尾。由于柱高非负，并且只在当前高度严格更小时弹栈，左侧零哨兵不会被弹出。</p>
+<p>等高柱子不会立即弹出，所以新的栈顶可能与 <code>mid</code> 等高，而非严格更矮。此时较靠右的柱子先计算较窄的面积，较靠左的等高柱子之后会得到更宽的范围。例如 <code>[2,2]</code> 遇到右哨兵时，先计算宽度 <code>1</code>，再计算宽度 <code>2</code>，最大面积仍为 <code>4</code>。</p>
+<p>时间复杂度：<code>O(n)</code>，每个下标只入栈一次、最多出栈一次；空间复杂度：<code>O(n)</code>，来自添加哨兵后的数组和单调栈。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">largestRectangleArea</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; heights)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(heights.<span class="built_in">size</span>());</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">newHeights</span><span class="params">(n + <span class="number">2</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            newHeights[i + <span class="number">1</span>] = heights[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(newHeights.<span class="built_in">size</span>()); i++) &#123;</span><br><span class="line">            <span class="keyword">while</span> (!st.<span class="built_in">empty</span>() &amp;&amp; newHeights[i] &lt; newHeights[st.<span class="built_in">top</span>()]) &#123;</span><br><span class="line">                <span class="type">int</span> mid = st.<span class="built_in">top</span>();</span><br><span class="line">                st.<span class="built_in">pop</span>();</span><br><span class="line">                <span class="type">int</span> h = newHeights[mid];</span><br><span class="line">                <span class="type">int</span> w = i - st.<span class="built_in">top</span>() - <span class="number">1</span>;</span><br><span class="line">                res = <span class="built_in">max</span>(res, h * w);</span><br><span class="line">            &#125;</span><br><span class="line">            st.<span class="built_in">push</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/kth-largest-element-in-an-array/">数组中的第 K 个最大元素（215）</a></li>
+</ol>
+<p>给定一个未排序的整数数组 <code>nums</code> 和整数 <code>k</code>，返回数组按降序排列后的第 <code>k</code> 个元素。重复元素也占据排名，不能去重后再取第 <code>k</code> 大。</p>
+<p>核心思路：利用题目中的有限值域做计数。元素范围为 <code>[-10000,10000]</code>，统一加上偏移量 <code>OFFSET = 10000</code>，映射到计数数组的下标 <code>[0,20000]</code>。</p>
+<p><code>count[x + OFFSET]</code> 记录值 <code>x</code> 出现了几次。统计完成后，从最高下标向最低下标扫描，每到一个值就执行 <code>k -= count[v]</code>。当 <code>k &lt;= 0</code> 时，第 <code>k</code> 大的排名已经落入这个值对应的若干个位置，返回 <code>v - OFFSET</code>。</p>
+<p>例如 <code>nums = [3,2,3,1,2,4,5,5,6]</code>，<code>k = 4</code>。先扣掉一个 <code>6</code>，剩余排名为 <code>3</code>；再扣掉两个 <code>5</code>，剩余排名为 <code>1</code>；最后扣掉一个 <code>4</code>，排名变为 <code>0</code>，答案就是 <code>4</code>。</p>
+<p>这份代码使用值域计数。它省去了比较排序，但依赖数值范围较小；若值域很大，可以改用大小为 <code>k</code> 的小根堆，保留当前最大的 <code>k</code> 个数，其时间复杂度为 <code>O(n log k)</code>。</p>
+<p>记值域大小为 <code>V = 20001</code>。当前计数解法的时间复杂度为 <code>O(n + V)</code>，空间复杂度为 <code>O(V)</code>。题目固定值域时，随输入长度增长的时间是线性的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findKthLargest</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="type">const</span> <span class="type">int</span> OFFSET = <span class="number">10000</span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">count</span><span class="params">(<span class="number">2</span> * OFFSET + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : nums) &#123;</span><br><span class="line">            ++count[x + OFFSET];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> v = <span class="number">2</span> * OFFSET; v &gt;= <span class="number">0</span>; --v) &#123;</span><br><span class="line">            k -= count[v];</span><br><span class="line">            <span class="keyword">if</span> (k &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> v - OFFSET;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 题目保证 k 合法，前面的循环一定会返回</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/top-k-frequent-elements/">前 K 个高频元素（347）</a></li>
+</ol>
+<p>给定整数数组 <code>nums</code> 和整数 <code>k</code>，返回出现次数最多的 <code>k</code> 个不同元素。结果可以按任意顺序返回。</p>
+<p>核心思路：先用哈希表统计每个值的出现次数，再按频次分桶。长度为 <code>n</code> 的数组中，一个元素的频次最多是 <code>n</code>，因此只需要建立 <code>n + 1</code> 个桶。<code>buckets[f]</code> 保存出现次数恰好为 <code>f</code> 的元素。</p>
+<p>例如 <code>[1,1,1,2,2,3]</code> 中，<code>buckets[3]</code> 放 <code>1</code>，<code>buckets[2]</code> 放 <code>2</code>，<code>buckets[1]</code> 放 <code>3</code>。从高频桶向低频桶扫描，依次取出元素，取满 <code>k</code> 个就结束。<code>k = 2</code> 时返回 <code>[1,2]</code>。</p>
+<p>哈希表每个不同值只有一个条目，因此分桶后同一个值只会被加入一次。频次为零的桶不需要扫描；同一桶内元素的顺序也不影响答案，取满后立即返回即可。</p>
+<p>与上一题的区别是：上一题的计数数组按<strong>数值大小</strong>组织；这一题先统计频次，再按<strong>出现次数</strong>组织桶。</p>
+<p>时间复杂度：平均 <code>O(n)</code>。哈希表操作按平均 <code>O(1)</code> 计算，建桶、放入不同元素和扫描桶都不超过线性规模。空间复杂度：<code>O(n)</code>，包括哈希表、桶数组及桶中保存的元素；返回数组另占 <code>O(k)</code>。结构化绑定 <code>const auto&amp; [val, f]</code> 需要 C++17。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">topKFrequent</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; freq;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : nums) &#123;</span><br><span class="line">            ++freq[x];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">buckets</span>(nums.<span class="built_in">size</span>() + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; [val, f] : freq) &#123;</span><br><span class="line">            buckets[f].<span class="built_in">push_back</span>(val);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; ans;</span><br><span class="line">        ans.<span class="built_in">reserve</span>(k);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> f = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(buckets.<span class="built_in">size</span>()) - <span class="number">1</span>;</span><br><span class="line">             f &gt;= <span class="number">1</span> &amp;&amp; <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(ans.<span class="built_in">size</span>()) &lt; k; --f) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> val : buckets[f]) &#123;</span><br><span class="line">                ans.<span class="built_in">push_back</span>(val);</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(ans.<span class="built_in">size</span>()) == k) &#123;</span><br><span class="line">                    <span class="keyword">return</span> ans;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li><a target="_blank" rel="noopener" href="https://leetcode.com/problems/find-median-from-data-stream/">数据流的中位数（295）</a></li>
+</ol>
+<p>设计一个数据结构，支持不断加入整数，并随时查询已经加入的所有数的中位数。元素数量为奇数时返回中间值，为偶数时返回中间两个值的平均数。</p>
+<p>核心思路：用两个堆把数据分成较小的一半和较大的一半。</p>
+<ul>
+<li><code>lo</code> 是大根堆，保存较小的一半，堆顶是这一半的最大值。</li>
+<li><code>hi</code> 是小根堆，保存较大的一半，堆顶是这一半的最小值。</li>
+</ul>
+<p>每次插入后维护两个条件：<code>lo</code> 中的所有元素不大于 <code>hi</code> 中的所有元素；两堆大小相同，或者 <code>lo</code> 恰好多一个元素。因此，中位数只与两个堆顶有关，不需要对全部数据排序。</p>
+<p>插入时先比较 <code>num</code> 与 <code>lo.top()</code>。较小的数放入 <code>lo</code>，较大的数放入 <code>hi</code>。然后调整大小：</p>
+<ul>
+<li><code>lo.size() &gt; hi.size() + 1</code>：把 <code>lo</code> 的最大值移到 <code>hi</code>。</li>
+<li><code>hi.size() &gt; lo.size()</code>：把 <code>hi</code> 的最小值移到 <code>lo</code>。</li>
+</ul>
+<p>搬移的正好是两部分之间的边界值，所以不会破坏大小顺序。插入一个数最多使两堆大小偏离一个允许状态，搬移一次即可重新平衡。</p>
+<p>依次加入 <code>1、2、3</code>：加入 <code>1</code> 后，<code>lo</code> 有一个数，中位数为 <code>1</code>；加入 <code>2</code> 后，两堆各一个数，中位数为 <code>1.5</code>；加入 <code>3</code> 后，把 <code>hi</code> 的堆顶 <code>2</code> 移到 <code>lo</code>，中位数变为 <code>2</code>。</p>
+<p><code>priority_queue&lt;int&gt;</code> 默认是大根堆；指定 <code>greater&lt;int&gt;</code> 得到小根堆。偶数个元素时先把一个堆顶转成 <code>double</code> 再相加，既保留小数，也避免整数加法在更大值域下溢出。题目保证查询前至少插入一个元素。</p>
+<p>时间复杂度：<code>addNum</code> 为 <code>O(log n)</code>，<code>findMedian</code> 为 <code>O(1)</code>；空间复杂度：<code>O(n)</code>，两个堆共同保存全部数据。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MedianFinder</span> &#123;</span><br><span class="line">    priority_queue&lt;<span class="type">int</span>&gt; lo; <span class="comment">// 大根堆：较小的一半</span></span><br><span class="line">    priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, greater&lt;<span class="type">int</span>&gt;&gt; hi; <span class="comment">// 小根堆：较大的一半</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MedianFinder</span>() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addNum</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (lo.<span class="built_in">empty</span>() || num &lt;= lo.<span class="built_in">top</span>()) &#123;</span><br><span class="line">            lo.<span class="built_in">push</span>(num);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            hi.<span class="built_in">push</span>(num);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (lo.<span class="built_in">size</span>() &gt; hi.<span class="built_in">size</span>() + <span class="number">1</span>) &#123;</span><br><span class="line">            hi.<span class="built_in">push</span>(lo.<span class="built_in">top</span>());</span><br><span class="line">            lo.<span class="built_in">pop</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (hi.<span class="built_in">size</span>() &gt; lo.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            lo.<span class="built_in">push</span>(hi.<span class="built_in">top</span>());</span><br><span class="line">            hi.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">double</span> <span class="title">findMedian</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (lo.<span class="built_in">size</span>() &gt; hi.<span class="built_in">size</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> lo.<span class="built_in">top</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="built_in">static_cast</span>&lt;<span class="type">double</span>&gt;(lo.<span class="built_in">top</span>()) + hi.<span class="built_in">top</span>()) / <span class="number">2.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" rel="tag"># 优先队列</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/LeetCode/" rel="tag"># LeetCode</a>
+              <a href="/tags/Hot-100/" rel="tag"># Hot 100</a>
+              <a href="/tags/%E6%A0%88/" rel="tag"># 栈</a>
+              <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" rel="tag"># 单调栈</a>
+              <a href="/tags/%E5%A0%86/" rel="tag"># 堆</a>
+              <a href="/tags/%E8%AE%A1%E6%95%B0/" rel="tag"># 计数</a>
+              <a href="/tags/%E6%A1%B6%E6%8E%92%E5%BA%8F/" rel="tag"># 桶排序</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/02/Algorithm-Hot100-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="prev" title="Algorithm-Hot100-二分查找">
+                  <i class="fa fa-angle-left"></i> Algorithm-Hot100-二分查找
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+<div class="knowledge-graph knowledge-graph-sidebar" hidden data-data-url="/graph/data.json">
+  <div class="knowledge-graph-header">
+    <h3 class="sidebar-graph-title"></h3>
+  </div>
+  <div class="knowledge-graph-outer knowledge-graph-outer-sidebar">
+    <div class="graph-container" data-mode="local" data-depth="1" role="img"></div>
+    <button type="button" class="graph-global-btn" aria-label="Open global graph">
+      <svg viewBox="0 0 55 55" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+          s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+          c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+          C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+          c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+          v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+          s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+          C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="graph-global-overlay" hidden>
+  <div class="graph-global-panel" role="dialog" aria-modal="true" aria-labelledby="graph-global-title">
+    <div class="graph-global-toolbar">
+      <h2 id="graph-global-title" class="graph-global-title"></h2>
+      <label class="graph-search">
+        <span class="sr-only"></span>
+        <input type="search" class="graph-search-input" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-tags" checked> <span data-i18n="tags"></span></label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-cats" checked> <span data-i18n="cats"></span></label>
+      <button type="button" class="graph-global-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="graph-container graph-container-global" data-mode="global" data-depth="-1" data-data-url="/graph/data.json" role="img"></div>
+    <div class="graph-zoom-btns">
+      <button type="button" class="graph-zoom-in" aria-label="+">+</button>
+      <button type="button" class="graph-zoom-out" aria-label="-">-</button>
+    </div>
+  </div>
+</div>
+<script src="/js/graph-view.js" defer></script>
+<img src="https://mapmyvisitors.com/map.png?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff" width="1" height="1" alt="" decoding="async" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;pointer-events:none">
+
+</body>
+</html>

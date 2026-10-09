@@ -11,7 +11,30 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-10-02T06:23:36.812Z</updated>
+  <updated>2026-10-09T13:50:20.993Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
+    <category term="优先队列" scheme="https://zhwang1224.github.io/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
+    <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
+    <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
+    <category term="栈" scheme="https://zhwang1224.github.io/tags/%E6%A0%88/"/>
+    <category term="单调栈" scheme="https://zhwang1224.github.io/tags/%E5%8D%95%E8%B0%83%E6%A0%88/"/>
+    <category term="堆" scheme="https://zhwang1224.github.io/tags/%E5%A0%86/"/>
+    <category term="计数" scheme="https://zhwang1224.github.io/tags/%E8%AE%A1%E6%95%B0/"/>
+    <category term="桶排序" scheme="https://zhwang1224.github.io/tags/%E6%A1%B6%E6%8E%92%E5%BA%8F/"/>
+    <category term="哈希表" scheme="https://zhwang1224.github.io/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/"/>
+    <id>https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/</id>
+    <link href="https://zhwang1224.github.io/2026/10/09/Algorithm-Hot100-%E6%A0%88%E4%B8%8E%E5%A0%86/"/>
+    <published>2026-10-09T13:42:23.000Z</published>
+    <summary>LeetCode Hot 100 栈与堆专题，包括有效的括号、最小栈、字符串解码、每日温度、柱状图中最大的矩形、数组中的第 K 个最大元素、前 K 个高频元素与数据流的中位数。</summary>
+    <title>Algorithm-Hot100-栈与堆</title>
+    <updated>2026-10-09T13:50:20.993Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -41,11 +64,11 @@
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
-    <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
-    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
     <category term="前缀和" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
     <id>https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/</id>
     <link href="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/"/>
     <published>2026-10-01T13:30:00.000Z</published>
@@ -135,8 +158,8 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
@@ -177,11 +200,11 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="NVSwitch" scheme="https://zhwang1224.github.io/tags/NVSwitch/"/>
     <category term="NVLink Network" scheme="https://zhwang1224.github.io/tags/NVLink-Network/"/>
     <category term="NVL72" scheme="https://zhwang1224.github.io/tags/NVL72/"/>
     <category term="Scale-up" scheme="https://zhwang1224.github.io/tags/Scale-up/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/"/>
     <published>2026-09-19T11:54:37.000Z</published>
@@ -197,9 +220,9 @@
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="PCIe" scheme="https://zhwang1224.github.io/tags/PCIe/"/>
     <category term="Unified Memory" scheme="https://zhwang1224.github.io/tags/Unified-Memory/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/"/>
     <published>2026-09-19T08:22:30.000Z</published>
@@ -217,8 +240,8 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="归并排序" scheme="https://zhwang1224.github.io/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
     <category term="LRU" scheme="https://zhwang1224.github.io/tags/LRU/"/>
     <id>https://zhwang1224.github.io/2026/09/18/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-II/</id>
@@ -238,8 +261,8 @@
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
-    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="快慢指针" scheme="https://zhwang1224.github.io/tags/%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/"/>
     <id>https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/</id>
     <link href="https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/"/>
@@ -381,24 +404,5 @@
     <summary>论文笔记：Dragonfly-Ultra 用 spine 层全互连替换 Dragonfly+ 的组间连接，从拓扑上根除“下-上”绕行，再配合双水线自适应路由、只在 L2 部署的虚拟链路，以及均匀亲和感知 rank 放置，以 3 层 Clos 的 82% 成本扩展到 26 万块 GPU。</summary>
     <title>Dragonfly-Ultra：面向高性能 AI 集群的可扩展、低成本网络架构</title>
     <updated>2026-09-01T09:38:33.258Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
-    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
-    <category term="OpenAI" scheme="https://zhwang1224.github.io/tags/OpenAI/"/>
-    <category term="Jalapeño" scheme="https://zhwang1224.github.io/tags/Jalapeno/"/>
-    <category term="ASIC" scheme="https://zhwang1224.github.io/tags/ASIC/"/>
-    <category term="HBM4" scheme="https://zhwang1224.github.io/tags/HBM4/"/>
-    <id>https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/</id>
-    <link href="https://zhwang1224.github.io/2026/08/31/HotChips2026-OpenAI-Jalapeno/"/>
-    <published>2026-08-31T10:20:00.000Z</published>
-    <summary>整理 OpenAI 在 Hot Chips 2026 发布的 Jalapeño 推理 ASIC：为什么选择单颗内部异构芯片，如何用本地 HBM、专用集合网络和两级 Clos 系统降低延迟，以及 AI 如何参与芯片与内核优化。</summary>
-    <title>OpenAI Jalapeño：为智能体推理自研的 ASIC 与 2,048 芯片系统</title>
-    <updated>2026-08-31T12:00:08.291Z</updated>
   </entry>
 </feed>
