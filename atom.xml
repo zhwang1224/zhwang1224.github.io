@@ -11,7 +11,26 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-10-13T10:57:25.185Z</updated>
+  <updated>2026-10-15T09:20:14.625Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    <category term="芯粒与先进封装" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E8%8A%AF%E7%B2%92%E4%B8%8E%E5%85%88%E8%BF%9B%E5%B0%81%E8%A3%85/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="Chiplet" scheme="https://zhwang1224.github.io/tags/Chiplet/"/>
+    <category term="DAC 2023" scheme="https://zhwang1224.github.io/tags/DAC-2023/"/>
+    <category term="成本模型" scheme="https://zhwang1224.github.io/tags/%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B/"/>
+    <category term="组装良率" scheme="https://zhwang1224.github.io/tags/%E7%BB%84%E8%A3%85%E8%89%AF%E7%8E%87/"/>
+    <category term="ESD" scheme="https://zhwang1224.github.io/tags/ESD/"/>
+    <id>https://zhwang1224.github.io/2026/10/15/ChipletsHowSmall/</id>
+    <link href="https://zhwang1224.github.io/2026/10/15/ChipletsHowSmall/"/>
+    <published>2026-10-15T09:16:44.000Z</published>
+    <summary>阅读 DAC 2023 论文 Chiplets: How Small is too Small?，从裸片良率、光刻曝光场利用率、组装时间与良率以及 IO 面积和功耗，分析最优芯粒尺寸及其适用边界。</summary>
+    <title>芯粒多小才合适：良率、组装与 IO 开销的成本权衡</title>
+    <updated>2026-10-15T09:20:14.625Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -83,11 +102,11 @@
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
-    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
-    <category term="前缀和" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
+    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
+    <category term="前缀和" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     <id>https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/</id>
     <link href="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/"/>
     <published>2026-10-01T13:30:00.000Z</published>
@@ -380,25 +399,5 @@
     <summary>英伟达如何用 BlueField-4 隔离并接管网络、存储与安全数据路径，再用 Spectrum-X 多平面网络把 AI Factory 扩展到数十万块 GPU。</summary>
     <title>英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络</title>
     <updated>2026-09-02T10:08:31.204Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
-    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
-    <category term="NVIDIA" scheme="https://zhwang1224.github.io/tags/NVIDIA/"/>
-    <category term="Groq 3" scheme="https://zhwang1224.github.io/tags/Groq-3/"/>
-    <category term="LPU" scheme="https://zhwang1224.github.io/tags/LPU/"/>
-    <category term="推理加速器" scheme="https://zhwang1224.github.io/tags/%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F%E5%99%A8/"/>
-    <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
-    <id>https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/</id>
-    <link href="https://zhwang1224.github.io/2026/09/01/HotChips2026-NVIDIA-LPU/"/>
-    <published>2026-09-01T14:39:24.000Z</published>
-    <summary>总结 Groq 3 LPU 的全 SRAM、周期级调度、同步互连及其在异构推理中的作用。</summary>
-    <title>NVIDIA Groq 3 LPU：用确定性执行加速交互式 AI 推理</title>
-    <updated>2026-09-02T09:33:05.989Z</updated>
   </entry>
 </feed>
