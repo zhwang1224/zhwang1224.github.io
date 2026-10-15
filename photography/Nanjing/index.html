@@ -526,6 +526,74 @@
     gap: 8px;
   }
 }
+
+/* Art-book covers: keep labels outside the artwork. */
+.post-body .photo-collection-header {
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap;
+  gap: 16px; margin: 0 0 28px; padding-top: 24px; border-top: 1px solid var(--photo-line);
+}
+.post-body .photo-collection-kicker { color: var(--photo-muted); font-size: 10px; letter-spacing: 0.22em; }
+.post-body .photo-collection-header h2 {
+  margin: 8px 0; border: 0; color: var(--photo-text);
+  font-family: Georgia, "Songti SC", "SimSun", serif;
+  font-size: 30px; font-weight: 400; letter-spacing: 0.06em;
+}
+.post-body .photo-collection-header p { margin: 0; color: var(--photo-muted); font-size: 13px; line-height: 1.8; }
+.post-body .photo-collection-count { color: var(--photo-muted); font-size: 11px; white-space: nowrap; }
+.post-body .photo-poster-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 20px; }
+.post-body a.photo-city-card { display: block; min-width: 0; border: 0; color: var(--photo-text); text-decoration: none; }
+.post-body .photo-city-figure { margin: 0; }
+.post-body .photo-poster-frame {
+  overflow: hidden; aspect-ratio: 3 / 4; background: #f5f1e9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.post-body .photo-poster-image {
+  display: block; width: 100%; height: auto; max-width: none;
+  margin: 0; padding: 0; border: 0; object-fit: contain;
+}
+.post-body .photo-city-caption { display: block; padding: 12px 0 0; text-align: left; }
+.post-body .photo-city-title { display: block; color: var(--photo-text); font-size: 14px; line-height: 1.5; }
+.post-body .photo-city-meta {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin-top: 4px; color: var(--photo-muted); font-size: 11px; line-height: 1.5;
+}
+.post-body .photo-city-arrow { color: var(--photo-accent); font-size: 18px; }
+.post-body .photo-city-card:hover .photo-poster-frame {
+  transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+.post-body .photo-city-card:focus-visible { outline: 2px solid var(--photo-accent); outline-offset: 6px; }
+@media (max-width: 767px) {
+  .post-body .photo-poster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 14px; }
+}
+@media (max-width: 359px) { .post-body .photo-poster-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .post-body .photo-poster-frame { transition: none; } }
+
+.post-body .photo-footprint {
+  margin: 0 0 26px;
+  padding: 12px 16px;
+  border: 1px solid var(--photo-line);
+  border-radius: 6px;
+  background: var(--photo-bg);
+}
+.post-body .photo-footprint summary {
+  color: var(--photo-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+.post-body .photo-footprint summary::marker { color: var(--photo-accent); }
+.post-body .photo-footprint-hint {
+  float: right;
+  margin-left: 12px;
+  color: var(--photo-muted);
+  font-size: 11px;
+}
+.post-body .photo-footprint[open] summary { margin-bottom: 20px; }
+.post-body .photo-footprint .photo-map-section { margin: 0; }
+@media (max-width: 479px) {
+  .post-body .photo-footprint summary { font-size: 12px; }
+  .post-body .photo-footprint-hint { margin-left: 6px; font-size: 10px; }
+}
 </style>
     <div class="photography-page photo-city-page">
       <nav class="photo-city-nav">
