@@ -11,7 +11,25 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-10-15T09:20:14.625Z</updated>
+  <updated>2026-10-26T12:48:07.057Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="计算机体系结构" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    <category term="芯粒与先进封装" scheme="https://zhwang1224.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/%E8%8A%AF%E7%B2%92%E4%B8%8E%E5%85%88%E8%BF%9B%E5%B0%81%E8%A3%85/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="Chiplet" scheme="https://zhwang1224.github.io/tags/Chiplet/"/>
+    <category term="成本模型" scheme="https://zhwang1224.github.io/tags/%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B/"/>
+    <category term="冗余设计" scheme="https://zhwang1224.github.io/tags/%E5%86%97%E4%BD%99%E8%AE%BE%E8%AE%A1/"/>
+    <category term="可靠性" scheme="https://zhwang1224.github.io/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/"/>
+    <id>https://zhwang1224.github.io/2026/10/26/lifecycle-cost-effectiveness-chiplet-redundancy/</id>
+    <link href="https://zhwang1224.github.io/2026/10/26/lifecycle-cost-effectiveness-chiplet-redundancy/"/>
+    <published>2026-10-25T16:00:00.000Z</published>
+    <summary>以 LCE 衡量寿命内单位计算能力的摊销成本，整理模块、路由与芯粒冗余的建模方法、协同收益及实验结果。</summary>
+    <title>冗余增强型多芯粒架构的全生命周期成本效益建模：论文笔记</title>
+    <updated>2026-10-26T12:48:07.057Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -278,8 +296,8 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="归并排序" scheme="https://zhwang1224.github.io/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
     <category term="LRU" scheme="https://zhwang1224.github.io/tags/LRU/"/>
     <id>https://zhwang1224.github.io/2026/09/18/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-II/</id>
@@ -299,8 +317,8 @@
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
-    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="双指针" scheme="https://zhwang1224.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    <category term="链表" scheme="https://zhwang1224.github.io/tags/%E9%93%BE%E8%A1%A8/"/>
     <category term="快慢指针" scheme="https://zhwang1224.github.io/tags/%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88/"/>
     <id>https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/</id>
     <link href="https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E9%93%BE%E8%A1%A8-I/"/>
@@ -378,26 +396,5 @@
     <summary>解读 Splitwise 如何依据大模型推理两个阶段的资源差异，拆分机器池、优化 KV Cache 传输，并在延迟 SLO 下改善吞吐、成本与功耗。</summary>
     <title>Splitwise：拆分 Prefill 与 Decode 的高效大模型推理系统</title>
     <updated>2026-09-03T16:37:23.653Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="数据中心网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9C/"/>
-    <category term="Hot Chips 2026" scheme="https://zhwang1224.github.io/tags/Hot-Chips-2026/"/>
-    <category term="NVIDIA" scheme="https://zhwang1224.github.io/tags/NVIDIA/"/>
-    <category term="BlueField-4" scheme="https://zhwang1224.github.io/tags/BlueField-4/"/>
-    <category term="Spectrum-X" scheme="https://zhwang1224.github.io/tags/Spectrum-X/"/>
-    <category term="DPU" scheme="https://zhwang1224.github.io/tags/DPU/"/>
-    <category term="多平面网络" scheme="https://zhwang1224.github.io/tags/%E5%A4%9A%E5%B9%B3%E9%9D%A2%E7%BD%91%E7%BB%9C/"/>
-    <category term="RoCE" scheme="https://zhwang1224.github.io/tags/RoCE/"/>
-    <category term="AI Factory" scheme="https://zhwang1224.github.io/tags/AI-Factory/"/>
-    <id>https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/</id>
-    <link href="https://zhwang1224.github.io/2026/09/02/HotChips2026-NVIDIA-BlueField4-SpectrumX/"/>
-    <published>2026-09-02T09:48:29.000Z</published>
-    <summary>英伟达如何用 BlueField-4 隔离并接管网络、存储与安全数据路径，再用 Spectrum-X 多平面网络把 AI Factory 扩展到数十万块 GPU。</summary>
-    <title>英伟达 BlueField-4 与 Spectrum-X：AI Factory 的基础设施与多平面网络</title>
-    <updated>2026-09-02T10:08:31.204Z</updated>
   </entry>
 </feed>
