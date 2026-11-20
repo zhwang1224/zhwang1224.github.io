@@ -18,8 +18,8 @@
     </author>
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="xMaaS" scheme="https://zhwang1224.github.io/tags/xMaaS/"/>
     <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="xMaaS" scheme="https://zhwang1224.github.io/tags/xMaaS/"/>
     <category term="生产 Trace" scheme="https://zhwang1224.github.io/tags/%E7%94%9F%E4%BA%A7-Trace/"/>
     <category term="异构 GPU" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84-GPU/"/>
     <category term="Prefill-Decode 分离" scheme="https://zhwang1224.github.io/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/"/>
