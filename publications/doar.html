@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面向蜻蜓拓扑的在线自适应路由及故障自愈技术 | Zhenghao Wang</title>
+<meta name="description" content="《计算机学报》2026, 49(4): 721–741。DOAR 分布式在线自适应路由与动态路由自愈技术论文摘要页，含 PDF 直链与完整中英文摘要。">
+
+<!-- Google Scholar / Highwire Press metadata -->
+<meta name="citation_title" content="面向蜻蜓拓扑的在线自适应路由及故障自愈技术">
+<meta name="citation_author" content="Lai, Ming-Che">
+<meta name="citation_author" content="Wang, Zheng-Hao">
+<meta name="citation_author" content="Xu, Jia-Qing">
+<meta name="citation_author" content="Gao, Lei">
+<meta name="citation_author" content="Ou, Yang">
+<meta name="citation_author" content="Wu, Li-Zhou">
+<meta name="citation_author" content="Wang, Qiang">
+<meta name="citation_publication_date" content="2026/04/01">
+<meta name="citation_online_date" content="2025/11/07">
+<meta name="citation_journal_title" content="计算机学报">
+<meta name="citation_journal_abbrev" content="Chin. J. Comput.">
+<meta name="citation_volume" content="49">
+<meta name="citation_issue" content="4">
+<meta name="citation_firstpage" content="721">
+<meta name="citation_lastpage" content="741">
+<meta name="citation_doi" content="10.11897/SP.J.1016.2026.00721">
+<meta name="citation_pdf_url" content="https://zhwang1224.github.io/publications/001-2026423163221.pdf">
+<meta name="citation_language" content="zh">
+<meta name="citation_keywords" content="高性能网络; 蜻蜓拓扑; 自适应路由; 容错机制">
+<meta name="citation_keywords" content="high-performance interconnection network; dragonfly topology; adaptive routing; fault-tolerance">
+
+<style>
+  :root { color-scheme: light; }
+  body { font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+         max-width: 780px; margin: 3em auto; padding: 0 1.2em; color: #222; line-height: 1.75; }
+  h1 { font-size: 1.5em; line-height: 1.4; margin-bottom: .2em; }
+  h1.en { font-size: 1.1em; font-weight: 500; color: #444; }
+  .authors { margin: .8em 0 .2em; }
+  .affil, .venue { color: #555; font-size: .95em; }
+  .venue { font-style: italic; }
+  .links { margin: 1em 0 1.4em; }
+  .links a { margin-right: 1em; }
+  h2 { font-size: 1.05em; border-bottom: 1px solid #ddd; padding-bottom: .2em; margin-top: 1.6em; }
+  .abstract { text-align: justify; }
+  .kw { color: #555; font-size: .95em; }
+  nav { font-size: .9em; margin-bottom: 2em; }
+  footer { margin-top: 3em; font-size: .85em; color: #888; border-top: 1px solid #eee; padding-top: 1em; }
+</style>
+</head>
+<body>
+
+<nav><a href="/">首页</a> · <a href="/publications/">Publications</a> · <a href="/en/">English</a></nav>
+
+<h1>面向蜻蜓拓扑的在线自适应路由及故障自愈技术</h1>
+<h1 class="en">An On-the-Fly Adaptive Routing and Fault Self-Healing Technology for Dragonfly Topology in Post-Exascale Supercomputer</h1>
+
+<p class="authors">赖明澈，王正浩，徐佳庆，高蕾，欧洋，吴利舟，王强<br>
+<span class="affil">LAI Ming-Che, WANG Zheng-Hao, XU Jia-Qing, GAO Lei, OU Yang, WU Li-Zhou, WANG Qiang</span></p>
+<p class="affil">国防科技大学计算机学院，长沙 410073<br>
+College of Computer Science and Technology, National University of Defense Technology, Changsha, China</p>
+
+<p class="venue">计算机学报 (Chinese Journal of Computers), 2026, 49(4): 721–741</p>
+
+<p class="links">
+  <a href="/publications/001-2026423163221.pdf"><strong>[PDF]</strong></a>
+  <a href="https://doi.org/10.11897/SP.J.1016.2026.00721"><strong>[DOI]</strong></a>
+  收稿日期 2025-03-01 · 在线发布 2025-11-07
+</p>
+
+<h2>摘要</h2>
+<p class="abstract">面向后 E 级超智算通信系统采取蜻蜓拓扑具有可扩展性强、延迟小、成本低优势。蜻蜓拓扑中自适应路由和容错路由对网络性能和稳定性至关重要。传统路由方法结合局部流量选择多样化路径对路径跳步影响考虑不足，性能优化效果有限。本文提出一种分布式在线自适应路由 DOAR 算法，传输过程中根据组内局部通道和组间全局通道状态动态选择路径，缓解拥塞同时降低跳步数，提升网络性能；提出路由计算部件结构及可重构路由配置方法，具有计算延迟低、配置灵活、无死锁特点。针对蜻蜓拓扑网络故障敏感特点提出动态路由自愈及恢复技术，主动产生诊断或恢复报文更新分布式路由表，在保证全局目的可达同时最大化可达路径数量，实现网络故障快速自动诊断与恢复，并减少网络性能损失和抖动。实验表明 DOAR 与 PARPH、TPR、UGAL_LE 相比，在合成流量下吞吐量分别提升约 15.2%、12.1% 和 23.7%；在混合流量下吞吐量分别提升约 15.1%、14.4% 和 41.2%；在实际应用负载下通信延迟分别降低约 8.2%、30.4% 和 26.0%。针对典型故障场景，标准合成流量下 40 和 200 处链路故障时吞吐量最大损失仅 1.7% 和 7.4%；10 和 30 处路由器故障时吞吐量最大损失仅 5.3% 和 10.5%；混合合成流量 100 处链路故障时吞吐量平均损失仅 2.9%。高负载随机流量 50 处链路故障下故障自动诊断和恢复过程耗时分别约 5.2 和 10.3 μs，带宽损失和延迟增幅仅约 1.1% 和 5.7%，体现较强的性能优势与自动故障容错能力。</p>
+<p class="kw"><strong>关键词：</strong>高性能网络；蜻蜓拓扑；自适应路由；容错机制</p>
+
+<h2>Abstract</h2>
+<p class="abstract">For post-exascale supercomputing and intelligent computing communication systems, the Dragonfly topology exhibits advantages of strong scalability, low latency, and cost-effectiveness. Adaptive routing and fault-tolerant routing are critical to network performance and stability in the Dragonfly topology. Traditional routing methods, when selecting diverse paths through local traffic, insufficiently consider the impacts of path hop counts, resulting in limited performance optimization. This paper proposes a Distributed On-the-Fly Adaptive Routing (DOAR) algorithm, which dynamically selects paths based on the status of intra-group local channels and inter-group global channels during data transmission. This approach alleviates congestion, reduces hop counts, and enhances network performance. Additionally, we present the architectural design of routing computation units and a reconfigurable routing configuration method, characterized by low computational latency, flexible configuration, and deadlock-free operation. To address the fault sensitivity of Dragonfly topology, dynamic routing self-healing and recovery techniques are proposed. These techniques proactively generate diagnostic or recovery packets to update distributed routing tables, ensuring global destination reachability while maximizing the number of available paths. This enables rapid automatic diagnosis and recovery from network faults, minimizing performance degradation and jitter. Experimental results demonstrate that compared to PARPH, TPR, and UGAL_LE under synthetic traffic, DOAR achieves throughput improvements of approximately 15.2%, 12.1%, and 23.7%, respectively; under mixed traffic, throughput improvements reach 15.1%, 14.4%, and 41.2%, respectively; and under real application workloads, communication latency is reduced by approximately 8.2%, 30.4%, 26.0%, respectively. For typical fault scenarios, under standard synthetic traffic with 40 and 200 link failures, maximum throughput losses are only 1.7% and 7.4%, respectively; with 10 and 30 router failures, maximum throughput losses are limited to 5.3% and 10.5%, respectively. Under mixed synthetic traffic with 100 link failures, average throughput loss is only 2.9%. For automatic diagnosis and recovery processes under high-load random traffic with 50 link failures, the required time is approximately 5.2 μs and 10.3 μs, respectively. Meanwhile, the network bandwidth loss and latency increase are only about 1.1% and 5.7%, respectively, showcasing strong performance advantages and automated fault tolerance capabilities.</p>
+<p class="kw"><strong>Keywords:</strong> high-performance interconnection network; dragonfly topology; adaptive routing; fault-tolerance</p>
+
+<h2>引用</h2>
+<p>赖明澈, 王正浩, 徐佳庆, 高蕾, 欧洋, 吴利舟, 王强. 面向蜻蜓拓扑的在线自适应路由及故障自愈技术[J]. 计算机学报, 2026, 49(4): 721–741. DOI: 10.11897/SP.J.1016.2026.00721.</p>
+<p>M. Lai, Z. Wang, J. Xu, L. Gao, Y. Ou, L. Wu, and Q. Wang, “An On-the-Fly Adaptive Routing and Fault Self-Healing Technology for Dragonfly Topology in Post-Exascale Supercomputer,” <em>Chinese Journal of Computers</em>, vol. 49, no. 4, pp. 721–741, 2026. DOI: 10.11897/SP.J.1016.2026.00721.</p>
+
+</body>
+</html>
