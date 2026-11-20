@@ -11,7 +11,7 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-11-20T09:35:42.759Z</updated>
+  <updated>2026-11-20T09:38:59.909Z</updated>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -29,7 +29,7 @@
     <published>2026-11-20T08:44:13.000Z</published>
     <summary>SIGOPS ATC 2026 Best Paper 阅读笔记。基于阿里 xMaaS 平台六个月、101,499 张 GPU、30 种 GPU 型号的生产 LLM 推理 trace，从集群、应用、模型三层回答 GPU 如何被供给、分配、占用和使用，并归纳显存超额预留、异构资源管理、PD 分离适用性三个开放问题。</summary>
     <title>阿里 xMaaS 生产 Trace 解读</title>
-    <updated>2026-11-20T09:35:42.759Z</updated>
+    <updated>2026-11-20T09:38:59.909Z</updated>
   </entry>
   <entry>
     <author>
@@ -233,8 +233,8 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
