@@ -11,15 +11,33 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-11-20T09:38:59.909Z</updated>
+  <updated>2026-11-23T08:20:26.226Z</updated>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
     </author>
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
-    <category term="xMaaS" scheme="https://zhwang1224.github.io/tags/xMaaS/"/>
     <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="Prefill-Decode 分离" scheme="https://zhwang1224.github.io/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/"/>
+    <category term="KV Cache" scheme="https://zhwang1224.github.io/tags/KV-Cache/"/>
+    <category term="DistServe" scheme="https://zhwang1224.github.io/tags/DistServe/"/>
+    <category term="Goodput" scheme="https://zhwang1224.github.io/tags/Goodput/"/>
+    <id>https://zhwang1224.github.io/2026/11/23/OSDI2024-DistServe/</id>
+    <link href="https://zhwang1224.github.io/2026/11/23/OSDI2024-DistServe/"/>
+    <published>2026-11-23T08:20:00.000Z</published>
+    <summary>OSDI 2024 论文 DistServe 阅读笔记。论文指出 Prefill 与 Decode 混部会带来相互干扰和资源耦合，提出 PD 分离并以 per-GPU goodput 为目标自动搜索两阶段的并行策略与部署方案，在三类应用上相对 vLLM 最高支撑 7.4× 请求速率或 12.6× 更严格的 SLO。</summary>
+    <title>DistServe：把 Prefill 和 Decode 拆到不同 GPU 上</title>
+    <updated>2026-11-23T08:20:26.226Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="xMaaS" scheme="https://zhwang1224.github.io/tags/xMaaS/"/>
     <category term="生产 Trace" scheme="https://zhwang1224.github.io/tags/%E7%94%9F%E4%BA%A7-Trace/"/>
     <category term="异构 GPU" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84-GPU/"/>
     <category term="Prefill-Decode 分离" scheme="https://zhwang1224.github.io/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/"/>
@@ -139,11 +157,11 @@
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
-    <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
-    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
     <category term="前缀和" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
     <id>https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/</id>
     <link href="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/"/>
     <published>2026-10-01T13:30:00.000Z</published>
@@ -233,8 +251,8 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
@@ -275,11 +293,11 @@
     <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="NVSwitch" scheme="https://zhwang1224.github.io/tags/NVSwitch/"/>
     <category term="NVLink Network" scheme="https://zhwang1224.github.io/tags/NVLink-Network/"/>
     <category term="NVL72" scheme="https://zhwang1224.github.io/tags/NVL72/"/>
     <category term="Scale-up" scheme="https://zhwang1224.github.io/tags/Scale-up/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/"/>
     <published>2026-09-19T11:54:37.000Z</published>
@@ -295,9 +313,9 @@
     <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
     <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
     <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <category term="PCIe" scheme="https://zhwang1224.github.io/tags/PCIe/"/>
     <category term="Unified Memory" scheme="https://zhwang1224.github.io/tags/Unified-Memory/"/>
+    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
     <id>https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/</id>
     <link href="https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/"/>
     <published>2026-09-19T08:22:30.000Z</published>
@@ -378,23 +396,5 @@
     <summary>TCP/IP 协议栈的分层职责，以及数据的封装与解封装过程</summary>
     <title>TCP/IP 协议</title>
     <updated>2026-09-21T10:32:32.734Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="高性能网络" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/"/>
-    <category term="InfiniBand" scheme="https://zhwang1224.github.io/tags/InfiniBand/"/>
-    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
-    <category term="libibverbs" scheme="https://zhwang1224.github.io/tags/libibverbs/"/>
-    <category term="rdma-core" scheme="https://zhwang1224.github.io/tags/rdma-core/"/>
-    <category term="高性能网络" scheme="https://zhwang1224.github.io/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C/"/>
-    <id>https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/</id>
-    <link href="https://zhwang1224.github.io/2026/09/12/infiniband-rdma-programming-guide/"/>
-    <published>2026-09-12T02:00:00.000Z</published>
-    <summary>InfiniBand RDMA Verbs 编程、可编译示例</summary>
-    <title>InfiniBand RDMA 编程</title>
-    <updated>2026-09-12T13:34:09.722Z</updated>
   </entry>
 </feed>
