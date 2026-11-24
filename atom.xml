@@ -11,7 +11,25 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-11-23T14:26:09.221Z</updated>
+  <updated>2026-11-24T12:44:48.280Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="Prefill-Decode 分离" scheme="https://zhwang1224.github.io/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/"/>
+    <category term="KV Cache" scheme="https://zhwang1224.github.io/tags/KV-Cache/"/>
+    <category term="Mooncake" scheme="https://zhwang1224.github.io/tags/Mooncake/"/>
+    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
+    <id>https://zhwang1224.github.io/2026/11/24/FAST2025-Mooncake/</id>
+    <link href="https://zhwang1224.github.io/2026/11/24/FAST2025-Mooncake/"/>
+    <published>2026-11-24T12:30:00.000Z</published>
+    <summary>FAST 2025 论文 Mooncake 阅读笔记。Mooncake 是 Kimi 的推理服务平台，在 Prefill/Decode 分离的基础上，把 GPU 集群中闲置的 CPU、DRAM、SSD 和 RDMA 网卡组织成分布式 KVCache 池，并围绕 KVCache 的分布做全局调度，以更多的存储换取更少的 Prefill 计算。</summary>
+    <title>Mooncake：以 KVCache 为中心的分离式推理架构</title>
+    <updated>2026-11-24T12:44:48.280Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -381,25 +399,5 @@
     <summary>LeetCode Hot 100 链表专题 I，包括相交链表、反转链表、回文链表、环形链表、环形链表 II、合并两个有序链表与两数相加。</summary>
     <title>Algorithm-Hot100-链表-I</title>
     <updated>2026-09-17T08:06:16.693Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
-    <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
-    <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
-    <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="数组" scheme="https://zhwang1224.github.io/tags/%E6%95%B0%E7%BB%84/"/>
-    <category term="矩阵" scheme="https://zhwang1224.github.io/tags/%E7%9F%A9%E9%98%B5/"/>
-    <category term="模拟" scheme="https://zhwang1224.github.io/tags/%E6%A8%A1%E6%8B%9F/"/>
-    <category term="原地算法" scheme="https://zhwang1224.github.io/tags/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95/"/>
-    <id>https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E7%9F%A9%E9%98%B5/</id>
-    <link href="https://zhwang1224.github.io/2026/09/17/Algorithm-Hot100-%E7%9F%A9%E9%98%B5/"/>
-    <published>2026-09-16T16:34:09.000Z</published>
-    <summary>LeetCode Hot 100 矩阵专题，包括矩阵置零、螺旋矩阵、旋转图像与搜索二维矩阵 II。</summary>
-    <title>Algorithm-Hot100-矩阵</title>
-    <updated>2026-09-16T16:42:27.460Z</updated>
   </entry>
 </feed>
