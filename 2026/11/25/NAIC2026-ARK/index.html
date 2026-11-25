@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="NAIC 2026（SIGCOMM 2026 Workshop）论文 ARK 阅读笔记。PD 分离推理中的 KV Cache 传输是持续数百毫秒到数秒的巨型大象流，ECMP 哈希冲突会让部分 spine 过载而其他 spine 空闲。ARK 利用“KV 流在准入时即已知、寿命足以摊销协调”这两点，让每台主机维护一份复制的 spine 预留表，通过选择源端口让 ECMP 把并发流哈希到不同 spin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/11/25/NAIC2026-ARK/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="NAIC 2026（SIGCOMM 2026 Workshop）论文 ARK 阅读笔记。PD 分离推理中的 KV Cache 传输是持续数百毫秒到数秒的巨型大象流，ECMP 哈希冲突会让部分 spine 过载而其他 spine 空闲。ARK 利用“KV 流在准入时即已知、寿命足以摊销协调”这两点，让每台主机维护一份复制的 spine 预留表，通过选择源端口让 ECMP 把并发流哈希到不同 spin">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NAIC2026-ARK/fig-01.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NAIC2026-ARK/fig-02.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NAIC2026-ARK/fig-03.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/NAIC2026-ARK/fig-04.png">
+<meta property="article:published_time" content="2026-11-25T11:45:00.000Z">
+<meta property="article:modified_time" content="2026-11-25T11:49:26.950Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="ARK">
+<meta property="article:tag" content="ECMP">
+<meta property="article:tag" content="KV Cache">
+<meta property="article:tag" content="Prefill-Decode 分离">
+<meta property="article:tag" content="大模型推理">
+<meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="负载均衡">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/NAIC2026-ARK/fig-01.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/11/25/NAIC2026-ARK/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/11/25/NAIC2026-ARK/","path":"2026/11/25/NAIC2026-ARK/","title":"ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/11/25/NAIC2026-ARK/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<link rel="stylesheet" href="/css/graph-view.css">
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-graph"><a href="/graph/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>图谱</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ARK%EF%BC%9A%E5%9C%A8%E4%B8%BB%E6%9C%BA%E4%BE%A7%E9%A2%84%E7%95%99%E8%B7%AF%E5%BE%84%EF%BC%8C%E9%81%BF%E5%BC%80-KV-Cache-%E5%A4%A7%E6%B5%81%E7%9A%84-ECMP-%E5%86%B2%E7%AA%81"><span class="nav-number">1.</span> <span class="nav-text">ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8A%A8%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">2. 动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">3. 设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.4.</span> <span class="nav-text">4. 实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-FCT-%E4%B8%8E-spine-%E8%B4%9F%E8%BD%BD"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 FCT 与 spine 负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-TTFT"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 TTFT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%8E%A7%E5%88%B6%E5%99%A8%E5%BC%80%E9%94%80"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 控制器开销</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93%E4%B8%8E%E6%80%9D%E8%80%83"><span class="nav-number">1.5.</span> <span class="nav-text">5. 总结与思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.6.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">92</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">403</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/25/SIGCOMM2026-DualPath/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-25</time>
+        <br>
+      DualPath：借用 Decode 节点的存储带宽加载 KV-Cache
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/24/FAST2025-Mooncake/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-24</time>
+        <br>
+      Mooncake：以 KVCache 为中心的分离式推理架构
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/23/ISCA2024-Splitwise/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-23</time>
+        <br>
+      Splitwise：按推理阶段拆分机器，面向成本与功耗设计集群
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/23/OSDI2024-DistServe/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-23</time>
+        <br>
+      DistServe：把 Prefill 和 Decode 拆到不同 GPU 上
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/20/ATC2026-MaaS-in-the-Wild/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-20</time>
+        <br>
+      阿里 xMaaS 生产 Trace 解读
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/11/25/NAIC2026-ARK/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突 | 正在输入">
+      <meta itemprop="description" content="NAIC 2026（SIGCOMM 2026 Workshop）论文 ARK 阅读笔记。PD 分离推理中的 KV Cache 传输是持续数百毫秒到数秒的巨型大象流，ECMP 哈希冲突会让部分 spine 过载而其他 spine 空闲。ARK 利用“KV 流在准入时即已知、寿命足以摊销协调”这两点，让每台主机维护一份复制的 spine 预留表，通过选择源端口让 ECMP 把并发流哈希到不同 spine，不改交换机、不引入乱序。分组级仿真中平均 &#x2F; P95 FCT 最多降低 27.3% &#x2F; 34.0%，平均 TTFT 最多降低 12.9%。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-11-25 19:45:00 / 修改时间：19:49:26" itemprop="dateCreated datePublished" datetime="2026-11-25T19:45:00+08:00">2026-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">NAIC 2026（SIGCOMM 2026 Workshop）论文 ARK 阅读笔记。PD 分离推理中的 KV Cache 传输是持续数百毫秒到数秒的巨型大象流，ECMP 哈希冲突会让部分 spine 过载而其他 spine 空闲。ARK 利用“KV 流在准入时即已知、寿命足以摊销协调”这两点，让每台主机维护一份复制的 spine 预留表，通过选择源端口让 ECMP 把并发流哈希到不同 spine，不改交换机、不引入乱序。分组级仿真中平均 / P95 FCT 最多降低 27.3% / 34.0%，平均 TTFT 最多降低 12.9%。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>ARK（NAIC 2026，即 SIGCOMM 2026 的 Networks for AI Computing Workshop，佐治亚理工学院）研究 PD 分离推理中 KV Cache 传输的 <strong>网内选路</strong> 问题。Prefill 节点生成的 KV Cache 要经数据中心网络送到 Decode 节点，单个请求就是几百 MB 到几 GB 的流，持续数百毫秒到数秒。ECMP 按五元组哈希选路、不看流的大小，两条这样的流一旦哈希到同一个 spine，就会在整个传输期间平分带宽，旁边的 spine 却可能空着。</p>
+<p>ARK 的出发点是：KV 流的目的地、字节数和开始时刻在 Prefill 结束时就已确定，寿命也长到足以摊销一次协调。于是每台主机维护一份复制的 spine 预留表，新流到达时选一个未被占用的 spine，用预先算好的 <strong>源端口</strong> 让 ECMP 哈希恰好落在它上面，再把预留广播给其他主机。交换机不用改，每条流仍走单一路径，接收端无需重排序。在 16 GPU 的分组级仿真中，平均 &#x2F; P95 FCT 最多降低 <strong>27.3% &#x2F; 34.0%</strong>，平均 TTFT 最多降低 <strong>12.9%</strong>。</p>
+<span id="more"></span>
+
+<h1 id="ARK：在主机侧预留路径，避开-KV-Cache-大流的-ECMP-冲突"><a href="#ARK：在主机侧预留路径，避开-KV-Cache-大流的-ECMP-冲突" class="headerlink" title="ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突"></a>ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突</h1><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标题</td>
+<td>ARK: Avoiding Routing Collisions for KV Cache Transfer in Disaggregated LLM Inference</td>
+</tr>
+<tr>
+<td>作者</td>
+<td>Hung-Chun Lin、Ting-Wei Hsu、Chung-En Ho、Ahmed Saeed</td>
+</tr>
+<tr>
+<td>机构</td>
+<td>佐治亚理工学院（Georgia Tech）</td>
+</tr>
+<tr>
+<td>会议</td>
+<td>NAIC 2026（ACM SIGCOMM 2026 Workshop on Networks for AI Computing）</td>
+</tr>
+<tr>
+<td>原文</td>
+<td><a target="_blank" rel="noopener" href="https://doi.org/10.1145/3789240.3828750">DOI: 10.1145&#x2F;3789240.3828750</a>，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2610.41160">arXiv:2610.41160</a></td>
+</tr>
+</tbody></table>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p><strong>KV Cache 流是一种新的流量形态。</strong> PD 分离（DistServe、Splitwise）把计算受限的 prefill 和访存受限的 decode 放到不同的 GPU 池，代价是每个请求的 KV Cache 都要经网络从 prefill GPU 搬到 decode GPU。vLLM、SGLang、Dynamo、llm-d 都已支持这一模式，Kimi（Mooncake）和 DeepSeek-V3 的 SGLang 参考部署也采用了它。论文给的对比是：传统数据中心“大象流”的峰值在几十 MB 量级，而 LLaMA-3.1-405B 一个 100K token 请求的 KV Cache 约 48 GB（每 token 504 KB），单条流就能让一条 400 Gbps 链路饱和 960 ms。这段传输位于请求的关键路径上，FCT 的增加会直接计入 TTFT。</p>
+<p><strong>AI 网络仍以 ECMP 为基线。</strong> ECMP 对五元组（源 &#x2F; 目的 IP、源 &#x2F; 目的端口、协议）做哈希来选下一跳，同一条流固定走一条路径。Meta 的训练 RoCE 网络和阿里 HPN 都保留了商用 ECMP，只是分别用“丰富哈希输入 + 集中式流量工程”和“双平面、双 ToR”来规避它的弱点。哈希不感知流大小，两条 KV 大流哈希到同一 spine 就会在数秒内平分带宽；AI 集群的 leaf–spine 层通常还有超售，冲突造成的排队更快填满缓冲区。</p>
+<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2. 动机"></a>2. 动机</h2><p><strong>现有的网内负载均衡方案都不划算或不适用：</strong></p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>代价 &#x2F; 问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONGA</td>
+<td>需要在全网部署定制的拥塞感知 leaf ASIC</td>
+</tr>
+<tr>
+<td>ConWeave</td>
+<td>需要可编程 ToR 和逐流重排序缓冲</td>
+</tr>
+<tr>
+<td>LetFlow</td>
+<td>需要交换机级的 flowlet 检测</td>
+</tr>
+<tr>
+<td>逐包喷洒</td>
+<td>乱序到达，KV 巨流在接收端重组的 CPU 开销大</td>
+</tr>
+<tr>
+<td>PLB（主机侧）</td>
+<td>被动式：连续 M 个 ECN 标记的往返后才重选路，且只在连接空闲时进行；RDMA 按硬件节奏发送，KV 流生命周期内几乎没有空闲间隙</td>
+</tr>
+</tbody></table>
+<p><strong>KV 流本身提供了协调的机会：</strong></p>
+<ul>
+<li><strong>寿命足以摊销协调。</strong> 平均 1.6 GB 的 KV 传输至少独占一条 100 Gbps spine 链路 128 ms，比 flowlet 方案针对的毫秒级流高三到四个数量级，毫秒级的准入协调只占流寿命的 1% 以下。</li>
+<li><strong>流的身份在准入时已知。</strong> Prefill 引擎生成 KV Cache 时，目的 GPU、字节数和开始时间都已确定，不需要像 Hedera 那样在运行时检测大象流；等价路径也能在主机端枚举。</li>
+</ul>
+<p>因此可以在第一个字节发出之前就把路径定下来，不依赖拥塞反馈，也不需要等待空闲间隙。</p>
+<h2 id="3-设计"><a href="#3-设计" class="headerlink" title="3. 设计"></a>3. 设计</h2><p><img data-src="/images/NAIC2026-ARK/fig-01.png" alt="图 1：ARK 的拓扑模型、路径预留控制器与部署方式"></p>
+<p>图 1：(a) 两级 spine-leaf 拓扑；(b) 路径预留控制器的流程；(c) 控制平面广播预留、数据平面传输 KV 流的分离部署。</p>
+<p><strong>问题模型。</strong> 两级 spine-leaf 网络中每个 leaf 连接全部 <code>N_S</code> 个 spine，跨 leaf 的主机对之间有 <code>K = N_S</code> 条等价路径，每条恰好经过一个 spine，ECMP 按 <code>k = H(五元组) mod K</code> 选路。</p>
+<p><strong>关键观察：源端口是主机自己能控制的哈希输入。</strong> KV 传输使用统一的目的端口，对一对主机而言源 &#x2F; 目的 IP、目的端口和协议都是固定的，只有源端口可变。只要知道交换机的哈希函数 H，主机就能枚举源端口，算出每个源端口会被哈希到哪个 spine。</p>
+<p>每台主机上运行一个用户态的 <strong>路径预留控制器</strong>：</p>
+<ol>
+<li><strong>启动时预计算</strong>：对每个对端枚举 <code>δ = 0 … 2^16</code> 个源端口，按 <code>H(q) mod K</code> 分桶，得到“spine k → 可用源端口”的映射表。</li>
+<li><strong>流到达</strong>：扫描本地预留表 R，选编号最小的未预留 spine，从对应桶中取一个源端口创建 RDMA QP 发送 KV Cache，同时向所有对端广播 <code>RESERVE</code>。</li>
+<li><strong>流完成</strong>：从 R 中删除该 spine，广播 <code>RELEASE</code>。</li>
+<li><strong>全部占满</strong>：<code>|R| = K</code> 时退回普通 ECMP，随机选一个 spine。</li>
+</ol>
+<p><strong>控制面与数据面分离。</strong> <code>RESERVE / RELEASE</code> 消息很小但对时延敏感：广播时延决定了两台主机争抢同一 spine 的竞争窗口。ARK 把它们放在低带宽网络或现有管理信道上，避免排在大象流后面；KV 流本身走普通 RDMA 网络，交换机照常做 ECMP。</p>
+<p><strong>竞争处理。</strong> R 是异步更新的副本，两台主机可能在一个广播时延内预留同一 spine。每条 <code>RESERVE</code> 携带 <code>(时间戳, 主机 id)</code>，较小者胜出，失败者换一个 spine 重新哈希。这要求主机时钟同步精度在广播时延（几微秒）以内，PTP 即可满足。</p>
+<p>论文把 ARK 定位为调度设计空间中最轻的一端：Fastpass、Flowtune 用中心仲裁器按包或 flowlet 调度，ARK 不需要仲裁器和流量矩阵，每条流只在准入时做一次 spine 选择。</p>
+<h2 id="4-实验结果"><a href="#4-实验结果" class="headerlink" title="4. 实验结果"></a>4. 实验结果</h2><p><strong>设置。</strong> 平台为 SimAI：计算由 Vidur 建模（用 H100 上实测的 LLaMA-3-8B 逐层数据训练回归器，预测 prefill &#x2F; decode 时延），KV 传输在 AstraSim 基于 ECMP 的 NS-3 后端上做分组级仿真，ARK 实现为主机侧应用。拓扑为两台 8 GPU 服务器（Server 1 做 prefill，Server 2 做 decode）、2 个 leaf、4 个 spine，所有链路 100 Gbps，每个 leaf 800 Gbps 入口对 400 Gbps 上行，超售比 2:1。提示长度服从 α &#x3D; 0.7 的 Zipf 分布，均值约 13,300 token，按每 token 128 KB 计，KV 流为 125 MB–6.7 GB（均值 1.6 GB）。泊松到达，每组 1000 个请求，基线为 ECMP。</p>
+<h3 id="4-1-FCT-与-spine-负载"><a href="#4-1-FCT-与-spine-负载" class="headerlink" title="4.1 FCT 与 spine 负载"></a>4.1 FCT 与 spine 负载</h3><p><img data-src="/images/NAIC2026-ARK/fig-02.png" alt="图 2：平均（左）与 P95（右）FCT 随 QPS 的变化"></p>
+<p>图 2：泊松到达下 QPS 从 1 扫到 30，蓝色标注为 ARK 相对 ECMP 的 FCT 降幅。</p>
+<ul>
+<li>QPS &#x3D; 1 时流很少重叠，平均 FCT 只降 1.9%，P95 降 1.2%。</li>
+<li>负载上升后收益扩大，正文报告在 QPS &#x3D; 25 达到峰值：平均 −27.3%，P95 −34.0%。图中 QPS &#x3D; 20 处标注的平均降幅为 28.9%，略高于正文给出的峰值。</li>
+<li>QPS &#x3D; 30 时 leaf–spine 接近饱和，收益收窄到平均 13.8% &#x2F; P95 12.4%。</li>
+</ul>
+<p><img data-src="/images/NAIC2026-ARK/fig-03.png" alt="图 3：QPS &#x3D; 25 时各 spine 上的活跃流数（上：ECMP，下：ARK）"></p>
+<p>图 3：ECMP 下 Spine 2、3 长时间承载多达 18 条并发流，Spine 1、4 间歇空闲；ARK 把四个 spine 的峰值都压在约 8 条以内。</p>
+<h3 id="4-2-TTFT"><a href="#4-2-TTFT" class="headerlink" title="4.2 TTFT"></a>4.2 TTFT</h3><p>TTFT 按 <code>T_prefill + T_KV + T_decode-1</code> 计算：<code>T_KV</code> 取 NS-3 仿真的 FCT，其余两项由 Vidur 预测。</p>
+<p><img data-src="/images/NAIC2026-ARK/fig-04.png" alt="图 4：平均（左）与 P95（右）TTFT 随 QPS 的变化"></p>
+<p>图 4：与图 2 相同的 QPS 扫描，蓝色标注为 ARK 相对 ECMP 的 TTFT 降幅。</p>
+<p>平均 TTFT 的降幅从 QPS &#x3D; 5 的 2.2% 增长到 QPS &#x3D; 25 的 12.9%；P95 的降幅在 QPS &#x3D; 30 时最大，为 11.5%。Prefill（约 840 ms）和首个 decode 步（约 10 ms）是固定偏移，所以 TTFT 的相对收益小于 FCT；TPOT 由 GPU 本地的 decode 决定，不受选路影响。</p>
+<h3 id="4-3-控制器开销"><a href="#4-3-控制器开销" class="headerlink" title="4.3 控制器开销"></a>4.3 控制器开销</h3><table>
+<thead>
+<tr>
+<th>操作（Intel i9，单线程单核）</th>
+<th>时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>哈希计算（每次）</td>
+<td>4.10 μs</td>
+</tr>
+<tr>
+<td>预留表查找（每次）</td>
+<td>0.87 μs</td>
+</tr>
+<tr>
+<td>启动时初始化（每个对端，2^16 个源端口）</td>
+<td>~326 ms</td>
+</tr>
+<tr>
+<td>每条流的准入（最坏情况），K &#x3D; 4 &#x2F; K &#x3D; 1000</td>
+<td>≤ 3.48 μs &#x2F; ≤ 870 μs</td>
+</tr>
+<tr>
+<td>参照：100 Gbps 下传输 1.6 GB KV Cache</td>
+<td>~137 ms</td>
+</tr>
+</tbody></table>
+<p>K &#x3D; 4 时，预留开销约为一次 KV 传输时间的 0.0025%。</p>
+<h2 id="5-总结与思考"><a href="#5-总结与思考" class="headerlink" title="5. 总结与思考"></a>5. 总结与思考</h2><p><strong>1. 把负载均衡从“事后发现”改成“准入时安排”。</strong> CONGA、LetFlow、PLB、Hedera 处理的是同一个难题：网络不知道哪条流大、什么时候来，只能检测或对拥塞做出反应。KV 传输正好相反，大小、目的地和开始时间在 prefill 结束时全部已知，负载均衡变成了一次性的放置决策。ARK 的主要价值在于指出这一点，机制本身（复制预留表 + 广播）相当朴素。</p>
+<p><strong>2. 源端口是主机控制路径的“后门”。</strong> 主机能改的哈希输入只有源端口，ARK 借它反解 ECMP，用纯软件实现了类似源路由的效果。代价是对交换机行为的强依赖：主机要知道哈希函数 H，而且 <code>mod K</code> 的映射要保持不变。多层 Clos 需要在每个 ECMP 决策点分别反解；链路故障改变 ECMP 组成员后，启动时算好的映射表就会失效，论文没有讨论故障场景。</p>
+<p><strong>3. 二值预留在高负载下很快用完。</strong> 预留表中每个 spine 只记一条流，占满后新流回到随机 ECMP。按 Little 定律粗算，QPS &#x3D; 25 时 ARK 的平均 FCT 约 0.55 s，同时在传的流约有 14 条（25&#x2F;s × 0.55 s），远多于 K &#x3D; 4；图 3 中 ARK 下每个 spine 也同时承载多条流。也就是说，收益最大的负载区间里，多数流是在预留表已满后随机下发的。论文没有给出预留流与回退流的比例，收益有多少来自预留本身并不清楚。此外，论文强调流大小在准入时已知，选路却只看 spine 是否被占用；按剩余字节数选最轻的 spine，是更自然的推广。</p>
+<p><strong>4. TTFT 收益建立在串行传输模型上。</strong> 按图读数，QPS &#x3D; 25 时平均 FCT 从约 755 ms 降到约 550 ms，平均 TTFT 从约 1600 ms 降到约 1395 ms，两者的绝对降幅都在 200 ms 左右，说明串行模型里网络省下的时间原样计入了 TTFT。但 Splitwise、Mooncake 都把 KV 传输按层与 prefill 计算重叠，Splitwise 报告在 H100、400 Gbps 下未被重叠的传输时间只有约 5 ms。在这类系统中，12.9% 更接近上界；而且逐层发送可能让一条 KV 流出现层间间隙，论文用来排除 PLB、flowlet 方案的“流内没有空闲间隙”这一前提也会随之变弱。</p>
+<p><strong>5. 评估还停留在概念验证规模。</strong> 一台 prefill 服务器、一台 decode 服务器、4 个 spine，只有一个 8B 模型；基线只有 ECMP，没有与逐包喷洒、自适应路由或集中式调度对比，也没有考虑与集合通信等其他流量共存。作为 workshop 论文，它提出的视角（把 KV 流当成可预知的大流来调度）比具体机制更有价值。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>Hung-Chun Lin, Ting-Wei Hsu, Chung-En Ho, Ahmed Saeed. <strong>ARK: Avoiding Routing Collisions for KV Cache Transfer in Disaggregated LLM Inference.</strong> NAIC 2026 (SIGCOMM 2026 Workshop). <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3789240.3828750">DOI: 10.1145&#x2F;3789240.3828750</a>，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2610.41160">arXiv:2610.41160</a></li>
+<li>Yinmin Zhong et al. <strong>DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving.</strong> OSDI 2024.（本站笔记：<a href="/2026/11/23/OSDI2024-DistServe/">DistServe</a>）</li>
+<li>Pratyush Patel et al. <strong>Splitwise: Efficient Generative LLM Inference Using Phase Splitting.</strong> ISCA 2024. <a target="_blank" rel="noopener" href="https://doi.org/10.1109/ISCA59077.2024.00019">DOI: 10.1109&#x2F;ISCA59077.2024.00019</a>（本站笔记：<a href="/2026/11/23/ISCA2024-Splitwise/">Splitwise</a>）</li>
+<li>Ruoyu Qin et al. <strong>Mooncake: Trading More Storage for Less Computation — A KVCache-centric Architecture for Serving LLM Chatbot.</strong> FAST 2025.（本站笔记：<a href="/2026/11/24/FAST2025-Mooncake/">Mooncake</a>）</li>
+<li>Kun Qian et al. <strong>Alibaba HPN: A Data Center Network for Large Language Model Training.</strong> SIGCOMM 2024. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3651890.3672265">DOI: 10.1145&#x2F;3651890.3672265</a></li>
+<li>Adithya Gangidi et al. <strong>RDMA over Ethernet for Distributed AI Training at Meta Scale.</strong> SIGCOMM 2024. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3651890.3672233">DOI: 10.1145&#x2F;3651890.3672233</a></li>
+<li>Mubashir Adnan Qureshi et al. <strong>PLB: Congestion Signals are Simple and Effective for Network Load Balancing.</strong> SIGCOMM 2022. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3544216.3544226">DOI: 10.1145&#x2F;3544216.3544226</a></li>
+<li>相关笔记：<a href="/2026/11/25/SIGCOMM2026-DualPath/">DualPath</a>（同样处理 PD 分离中的 KV Cache 搬运，但改的是加载路径而非网内选路）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag"># 大模型推理</a>
+              <a href="/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/" rel="tag"># Prefill-Decode 分离</a>
+              <a href="/tags/KV-Cache/" rel="tag"># KV Cache</a>
+              <a href="/tags/ECMP/" rel="tag"># ECMP</a>
+              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag"># 负载均衡</a>
+              <a href="/tags/ARK/" rel="tag"># ARK</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/25/SIGCOMM2026-DualPath/" rel="prev" title="DualPath：借用 Decode 节点的存储带宽加载 KV-Cache">
+                  <i class="fa fa-angle-left"></i> DualPath：借用 Decode 节点的存储带宽加载 KV-Cache
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+<div class="knowledge-graph knowledge-graph-sidebar" hidden data-data-url="/graph/data.json">
+  <div class="knowledge-graph-header">
+    <h3 class="sidebar-graph-title"></h3>
+  </div>
+  <div class="knowledge-graph-outer knowledge-graph-outer-sidebar">
+    <div class="graph-container" data-mode="local" data-depth="1" role="img"></div>
+    <button type="button" class="graph-global-btn" aria-label="Open global graph">
+      <svg viewBox="0 0 55 55" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+          s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+          c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+          C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+          c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+          v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+          s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+          C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="graph-global-overlay" hidden>
+  <div class="graph-global-panel" role="dialog" aria-modal="true" aria-labelledby="graph-global-title">
+    <div class="graph-global-toolbar">
+      <h2 id="graph-global-title" class="graph-global-title"></h2>
+      <label class="graph-search">
+        <span class="sr-only"></span>
+        <input type="search" class="graph-search-input" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-tags" checked> <span data-i18n="tags"></span></label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-cats" checked> <span data-i18n="cats"></span></label>
+      <button type="button" class="graph-global-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="graph-container graph-container-global" data-mode="global" data-depth="-1" data-data-url="/graph/data.json" role="img"></div>
+    <div class="graph-zoom-btns">
+      <button type="button" class="graph-zoom-in" aria-label="+">+</button>
+      <button type="button" class="graph-zoom-out" aria-label="-">-</button>
+    </div>
+  </div>
+</div>
+<script src="/js/graph-view.js" defer></script>
+<img src="https://mapmyvisitors.com/map.png?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff" width="1" height="1" alt="" decoding="async" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;pointer-events:none">
+
+</body>
+</html>
