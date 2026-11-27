@@ -11,7 +11,42 @@
   <rights>All rights reserved 2026, Zhengzaishuru</rights>
   <subtitle>关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</subtitle>
   <title>正在输入</title>
-  <updated>2026-11-25T11:49:26.950Z</updated>
+  <updated>2026-11-27T07:41:08.754Z</updated>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="论文阅读" scheme="https://zhwang1224.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="Prefill-Decode 分离" scheme="https://zhwang1224.github.io/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/"/>
+    <category term="KV Cache" scheme="https://zhwang1224.github.io/tags/KV-Cache/"/>
+    <category term="Nuska" scheme="https://zhwang1224.github.io/tags/Nuska/"/>
+    <category term="流调度" scheme="https://zhwang1224.github.io/tags/%E6%B5%81%E8%B0%83%E5%BA%A6/"/>
+    <id>https://zhwang1224.github.io/2026/11/27/arXiv2026-Nuska/</id>
+    <link href="https://zhwang1224.github.io/2026/11/27/arXiv2026-Nuska/"/>
+    <published>2026-11-27T08:00:00.000Z</published>
+    <summary>arXiv 2026 论文 Nuska 阅读笔记。PD 分离推理的 Prefill 阶段同时存在 KV-Cache 复用拉取、EP/SP 集合通信和 P2D 传输三类流，它们在共享链路上相互争抢，而 SJF、EDF 等阶段无关的调度恰好把带宽让给了最能等的流。Nuska 观察到请求的 TTFT deadline 会随 Prefill 推进逐步落实到每条流上，用反向多级队列实现“延后—提升”，在不知道精确松弛度的情况下近似最小松弛度优先（LLF）。测试床上平均 TTFT 降低 20.7%–32.3%，仿真中 TTFT SLO 达标率提升 1.2×–2.4×。</summary>
+    <title>Nuska：按松弛度调度分离式 LLM 推理的多阶段通信</title>
+    <updated>2026-11-27T07:41:08.754Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Zhengzaishuru</name>
+    </author>
+    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
+    <category term="大模型推理" scheme="https://zhwang1224.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/"/>
+    <category term="Prefill-Decode 分离" scheme="https://zhwang1224.github.io/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/"/>
+    <category term="KV Cache" scheme="https://zhwang1224.github.io/tags/KV-Cache/"/>
+    <category term="RDMA" scheme="https://zhwang1224.github.io/tags/RDMA/"/>
+    <category term="技术综述" scheme="https://zhwang1224.github.io/tags/%E6%8A%80%E6%9C%AF%E7%BB%BC%E8%BF%B0/"/>
+    <id>https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/</id>
+    <link href="https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/"/>
+    <published>2026-11-27T04:30:00.000Z</published>
+    <summary>用 7 张图梳理 PD 分离推理中 KVCache 的传输与计算方式：从共置执行、整体传输（DistServe）、逐层传输（Splitwise）到逐层载入与写回（Mooncake），再把 vLLM、SGLang、LMCache、NVIDIA Dynamo、NIXL 与 Mooncake 的开源实现归纳为四类方法。</summary>
+    <title>KVCache 传输与计算方式的演进：从整体传输到逐层载入与写回</title>
+    <updated>2026-11-27T04:42:07.225Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhengzaishuru</name>
@@ -230,12 +265,12 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
-    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
+    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
-    <category term="前缀和" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
+    <category term="二叉搜索树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/"/>
+    <category term="前缀和" scheme="https://zhwang1224.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     <id>https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/</id>
     <link href="https://zhwang1224.github.io/2026/10/01/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-II/"/>
     <published>2026-10-01T13:30:00.000Z</published>
@@ -308,8 +343,8 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="回溯" scheme="https://zhwang1224.github.io/tags/%E5%9B%9E%E6%BA%AF/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
+    <category term="回溯" scheme="https://zhwang1224.github.io/tags/%E5%9B%9E%E6%BA%AF/"/>
     <category term="排列组合" scheme="https://zhwang1224.github.io/tags/%E6%8E%92%E5%88%97%E7%BB%84%E5%90%88/"/>
     <category term="剪枝" scheme="https://zhwang1224.github.io/tags/%E5%89%AA%E6%9E%9D/"/>
     <id>https://zhwang1224.github.io/2026/09/23/Algorithm-Hot100-%E5%9B%9E%E6%BA%AF/</id>
@@ -325,8 +360,8 @@
     </author>
     <category term="算法与数据结构" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     <category term="LeetCode Hot 100" scheme="https://zhwang1224.github.io/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/LeetCode-Hot-100/"/>
-    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="图论" scheme="https://zhwang1224.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
     <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
@@ -349,8 +384,8 @@
     <category term="C++" scheme="https://zhwang1224.github.io/tags/C/"/>
     <category term="LeetCode" scheme="https://zhwang1224.github.io/tags/LeetCode/"/>
     <category term="Hot 100" scheme="https://zhwang1224.github.io/tags/Hot-100/"/>
-    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="二叉树" scheme="https://zhwang1224.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="深度优先搜索" scheme="https://zhwang1224.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="广度优先搜索" scheme="https://zhwang1224.github.io/tags/%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/"/>
     <category term="递归" scheme="https://zhwang1224.github.io/tags/%E9%80%92%E5%BD%92/"/>
     <id>https://zhwang1224.github.io/2026/09/22/Algorithm-Hot100-%E4%BA%8C%E5%8F%89%E6%A0%91-I/</id>
@@ -359,42 +394,5 @@
     <summary>LeetCode Hot 100 二叉树专题 I，包括二叉树的中序遍历、最大深度、翻转二叉树、对称二叉树、二叉树的直径、层序遍历、将有序数组转换为二叉搜索树与验证二叉搜索树。</summary>
     <title>Algorithm-Hot100-二叉树-I</title>
     <updated>2026-09-22T10:12:13.222Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
-    <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
-    <category term="NVSwitch" scheme="https://zhwang1224.github.io/tags/NVSwitch/"/>
-    <category term="NVLink Network" scheme="https://zhwang1224.github.io/tags/NVLink-Network/"/>
-    <category term="NVL72" scheme="https://zhwang1224.github.io/tags/NVL72/"/>
-    <category term="Scale-up" scheme="https://zhwang1224.github.io/tags/Scale-up/"/>
-    <id>https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/</id>
-    <link href="https://zhwang1224.github.io/2026/09/19/NVLink-02-%E4%BB%A3%E9%99%85%E6%BC%94%E8%BF%9B/"/>
-    <published>2026-09-19T11:54:37.000Z</published>
-    <summary>从 Pascal 的点对点互连，到 NVSwitch 交换网络与 NVL72 机架级系统，梳理 NVLink 六代技术在链路带宽、拓扑、集合通信和可靠性上的变化。</summary>
-    <title>NVLink的技术演进</title>
-    <updated>2026-09-19T16:00:00.000Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>Zhengzaishuru</name>
-    </author>
-    <category term="人工智能系统" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/"/>
-    <category term="高性能互连" scheme="https://zhwang1224.github.io/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/%E9%AB%98%E6%80%A7%E8%83%BD%E4%BA%92%E8%BF%9E/"/>
-    <category term="异构计算" scheme="https://zhwang1224.github.io/tags/%E5%BC%82%E6%9E%84%E8%AE%A1%E7%AE%97/"/>
-    <category term="NVLink" scheme="https://zhwang1224.github.io/tags/NVLink/"/>
-    <category term="PCIe" scheme="https://zhwang1224.github.io/tags/PCIe/"/>
-    <category term="Unified Memory" scheme="https://zhwang1224.github.io/tags/Unified-Memory/"/>
-    <category term="GPU 互连" scheme="https://zhwang1224.github.io/tags/GPU-%E4%BA%92%E8%BF%9E/"/>
-    <id>https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/</id>
-    <link href="https://zhwang1224.github.io/2026/09/19/NVLink-01-%E4%BB%8EPCIe%E5%88%B0Scale-up/"/>
-    <published>2026-09-19T08:22:30.000Z</published>
-    <summary>从异构计算与多 GPU 节点的发展出发，理解 NVLink 如何缓解通信瓶颈、改善应用扩展性，并与 Unified Memory 配合简化编程。</summary>
-    <title>NVLink 01｜为什么需要 NVLink</title>
-    <updated>2026-09-20T07:37:37.544Z</updated>
   </entry>
 </feed>

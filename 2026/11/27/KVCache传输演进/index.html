@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="XG3HmIK5QiKsfVuddzIfCazbDqtb6x00NM3uYyjIJBc">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zhwang1224.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12,"onmobile":true},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":false},"fold":{"enable":false,"height":500},"language":true,"highlight_theme":"normal"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="用 7 张图梳理 PD 分离推理中 KVCache 的传输与计算方式：从共置执行、整体传输（DistServe）、逐层传输（Splitwise）到逐层载入与写回（Mooncake），再把 vLLM、SGLang、LMCache、NVIDIA Dynamo、NIXL 与 Mooncake 的开源实现归纳为四类方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KVCache 传输与计算方式的演进：从整体传输到逐层载入与写回">
+<meta property="og:url" content="https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/index.html">
+<meta property="og:site_name" content="正在输入">
+<meta property="og:description" content="用 7 张图梳理 PD 分离推理中 KVCache 的传输与计算方式：从共置执行、整体传输（DistServe）、逐层传输（Splitwise）到逐层载入与写回（Mooncake），再把 vLLM、SGLang、LMCache、NVIDIA Dynamo、NIXL 与 Mooncake 的开源实现归纳为四类方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-01.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-02.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-03.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-04.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-05.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-06.png">
+<meta property="og:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-07.png">
+<meta property="article:published_time" content="2026-11-27T04:30:00.000Z">
+<meta property="article:modified_time" content="2026-11-27T04:42:07.225Z">
+<meta property="article:author" content="Zhengzaishuru">
+<meta property="article:tag" content="KV Cache">
+<meta property="article:tag" content="Prefill-Decode 分离">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="大模型推理">
+<meta property="article:tag" content="技术综述">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhwang1224.github.io/images/KVCache-Transfer/fig-01.png">
+
+
+<link rel="canonical" href="https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/","path":"2026/11/27/KVCache传输演进/","title":"KVCache 传输与计算方式的演进：从整体传输到逐层载入与写回"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>KVCache 传输与计算方式的演进：从整体传输到逐层载入与写回 | 正在输入</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"forest","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/3.0.1/quicklink.umd.js" integrity="sha256-44BednzIpUeQJcY8qtLyarFu0UCCTbgmWOvaoehiFQQ=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"ignores":null,"url":"https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+<link rel="stylesheet" href="/css/graph-view.css">
+<style>
+  /* 语言切换：中文站隐藏“简体中文”，英文站隐藏“English” */
+  html[lang="zh-CN"] .menu-item-lang-zh { display: none; }
+  html[lang="en"] .menu-item-lang-en { display: none; }
+</style>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="正在输入" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">正在输入</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-blog"><a href="/blog/" rel="section"><i class="fa fa-pencil-alt fa-fw"></i>博客</a></li><li class="menu-item menu-item-graph"><a href="/graph/" rel="section"><i class="fa fa-diagram-project fa-fw"></i>图谱</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-statistics"><a href="/stat/" rel="section"><i class="fa fa-chart-bar fa-fw"></i>访问统计</a></li><li class="menu-item menu-item-photography"><a href="/photography/" rel="section"><i class="fa fa-camera fa-fw"></i>摄影</a></li><li class="menu-item menu-item-wechat"><a href="/wechat.html" rel="section"><i class="fab fa-weixin fa-fw"></i>微信</a></li><li class="menu-item menu-item-lang-zh"><a href="/" rel="section"><i class="fa fa-globe fa-fw"></i>简体中文</a></li><li class="menu-item menu-item-lang-en"><a href="/en/" rel="section"><i class="fa fa-globe fa-fw"></i>English</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#KVCache-%E4%BC%A0%E8%BE%93%E4%B8%8E%E8%AE%A1%E7%AE%97%E6%96%B9%E5%BC%8F%E7%9A%84%E6%BC%94%E8%BF%9B"><span class="nav-number">1.</span> <span class="nav-text">KVCache 传输与计算方式的演进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%80%BB%E8%A7%88"><span class="nav-number">1.1.</span> <span class="nav-text">1. 总览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC-0-%E4%BB%A3-%E2%86%92-%E7%AC%AC-1-%E4%BB%A3%EF%BC%9APD-%E5%88%86%E7%A6%BB%E4%B8%8E%E6%95%B4%E4%BD%93%E4%BC%A0%E8%BE%93"><span class="nav-number">1.2.</span> <span class="nav-text">2. 第 0 代 → 第 1 代：PD 分离与整体传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC-2-%E4%BB%A3%EF%BC%9A%E9%80%90%E5%B1%82%E4%BC%A0%E8%BE%93"><span class="nav-number">1.3.</span> <span class="nav-text">3. 第 2 代：逐层传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%AC%AC-3-%E4%BB%A3%EF%BC%9A%E9%80%90%E5%B1%82%E8%BD%BD%E5%85%A5%E4%B8%8E%E9%80%90%E5%B1%82%E5%86%99%E5%9B%9E"><span class="nav-number">1.4.</span> <span class="nav-text">4. 第 3 代：逐层载入与逐层写回</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%BC%80%E6%BA%90%E5%B7%A5%E7%A8%8B%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.5.</span> <span class="nav-text">5. 开源工程实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%9B%9B%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 四类方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Prefill-%E2%86%92-Decode-%E7%9A%84%E4%BC%A0%E8%BE%93"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 Prefill → Decode 的传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E4%B8%8E%E9%80%90%E5%B1%82%E8%BD%BD%E5%85%A5"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 多级缓存与逐层载入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E8%BD%AF%E4%BB%B6%E6%A0%88"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 软件栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%AF%B9%E6%AF%94"><span class="nav-number">1.6.</span> <span class="nav-text">6. 对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93%E4%B8%8E%E6%80%9D%E8%80%83"><span class="nav-number">1.7.</span> <span class="nav-text">7. 总结与思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhengzaishuru"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zhengzaishuru</p>
+  <div class="site-description" itemprop="description">关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">406</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://www.nudt.edu.cn/" title="NUDT → https:&#x2F;&#x2F;www.nudt.edu.cn&#x2F;" rel="noopener me" target="_blank"><i class="fa fa-university fa-fw"></i>NUDT</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhwang1224" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhwang1224" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0009-0006-4936-0025" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0009-0006-4936-0025" rel="noopener me" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    相关文章
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/25/SIGCOMM2026-DualPath/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-25</time>
+        <br>
+      DualPath：借用 Decode 节点的存储带宽加载 KV-Cache
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/24/FAST2025-Mooncake/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-24</time>
+        <br>
+      Mooncake：以 KVCache 为中心的分离式推理架构
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/27/arXiv2026-Nuska/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-27</time>
+        <br>
+      Nuska：按松弛度调度分离式 LLM 推理的多阶段通信
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/25/NAIC2026-ARK/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-25</time>
+        <br>
+      ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/11/23/ISCA2024-Splitwise/" rel="bookmark">
+        <time class="popular-posts-time">2026-11-23</time>
+        <br>
+      Splitwise：按推理阶段拆分机器，面向成本与功耗设计集群
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhwang1224.github.io/2026/11/27/KVCache%E4%BC%A0%E8%BE%93%E6%BC%94%E8%BF%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zhengzaishuru">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="正在输入">
+      <meta itemprop="description" content="关注高性能互连网络、片上网络与 AI 基础设施的论文阅读与研究笔记。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="KVCache 传输与计算方式的演进：从整体传输到逐层载入与写回 | 正在输入">
+      <meta itemprop="description" content="用 7 张图梳理 PD 分离推理中 KVCache 的传输与计算方式：从共置执行、整体传输（DistServe）、逐层传输（Splitwise）到逐层载入与写回（Mooncake），再把 vLLM、SGLang、LMCache、NVIDIA Dynamo、NIXL 与 Mooncake 的开源实现归纳为四类方法。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KVCache 传输与计算方式的演进：从整体传输到逐层载入与写回
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-11-27 12:30:00 / 修改时间：12:42:07" itemprop="dateCreated datePublished" datetime="2026-11-27T12:30:00+08:00">2026-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">人工智能系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">用 7 张图梳理 PD 分离推理中 KVCache 的传输与计算方式：从共置执行、整体传输（DistServe）、逐层传输（Splitwise）到逐层载入与写回（Mooncake），再把 vLLM、SGLang、LMCache、NVIDIA Dynamo、NIXL 与 Mooncake 的开源实现归纳为四类方法。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Prefill 与 Decode 分离（PD 分离）之后，KV Cache 不再“在哪算就在哪用”：Prefill 算出的 KV 要搬到 Decode；前缀缓存普及后，命中的历史 KV 还要从 CPU 内存、SSD 甚至别的节点搬回 Prefill。KV 传输从一项附带开销，变成了推理系统的核心设计问题。</p>
+<p>本文按技术形态把这条演进线分为四代（第 0–3 代），每代配一张图，说明它怎样安排计算与传输、解决了什么、又留下了什么；最后把 vLLM、SGLang、LMCache、NVIDIA Dynamo、NIXL 与 Mooncake 的开源实现归纳为四类方法。论文部分的细节均对照原文核实，开源部分依据 2025–2026 年的官方文档、源码与技术报告。</p>
+<span id="more"></span>
+
+<h1 id="KVCache-传输与计算方式的演进"><a href="#KVCache-传输与计算方式的演进" class="headerlink" title="KVCache 传输与计算方式的演进"></a>KVCache 传输与计算方式的演进</h1><table>
+<thead>
+<tr>
+<th>工作</th>
+<th>出处</th>
+<th>本文用到的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DistServe</td>
+<td>OSDI 2024</td>
+<td>整体传输、按 stage 放置、Decode 拉取</td>
+</tr>
+<tr>
+<td>Splitwise</td>
+<td>ISCA 2024</td>
+<td>逐层传输、串行与逐层的切换</td>
+</tr>
+<tr>
+<td>Mooncake</td>
+<td>FAST 2025（arXiv 版含 §5.2）</td>
+<td>逐层载入与写回、分布式 KVCache 池</td>
+</tr>
+<tr>
+<td>vLLM、SGLang、LMCache、Dynamo、NIXL、Mooncake</td>
+<td>官方文档、源码、LMCache 技术报告</td>
+<td>开源系统中的实际做法</td>
+</tr>
+</tbody></table>
+<h2 id="1-总览"><a href="#1-总览" class="headerlink" title="1. 总览"></a>1. 总览</h2><p>先看 KV 有多大。DistServe 给出的例子是：OPT-66B 上，一个 512 token 请求的 KV 约 1.13 GB。Mooncake 仓库给出的量级是：LLaMA3-70B 上，128k token 对应约 40 GB KVCache。搬这些数据的时间如果不能藏进计算里，就会直接加到延迟上。</p>
+<p><img data-src="/images/KVCache-Transfer/fig-01.png" alt="图 1：KVCache 传输与计算方式的演进总览"></p>
+<p>图 1：第 0–3 代的时序示意与要点，底部为开源工程实现的四类方法。</p>
+<p>这条演进线有两条主线：</p>
+<ul>
+<li><strong>传输粒度越来越细，以便与计算重叠。</strong> 从整个请求（第 1 代），到每一层（第 2 代），再到“载入、计算、写回”三条流并行（第 3 代）。开源系统里还有按 prefill chunk 传输的中间粒度。</li>
+<li><strong>要搬的 KV 从“刚算出的”扩展到“命中的历史 KV”。</strong> 第 1、2 代只关心 Prefill → Decode 的新 KV；有了前缀缓存，Prefill 要先把命中的 KV 读进来（第 3 代）。命中率越高，prefill 越受载入带宽限制，这也是开源实现在多级缓存、预取和 I&#x2F;O kernel 上持续优化的原因。</li>
+</ul>
+<p>分代依据的是技术形态，不严格按发表时间：Splitwise 的 arXiv 版（2023 年 11 月）早于 DistServe（2024 年 1 月），而 Splitwise 的串行传输基线就是第 1 代的做法。</p>
+<h2 id="2-第-0-代-→-第-1-代：PD-分离与整体传输"><a href="#2-第-0-代-→-第-1-代：PD-分离与整体传输" class="headerlink" title="2. 第 0 代 → 第 1 代：PD 分离与整体传输"></a>2. 第 0 代 → 第 1 代：PD 分离与整体传输</h2><p><strong>共置执行</strong>（Orca、vLLM 等早期系统，也是 DistServe 和 Splitwise 的基线）中，Prefill 与 Decode 在同一张 GPU 上批处理，KV 在本卡 HBM 中产生并直接使用，不需要传输。问题在于两阶段的计算特征完全不同：prefill 计算密集，decode 访存密集，新请求的 prefill 插进来会拖慢正在 decode 的请求；两阶段还只能共用一套资源分配和并行策略。</p>
+<p>PD 分离把两阶段放到不同实例上，代价是必须把 KV 从 Prefill 实例搬到 Decode 实例。最直接的做法是 <strong>整体传输</strong>：prefill 全部算完、得到首 token 之后，把整个请求的 KV 一次性交出去。</p>
+<p><img data-src="/images/KVCache-Transfer/fig-02.png" alt="图 2：第 1 代，PD 分离与整体传输（以 DistServe 为例）"></p>
+<p>图 2：(a) 一个请求的时序；(b) 带宽需求的估算；(c) 跨节点带宽有限时的放置方式。</p>
+<p>DistServe 没有试图把传输藏进计算，而是从两方面降低它的影响：</p>
+<ul>
+<li><strong>拉取而非推送。</strong> Decode 实例按自己的节奏拉取 KV，Prefill 实例把 KV 留在显存里继续处理别的 prefill，显存充当排队缓冲。突发流量时，Decode 显存不会被大量同时涌入的 KV 压垮。</li>
+<li><strong>用放置把传输限制在 NVLink 上。</strong> 按 10 rps 计算，OPT-66B 需要约 90 Gbps 才能让传输开销不可见。有 InfiniBand 时可以忽略；跨节点带宽有限时，DistServe 利用一个观察：KV 只在 Prefill 与 Decode 实例的 <strong>对应层</strong> 之间传输。于是用 inter-op（流水线）并行把模型按层切成 stage，同一 stage 的 Prefill 段和 Decode 段放在同一节点，KV 就只走节点内 NVLink。在跨节点仅 25 Gbps 的测试床上，OPT-175B 的 KV 传输只占总延迟的不到 0.1%。</li>
+</ul>
+<p>整体传输的根本问题是传输时间随 prompt 长度线性增长，并且完全暴露在首个 decode 步之前。Splitwise 的串行基线把这一点说得更直接：首 token 生成后才开始传，传完才能生成下一个 token。</p>
+<h2 id="3-第-2-代：逐层传输"><a href="#3-第-2-代：逐层传输" class="headerlink" title="3. 第 2 代：逐层传输"></a>3. 第 2 代：逐层传输</h2><p>Splitwise 注意到，prefill 是逐层计算的，第 i 层算完时这一层的 KV 就已经完整了，不必等到最后一层。</p>
+<p><img data-src="/images/KVCache-Transfer/fig-03.png" alt="图 3：第 2 代，逐层传输（以 Splitwise 为例）"></p>
+<p>图 3：(a) 串行传输；(b) 逐层传输；(c) 设计要点与实测开销。</p>
+<ul>
+<li><strong>做法。</strong> 每算完一层，就异步发出这一层的 KV，同时继续算下一层。实现上用 MSCCL++ 的零拷贝单边 put，KV 一就绪就经 InfiniBand 写到 token 机器，接收方不用发起 receive；全部层 put 完后置位一个 semaphore，token 机器据此开始生成。</li>
+<li><strong>前提。</strong> 集群调度器在调度请求时就同时选定 prompt 机器和 token 机器，传输目标事先已知，计算过程中才能开始发送。</li>
+<li><strong>折中。</strong> 逐层传输要求每层细粒度同步，可能干扰计算、增加 TTFT。短 prompt 的 KV 本来就小，不需要靠重叠来隐藏。Splitwise 在计算开始前根据 batch 的 token 数做选择：短 prompt（H100 上少于 512 token）用串行传输，长 prompt 用逐层传输。</li>
+<li><strong>效果。</strong> 串行传输的可见延迟随 prompt 长度线性增长；逐层传输未被重叠的部分基本恒定，A100（200 Gbps）约 8 ms，H100（400 Gbps）约 5 ms，相对 prompt 计算时间不到 7%。coding trace 上，串行传输最多增加 3% 的端到端延迟，Splitwise 的混合策略只增加 0.8%。</li>
+</ul>
+<p>逐层传输解决了“传出去”的问题，但每个请求仍从头 prefill，不涉及跨请求复用 KV。</p>
+<h2 id="4-第-3-代：逐层载入与逐层写回"><a href="#4-第-3-代：逐层载入与逐层写回" class="headerlink" title="4. 第 3 代：逐层载入与逐层写回"></a>4. 第 3 代：逐层载入与逐层写回</h2><p>前缀缓存让 prefill 只需计算未命中的 token，但命中的 KV 必须先进入 HBM。Mooncake 把 KV 放进由集群 CPU 内存（以及 SSD）组成的分布式 KVCache 池，并把“载入命中的 KV”和“写出新 KV”都改成逐层进行。</p>
+<p><img data-src="/images/KVCache-Transfer/fig-04.png" alt="图 4：第 3 代，以 KVCache 为中心的逐层载入与写回（以 Mooncake 为例）"></p>
+<p>图 4：(a) 一个请求的数据通路，编号对应论文图 3 的 s1–s4；(b) Prefill 内部载入、计算、写回三条流的时序；(c) 调度与传输引擎。</p>
+<p><strong>数据通路（图 4a）。</strong></p>
+<ol>
+<li><strong>KVCache 复用</strong>：命中的前缀 KV 从 CPU DRAM 逐层载入 HBM。前缀在别的节点时，经 RDMA 取回。</li>
+<li><strong>增量 prefill</strong>：只计算未命中的 token；未命中 token 超过阈值（通常大于 1000）时切成多个 chunk，在多个 Prefill 节点上流水执行（CPP）。新 KV 逐层写回 CPU DRAM。</li>
+<li><strong>KVCache 传输</strong>：前缀与增量 KV 按层流式发往 Decode 节点的 CPU DRAM，与第 2 步重叠，由 Transfer Engine 经 RDMA 完成（每节点最高 8 × 400 Gbps）。</li>
+<li><strong>Decode</strong>：KV 收齐后异步载入 HBM，与其他请求的 decode 并行，然后加入 continuous batching。</li>
+</ol>
+<p><strong>Prefill 内部的三条流（图 4b，arXiv 版 §5.2）。</strong> 每层 attention 开始前，等待这一层的 KV 载入完成，并发起下一层的异步载入；attention 结束后，发起这一层 KV 的异步写回；所有层算完后，等待全部写回完成。载入和计算由不同硬件并行完成，prefill 的执行时间约为 max（KV 载入时间，标准 prefill 计算时间）而不是两者之和，取哪一个由前缀占输入的比例决定。</p>
+<p><strong>对显存的影响。</strong> Mooncake 把 KV 占用显存的代价看作“大小 × 占用时长”，逐层载入与写回缩短了占用时长，所以只要显存能装下单个请求，prefill 调度就不必考虑剩余显存，只看 KV 分布和 DRAM 容量。</p>
+<p><strong>调度（图 4c）。</strong> Conductor 按前缀命中长度和排队时间估算各 Prefill 实例的 TTFT，选最短者；请求没有被调度到前缀最长的实例时，新实例从持有者取回 KV 并存到本地，热点块由此在多个节点上有副本。</p>
+<p>这一代留下的问题是：命中率越高，prefill 的时间越由载入带宽决定。开源实现里的预取策略、GPU 辅助 I&#x2F;O kernel 和 chunk 聚合，针对的都是这一点。</p>
+<h2 id="5-开源工程实现"><a href="#5-开源工程实现" class="headerlink" title="5. 开源工程实现"></a>5. 开源工程实现</h2><h3 id="5-1-四类方法"><a href="#5-1-四类方法" class="headerlink" title="5.1 四类方法"></a>5.1 四类方法</h3><p>第 1–3 代的思路在开源系统里已经拆成了几类可复用的组件：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>要解决的问题</th>
+<th>做法</th>
+<th>代表实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>① PD 间传输</td>
+<td>把 Prefill 的 KV 送到 Decode</td>
+<td>请求级拉取，或 chunk 级推送；经 RDMA &#x2F; NVLink 在显存之间直接传输</td>
+<td>vLLM NixlConnector、SGLang PD、LMCache PD</td>
+</tr>
+<tr>
+<td>② 逐层载入与写回</td>
+<td>隐藏载入和写回时间，限制显存占用</td>
+<td>在每层 attention 前后挂钩子，用独立 CUDA 流或 DMA 搬运</td>
+<td>vLLM KV Connector、SGLang HiCache、LMCache</td>
+</tr>
+<tr>
+<td>③ 多级 KV 缓存</td>
+<td>显存放不下历史 KV，跨实例复用</td>
+<td>HBM → 主机 DRAM → 存储后端；按 page 或 chunk 组织数据，配合预取与写回策略</td>
+<td>SGLang HiCache、LMCache、Mooncake Store</td>
+</tr>
+<tr>
+<td>④ 传输库与编排</td>
+<td>屏蔽 NVLink、RDMA、GDS 等通路差异，按 KV 位置调度</td>
+<td>插件式传输后端，多网卡聚合与拓扑感知选路，KV 感知路由</td>
+<td>NIXL、Mooncake Transfer Engine、NVIDIA Dynamo</td>
+</tr>
+</tbody></table>
+<p>其中 ① 对应第 1、2 代，并多出 chunk 这一中间粒度；② 和 ③ 对应第 3 代；④ 是它们共同的底座。下面分别展开。</p>
+<h3 id="5-2-Prefill-→-Decode-的传输"><a href="#5-2-Prefill-→-Decode-的传输" class="headerlink" title="5.2 Prefill → Decode 的传输"></a>5.2 Prefill → Decode 的传输</h3><p><img data-src="/images/KVCache-Transfer/fig-05.png" alt="图 5：开源系统中 Prefill → Decode 的 KV 传输方式"></p>
+<p>图 5：(a) vLLM NixlConnector；(b) SGLang PD；(c) LMCache PD；(d) NVIDIA Dynamo 的编排流程。</p>
+<p>三种实现在粒度和发起方上各不相同：</p>
+<ul>
+<li><strong>vLLM NixlConnector：请求级、Decode 拉取。</strong> Prefill 算完后，KV 块留在 Prefill 显存中，租约默认 30 秒，Decode 排队时用心跳续租；Decode 通过 NIXL 读取 KV 块，读完通知 Prefill 释放。NIXL 默认后端为 UCX，同机走 cuda_ipc，跨机走 RDMA。多轮对话可以开启双向模式，由 Prefill 先从 Decode 拉取上一轮已有的 KV 块，只计算新 token。vLLM 文档也明确指出，PD 分离用于分别调优 TTFT 与 ITL、控制尾部 ITL，并不提升吞吐。</li>
+<li><strong>SGLang PD：chunk 级、Prefill 推送。</strong> 默认由 Decode 在 prefill 完成前预留目标 KV 槽位；Prefill 每完成一个 chunk 就调用 <code>send_kv_chunk</code>，经 Mooncake Transfer Engine 或 NIXL 用 RDMA 写入 Decode 显存，传输与后续 chunk 的计算重叠。可选的 <code>prefill_complete</code> 策略把预留推迟到 prefill 完成之后，减少 Decode 槽位的占用，代价是分块 prefill 与传输不再重叠。</li>
+<li><strong>LMCache PD：chunk 先拷入连续缓冲区。</strong> 每个 chunk 的 KV 先拷到 Prefill 侧一块连续的 GPU 缓冲区，整块传到 Decode 侧缓冲区，再拆回 Decode 的分页显存。技术报告指出，vLLM 原生 PD 按页地址直接拷贝，分页 KV 分散在显存中时逐页传输，带宽利用不足；在 8K 输入、200 输出、P&#x2F;D 经 NVLink 相连的设置下，LMCache 的平均 TTFT 降低 1.53–1.84×。</li>
+<li><strong>NVIDIA Dynamo：编排层。</strong> PrefillRouter 按缓存重叠度和负载选择 Prefill worker；Prefill 返回传输元数据后，请求被路由到 Decode worker，后者与 Prefill worker 协调，经 NIXL 直接完成显存到显存的非阻塞传输，传输期间 GPU 继续为其他请求做前向。传输元数据随后端而异：vLLM 为块 ID，SGLang 为 bootstrap 连接，TensorRT-LLM 为 opaque state。</li>
+</ul>
+<h3 id="5-3-多级缓存与逐层载入"><a href="#5-3-多级缓存与逐层载入" class="headerlink" title="5.3 多级缓存与逐层载入"></a>5.3 多级缓存与逐层载入</h3><p><img data-src="/images/KVCache-Transfer/fig-06.png" alt="图 6：开源系统中的多级 KV 缓存与逐层载入"></p>
+<p>图 6：(a) SGLang HiCache 的三级缓存与工作流程；(b) LMCache 的逐层流水；(c) vLLM KV Connector 在 worker 侧的逐层钩子。</p>
+<ul>
+<li><strong>SGLang HiCache</strong> 把 GPU 显存、主机内存和存储后端组织成 L1 &#x2F; L2 &#x2F; L3。L1、L2 是实例私有的，跨实例复用只能经过 L3（mooncake、hf3fs、nixl、aibrix 等后端）。请求到达时先在 HiRadixTree 上匹配 L1、L2，未命中部分在 L3 命中超过 256 token（默认）才预取到 L2；prefill 时一边计算第 N 层，一边载入第 N+1 层的 KV。GPU 按层组织数据（layer_first），主机内存可以按 page 组织（page_first、page_first_direct），便于零拷贝交给 L3。</li>
+<li><strong>LMCache</strong> 为计算和数据搬运分配独立的 CUDA 流：先把第 1 层 KV 取进 GPU 缓冲区并拆成分页格式，计算第 1 层时异步取第 2 层。第 2 层要等第 1 层放进分页显存后才开始取，因此只需要一层 KV 大小的固定缓冲区。存取以 256 token 的 chunk 为单位（vLLM 的一页只有 16 token、单层），避免大量小 I&#x2F;O。</li>
+<li><strong>vLLM KV Connector</strong> 把逐层载入和保存做成了引擎接口：worker 侧有 <code>start_load_kv</code>、<code>wait_for_layer_load</code>、<code>save_kv_layer</code>、<code>wait_for_save</code> 四个钩子，调度器侧有 <code>get_num_new_matched_tokens</code> 和 <code>request_finished</code>。NixlConnector、MooncakeConnector、LMCacheConnectorV1、OffloadingConnector 等都建立在这一接口之上。</li>
+</ul>
+<h3 id="5-4-软件栈"><a href="#5-4-软件栈" class="headerlink" title="5.4 软件栈"></a>5.4 软件栈</h3><p><img data-src="/images/KVCache-Transfer/fig-07.png" alt="图 7：KV 传输的开源软件栈"></p>
+<p>图 7：从编排层到硬件通路的分层，以及各代技术在栈中的位置。</p>
+<h2 id="6-对比"><a href="#6-对比" class="headerlink" title="6. 对比"></a>6. 对比</h2><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>传输粒度</th>
+<th>发起方</th>
+<th>与本请求计算重叠</th>
+<th>数据通路</th>
+<th>主要代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>共置执行</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>本卡 HBM</td>
+<td>prefill 与 decode 相互干扰</td>
+</tr>
+<tr>
+<td>DistServe</td>
+<td>请求</td>
+<td>Decode 拉取</td>
+<td>否</td>
+<td>Prefill HBM → Decode HBM（优先 NVLink）</td>
+<td>传输暴露在首个 decode 步之前</td>
+</tr>
+<tr>
+<td>Splitwise</td>
+<td>层（短 prompt 为请求）</td>
+<td>Prompt 机器单边 put</td>
+<td>是</td>
+<td>Prefill HBM → Decode HBM（InfiniBand）</td>
+<td>每层同步，短 prompt 不划算</td>
+</tr>
+<tr>
+<td>Mooncake</td>
+<td>层</td>
+<td>Prefill 侧流式发送</td>
+<td>是（载入、写回、传输）</td>
+<td>DRAM 池 → Prefill HBM → Prefill DRAM → Decode DRAM → Decode HBM</td>
+<td>高命中率时受载入带宽限制</td>
+</tr>
+<tr>
+<td>vLLM NixlConnector</td>
+<td>请求</td>
+<td>Decode 拉取</td>
+<td>否</td>
+<td>Prefill HBM → Decode HBM</td>
+<td>按页传输，KV 在租约内占用显存</td>
+</tr>
+<tr>
+<td>SGLang PD</td>
+<td>chunk</td>
+<td>Prefill 推送（RDMA 写）</td>
+<td>是（与后续 chunk）</td>
+<td>Prefill HBM → Decode 预留槽位</td>
+<td>预留槽位提前占用 Decode 显存</td>
+</tr>
+<tr>
+<td>LMCache PD</td>
+<td>chunk</td>
+<td>Prefill 侧发送</td>
+<td>是（与后续 chunk）</td>
+<td>分页 → 连续缓冲区 → 缓冲区 → 分页</td>
+<td>两端各多一次显存内拷贝</td>
+</tr>
+</tbody></table>
+<h2 id="7-总结与思考"><a href="#7-总结与思考" class="headerlink" title="7. 总结与思考"></a>7. 总结与思考</h2><p><strong>1. 粒度越细，越依赖提前知道目的地。</strong> 逐层或分块传输要在计算过程中就把数据发出去，前提是目的地已经确定：Splitwise 在调度时同时选定两台机器，Mooncake 的 Conductor 同时选出 P&#x2F;D 对，SGLang 默认让 Decode 先预留槽位。vLLM NixlConnector 选择由 Decode 事后拉取，Prefill 不必等待 Decode 分配显存，代价是传输无法与本请求的 prefill 重叠。SGLang 的 <code>prefill_complete</code> 策略把这个取舍摆得很清楚：推迟预留，就失去重叠。</p>
+<p><strong>2. 瓶颈从“传出去”转向“读进来”。</strong> 第 1、2 代优化的是 Prefill → Decode 的新 KV；前缀命中率升高后，要搬的主要是历史 KV。Mooncake 的 prefill 时间约为 max（载入，计算），命中率越高越偏向载入。开源实现的优化也集中在“读进来”这一侧：HiCache 用 best_effort、wait_complete、timeout 三种预取策略在命中率和延迟之间取舍，GPU 辅助 I&#x2F;O kernel 比 cudaMemcpyAsync 最高快 3×；LMCache 报告从 CPU 内存载入 KV 可达 400 Gbps，vLLM 原生 CPU offloading 为 88 Gbps。vLLM 的双向模式则让 Prefill 直接从 Decode 拉取上一轮的 KV，少读一次存储。</p>
+<p><strong>3. 数据布局是计算与 I&#x2F;O 之间的翻译层。</strong> 计算天然按层进行，存储和网络则偏好大块连续的数据。Mooncake 的 block 大小（16–512 token）按模型规模和最优网络传输大小选取；HiCache 的 page_first_direct 把一个 page 内同一层的 token 放在一起；LMCache 用 256 token 的 chunk 和单层缓冲区。它们解决的是同一个问题：既能逐层供给计算，又不让传输退化成大量小 I&#x2F;O。</p>
+<p><strong>4. KV 是网络里的大流，拓扑和路径都要管。</strong> DistServe 用放置约束把 KV 限制在 NVLink 上；Mooncake 的 Transfer Engine 按拓扑矩阵优先选本 NUMA、本 PCIe switch 的网卡，避开 UPI 和 PCIe switch 的带宽瓶颈，调度器还靠增加热点块的副本缓解拥塞。跨节点时，PD 间的 KV 传输是持续数百毫秒到数秒的大象流，本站的 <a href="/2026/11/25/NAIC2026-ARK/">ARK</a> 笔记讨论的就是这类流在 ECMP 下的哈希冲突。</p>
+<p><strong>5. 工程栈在收敛，但取舍还没有统一。</strong> 引擎提供逐层钩子（vLLM KV Connector），传输交给 NIXL 或 Mooncake Transfer Engine，缓存交给 HiCache、LMCache 或 Mooncake Store，分层已经比较清楚。但拉取还是推送、按请求、按 chunk 还是按层传，不同系统仍有不同选择，背后是显存占用、重叠程度和实现复杂度之间的权衡。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>Yinmin Zhong et al. <strong>DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving.</strong> OSDI 2024. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2401.09670">arXiv:2401.09670</a>（本站笔记：<a href="/2026/11/23/OSDI2024-DistServe/">DistServe</a>）</li>
+<li>Pratyush Patel et al. <strong>Splitwise: Efficient Generative LLM Inference Using Phase Splitting.</strong> ISCA 2024. <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2311.18677">arXiv:2311.18677</a>（本站笔记：<a href="/2026/11/23/ISCA2024-Splitwise/">Splitwise</a>）</li>
+<li>Ruoyu Qin et al. <strong>Mooncake: Trading More Storage for Less Computation — A KVCache-centric Architecture for Serving LLM Chatbot.</strong> FAST 2025. <a target="_blank" rel="noopener" href="https://www.usenix.org/conference/fast25/presentation/qin">USENIX</a>；arXiv 版 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2407.00079">2407.00079</a>（本站笔记：<a href="/2026/11/24/FAST2025-Mooncake/">Mooncake</a>）</li>
+<li>Yuhan Liu et al. <strong>LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference.</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.09665">arXiv:2510.09665</a>；代码：<a target="_blank" rel="noopener" href="https://github.com/LMCache/LMCache">LMCache&#x2F;LMCache</a></li>
+<li>Hung-Chun Lin et al. <strong>ARK: Avoiding Routing Collisions for KV Cache Transfer in Disaggregated LLM Inference.</strong> NAIC 2026. <a target="_blank" rel="noopener" href="https://doi.org/10.1145/3789240.3828750">DOI: 10.1145&#x2F;3789240.3828750</a>（本站笔记：<a href="/2026/11/25/NAIC2026-ARK/">ARK</a>）</li>
+<li>vLLM：<a target="_blank" rel="noopener" href="https://docs.vllm.ai/en/latest/features/disagg_prefill.html">Disaggregated Prefilling</a>、<a target="_blank" rel="noopener" href="https://docs.vllm.ai/en/latest/features/nixl_connector_usage/">NixlConnector Usage Guide</a>、<a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm/blob/main/vllm/distributed/kv_transfer/kv_connector/v1/base.py">KVConnectorBase_V1 源码</a></li>
+<li>SGLang：<a target="_blank" rel="noopener" href="https://docs.sglang.io/docs/advanced_features/pd_disaggregation">PD Disaggregation</a>、<a target="_blank" rel="noopener" href="https://docs.sglang.io/docs/advanced_features/hicache_design">HiCache System Design and Optimization</a>、<a target="_blank" rel="noopener" href="https://www.lmsys.org/blog/2025-09-10-sglang-hicache/">SGLang HiCache（LMSYS 博客）</a>、<a target="_blank" rel="noopener" href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/disaggregation/prefill.py">disaggregation&#x2F;prefill.py 源码</a></li>
+<li>NVIDIA Dynamo：<a target="_blank" rel="noopener" href="https://docs.nvidia.com/dynamo/dev/knowledge-base/concepts/system-architecture/disaggregated-serving">Disaggregated Serving</a>、<a target="_blank" rel="noopener" href="https://docs.nvidia.com/dynamo/knowledge-base/concepts/architecture">Architecture</a>、<a target="_blank" rel="noopener" href="https://docs.nvidia.com/dynamo/knowledge-base/modular-components/backends/sg-lang/disaggregation">SGLang 后端的 Disaggregation</a></li>
+<li>NIXL：<a target="_blank" rel="noopener" href="https://github.com/ai-dynamo/nixl">ai-dynamo&#x2F;nixl</a></li>
+<li>Mooncake：<a target="_blank" rel="noopener" href="https://github.com/kvcache-ai/Mooncake">kvcache-ai&#x2F;Mooncake</a>（Transfer Engine 与 Mooncake Store）</li>
+<li>3FS：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/3FS">deepseek-ai&#x2F;3FS</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag"># 大模型推理</a>
+              <a href="/tags/Prefill-Decode-%E5%88%86%E7%A6%BB/" rel="tag"># Prefill-Decode 分离</a>
+              <a href="/tags/KV-Cache/" rel="tag"># KV Cache</a>
+              <a href="/tags/RDMA/" rel="tag"># RDMA</a>
+              <a href="/tags/%E6%8A%80%E6%9C%AF%E7%BB%BC%E8%BF%B0/" rel="tag"># 技术综述</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/11/25/NAIC2026-ARK/" rel="prev" title="ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突">
+                  <i class="fa fa-angle-left"></i> ARK：在主机侧预留路径，避开 KV Cache 大流的 ECMP 冲突
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/11/27/arXiv2026-Nuska/" rel="next" title="Nuska：按松弛度调度分离式 LLM 推理的多阶段通信">
+                  Nuska：按松弛度调度分离式 LLM 推理的多阶段通信 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zhengzaishuru</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"zhwang1224/zhwang1224.github.io","issue_term":"pathname","theme":"preferred-color-scheme"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+<div class="knowledge-graph knowledge-graph-sidebar" hidden data-data-url="/graph/data.json">
+  <div class="knowledge-graph-header">
+    <h3 class="sidebar-graph-title"></h3>
+  </div>
+  <div class="knowledge-graph-outer knowledge-graph-outer-sidebar">
+    <div class="graph-container" data-mode="local" data-depth="1" role="img"></div>
+    <button type="button" class="graph-global-btn" aria-label="Open global graph">
+      <svg viewBox="0 0 55 55" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+          s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+          c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+          C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+          c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+          v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+          s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+          C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="graph-global-overlay" hidden>
+  <div class="graph-global-panel" role="dialog" aria-modal="true" aria-labelledby="graph-global-title">
+    <div class="graph-global-toolbar">
+      <h2 id="graph-global-title" class="graph-global-title"></h2>
+      <label class="graph-search">
+        <span class="sr-only"></span>
+        <input type="search" class="graph-search-input" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-tags" checked> <span data-i18n="tags"></span></label>
+      <label class="graph-toggle"><input type="checkbox" class="graph-toggle-cats" checked> <span data-i18n="cats"></span></label>
+      <button type="button" class="graph-global-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="graph-container graph-container-global" data-mode="global" data-depth="-1" data-data-url="/graph/data.json" role="img"></div>
+    <div class="graph-zoom-btns">
+      <button type="button" class="graph-zoom-in" aria-label="+">+</button>
+      <button type="button" class="graph-zoom-out" aria-label="-">-</button>
+    </div>
+  </div>
+</div>
+<script src="/js/graph-view.js" defer></script>
+<img src="https://mapmyvisitors.com/map.png?d=0z6rM8EvlBeylymKmr4PTVB4GhLbl_qNPKISkqFFJGg&amp;cl=ffffff" width="1" height="1" alt="" decoding="async" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;pointer-events:none">
+
+</body>
+</html>
